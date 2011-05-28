@@ -207,7 +207,6 @@ class Mode:
 			for player in Player.players.values():
 				player.kill()
 		current_mode=self.getEscapedName()
-		Armagetronad.PrintMessage("0xff0000Mode "+current_mode+" activated")
 		log.info("Mode "+current_mode+" activated.")
 
 	## @brief Spawns all players (teams)

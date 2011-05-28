@@ -116,7 +116,7 @@ def getUsage(command):
 				desc=desc+"."
 			if param in optionalargs:
 				desc=desc+" Defaults to "+str(defaultvalues[optionalargs.index(param)])+"."
-			desc=textwrap.wrap(desc, 75)
+			desc=textwrap.wrap(desc, 60)
 			for curdescl in reversed(desc[1:]):
 				params.append(" "*7+curdescl)
 			params.append(param+" "*(7-len(param))+desc[0])
@@ -186,7 +186,7 @@ def printbuffer(player):
  # @param ydir The y direction
 def tele(player, x, y, xdir=0, ydir=1):
 	Player.players[player].respawn(x,y,xdir,ydir,True)
-	Armagetronad.PrintMessage(Messages.PlayerTeleport.format(player=player,x=x,xdir=xdir, ydir=ydir) )
+	Armagetronad.PrintMessage(Messages.PlayerTeleport.format(player=player,x=x,y=y,xdir=xdir, ydir=ydir) )
 
 ## @brief Activates a mode.
  # @details This is the /mode command
@@ -197,12 +197,12 @@ def tele(player, x, y, xdir=0, ydir=1):
 def mode(player, mode, type="vote", when="now"):
 	mode=mode.lower()
 	if(type=="vote"):
-		Armagetronad.PrintPlayerMessage(player, Messages.FeatureNotImplemented.format(feature="Voting"),Messages.PlayerColorCode)
+		Armagetronad.PrintPlayerMessage(player, Messages.FeatureNotImplemented.format(feature="Voting"))
 		return
 	elif type=="set":
 		if when=="now":
 			if mode not in Mode.modes:
-				Armagetronad.PrintPlayerMessage(player, Messages.ModeNotExist.format(mode=mode), Messages.PlayerColorCode)
+				Armagetronad.PrintPlayerMessage(player, Messages.ModeNotExist.format(mode=mode))
 				return
 			else:
 				Mode.modes[mode].activate(True)

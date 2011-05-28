@@ -26,12 +26,11 @@ Armagetronad.SendCommand("LADDERLOG_WRITE_CYCLE_CREATED 1")
 Armagetronad.SendCommand("LADDERLOG_WRITE_INVALID_COMMAND 1")
 Armagetronad.SendCommand("INTERCEPT_UNKNOWN_COMMANDS 1")
 Armagetronad.SendCommand("LADDERLOG_GAME_TIME_INTERVAL 1")
-Armagetronad.PrintMessage("Script started")
+Armagetronad.SendCommand("EXTRA_ROUND_TIME 1")
+Armagetronad.PrintMessage("0xff0000Script started")
 #Init
 Team.Add("AI")
 log.info("Script started")
-#We need to flush player list. Kick all players
-Global.reloadPlayerList()
 while(True):
 	line=""
 	try:
@@ -39,7 +38,7 @@ while(True):
 	except KeyboardInterrupt:
 		log.info("Exiting")
 		Armagetronad.PrintMessage("Script exited.")
-		exit()
+		break
 	line=line.strip()
 	keywords=line.split(" ")
 	command=keywords[0]
@@ -52,12 +51,14 @@ while(True):
 	command=command.replace(" ","")
 	#call handler
 	if(hasattr(LadderLogHandlers,command) ):
-		#try:
-		getattr(LadderLogHandlers,command)(*args)
-		#except TypeError:
-		#	log.warning("Wrong arguments for ladder log handler function. This might be a bug.")
-		#except Exception as e:
-			#log.warning("Exception " +e.__class__.__name__ 
-			 #           + " raised in Ladder log handler. This might be a bug.")
+		try:
+			getattr(LadderLogHandlers,command)(*args)
+		except TypeError:
+			log.warning("Wrong arguments for ladder log handler function. This might be a bug.")
+		except Exception as e:
+			log.error("Exception " +e.__class__.__name__ 
+			            + " raised in Ladder log handler. This might be a bug.")
+			break
 	else:
 		log.debug("No ladder log handler for ladder event „" + command + "“.")
+Armagetronad.PrintMessage("0xff0000Script exited.")

@@ -5,7 +5,7 @@
 
 ## @brief The color code for user messages
  # @details Color code for all messages sent to a specific player.
-PlayerColorCode="0xbbbbbb"
+PlayerColorCode="0xddffdd"
 
 ## @brief Command not found message
  # @details This message is printed if the player tries to execute an invalid command
@@ -32,7 +32,7 @@ PlayerTeleport=("0xff0088Player {player} teleported himself to ({x}|{y})")
 ## @brief Feature not implemented message
  # @details This message is printed when a feature is currently not avaliable, but still in develop.
  # @param feature The name of the feature
-FeatureNotAvaliable=("{feature} is currently not supported, but it's coming soon! :)")
+FeatureNotImplemented=("{feature} is currently not supported, but it's coming soon! :)")
 
 ## @brief Mode not exists message
  # @details This message is printed when a mode doesn't exist.

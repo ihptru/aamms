@@ -3,6 +3,8 @@
  # @brief Functions for Armagetron Advanced server scripting
  # @details This file contains some usefull functions for %Armagetronad server scripting.
 
+import Messages
+
 ## @brief Executes a command
  # @details Send a command to the server. You only have to replace this function if you
  #          don't want to print commands to stdout.
@@ -19,8 +21,10 @@ def PrintMessage(msg):
 ## @brief Prints a message to a player
  # @param msg The message to print
  # @param player The player to who to print the message
- # @param color The color which to use for the message
-def PrintPlayerMessage(player,msg, color="0xffffff"):
+ # @param color The color which to use for the message. Defaults to Messages.PlayerColorCode
+def PrintPlayerMessage(player,msg, color=None):
+	if color == None:
+		color=Messages.PlayerColorCode
 	msg=str(msg)
 	msgs=msg.split("\n")
 	for msg in msgs:
