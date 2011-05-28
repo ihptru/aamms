@@ -1,0 +1,252 @@
+\hypertarget{class_event_1_1_event_group}{
+\section{Event.EventGroup Class Reference}
+\label{class_event_1_1_event_group}\index{Event::EventGroup@{Event::EventGroup}}
+}
+
+
+Class for a group of events.  
+
+
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+def \hyperlink{class_event_1_1_event_group_ad1ebaceb20cb6149a8b5249b94307709}{\_\-\_\-init\_\-\_\-}
+\begin{DoxyCompactList}\small\item\em Init function. \item\end{DoxyCompactList}\item 
+def \hyperlink{class_event_1_1_event_group_ae64ca96cf4d8532a252facaf58821ba9}{addEvent}
+\begin{DoxyCompactList}\small\item\em Adds an event to the group. \item\end{DoxyCompactList}\item 
+def \hyperlink{class_event_1_1_event_group_aaeb41463c369afbac4cba57f2abbeede}{removeEvent}
+\begin{DoxyCompactList}\small\item\em Removes an event from the group. \item\end{DoxyCompactList}\item 
+def \hyperlink{class_event_1_1_event_group_a8a56df89cd9ee525d57d161e151a892d}{triggerEvent}
+\begin{DoxyCompactList}\small\item\em Triggers an event in the group. \item\end{DoxyCompactList}\item 
+def \hyperlink{class_event_1_1_event_group_ab2d2732bccc85ccc6da3ce381d14f314}{disable}
+\begin{DoxyCompactList}\small\item\em Disables the group. \item\end{DoxyCompactList}\item 
+def \hyperlink{class_event_1_1_event_group_ad7e8b3ca8ac34c86df5918f405291348}{enable}
+\begin{DoxyCompactList}\small\item\em Enables the group. \item\end{DoxyCompactList}\item 
+def \hyperlink{class_event_1_1_event_group_a150001e28345ca99551fc06e63592f19}{getEvent}
+\begin{DoxyCompactList}\small\item\em Returns an event. \item\end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\hyperlink{class_event_1_1_event_group_a5d5ff8c585cc7abeb5e50d1c81d40813}{name}
+\begin{DoxyCompactList}\small\item\em name of the group \item\end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Private Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\hyperlink{class_event_1_1_event_group_ac27ccf54470339b7343b424c86da8ab9}{\_\-\_\-events}
+\begin{DoxyCompactList}\small\item\em \hyperlink{namespace_event}{Events} assigned with this group. \item\end{DoxyCompactList}\item 
+\hyperlink{class_event_1_1_event_group_af1cda284012e3badea391a0f9573c964}{\_\-\_\-enabled}
+\begin{DoxyCompactList}\small\item\em Are events of this group enabled? \item\end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+Class for a group of events. Class for a group of events for better management of events. 
+
+Definition at line 176 of file Event.py.
+
+
+
+\subsection{Member Function Documentation}
+\hypertarget{class_event_1_1_event_group_ad1ebaceb20cb6149a8b5249b94307709}{
+\index{Event::EventGroup@{Event::EventGroup}!\_\-\_\-init\_\-\_\-@{\_\-\_\-init\_\-\_\-}}
+\index{\_\-\_\-init\_\-\_\-@{\_\-\_\-init\_\-\_\-}!Event::EventGroup@{Event::EventGroup}}
+\subsubsection[{\_\-\_\-init\_\-\_\-}]{\setlength{\rightskip}{0pt plus 5cm}def Event.EventGroup.\_\-\_\-init\_\-\_\- (
+\begin{DoxyParamCaption}
+\item[{}]{ self, }
+\item[{}]{ name, }
+\item[{}]{ enabled = {\ttfamily True}, }
+\item[{}]{ events = {\ttfamily dict()}}
+\end{DoxyParamCaption}
+)}}
+\label{class_event_1_1_event_group_ad1ebaceb20cb6149a8b5249b94307709}
+
+
+Init function. 
+
+Inits a new \hyperlink{class_event_1_1_event_group}{EventGroup} and adds the properties. 
+\begin{DoxyParams}{Parameters}
+\item[{\em name}]The name of the group. \item[{\em enabled}]Is the group enabled? If not True, no actions are executed when an event is triggered. \item[{\em events}]The events assigned with the group. \end{DoxyParams}
+
+
+Definition at line 202 of file Event.py.
+
+\hypertarget{class_event_1_1_event_group_ae64ca96cf4d8532a252facaf58821ba9}{
+\index{Event::EventGroup@{Event::EventGroup}!addEvent@{addEvent}}
+\index{addEvent@{addEvent}!Event::EventGroup@{Event::EventGroup}}
+\subsubsection[{addEvent}]{\setlength{\rightskip}{0pt plus 5cm}def Event.EventGroup.addEvent (
+\begin{DoxyParamCaption}
+\item[{}]{ self, }
+\item[{}]{ events}
+\end{DoxyParamCaption}
+)}}
+\label{class_event_1_1_event_group_ae64ca96cf4d8532a252facaf58821ba9}
+
+
+Adds an event to the group. 
+
+This function adds the given event to the group and enables it. 
+\begin{DoxyParams}{Parameters}
+\item[{\em events}]One or more events to add \end{DoxyParams}
+
+\begin{DoxyExceptions}{Exceptions}
+\item[{\em TypeError}]Raised if event isn't an instance of \hyperlink{class_event_1_1_event}{Event}. \item[{\em RuntimeError}]Raised when the event already exists. \end{DoxyExceptions}
+
+
+Definition at line 214 of file Event.py.
+
+\hypertarget{class_event_1_1_event_group_ab2d2732bccc85ccc6da3ce381d14f314}{
+\index{Event::EventGroup@{Event::EventGroup}!disable@{disable}}
+\index{disable@{disable}!Event::EventGroup@{Event::EventGroup}}
+\subsubsection[{disable}]{\setlength{\rightskip}{0pt plus 5cm}def Event.EventGroup.disable (
+\begin{DoxyParamCaption}
+\item[{}]{ self}
+\end{DoxyParamCaption}
+)}}
+\label{class_event_1_1_event_group_ab2d2732bccc85ccc6da3ce381d14f314}
+
+
+Disables the group. 
+
+Disables the event group. If the event group is disables, no events are triggered. 
+
+Definition at line 247 of file Event.py.
+
+\hypertarget{class_event_1_1_event_group_ad7e8b3ca8ac34c86df5918f405291348}{
+\index{Event::EventGroup@{Event::EventGroup}!enable@{enable}}
+\index{enable@{enable}!Event::EventGroup@{Event::EventGroup}}
+\subsubsection[{enable}]{\setlength{\rightskip}{0pt plus 5cm}def Event.EventGroup.enable (
+\begin{DoxyParamCaption}
+\item[{}]{ self}
+\end{DoxyParamCaption}
+)}}
+\label{class_event_1_1_event_group_ad7e8b3ca8ac34c86df5918f405291348}
+
+
+Enables the group. 
+
+Enables the group. Events are only triggered when the group is enabled. 
+
+Definition at line 253 of file Event.py.
+
+\hypertarget{class_event_1_1_event_group_a150001e28345ca99551fc06e63592f19}{
+\index{Event::EventGroup@{Event::EventGroup}!getEvent@{getEvent}}
+\index{getEvent@{getEvent}!Event::EventGroup@{Event::EventGroup}}
+\subsubsection[{getEvent}]{\setlength{\rightskip}{0pt plus 5cm}def Event.EventGroup.getEvent (
+\begin{DoxyParamCaption}
+\item[{}]{ self, }
+\item[{}]{ name}
+\end{DoxyParamCaption}
+)}}
+\label{class_event_1_1_event_group_a150001e28345ca99551fc06e63592f19}
+
+
+Returns an event. 
+
+Returns a reference to an event. 
+\begin{DoxyParams}{Parameters}
+\item[{\em name}]The name of the event to return \end{DoxyParams}
+
+\begin{DoxyExceptions}{Exceptions}
+\item[{\em RuntimeError}]Raised if the event doesn't exist. \end{DoxyExceptions}
+\begin{DoxyReturn}{Returns}
+A reference to the event. 
+\end{DoxyReturn}
+
+
+Definition at line 262 of file Event.py.
+
+\hypertarget{class_event_1_1_event_group_aaeb41463c369afbac4cba57f2abbeede}{
+\index{Event::EventGroup@{Event::EventGroup}!removeEvent@{removeEvent}}
+\index{removeEvent@{removeEvent}!Event::EventGroup@{Event::EventGroup}}
+\subsubsection[{removeEvent}]{\setlength{\rightskip}{0pt plus 5cm}def Event.EventGroup.removeEvent (
+\begin{DoxyParamCaption}
+\item[{}]{ self, }
+\item[{}]{ eventname}
+\end{DoxyParamCaption}
+)}}
+\label{class_event_1_1_event_group_aaeb41463c369afbac4cba57f2abbeede}
+
+
+Removes an event from the group. 
+
+This function removes the given event from the group. 
+\begin{DoxyParams}{Parameters}
+\item[{\em eventname}]The name of the event. \end{DoxyParams}
+
+\begin{DoxyExceptions}{Exceptions}
+\item[{\em RuntimeError}]Raised if the event doesn't exist. \end{DoxyExceptions}
+
+
+Definition at line 227 of file Event.py.
+
+\hypertarget{class_event_1_1_event_group_a8a56df89cd9ee525d57d161e151a892d}{
+\index{Event::EventGroup@{Event::EventGroup}!triggerEvent@{triggerEvent}}
+\index{triggerEvent@{triggerEvent}!Event::EventGroup@{Event::EventGroup}}
+\subsubsection[{triggerEvent}]{\setlength{\rightskip}{0pt plus 5cm}def Event.EventGroup.triggerEvent (
+\begin{DoxyParamCaption}
+\item[{}]{ self, }
+\item[{}]{ name, }
+\item[{}]{ args}
+\end{DoxyParamCaption}
+)}}
+\label{class_event_1_1_event_group_a8a56df89cd9ee525d57d161e151a892d}
+
+
+Triggers an event in the group. 
+
+This function triggers the given event. 
+\begin{DoxyParams}{Parameters}
+\item[{\em name}]The name of the event to triggers \item[{\em args}]The arguments to pass to the actions \end{DoxyParams}
+
+\begin{DoxyExceptions}{Exceptions}
+\item[{\em RuntimeError}]Raised when the event doesn't exist. \end{DoxyExceptions}
+
+
+Definition at line 237 of file Event.py.
+
+
+
+\subsection{Member Data Documentation}
+\hypertarget{class_event_1_1_event_group_af1cda284012e3badea391a0f9573c964}{
+\index{Event::EventGroup@{Event::EventGroup}!\_\-\_\-enabled@{\_\-\_\-enabled}}
+\index{\_\-\_\-enabled@{\_\-\_\-enabled}!Event::EventGroup@{Event::EventGroup}}
+\subsubsection[{\_\-\_\-enabled}]{\setlength{\rightskip}{0pt plus 5cm}{\bf Event.EventGroup::\_\-\_\-enabled}\hspace{0.3cm}{\ttfamily  \mbox{[}private\mbox{]}}}}
+\label{class_event_1_1_event_group_af1cda284012e3badea391a0f9573c964}
+
+
+Are events of this group enabled? 
+
+If not True, no actions are executed when an event is triggered. 
+
+Definition at line 207 of file Event.py.
+
+\hypertarget{class_event_1_1_event_group_ac27ccf54470339b7343b424c86da8ab9}{
+\index{Event::EventGroup@{Event::EventGroup}!\_\-\_\-events@{\_\-\_\-events}}
+\index{\_\-\_\-events@{\_\-\_\-events}!Event::EventGroup@{Event::EventGroup}}
+\subsubsection[{\_\-\_\-events}]{\setlength{\rightskip}{0pt plus 5cm}{\bf Event.EventGroup::\_\-\_\-events}\hspace{0.3cm}{\ttfamily  \mbox{[}private\mbox{]}}}}
+\label{class_event_1_1_event_group_ac27ccf54470339b7343b424c86da8ab9}
+
+
+\hyperlink{namespace_event}{Events} assigned with this group. 
+
+Dictionary of all \hyperlink{namespace_event}{Events} assigned to this group, where the key is the name of the event. 
+
+Definition at line 203 of file Event.py.
+
+\hypertarget{class_event_1_1_event_group_a5d5ff8c585cc7abeb5e50d1c81d40813}{
+\index{Event::EventGroup@{Event::EventGroup}!name@{name}}
+\index{name@{name}!Event::EventGroup@{Event::EventGroup}}
+\subsubsection[{name}]{\setlength{\rightskip}{0pt plus 5cm}{\bf Event.EventGroup::name}}}
+\label{class_event_1_1_event_group_a5d5ff8c585cc7abeb5e50d1c81d40813}
+
+
+name of the group 
+
+The name of the group. 
+
+Definition at line 206 of file Event.py.
+
+
+
+The documentation for this class was generated from the following file:\begin{DoxyCompactItemize}
+\item 
+\hyperlink{_event_8py}{Event.py}\end{DoxyCompactItemize}

@@ -1,0 +1,643 @@
+\hypertarget{class_player_1_1_player}{
+\section{Player.Player Class Reference}
+\label{class_player_1_1_player}\index{Player::Player@{Player::Player}}
+}
+
+
+Class for a player.  
+
+
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+def \hyperlink{class_player_1_1_player_a24b6d9aadd8f9a4d57ad531a7172209b}{\_\-\_\-init\_\-\_\-}
+\begin{DoxyCompactList}\small\item\em Init function. \item\end{DoxyCompactList}\item 
+def \hyperlink{class_player_1_1_player_a1cc8f0385a8b8ae30062f1475f08de3b}{\_\-\_\-del\_\-\_\-}
+\begin{DoxyCompactList}\small\item\em Del function. \item\end{DoxyCompactList}\item 
+def \hyperlink{class_player_1_1_player_aa169627ae36dac4ce2c29dab48184801}{joinTeam}
+\begin{DoxyCompactList}\small\item\em Sets the team of the player. \item\end{DoxyCompactList}\item 
+def \hyperlink{class_player_1_1_player_a7fb849bfe1c9df24fcc166b16c48f4de}{leaveTeam}
+\begin{DoxyCompactList}\small\item\em Lets the player leave the team. \item\end{DoxyCompactList}\item 
+def \hyperlink{class_player_1_1_player_af3a510565e600d099419503da9a40f8a}{setLives}
+\begin{DoxyCompactList}\small\item\em Set player's lives. \item\end{DoxyCompactList}\item 
+def \hyperlink{class_player_1_1_player_aa3399eb13837ea4756060474fdf81e19}{crashed}
+\begin{DoxyCompactList}\small\item\em This decreases the player's lives counter by 1. \item\end{DoxyCompactList}\item 
+def \hyperlink{class_player_1_1_player_a4513fc3191aa1b2da9ebac05acb67642}{kill}
+\begin{DoxyCompactList}\small\item\em Kills the player. \item\end{DoxyCompactList}\item 
+def \hyperlink{class_player_1_1_player_add4b61d7f63f7361bdaa2e797cc00567}{setLadderName}
+\begin{DoxyCompactList}\small\item\em Sets the ladder name. \item\end{DoxyCompactList}\item 
+def \hyperlink{class_player_1_1_player_ad32410beb56cd2b6d3ab69568a5a3f7d}{respawn}
+\begin{DoxyCompactList}\small\item\em Respawns the player. \item\end{DoxyCompactList}\item 
+def \hyperlink{class_player_1_1_player_a9dfc04a9bc137d223ea2bf2eea0b04d3}{getLadderName}
+\begin{DoxyCompactList}\small\item\em Gets ladder name. \item\end{DoxyCompactList}\item 
+def \hyperlink{class_player_1_1_player_aff01af86018e0aff6fe8c5ff01d46d0a}{applyChanges}
+\begin{DoxyCompactList}\small\item\em Applies all changes. \item\end{DoxyCompactList}\item 
+def \hyperlink{class_player_1_1_player_a191891bb93599c4edc1bae029966d6cd}{login}
+\begin{DoxyCompactList}\small\item\em \hyperlink{class_player_1_1_player}{Player} logged in. \item\end{DoxyCompactList}\item 
+def \hyperlink{class_player_1_1_player_a1f91a0f380efed515111952b96f6a90e}{logout}
+\begin{DoxyCompactList}\small\item\em \hyperlink{class_player_1_1_player}{Player} logged out. \item\end{DoxyCompactList}\item 
+def \hyperlink{class_player_1_1_player_a293131894621a14d2f6741e2be29451d}{getLives}
+\begin{DoxyCompactList}\small\item\em Returns the lives of the player. \item\end{DoxyCompactList}\item 
+def \hyperlink{class_player_1_1_player_ab810708370e380e49f9e4885f42df037}{getInGameLadderName}
+\begin{DoxyCompactList}\small\item\em Returns in-\/game ladder name. \item\end{DoxyCompactList}\item 
+def \hyperlink{class_player_1_1_player_a80f2beaf026556ed4b4e432ebec249d4}{getInGameName}
+\begin{DoxyCompactList}\small\item\em Returns in-\/game name. \item\end{DoxyCompactList}\item 
+def \hyperlink{class_player_1_1_player_abc21f488a31729c70d7fd3dea220c599}{getTeam}
+\begin{DoxyCompactList}\small\item\em Gets the team name. \item\end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\hyperlink{class_player_1_1_player_a6cea7416f6b4ce563211f3194033f671}{name}
+\begin{DoxyCompactList}\small\item\em The name of the player. \item\end{DoxyCompactList}\item 
+\hyperlink{class_player_1_1_player_a48ed10bfc12677f9c41e2cae6daafa49}{ip}
+\begin{DoxyCompactList}\small\item\em The player's ip. \item\end{DoxyCompactList}\item 
+\hyperlink{class_player_1_1_player_ab675ec89c8e17a56d85f0304f46465ea}{ping}
+\begin{DoxyCompactList}\small\item\em The ping of the player. \item\end{DoxyCompactList}\item 
+\hyperlink{class_player_1_1_player_a323d688193f511184787b2e598222e74}{color}
+\begin{DoxyCompactList}\small\item\em The color of the player. \item\end{DoxyCompactList}\item 
+\hyperlink{class_player_1_1_player_a01b505c0fe5ff3d20d75327800b1552e}{is\_\-human}
+\begin{DoxyCompactList}\small\item\em Is the player human? \item\end{DoxyCompactList}\item 
+\hyperlink{class_player_1_1_player_a1a50d6ee0682ff86b83ea314dfa58ce6}{data}
+\begin{DoxyCompactList}\small\item\em Store data assigned with the player. \item\end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Private Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\hyperlink{class_player_1_1_player_ab4e7b3e5188ae4bd044ffaa563098973}{\_\-\_\-ladder\_\-name}
+\begin{DoxyCompactList}\small\item\em The name of the player on the ladder. \item\end{DoxyCompactList}\item 
+\hyperlink{class_player_1_1_player_ade041c5e2ed4966a35e6d548746ee6da}{\_\-\_\-lives}
+\begin{DoxyCompactList}\small\item\em Remaining lives. \item\end{DoxyCompactList}\item 
+\hyperlink{class_player_1_1_player_ae01a2cfd1449c211cc6b6ca6d6fce853}{\_\-\_\-team}
+\begin{DoxyCompactList}\small\item\em The name of the team in which the player is in. \item\end{DoxyCompactList}\item 
+\hyperlink{class_player_1_1_player_a11f44d16220129d7efca52828dc13d4f}{\_\-\_\-old\_\-ladder\_\-name}
+\begin{DoxyCompactList}\small\item\em The old ladder name. \item\end{DoxyCompactList}\item 
+\hyperlink{class_player_1_1_player_a040c3c6e90a7655064aa65adbb4387b6}{\_\-\_\-logged\_\-in}
+\begin{DoxyCompactList}\small\item\em If the player is logged in? \item\end{DoxyCompactList}\item 
+\hyperlink{class_player_1_1_player_a43d105f816af7ba2c6dbe816ffaf4eba}{\_\-\_\-old\_\-name}
+\begin{DoxyCompactList}\small\item\em The old name. \item\end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+Class for a player. This class represents an player. 
+
+Definition at line 99 of file Player.py.
+
+
+
+\subsection{Member Function Documentation}
+\hypertarget{class_player_1_1_player_a1cc8f0385a8b8ae30062f1475f08de3b}{
+\index{Player::Player@{Player::Player}!\_\-\_\-del\_\-\_\-@{\_\-\_\-del\_\-\_\-}}
+\index{\_\-\_\-del\_\-\_\-@{\_\-\_\-del\_\-\_\-}!Player::Player@{Player::Player}}
+\subsubsection[{\_\-\_\-del\_\-\_\-}]{\setlength{\rightskip}{0pt plus 5cm}def Player.Player.\_\-\_\-del\_\-\_\- (
+\begin{DoxyParamCaption}
+\item[{}]{ self}
+\end{DoxyParamCaption}
+)}}
+\label{class_player_1_1_player_a1cc8f0385a8b8ae30062f1475f08de3b}
+
+
+Del function. 
+
+Removes the player from his team 
+
+Definition at line 179 of file Player.py.
+
+\hypertarget{class_player_1_1_player_a24b6d9aadd8f9a4d57ad531a7172209b}{
+\index{Player::Player@{Player::Player}!\_\-\_\-init\_\-\_\-@{\_\-\_\-init\_\-\_\-}}
+\index{\_\-\_\-init\_\-\_\-@{\_\-\_\-init\_\-\_\-}!Player::Player@{Player::Player}}
+\subsubsection[{\_\-\_\-init\_\-\_\-}]{\setlength{\rightskip}{0pt plus 5cm}def Player.Player.\_\-\_\-init\_\-\_\- (
+\begin{DoxyParamCaption}
+\item[{}]{ self, }
+\item[{}]{ ladder\_\-name, }
+\item[{}]{ name, }
+\item[{}]{ ip}
+\end{DoxyParamCaption}
+)}}
+\label{class_player_1_1_player_a24b6d9aadd8f9a4d57ad531a7172209b}
+
+
+Init function. 
+
+Inits a new \hyperlink{class_player_1_1_player}{Player} and adds the properties to it. 
+\begin{DoxyParams}{Parameters}
+\item[{\em ladder\_\-name}]The name of the player on the ladder.  \item[{\em name}]The name of the player.  \item[{\em ip}]The player's ip.  \end{DoxyParams}
+
+
+Definition at line 163 of file Player.py.
+
+\hypertarget{class_player_1_1_player_aff01af86018e0aff6fe8c5ff01d46d0a}{
+\index{Player::Player@{Player::Player}!applyChanges@{applyChanges}}
+\index{applyChanges@{applyChanges}!Player::Player@{Player::Player}}
+\subsubsection[{applyChanges}]{\setlength{\rightskip}{0pt plus 5cm}def Player.Player.applyChanges (
+\begin{DoxyParamCaption}
+\item[{}]{ self, }
+\item[{}]{ force = {\ttfamily True}}
+\end{DoxyParamCaption}
+)}}
+\label{class_player_1_1_player_aff01af86018e0aff6fe8c5ff01d46d0a}
+
+
+Applies all changes. 
+
+Should be only called at the end of the round, when the player can rename. 
+\begin{DoxyParams}{Parameters}
+\item[{\em force}]Force renaming? \end{DoxyParams}
+
+
+Definition at line 314 of file Player.py.
+
+\hypertarget{class_player_1_1_player_aa3399eb13837ea4756060474fdf81e19}{
+\index{Player::Player@{Player::Player}!crashed@{crashed}}
+\index{crashed@{crashed}!Player::Player@{Player::Player}}
+\subsubsection[{crashed}]{\setlength{\rightskip}{0pt plus 5cm}def Player.Player.crashed (
+\begin{DoxyParamCaption}
+\item[{}]{ self}
+\end{DoxyParamCaption}
+)}}
+\label{class_player_1_1_player_aa3399eb13837ea4756060474fdf81e19}
+
+
+This decreases the player's lives counter by 1. 
+
+Call this function when the player crashed. \begin{DoxyReturn}{Returns}
+Remaining lives. 0 is the player is death. 
+\end{DoxyReturn}
+\begin{DoxyNote}{Note}
+This triggers the event \char`\"{}Player crashed\char`\"{}. If the lives are less or equal 0 after decreasing them, \char`\"{}Player died\char`\"{} is also triggered. 
+\end{DoxyNote}
+
+
+Definition at line 253 of file Player.py.
+
+\hypertarget{class_player_1_1_player_ab810708370e380e49f9e4885f42df037}{
+\index{Player::Player@{Player::Player}!getInGameLadderName@{getInGameLadderName}}
+\index{getInGameLadderName@{getInGameLadderName}!Player::Player@{Player::Player}}
+\subsubsection[{getInGameLadderName}]{\setlength{\rightskip}{0pt plus 5cm}def Player.Player.getInGameLadderName (
+\begin{DoxyParamCaption}
+\item[{}]{ self}
+\end{DoxyParamCaption}
+)}}
+\label{class_player_1_1_player_ab810708370e380e49f9e4885f42df037}
+
+
+Returns in-\/game ladder name. 
+
+This function return the ladder name of the player that is currently used in the game. \begin{DoxyReturn}{Returns}
+The in-\/game ladder name 
+\end{DoxyReturn}
+
+
+Definition at line 351 of file Player.py.
+
+\hypertarget{class_player_1_1_player_a80f2beaf026556ed4b4e432ebec249d4}{
+\index{Player::Player@{Player::Player}!getInGameName@{getInGameName}}
+\index{getInGameName@{getInGameName}!Player::Player@{Player::Player}}
+\subsubsection[{getInGameName}]{\setlength{\rightskip}{0pt plus 5cm}def Player.Player.getInGameName (
+\begin{DoxyParamCaption}
+\item[{}]{ self}
+\end{DoxyParamCaption}
+)}}
+\label{class_player_1_1_player_a80f2beaf026556ed4b4e432ebec249d4}
+
+
+Returns in-\/game name. 
+
+This function returns the name of the player that is currently used in the game \begin{DoxyReturn}{Returns}
+The in-\/game name 
+\end{DoxyReturn}
+
+
+Definition at line 358 of file Player.py.
+
+\hypertarget{class_player_1_1_player_a9dfc04a9bc137d223ea2bf2eea0b04d3}{
+\index{Player::Player@{Player::Player}!getLadderName@{getLadderName}}
+\index{getLadderName@{getLadderName}!Player::Player@{Player::Player}}
+\subsubsection[{getLadderName}]{\setlength{\rightskip}{0pt plus 5cm}def Player.Player.getLadderName (
+\begin{DoxyParamCaption}
+\item[{}]{ self}
+\end{DoxyParamCaption}
+)}}
+\label{class_player_1_1_player_a9dfc04a9bc137d223ea2bf2eea0b04d3}
+
+
+Gets ladder name. 
+
+This function gets the ladder name \begin{DoxyReturn}{Returns}
+The ladder name 
+\end{DoxyReturn}
+
+
+Definition at line 308 of file Player.py.
+
+\hypertarget{class_player_1_1_player_a293131894621a14d2f6741e2be29451d}{
+\index{Player::Player@{Player::Player}!getLives@{getLives}}
+\index{getLives@{getLives}!Player::Player@{Player::Player}}
+\subsubsection[{getLives}]{\setlength{\rightskip}{0pt plus 5cm}def Player.Player.getLives (
+\begin{DoxyParamCaption}
+\item[{}]{ self}
+\end{DoxyParamCaption}
+)}}
+\label{class_player_1_1_player_a293131894621a14d2f6741e2be29451d}
+
+
+Returns the lives of the player. 
+
+Returns the remaining lives of the player 
+
+Definition at line 344 of file Player.py.
+
+\hypertarget{class_player_1_1_player_abc21f488a31729c70d7fd3dea220c599}{
+\index{Player::Player@{Player::Player}!getTeam@{getTeam}}
+\index{getTeam@{getTeam}!Player::Player@{Player::Player}}
+\subsubsection[{getTeam}]{\setlength{\rightskip}{0pt plus 5cm}def Player.Player.getTeam (
+\begin{DoxyParamCaption}
+\item[{}]{ self}
+\end{DoxyParamCaption}
+)}}
+\label{class_player_1_1_player_abc21f488a31729c70d7fd3dea220c599}
+
+
+Gets the team name. 
+
+Returns the name of the team the player is in. \begin{DoxyReturn}{Returns}
+The escaped name of the team or None of the player is spectating. 
+\end{DoxyReturn}
+
+
+Definition at line 364 of file Player.py.
+
+\hypertarget{class_player_1_1_player_aa169627ae36dac4ce2c29dab48184801}{
+\index{Player::Player@{Player::Player}!joinTeam@{joinTeam}}
+\index{joinTeam@{joinTeam}!Player::Player@{Player::Player}}
+\subsubsection[{joinTeam}]{\setlength{\rightskip}{0pt plus 5cm}def Player.Player.joinTeam (
+\begin{DoxyParamCaption}
+\item[{}]{ self, }
+\item[{}]{ teamname, }
+\item[{}]{ force = {\ttfamily False}, }
+\item[{}]{ quiet = {\ttfamily False}}
+\end{DoxyParamCaption}
+)}}
+\label{class_player_1_1_player_aa169627ae36dac4ce2c29dab48184801}
+
+
+Sets the team of the player. 
+
+This function lets the player join the given team 
+\begin{DoxyParams}{Parameters}
+\item[{\em teamname}]The escaped name of the team to which to add the player. None if the player is specating. AI if the player is in the AI team. \item[{\em force}]Create the team if it doesn't exist? \item[{\em quiet}]If True, don't print info log messages \end{DoxyParams}
+
+\begin{DoxyExceptions}{Exceptions}
+\item[{\em RuntimeError}]Raised if the team doesn't exist and force isn't set \end{DoxyExceptions}
+\begin{DoxyNote}{Note}
+This also calls Team.addPlayer (adds the player to the team) 
+
+This triggers the event \char`\"{}Player joined team\char`\"{} 
+
+If the team name is AI, is\_\-human is set to False 
+\end{DoxyNote}
+
+
+Definition at line 192 of file Player.py.
+
+\hypertarget{class_player_1_1_player_a4513fc3191aa1b2da9ebac05acb67642}{
+\index{Player::Player@{Player::Player}!kill@{kill}}
+\index{kill@{kill}!Player::Player@{Player::Player}}
+\subsubsection[{kill}]{\setlength{\rightskip}{0pt plus 5cm}def Player.Player.kill (
+\begin{DoxyParamCaption}
+\item[{}]{ self}
+\end{DoxyParamCaption}
+)}}
+\label{class_player_1_1_player_a4513fc3191aa1b2da9ebac05acb67642}
+
+
+Kills the player. 
+
+This function kills the player. \begin{DoxyNote}{Note}
+The lives of the player are set to 0. 
+
+This triggers the event \char`\"{}Player killed\char`\"{} and \char`\"{}Player died\char`\"{}. 
+\end{DoxyNote}
+
+
+Definition at line 267 of file Player.py.
+
+\hypertarget{class_player_1_1_player_a7fb849bfe1c9df24fcc166b16c48f4de}{
+\index{Player::Player@{Player::Player}!leaveTeam@{leaveTeam}}
+\index{leaveTeam@{leaveTeam}!Player::Player@{Player::Player}}
+\subsubsection[{leaveTeam}]{\setlength{\rightskip}{0pt plus 5cm}def Player.Player.leaveTeam (
+\begin{DoxyParamCaption}
+\item[{}]{ self, }
+\item[{}]{ quiet = {\ttfamily False}}
+\end{DoxyParamCaption}
+)}}
+\label{class_player_1_1_player_a7fb849bfe1c9df24fcc166b16c48f4de}
+
+
+Lets the player leave the team. 
+
+This function lets the player leave the team. 
+\begin{DoxyParams}{Parameters}
+\item[{\em quiet}]If True, don't print info log messages \end{DoxyParams}
+\begin{DoxyNote}{Note}
+This also calls Team.removePlayer (removes the player from the team) 
+
+This triggers the event \char`\"{}Player left team\char`\"{}. 
+\end{DoxyNote}
+
+
+Definition at line 224 of file Player.py.
+
+\hypertarget{class_player_1_1_player_a191891bb93599c4edc1bae029966d6cd}{
+\index{Player::Player@{Player::Player}!login@{login}}
+\index{login@{login}!Player::Player@{Player::Player}}
+\subsubsection[{login}]{\setlength{\rightskip}{0pt plus 5cm}def Player.Player.login (
+\begin{DoxyParamCaption}
+\item[{}]{ self, }
+\item[{}]{ global\_\-id}
+\end{DoxyParamCaption}
+)}}
+\label{class_player_1_1_player_a191891bb93599c4edc1bae029966d6cd}
+
+
+\hyperlink{class_player_1_1_player}{Player} logged in. 
+
+Sets logged\_\-in to True and ladder\_\-name to the login 
+\begin{DoxyParams}{Parameters}
+\item[{\em global\_\-id}]The login \end{DoxyParams}
+\begin{DoxyNote}{Note}
+This triggers the event \char`\"{}Player logged in\char`\"{} 
+\end{DoxyNote}
+
+
+Definition at line 328 of file Player.py.
+
+\hypertarget{class_player_1_1_player_a1f91a0f380efed515111952b96f6a90e}{
+\index{Player::Player@{Player::Player}!logout@{logout}}
+\index{logout@{logout}!Player::Player@{Player::Player}}
+\subsubsection[{logout}]{\setlength{\rightskip}{0pt plus 5cm}def Player.Player.logout (
+\begin{DoxyParamCaption}
+\item[{}]{ self, }
+\item[{}]{ ladder\_\-name}
+\end{DoxyParamCaption}
+)}}
+\label{class_player_1_1_player_a1f91a0f380efed515111952b96f6a90e}
+
+
+\hyperlink{class_player_1_1_player}{Player} logged out. 
+
+Sets logged in to False and ladder\_\-name to the given ladder\_\-name 
+\begin{DoxyParams}{Parameters}
+\item[{\em ladder\_\-name}]The ladder name to use for the player \end{DoxyParams}
+\begin{DoxyNote}{Note}
+This triggers the event \char`\"{}Player logged out\char`\"{} 
+\end{DoxyNote}
+
+
+Definition at line 337 of file Player.py.
+
+\hypertarget{class_player_1_1_player_ad32410beb56cd2b6d3ab69568a5a3f7d}{
+\index{Player::Player@{Player::Player}!respawn@{respawn}}
+\index{respawn@{respawn}!Player::Player@{Player::Player}}
+\subsubsection[{respawn}]{\setlength{\rightskip}{0pt plus 5cm}def Player.Player.respawn (
+\begin{DoxyParamCaption}
+\item[{}]{ self, }
+\item[{}]{ x, }
+\item[{}]{ y, }
+\item[{}]{ xdir, }
+\item[{}]{ ydir, }
+\item[{}]{ force}
+\end{DoxyParamCaption}
+)}}
+\label{class_player_1_1_player_ad32410beb56cd2b6d3ab69568a5a3f7d}
+
+
+Respawns the player. 
+
+This function respawns the player at the given position. 
+\begin{DoxyParams}{Parameters}
+\item[{\em x}]The x-\/coordinate of the position where to respawn \item[{\em y}]The y-\/coordinate of the position where to respawn \item[{\em xdir}]The x direction \item[{\em ydir}]The y direction \item[{\em force}]Force position changing(teleporting) ? \end{DoxyParams}
+\begin{DoxyNote}{Note}
+This sets Player's lives to 1 if they are less or equal 0 
+
+This triggers the event \char`\"{}Player respawned\char`\"{} 
+\end{DoxyNote}
+
+
+Definition at line 292 of file Player.py.
+
+\hypertarget{class_player_1_1_player_add4b61d7f63f7361bdaa2e797cc00567}{
+\index{Player::Player@{Player::Player}!setLadderName@{setLadderName}}
+\index{setLadderName@{setLadderName}!Player::Player@{Player::Player}}
+\subsubsection[{setLadderName}]{\setlength{\rightskip}{0pt plus 5cm}def Player.Player.setLadderName (
+\begin{DoxyParamCaption}
+\item[{}]{ self, }
+\item[{}]{ name}
+\end{DoxyParamCaption}
+)}}
+\label{class_player_1_1_player_add4b61d7f63f7361bdaa2e797cc00567}
+
+
+Sets the ladder name. 
+
+This function sets the ladder name. 
+\begin{DoxyParams}{Parameters}
+\item[{\em name}]The new ladder name \end{DoxyParams}
+\begin{DoxyNote}{Note}
+This triggers the event \char`\"{}Player renamed\char`\"{} 
+\end{DoxyNote}
+
+
+Definition at line 278 of file Player.py.
+
+\hypertarget{class_player_1_1_player_af3a510565e600d099419503da9a40f8a}{
+\index{Player::Player@{Player::Player}!setLives@{setLives}}
+\index{setLives@{setLives}!Player::Player@{Player::Player}}
+\subsubsection[{setLives}]{\setlength{\rightskip}{0pt plus 5cm}def Player.Player.setLives (
+\begin{DoxyParamCaption}
+\item[{}]{ self, }
+\item[{}]{ lives}
+\end{DoxyParamCaption}
+)}}
+\label{class_player_1_1_player_af3a510565e600d099419503da9a40f8a}
+
+
+Set player's lives. 
+
+This sets the player's lives to the given number. A value less or equal 0 means the player is death. 
+\begin{DoxyParams}{Parameters}
+\item[{\em lives}]The lives \end{DoxyParams}
+\begin{DoxyNote}{Note}
+If the number of lives is less than 0, 0 is used for lives. 
+
+Setting the lives to 0 does NOT immenediately kill the player. For that, use Player.kill. 
+\end{DoxyNote}
+
+
+Definition at line 243 of file Player.py.
+
+
+
+\subsection{Member Data Documentation}
+\hypertarget{class_player_1_1_player_ab4e7b3e5188ae4bd044ffaa563098973}{
+\index{Player::Player@{Player::Player}!\_\-\_\-ladder\_\-name@{\_\-\_\-ladder\_\-name}}
+\index{\_\-\_\-ladder\_\-name@{\_\-\_\-ladder\_\-name}!Player::Player@{Player::Player}}
+\subsubsection[{\_\-\_\-ladder\_\-name}]{\setlength{\rightskip}{0pt plus 5cm}{\bf Player.Player::\_\-\_\-ladder\_\-name}\hspace{0.3cm}{\ttfamily  \mbox{[}private\mbox{]}}}}
+\label{class_player_1_1_player_ab4e7b3e5188ae4bd044ffaa563098973}
+
+
+The name of the player on the ladder. 
+
+This variable is set to the escaped name or login of the player. It's used to indentify the player. 
+
+Definition at line 164 of file Player.py.
+
+\hypertarget{class_player_1_1_player_ade041c5e2ed4966a35e6d548746ee6da}{
+\index{Player::Player@{Player::Player}!\_\-\_\-lives@{\_\-\_\-lives}}
+\index{\_\-\_\-lives@{\_\-\_\-lives}!Player::Player@{Player::Player}}
+\subsubsection[{\_\-\_\-lives}]{\setlength{\rightskip}{0pt plus 5cm}{\bf Player.Player::\_\-\_\-lives}\hspace{0.3cm}{\ttfamily  \mbox{[}private\mbox{]}}}}
+\label{class_player_1_1_player_ade041c5e2ed4966a35e6d548746ee6da}
+
+
+Remaining lives. 
+
+The remaining lives of the player. 0 if the player is death. 
+
+Definition at line 167 of file Player.py.
+
+\hypertarget{class_player_1_1_player_a040c3c6e90a7655064aa65adbb4387b6}{
+\index{Player::Player@{Player::Player}!\_\-\_\-logged\_\-in@{\_\-\_\-logged\_\-in}}
+\index{\_\-\_\-logged\_\-in@{\_\-\_\-logged\_\-in}!Player::Player@{Player::Player}}
+\subsubsection[{\_\-\_\-logged\_\-in}]{\setlength{\rightskip}{0pt plus 5cm}{\bf Player.Player::\_\-\_\-logged\_\-in}\hspace{0.3cm}{\ttfamily  \mbox{[}private\mbox{]}}}}
+\label{class_player_1_1_player_a040c3c6e90a7655064aa65adbb4387b6}
+
+
+If the player is logged in? 
+
+True if the player is logged in, False if not. 
+
+Definition at line 170 of file Player.py.
+
+\hypertarget{class_player_1_1_player_a11f44d16220129d7efca52828dc13d4f}{
+\index{Player::Player@{Player::Player}!\_\-\_\-old\_\-ladder\_\-name@{\_\-\_\-old\_\-ladder\_\-name}}
+\index{\_\-\_\-old\_\-ladder\_\-name@{\_\-\_\-old\_\-ladder\_\-name}!Player::Player@{Player::Player}}
+\subsubsection[{\_\-\_\-old\_\-ladder\_\-name}]{\setlength{\rightskip}{0pt plus 5cm}{\bf Player.Player::\_\-\_\-old\_\-ladder\_\-name}\hspace{0.3cm}{\ttfamily  \mbox{[}private\mbox{]}}}}
+\label{class_player_1_1_player_a11f44d16220129d7efca52828dc13d4f}
+
+
+The old ladder name. 
+
+This variable is set to the in game ladder name. 
+
+Definition at line 169 of file Player.py.
+
+\hypertarget{class_player_1_1_player_a43d105f816af7ba2c6dbe816ffaf4eba}{
+\index{Player::Player@{Player::Player}!\_\-\_\-old\_\-name@{\_\-\_\-old\_\-name}}
+\index{\_\-\_\-old\_\-name@{\_\-\_\-old\_\-name}!Player::Player@{Player::Player}}
+\subsubsection[{\_\-\_\-old\_\-name}]{\setlength{\rightskip}{0pt plus 5cm}{\bf Player.Player::\_\-\_\-old\_\-name}\hspace{0.3cm}{\ttfamily  \mbox{[}private\mbox{]}}}}
+\label{class_player_1_1_player_a43d105f816af7ba2c6dbe816ffaf4eba}
+
+
+The old name. 
+
+This variable is set to the currently in the game used name. 
+
+Definition at line 172 of file Player.py.
+
+\hypertarget{class_player_1_1_player_ae01a2cfd1449c211cc6b6ca6d6fce853}{
+\index{Player::Player@{Player::Player}!\_\-\_\-team@{\_\-\_\-team}}
+\index{\_\-\_\-team@{\_\-\_\-team}!Player::Player@{Player::Player}}
+\subsubsection[{\_\-\_\-team}]{\setlength{\rightskip}{0pt plus 5cm}{\bf Player.Player::\_\-\_\-team}\hspace{0.3cm}{\ttfamily  \mbox{[}private\mbox{]}}}}
+\label{class_player_1_1_player_ae01a2cfd1449c211cc6b6ca6d6fce853}
+
+
+The name of the team in which the player is in. 
+
+The name of the player's team. None if the player is spectating, or AI if the player is in the AI team. 
+
+Definition at line 168 of file Player.py.
+
+\hypertarget{class_player_1_1_player_a323d688193f511184787b2e598222e74}{
+\index{Player::Player@{Player::Player}!color@{color}}
+\index{color@{color}!Player::Player@{Player::Player}}
+\subsubsection[{color}]{\setlength{\rightskip}{0pt plus 5cm}{\bf Player.Player::color}}}
+\label{class_player_1_1_player_a323d688193f511184787b2e598222e74}
+
+
+The color of the player. 
+
+A tuple of the color of the player(r, g, b). Each value is between 0 and 15 
+
+Definition at line 173 of file Player.py.
+
+\hypertarget{class_player_1_1_player_a1a50d6ee0682ff86b83ea314dfa58ce6}{
+\index{Player::Player@{Player::Player}!data@{data}}
+\index{data@{data}!Player::Player@{Player::Player}}
+\subsubsection[{data}]{\setlength{\rightskip}{0pt plus 5cm}{\bf Player.Player::data}}}
+\label{class_player_1_1_player_a1a50d6ee0682ff86b83ea314dfa58ce6}
+
+
+Store data assigned with the player. 
+
+Used to store additional data assigned with the player. 
+
+Definition at line 175 of file Player.py.
+
+\hypertarget{class_player_1_1_player_a48ed10bfc12677f9c41e2cae6daafa49}{
+\index{Player::Player@{Player::Player}!ip@{ip}}
+\index{ip@{ip}!Player::Player@{Player::Player}}
+\subsubsection[{ip}]{\setlength{\rightskip}{0pt plus 5cm}{\bf Player.Player::ip}}}
+\label{class_player_1_1_player_a48ed10bfc12677f9c41e2cae6daafa49}
+
+
+The player's ip. 
+
+The ip of the player. Used for votes. 
+
+Definition at line 166 of file Player.py.
+
+\hypertarget{class_player_1_1_player_a01b505c0fe5ff3d20d75327800b1552e}{
+\index{Player::Player@{Player::Player}!is\_\-human@{is\_\-human}}
+\index{is\_\-human@{is\_\-human}!Player::Player@{Player::Player}}
+\subsubsection[{is\_\-human}]{\setlength{\rightskip}{0pt plus 5cm}{\bf Player.Player::is\_\-human}}}
+\label{class_player_1_1_player_a01b505c0fe5ff3d20d75327800b1552e}
+
+
+Is the player human? 
+
+True is yes, otherwise False. 
+
+Definition at line 174 of file Player.py.
+
+\hypertarget{class_player_1_1_player_a6cea7416f6b4ce563211f3194033f671}{
+\index{Player::Player@{Player::Player}!name@{name}}
+\index{name@{name}!Player::Player@{Player::Player}}
+\subsubsection[{name}]{\setlength{\rightskip}{0pt plus 5cm}{\bf Player.Player::name}}}
+\label{class_player_1_1_player_a6cea7416f6b4ce563211f3194033f671}
+
+
+The name of the player. 
+
+The full name of the player as it's used in the game 
+
+Definition at line 165 of file Player.py.
+
+\hypertarget{class_player_1_1_player_ab675ec89c8e17a56d85f0304f46465ea}{
+\index{Player::Player@{Player::Player}!ping@{ping}}
+\index{ping@{ping}!Player::Player@{Player::Player}}
+\subsubsection[{ping}]{\setlength{\rightskip}{0pt plus 5cm}{\bf Player.Player::ping}}}
+\label{class_player_1_1_player_ab675ec89c8e17a56d85f0304f46465ea}
+
+
+The ping of the player. 
+
+The current ping of the player. \begin{DoxyNote}{Note}
+Currently there's no use for the ping of the player, but it may be used in future. 
+\end{DoxyNote}
+
+
+Definition at line 171 of file Player.py.
+
+
+
+The documentation for this class was generated from the following file:\begin{DoxyCompactItemize}
+\item 
+\hyperlink{_player_8py}{Player.py}\end{DoxyCompactItemize}

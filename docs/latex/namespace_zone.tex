@@ -1,0 +1,108 @@
+\hypertarget{namespace_zone}{
+\section{Package Zone}
+\label{namespace_zone}\index{Zone@{Zone}}
+}
+
+
+Functions and classes for zone management.  
+
+
+\subsection*{Classes}
+\begin{DoxyCompactItemize}
+\item 
+class \hyperlink{class_zone_1_1_zone}{Zone}
+\begin{DoxyCompactList}\small\item\em A zone. \item\end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+def \hyperlink{namespace_zone_aaa40a627f781a072131be03ac8e08328}{enableLogging}
+\begin{DoxyCompactList}\small\item\em Enables logging. \item\end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Variables}
+\begin{DoxyCompactItemize}
+\item 
+tuple \hyperlink{namespace_zone_aad90704d2c88929bd92b7acf2b9a09d6}{log} = logging.getLogger(\char`\"{}TeamModule\char`\"{})
+\begin{DoxyCompactList}\small\item\em The logging object. \item\end{DoxyCompactList}\item 
+list \hyperlink{namespace_zone_a66957733c79b90d78a2f4760d501bba6}{\_\-\_\-ZONE\_\-TYPES}
+\begin{DoxyCompactList}\small\item\em All avaliable zone types. \item\end{DoxyCompactList}\item 
+tuple \hyperlink{namespace_zone_a2cf3edd088ca6482872ba018b81ef52a}{events} = \hyperlink{class_event_1_1_event_group}{Event.EventGroup}(\char`\"{}ZoneEvents\char`\"{})
+\begin{DoxyCompactList}\small\item\em Eventgroup of this module. \item\end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+Functions and classes for zone management. This file contains functions and classes that are used for zone management. 
+
+\subsection{Function Documentation}
+\hypertarget{namespace_zone_aaa40a627f781a072131be03ac8e08328}{
+\index{Zone@{Zone}!enableLogging@{enableLogging}}
+\index{enableLogging@{enableLogging}!Zone@{Zone}}
+\subsubsection[{enableLogging}]{\setlength{\rightskip}{0pt plus 5cm}def Zone.enableLogging (
+\begin{DoxyParamCaption}
+\item[{}]{ level = {\ttfamily logging.DEBUG}, }
+\item[{}]{ h = {\ttfamily None}, }
+\item[{}]{ f = {\ttfamily None}}
+\end{DoxyParamCaption}
+)}}
+\label{namespace_zone_aaa40a627f781a072131be03ac8e08328}
+
+
+Enables logging. 
+
+This function enables logging for this module. 
+\begin{DoxyParams}{Parameters}
+\item[{\em h}]The handler used for logging \item[{\em f}]The formatter used for logging \item[{\em level}]The logging level \end{DoxyParams}
+
+
+Definition at line 236 of file Zone.py.
+
+
+
+\subsection{Variable Documentation}
+\hypertarget{namespace_zone_a66957733c79b90d78a2f4760d501bba6}{
+\index{Zone@{Zone}!\_\-\_\-ZONE\_\-TYPES@{\_\-\_\-ZONE\_\-TYPES}}
+\index{\_\-\_\-ZONE\_\-TYPES@{\_\-\_\-ZONE\_\-TYPES}!Zone@{Zone}}
+\subsubsection[{\_\-\_\-ZONE\_\-TYPES}]{\setlength{\rightskip}{0pt plus 5cm}list {\bf Zone.\_\-\_\-ZONE\_\-TYPES}}}
+\label{namespace_zone_a66957733c79b90d78a2f4760d501bba6}
+{\bfseries Initial value:}
+\begin{DoxyCode}
+1 ["win", "death", "ball", "ballTeam", "blast", "deathTeam", "koh", 
+2               "fortress", "flag","rubber", "sumo", "target", "teleport", "zombie"
+      ,
+3               "zombieOwner"]
+\end{DoxyCode}
+
+
+All avaliable zone types. 
+
+List of all avaliable zone types used to determine if a zone type is valid. 
+
+Definition at line 21 of file Zone.py.
+
+\hypertarget{namespace_zone_a2cf3edd088ca6482872ba018b81ef52a}{
+\index{Zone@{Zone}!events@{events}}
+\index{events@{events}!Zone@{Zone}}
+\subsubsection[{events}]{\setlength{\rightskip}{0pt plus 5cm}tuple {\bf Zone.events} = {\bf Event.EventGroup}(\char`\"{}ZoneEvents\char`\"{})}}
+\label{namespace_zone_a2cf3edd088ca6482872ba018b81ef52a}
+
+
+Eventgroup of this module. 
+
+Events used by this module: \char`\"{}Zone spawned\char`\"{}: triggered when a zone is spawned. \char`\"{}Zone collapsed\char`\"{}: triggered when a zone collapsed. \char`\"{}Zone renamed\char`\"{}: triggered when the name of a zone changes 
+
+Definition at line 30 of file Zone.py.
+
+\hypertarget{namespace_zone_aad90704d2c88929bd92b7acf2b9a09d6}{
+\index{Zone@{Zone}!log@{log}}
+\index{log@{log}!Zone@{Zone}}
+\subsubsection[{log}]{\setlength{\rightskip}{0pt plus 5cm}tuple {\bf Zone.log} = logging.getLogger(\char`\"{}TeamModule\char`\"{})}}
+\label{namespace_zone_aad90704d2c88929bd92b7acf2b9a09d6}
+
+
+The logging object. 
+
+Used for logging by this module \begin{DoxyNote}{Note}
+To enable or disable logging of this module use \hyperlink{namespace_team_a391de1d02502546ec5d88de1632b3bc2}{Team.enableLogging} 
+\end{DoxyNote}
+
+
+Definition at line 16 of file Zone.py.
+

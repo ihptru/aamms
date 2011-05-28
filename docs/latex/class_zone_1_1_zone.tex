@@ -1,0 +1,462 @@
+\hypertarget{class_zone_1_1_zone}{
+\section{Zone.Zone Class Reference}
+\label{class_zone_1_1_zone}\index{Zone::Zone@{Zone::Zone}}
+}
+
+
+A zone.  
+
+
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+def \hyperlink{class_zone_1_1_zone_afe0e971765baa04ca770cbdc685efbb6}{\_\-\_\-init\_\-\_\-}
+\begin{DoxyCompactList}\small\item\em Init function (Constructor). \item\end{DoxyCompactList}\item 
+def \hyperlink{class_zone_1_1_zone_a6197bd3a82e33df84c7a24a2bd698516}{spawn}
+\begin{DoxyCompactList}\small\item\em Spawns the zone. \item\end{DoxyCompactList}\item 
+def \hyperlink{class_zone_1_1_zone_a82cd5417c0fd6dc0cb7d1b8a3399e174}{collapse}
+\begin{DoxyCompactList}\small\item\em Collapses the zone. \item\end{DoxyCompactList}\item 
+def \hyperlink{class_zone_1_1_zone_acbb02f4e05a741d0f0817f3f7a72b215}{name}
+\begin{DoxyCompactList}\small\item\em Gets the zone name. \item\end{DoxyCompactList}\item 
+def \hyperlink{class_zone_1_1_zone_a01a15c4548a4e2675890cec3b6172beb}{setName}
+\begin{DoxyCompactList}\small\item\em Sets the zone name. \item\end{DoxyCompactList}\item 
+def \hyperlink{class_zone_1_1_zone_af99fbbc555e6f93d62126c17ae9a8052}{isAlive}
+\begin{DoxyCompactList}\small\item\em Returns the alive state of the zone. \item\end{DoxyCompactList}\item 
+def \hyperlink{class_zone_1_1_zone_ae86cd40bd98448e74ed206e515a1f5da}{setType}
+\begin{DoxyCompactList}\small\item\em Sets the zone type. \item\end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\hyperlink{class_zone_1_1_zone_ae30b162378f40661dfcb854ec7926bdb}{position}
+\begin{DoxyCompactList}\small\item\em The position of the zone. \item\end{DoxyCompactList}\item 
+\hyperlink{class_zone_1_1_zone_a6ee5fd031ade8ecb6b2f41455ad309c4}{radius}
+\begin{DoxyCompactList}\small\item\em \hyperlink{class_zone_1_1_zone}{Zone} radius. \item\end{DoxyCompactList}\item 
+\hyperlink{class_zone_1_1_zone_a42d231813671766976464bbf2dfdf387}{growth}
+\begin{DoxyCompactList}\small\item\em The growth of the zone. \item\end{DoxyCompactList}\item 
+\hyperlink{class_zone_1_1_zone_a0e94d3602835417fef9d1345cf1e739c}{color}
+\begin{DoxyCompactList}\small\item\em The zone color. \item\end{DoxyCompactList}\item 
+\hyperlink{class_zone_1_1_zone_a574bf43b0f15767743c104faabbae973}{interactive}
+\begin{DoxyCompactList}\small\item\em Should the zone bounce at walls? \item\end{DoxyCompactList}\item 
+\hyperlink{class_zone_1_1_zone_a20a50ae6ea7f05c4bb403ef0306ba83f}{dir}
+\begin{DoxyCompactList}\small\item\em Direction in which the zone should move. \item\end{DoxyCompactList}\item 
+\hyperlink{class_zone_1_1_zone_a9962b673a138b53b1631158d18cf5279}{target\_\-size}
+\begin{DoxyCompactList}\small\item\em max or min size of the zone \item\end{DoxyCompactList}\item 
+\hyperlink{class_zone_1_1_zone_a0f3f8429ae8a37672f700da3f2805a91}{teamnames}
+\begin{DoxyCompactList}\small\item\em The team name(s) of the team(s) to pass to the zone before x and y. \item\end{DoxyCompactList}\item 
+\hyperlink{class_zone_1_1_zone_a45db96faa826bf1e485c70da9c07d83e}{killteam}
+\begin{DoxyCompactList}\small\item\em Kill the team when the zone collapses? \item\end{DoxyCompactList}\item 
+\hyperlink{class_zone_1_1_zone_a57b65c53ff747cf9504c88ff37d7b9ee}{settings}
+\begin{DoxyCompactList}\small\item\em \hyperlink{class_zone_1_1_zone}{Zone} type specific settings. \item\end{DoxyCompactList}\item 
+\hyperlink{class_zone_1_1_zone_a2b9ae272876347626e25ead4d48f9a97}{teleport\_\-settings}
+\begin{DoxyCompactList}\small\item\em Extra settings for teleport zones. \item\end{DoxyCompactList}\item 
+\hyperlink{class_zone_1_1_zone_ad03356df7f4de16fb473ba7bd8fbe2c8}{name}
+\begin{DoxyCompactList}\small\item\em The zone name. \item\end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Private Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\hyperlink{class_zone_1_1_zone_a72ab1886c15120f42281d35955ab21b5}{\_\-\_\-name}
+\begin{DoxyCompactList}\small\item\em Used to store the name. \item\end{DoxyCompactList}\item 
+\hyperlink{class_zone_1_1_zone_a1c4e31d1327ad4d7a2c31a2b7fcde5e7}{\_\-\_\-alive}
+\begin{DoxyCompactList}\small\item\em Is the zone still alive? \item\end{DoxyCompactList}\item 
+\hyperlink{class_zone_1_1_zone_a5164f57edacb2b3a7b3dfca3ba949139}{\_\-\_\-type}
+\begin{DoxyCompactList}\small\item\em The type of the zone. \item\end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Static Private Attributes}
+\begin{DoxyCompactItemize}
+\item 
+tuple \hyperlink{class_zone_1_1_zone_ad5bde96ea6dea6f68ee68d33a6c90850}{\_\-\_\-slots\_\-\_\-}
+\begin{DoxyCompactList}\small\item\em slots \item\end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+A zone. This class represents a zone. Zones can be spawned, collapsed, have a name, ... 
+
+Definition at line 38 of file Zone.py.
+
+
+
+\subsection{Member Function Documentation}
+\hypertarget{class_zone_1_1_zone_afe0e971765baa04ca770cbdc685efbb6}{
+\index{Zone::Zone@{Zone::Zone}!\_\-\_\-init\_\-\_\-@{\_\-\_\-init\_\-\_\-}}
+\index{\_\-\_\-init\_\-\_\-@{\_\-\_\-init\_\-\_\-}!Zone::Zone@{Zone::Zone}}
+\subsubsection[{\_\-\_\-init\_\-\_\-}]{\setlength{\rightskip}{0pt plus 5cm}def Zone.Zone.\_\-\_\-init\_\-\_\- (
+\begin{DoxyParamCaption}
+\item[{}]{ self, }
+\item[{}]{ name, }
+\item[{}]{ position = {\ttfamily (0,0}, }
+\item[{}]{ radius = {\ttfamily 5}, }
+\item[{}]{ growth = {\ttfamily 0}, }
+\item[{}]{ direction = {\ttfamily (0,0}, }
+\item[{}]{ interactive = {\ttfamily False}, }
+\item[{}]{ color = {\ttfamily (0,0}, }
+\item[{}]{ target\_\-size = {\ttfamily -\/1}}
+\end{DoxyParamCaption}
+)}}
+\label{class_zone_1_1_zone_afe0e971765baa04ca770cbdc685efbb6}
+
+
+Init function (Constructor). 
+
+Inits a new \hyperlink{class_zone_1_1_zone}{Zone} and adds properties. 
+\begin{DoxyParams}{Parameters}
+\item[{\em name}]The name of the zone \item[{\em position}]Tuple of the x and y coordinate of the position of the zone. \item[{\em radius}]\hyperlink{class_zone_1_1_zone}{Zone} size (radius) \item[{\em growth}]The growth of the zone.  \item[{\em direction}]Direction in which the zone should move.  \item[{\em interactive}]Should the zone bounce at walls?  \item[{\em color}]Tuple of the r,g,b values of the color used for the zone, \item[{\em target\_\-size}]max or min size of the zone  \end{DoxyParams}
+
+
+Definition at line 122 of file Zone.py.
+
+\hypertarget{class_zone_1_1_zone_a82cd5417c0fd6dc0cb7d1b8a3399e174}{
+\index{Zone::Zone@{Zone::Zone}!collapse@{collapse}}
+\index{collapse@{collapse}!Zone::Zone@{Zone::Zone}}
+\subsubsection[{collapse}]{\setlength{\rightskip}{0pt plus 5cm}def Zone.Zone.collapse (
+\begin{DoxyParamCaption}
+\item[{}]{ self}
+\end{DoxyParamCaption}
+)}}
+\label{class_zone_1_1_zone_a82cd5417c0fd6dc0cb7d1b8a3399e174}
+
+
+Collapses the zone. 
+
+Collapses the zone and sets alive to false \begin{DoxyWarning}{Warning}
+If the zone name is None, all zones with no name are collapsed. 
+\end{DoxyWarning}
+\begin{DoxyNote}{Note}
+This triggers the event \char`\"{}Zone collapsed\char`\"{} 
+\end{DoxyNote}
+
+
+Definition at line 183 of file Zone.py.
+
+\hypertarget{class_zone_1_1_zone_af99fbbc555e6f93d62126c17ae9a8052}{
+\index{Zone::Zone@{Zone::Zone}!isAlive@{isAlive}}
+\index{isAlive@{isAlive}!Zone::Zone@{Zone::Zone}}
+\subsubsection[{isAlive}]{\setlength{\rightskip}{0pt plus 5cm}def Zone.Zone.isAlive (
+\begin{DoxyParamCaption}
+\item[{}]{ self}
+\end{DoxyParamCaption}
+)}}
+\label{class_zone_1_1_zone_af99fbbc555e6f93d62126c17ae9a8052}
+
+
+Returns the alive state of the zone. 
+
+\begin{DoxyReturn}{Returns}
+True if the zone is alive, False otherwise. 
+\end{DoxyReturn}
+
+
+Definition at line 218 of file Zone.py.
+
+\hypertarget{class_zone_1_1_zone_acbb02f4e05a741d0f0817f3f7a72b215}{
+\index{Zone::Zone@{Zone::Zone}!name@{name}}
+\index{name@{name}!Zone::Zone@{Zone::Zone}}
+\subsubsection[{name}]{\setlength{\rightskip}{0pt plus 5cm}def {\bf Zone.Zone.name} (
+\begin{DoxyParamCaption}
+\item[{}]{ self}
+\end{DoxyParamCaption}
+)}}
+\label{class_zone_1_1_zone_acbb02f4e05a741d0f0817f3f7a72b215}
+
+
+Gets the zone name. 
+
+\begin{DoxyReturn}{Returns}
+The zone name or None if the zone is unnamed. 
+\end{DoxyReturn}
+
+
+Definition at line 205 of file Zone.py.
+
+\hypertarget{class_zone_1_1_zone_a01a15c4548a4e2675890cec3b6172beb}{
+\index{Zone::Zone@{Zone::Zone}!setName@{setName}}
+\index{setName@{setName}!Zone::Zone@{Zone::Zone}}
+\subsubsection[{setName}]{\setlength{\rightskip}{0pt plus 5cm}def Zone.Zone.setName (
+\begin{DoxyParamCaption}
+\item[{}]{ self, }
+\item[{}]{ name}
+\end{DoxyParamCaption}
+)}}
+\label{class_zone_1_1_zone_a01a15c4548a4e2675890cec3b6172beb}
+
+
+Sets the zone name. 
+
+
+\begin{DoxyParams}{Parameters}
+\item[{\em name}]The new name of the zone or None if the zone should be unnamed. \end{DoxyParams}
+\begin{DoxyNote}{Note}
+This triggers the event \char`\"{}Zone renamed\char`\"{} 
+\end{DoxyNote}
+
+
+Definition at line 212 of file Zone.py.
+
+\hypertarget{class_zone_1_1_zone_ae86cd40bd98448e74ed206e515a1f5da}{
+\index{Zone::Zone@{Zone::Zone}!setType@{setType}}
+\index{setType@{setType}!Zone::Zone@{Zone::Zone}}
+\subsubsection[{setType}]{\setlength{\rightskip}{0pt plus 5cm}def Zone.Zone.setType (
+\begin{DoxyParamCaption}
+\item[{}]{ self, }
+\item[{}]{ type}
+\end{DoxyParamCaption}
+)}}
+\label{class_zone_1_1_zone_ae86cd40bd98448e74ed206e515a1f5da}
+
+
+Sets the zone type. 
+
+For more information about zone types go to \href{http://crazy-tronners.com/wiki/index.php/Settings#type}{\tt http://crazy-\/tronners.com/wiki/index.php/Settings\#type} 
+\begin{DoxyParams}{Parameters}
+\item[{\em type}]The name of the zone type. \end{DoxyParams}
+
+\begin{DoxyExceptions}{Exceptions}
+\item[{\em ValueError}]Raised if the zone type doesn't exist. \end{DoxyExceptions}
+
+
+Definition at line 226 of file Zone.py.
+
+\hypertarget{class_zone_1_1_zone_a6197bd3a82e33df84c7a24a2bd698516}{
+\index{Zone::Zone@{Zone::Zone}!spawn@{spawn}}
+\index{spawn@{spawn}!Zone::Zone@{Zone::Zone}}
+\subsubsection[{spawn}]{\setlength{\rightskip}{0pt plus 5cm}def Zone.Zone.spawn (
+\begin{DoxyParamCaption}
+\item[{}]{ self}
+\end{DoxyParamCaption}
+)}}
+\label{class_zone_1_1_zone_a6197bd3a82e33df84c7a24a2bd698516}
+
+
+Spawns the zone. 
+
+Spawns the zone and sets alive to True \begin{DoxyNote}{Note}
+This triggers the event \char`\"{}Zone spawned\char`\"{} 
+\end{DoxyNote}
+
+
+Definition at line 142 of file Zone.py.
+
+
+
+\subsection{Member Data Documentation}
+\hypertarget{class_zone_1_1_zone_a1c4e31d1327ad4d7a2c31a2b7fcde5e7}{
+\index{Zone::Zone@{Zone::Zone}!\_\-\_\-alive@{\_\-\_\-alive}}
+\index{\_\-\_\-alive@{\_\-\_\-alive}!Zone::Zone@{Zone::Zone}}
+\subsubsection[{\_\-\_\-alive}]{\setlength{\rightskip}{0pt plus 5cm}{\bf Zone.Zone::\_\-\_\-alive}\hspace{0.3cm}{\ttfamily  \mbox{[}private\mbox{]}}}}
+\label{class_zone_1_1_zone_a1c4e31d1327ad4d7a2c31a2b7fcde5e7}
+
+
+Is the zone still alive? 
+
+True if yes, False if no. 
+
+Definition at line 127 of file Zone.py.
+
+\hypertarget{class_zone_1_1_zone_a72ab1886c15120f42281d35955ab21b5}{
+\index{Zone::Zone@{Zone::Zone}!\_\-\_\-name@{\_\-\_\-name}}
+\index{\_\-\_\-name@{\_\-\_\-name}!Zone::Zone@{Zone::Zone}}
+\subsubsection[{\_\-\_\-name}]{\setlength{\rightskip}{0pt plus 5cm}{\bf Zone.Zone::\_\-\_\-name}\hspace{0.3cm}{\ttfamily  \mbox{[}private\mbox{]}}}}
+\label{class_zone_1_1_zone_a72ab1886c15120f42281d35955ab21b5}
+
+
+Used to store the name. 
+
+Internal variable for the name. 
+
+Definition at line 123 of file Zone.py.
+
+\hypertarget{class_zone_1_1_zone_ad5bde96ea6dea6f68ee68d33a6c90850}{
+\index{Zone::Zone@{Zone::Zone}!\_\-\_\-slots\_\-\_\-@{\_\-\_\-slots\_\-\_\-}}
+\index{\_\-\_\-slots\_\-\_\-@{\_\-\_\-slots\_\-\_\-}!Zone::Zone@{Zone::Zone}}
+\subsubsection[{\_\-\_\-slots\_\-\_\-}]{\setlength{\rightskip}{0pt plus 5cm}tuple {\bf Zone.Zone.\_\-\_\-slots\_\-\_\-}\hspace{0.3cm}{\ttfamily  \mbox{[}static, private\mbox{]}}}}
+\label{class_zone_1_1_zone_ad5bde96ea6dea6f68ee68d33a6c90850}
+{\bfseries Initial value:}
+\begin{DoxyCode}
+("name","__name","color", "position", "radius","__alive", "growth","interactive",
+       
+                  "teamnames", "settings", "killteam", "target_size", "teleport_s
+      ettings","dir","__type")
+\end{DoxyCode}
+
+
+slots 
+
+
+
+Definition at line 109 of file Zone.py.
+
+\hypertarget{class_zone_1_1_zone_a5164f57edacb2b3a7b3dfca3ba949139}{
+\index{Zone::Zone@{Zone::Zone}!\_\-\_\-type@{\_\-\_\-type}}
+\index{\_\-\_\-type@{\_\-\_\-type}!Zone::Zone@{Zone::Zone}}
+\subsubsection[{\_\-\_\-type}]{\setlength{\rightskip}{0pt plus 5cm}{\bf Zone.Zone::\_\-\_\-type}\hspace{0.3cm}{\ttfamily  \mbox{[}private\mbox{]}}}}
+\label{class_zone_1_1_zone_a5164f57edacb2b3a7b3dfca3ba949139}
+
+
+The type of the zone. 
+
+Could be: win, death, ball, ballTeam, blast, deathTeam, koh, fortress, flag, rubber, sumo, target, teleport, zombie, zombieOwner 
+
+Definition at line 136 of file Zone.py.
+
+\hypertarget{class_zone_1_1_zone_a0e94d3602835417fef9d1345cf1e739c}{
+\index{Zone::Zone@{Zone::Zone}!color@{color}}
+\index{color@{color}!Zone::Zone@{Zone::Zone}}
+\subsubsection[{color}]{\setlength{\rightskip}{0pt plus 5cm}{\bf Zone.Zone::color}}}
+\label{class_zone_1_1_zone_a0e94d3602835417fef9d1345cf1e739c}
+
+
+The zone color. 
+
+The color of the zone is the tuple of r,g,b. The maximal values for each r, g or b are 1. 
+
+Definition at line 128 of file Zone.py.
+
+\hypertarget{class_zone_1_1_zone_a20a50ae6ea7f05c4bb403ef0306ba83f}{
+\index{Zone::Zone@{Zone::Zone}!dir@{dir}}
+\index{dir@{dir}!Zone::Zone@{Zone::Zone}}
+\subsubsection[{dir}]{\setlength{\rightskip}{0pt plus 5cm}{\bf Zone.Zone::dir}}}
+\label{class_zone_1_1_zone_a20a50ae6ea7f05c4bb403ef0306ba83f}
+
+
+Direction in which the zone should move. 
+
+Tuple of xdir and ydir. 0,0 if the zone shouldn't move. 
+
+Definition at line 130 of file Zone.py.
+
+\hypertarget{class_zone_1_1_zone_a42d231813671766976464bbf2dfdf387}{
+\index{Zone::Zone@{Zone::Zone}!growth@{growth}}
+\index{growth@{growth}!Zone::Zone@{Zone::Zone}}
+\subsubsection[{growth}]{\setlength{\rightskip}{0pt plus 5cm}{\bf Zone.Zone::growth}}}
+\label{class_zone_1_1_zone_a42d231813671766976464bbf2dfdf387}
+
+
+The growth of the zone. 
+
+How much should the zone grow? 
+
+Definition at line 126 of file Zone.py.
+
+\hypertarget{class_zone_1_1_zone_a574bf43b0f15767743c104faabbae973}{
+\index{Zone::Zone@{Zone::Zone}!interactive@{interactive}}
+\index{interactive@{interactive}!Zone::Zone@{Zone::Zone}}
+\subsubsection[{interactive}]{\setlength{\rightskip}{0pt plus 5cm}{\bf Zone.Zone::interactive}}}
+\label{class_zone_1_1_zone_a574bf43b0f15767743c104faabbae973}
+
+
+Should the zone bounce at walls? 
+
+True if yes, False if no. 
+
+Definition at line 129 of file Zone.py.
+
+\hypertarget{class_zone_1_1_zone_a45db96faa826bf1e485c70da9c07d83e}{
+\index{Zone::Zone@{Zone::Zone}!killteam@{killteam}}
+\index{killteam@{killteam}!Zone::Zone@{Zone::Zone}}
+\subsubsection[{killteam}]{\setlength{\rightskip}{0pt plus 5cm}{\bf Zone.Zone::killteam}}}
+\label{class_zone_1_1_zone_a45db96faa826bf1e485c70da9c07d83e}
+
+
+Kill the team when the zone collapses? 
+
+True if yes, False otherwise. 
+
+Definition at line 133 of file Zone.py.
+
+\hypertarget{class_zone_1_1_zone_ad03356df7f4de16fb473ba7bd8fbe2c8}{
+\index{Zone::Zone@{Zone::Zone}!name@{name}}
+\index{name@{name}!Zone::Zone@{Zone::Zone}}
+\subsubsection[{name}]{\setlength{\rightskip}{0pt plus 5cm}{\bf Zone.Zone::name}}}
+\label{class_zone_1_1_zone_ad03356df7f4de16fb473ba7bd8fbe2c8}
+
+
+The zone name. 
+
+The name of the zone or None if the zone is unnamed. \begin{DoxyNote}{Note}
+Changing this triggers the event \char`\"{}Zone renamed\char`\"{} 
+\end{DoxyNote}
+
+
+Definition at line 213 of file Zone.py.
+
+\hypertarget{class_zone_1_1_zone_ae30b162378f40661dfcb854ec7926bdb}{
+\index{Zone::Zone@{Zone::Zone}!position@{position}}
+\index{position@{position}!Zone::Zone@{Zone::Zone}}
+\subsubsection[{position}]{\setlength{\rightskip}{0pt plus 5cm}{\bf Zone.Zone::position}}}
+\label{class_zone_1_1_zone_ae30b162378f40661dfcb854ec7926bdb}
+
+
+The position of the zone. 
+
+Tuple of x,y 
+
+Definition at line 124 of file Zone.py.
+
+\hypertarget{class_zone_1_1_zone_a6ee5fd031ade8ecb6b2f41455ad309c4}{
+\index{Zone::Zone@{Zone::Zone}!radius@{radius}}
+\index{radius@{radius}!Zone::Zone@{Zone::Zone}}
+\subsubsection[{radius}]{\setlength{\rightskip}{0pt plus 5cm}{\bf Zone.Zone::radius}}}
+\label{class_zone_1_1_zone_a6ee5fd031ade8ecb6b2f41455ad309c4}
+
+
+\hyperlink{class_zone_1_1_zone}{Zone} radius. 
+
+The radius of the zone. 
+
+Definition at line 125 of file Zone.py.
+
+\hypertarget{class_zone_1_1_zone_a57b65c53ff747cf9504c88ff37d7b9ee}{
+\index{Zone::Zone@{Zone::Zone}!settings@{settings}}
+\index{settings@{settings}!Zone::Zone@{Zone::Zone}}
+\subsubsection[{settings}]{\setlength{\rightskip}{0pt plus 5cm}{\bf Zone.Zone::settings}}}
+\label{class_zone_1_1_zone_a57b65c53ff747cf9504c88ff37d7b9ee}
+
+
+\hyperlink{class_zone_1_1_zone}{Zone} type specific settings. 
+
+List of settings. 
+
+Definition at line 134 of file Zone.py.
+
+\hypertarget{class_zone_1_1_zone_a9962b673a138b53b1631158d18cf5279}{
+\index{Zone::Zone@{Zone::Zone}!target\_\-size@{target\_\-size}}
+\index{target\_\-size@{target\_\-size}!Zone::Zone@{Zone::Zone}}
+\subsubsection[{target\_\-size}]{\setlength{\rightskip}{0pt plus 5cm}{\bf Zone.Zone::target\_\-size}}}
+\label{class_zone_1_1_zone_a9962b673a138b53b1631158d18cf5279}
+
+
+max or min size of the zone 
+
+Max or min radius of the zone, depends on the zone shrinks or expands. 
+
+Definition at line 131 of file Zone.py.
+
+\hypertarget{class_zone_1_1_zone_a0f3f8429ae8a37672f700da3f2805a91}{
+\index{Zone::Zone@{Zone::Zone}!teamnames@{teamnames}}
+\index{teamnames@{teamnames}!Zone::Zone@{Zone::Zone}}
+\subsubsection[{teamnames}]{\setlength{\rightskip}{0pt plus 5cm}{\bf Zone.Zone::teamnames}}}
+\label{class_zone_1_1_zone_a0f3f8429ae8a37672f700da3f2805a91}
+
+
+The team name(s) of the team(s) to pass to the zone before x and y. 
+
+The escaped name of the teams or None when no teams should be passed. 
+
+Definition at line 132 of file Zone.py.
+
+\hypertarget{class_zone_1_1_zone_a2b9ae272876347626e25ead4d48f9a97}{
+\index{Zone::Zone@{Zone::Zone}!teleport\_\-settings@{teleport\_\-settings}}
+\index{teleport\_\-settings@{teleport\_\-settings}!Zone::Zone@{Zone::Zone}}
+\subsubsection[{teleport\_\-settings}]{\setlength{\rightskip}{0pt plus 5cm}{\bf Zone.Zone::teleport\_\-settings}}}
+\label{class_zone_1_1_zone_a2b9ae272876347626e25ead4d48f9a97}
+
+
+Extra settings for teleport zones. 
+
+This setting is needed because the different types of zones has different settings. The extra settings are allways at the end, except for teleport zones. This settings are passed to SPAWN\_\-ZONE at this position, but only if the zone is a teleport zone. 
+
+Definition at line 135 of file Zone.py.
+
+
+
+The documentation for this class was generated from the following file:\begin{DoxyCompactItemize}
+\item 
+\hyperlink{_zone_8py}{Zone.py}\end{DoxyCompactItemize}

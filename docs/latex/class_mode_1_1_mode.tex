@@ -1,0 +1,492 @@
+\hypertarget{class_mode_1_1_mode}{
+\section{Mode.Mode Class Reference}
+\label{class_mode_1_1_mode}\index{Mode::Mode@{Mode::Mode}}
+}
+
+
+A mode.  
+
+
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+def \hyperlink{class_mode_1_1_mode_add2325e8a6bf4ff3aacb7c1dd3299e5a}{\_\-\_\-init\_\-\_\-}
+\begin{DoxyCompactList}\small\item\em Init function (Constructor). \item\end{DoxyCompactList}\item 
+def \hyperlink{class_mode_1_1_mode_a48c269456fe39631862a8be79627b0e5}{addRespoint}
+\begin{DoxyCompactList}\small\item\em Adds a respoint. \item\end{DoxyCompactList}\item 
+def \hyperlink{class_mode_1_1_mode_a098cfc6ad819a1db17be57c9548bd199}{deleteRespoints}
+\begin{DoxyCompactList}\small\item\em Deletes all respoints. \item\end{DoxyCompactList}\item 
+def \hyperlink{class_mode_1_1_mode_a982f3bf8cfcade38459c67bbf6a64409}{getRepoints}
+\begin{DoxyCompactList}\small\item\em Gets respoints. \item\end{DoxyCompactList}\item 
+def \hyperlink{class_mode_1_1_mode_a68362e7b1cdd6ee60378f3cc1322a144}{playerCrashed}
+\begin{DoxyCompactList}\small\item\em Call this when a player crashed. \item\end{DoxyCompactList}\item 
+def \hyperlink{class_mode_1_1_mode_a6cf2ccffddfb377d9abdb116ba74bd3b}{activate}
+\begin{DoxyCompactList}\small\item\em Enables the mode. \item\end{DoxyCompactList}\item 
+def \hyperlink{class_mode_1_1_mode_a356d4927de4587c311227527e55eaada}{spawnTeams}
+\begin{DoxyCompactList}\small\item\em Spawns all players (teams). \item\end{DoxyCompactList}\item 
+def \hyperlink{class_mode_1_1_mode_a152e7d0cf7d765c82810d69662f8af40}{spawnZones}
+\begin{DoxyCompactList}\small\item\em Spawns all zones. \item\end{DoxyCompactList}\item 
+def \hyperlink{class_mode_1_1_mode_ae24a354b3b872ac4d0c12c43cec5f475}{addZone}
+\begin{DoxyCompactList}\small\item\em Adds a zone. \item\end{DoxyCompactList}\item 
+def \hyperlink{class_mode_1_1_mode_ac957f54f8b2dae24ec1d72af3d53f0ef}{removeZones}
+\begin{DoxyCompactList}\small\item\em Remove all zones. \item\end{DoxyCompactList}\item 
+def \hyperlink{class_mode_1_1_mode_a2bf7c935b63449284449c845ad6b5321}{getZones}
+\begin{DoxyCompactList}\small\item\em Get zones. \item\end{DoxyCompactList}\item 
+def \hyperlink{class_mode_1_1_mode_ac1d907aa0ec93e0908aa3fa2cac0bde7}{getEscapedName}
+\begin{DoxyCompactList}\small\item\em Returns an escaped name for the mode. \item\end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\hyperlink{class_mode_1_1_mode_a38afa93ee0f4ad9e8258a510ccdbaa9c}{name}
+\begin{DoxyCompactList}\small\item\em The name of the mode. \item\end{DoxyCompactList}\item 
+\hyperlink{class_mode_1_1_mode_a40402dcfd634686dcd9b2ce8b8f3d4eb}{settings\_\-file}
+\begin{DoxyCompactList}\small\item\em The settings file which to include when the mode gets activated. \item\end{DoxyCompactList}\item 
+\hyperlink{class_mode_1_1_mode_af4bebfeddda24f7437fc086bc52ca711}{settings}
+\begin{DoxyCompactList}\small\item\em Additional settings. \item\end{DoxyCompactList}\item 
+\hyperlink{class_mode_1_1_mode_ad4ba6cae17b92d4c8c85c35dc9418c8b}{max\_\-team\_\-members}
+\begin{DoxyCompactList}\small\item\em How much members a team can have maximaly. \item\end{DoxyCompactList}\item 
+\hyperlink{class_mode_1_1_mode_a55c4e205a8cb20550c0f3924471522ab}{max\_\-teams}
+\begin{DoxyCompactList}\small\item\em Maximal teams that can be active in this mode. \item\end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Private Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+def \hyperlink{class_mode_1_1_mode_af6ee8ed30365011c35b48d4c5696e05b}{\_\-\_\-getRespoint}
+\begin{DoxyCompactList}\small\item\em Gets a respoint. \item\end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Private Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\hyperlink{class_mode_1_1_mode_a0672655c12a3e18e65d084c395d9378c}{\_\-\_\-zones}
+\begin{DoxyCompactList}\small\item\em The zones of the modes. \item\end{DoxyCompactList}\item 
+\hyperlink{class_mode_1_1_mode_a2e07ed5d08d3ced387d24587f8a87967}{\_\-\_\-respoints}
+\begin{DoxyCompactList}\small\item\em Respoints of this mode. \item\end{DoxyCompactList}\item 
+\hyperlink{class_mode_1_1_mode_a1fd32aea9872573e444d08b65ec28ef2}{\_\-\_\-restype}
+\begin{DoxyCompactList}\small\item\em How should the respoints be used? \item\end{DoxyCompactList}\item 
+\hyperlink{class_mode_1_1_mode_a93dd6d85da76655a5ca8f5a4873109f9}{\_\-\_\-last\_\-respoint}
+\begin{DoxyCompactList}\small\item\em The last used respoint. \item\end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Static Private Attributes}
+\begin{DoxyCompactItemize}
+\item 
+tuple \hyperlink{class_mode_1_1_mode_a6f65d9a9362971bd8896a81a0d71c642}{\_\-\_\-slots\_\-\_\-}
+\begin{DoxyCompactList}\small\item\em Slots  See \href{http://docs.python.org}{\tt http://docs.python.org} OOP. \item\end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+A mode. This class represents a mode. It stores all information about the mode. 
+
+Definition at line 65 of file Mode.py.
+
+
+
+\subsection{Member Function Documentation}
+\hypertarget{class_mode_1_1_mode_af6ee8ed30365011c35b48d4c5696e05b}{
+\index{Mode::Mode@{Mode::Mode}!\_\-\_\-getRespoint@{\_\-\_\-getRespoint}}
+\index{\_\-\_\-getRespoint@{\_\-\_\-getRespoint}!Mode::Mode@{Mode::Mode}}
+\subsubsection[{\_\-\_\-getRespoint}]{\setlength{\rightskip}{0pt plus 5cm}def Mode.Mode.\_\-\_\-getRespoint (
+\begin{DoxyParamCaption}
+\item[{}]{ self, }
+\item[{}]{ mode, }
+\item[{}]{ team\_\-num}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily  \mbox{[}private\mbox{]}}}}
+\label{class_mode_1_1_mode_af6ee8ed30365011c35b48d4c5696e05b}
+
+
+Gets a respoint. 
+
+Gets a respoint for roundstart or normal for the given team 
+\begin{DoxyParams}{Parameters}
+\item[{\em mode}]The mode which to use (roundstart, normal) \item[{\em team\_\-num}]the number of the team for which to get a respoint. \end{DoxyParams}
+
+\begin{DoxyExceptions}{Exceptions}
+\item[{\em RuntimeError}]Raised if no respoints for the given team exist. \item[{\em RuntimeError}]Raised if the type is unknown \end{DoxyExceptions}
+
+
+Definition at line 248 of file Mode.py.
+
+\hypertarget{class_mode_1_1_mode_add2325e8a6bf4ff3aacb7c1dd3299e5a}{
+\index{Mode::Mode@{Mode::Mode}!\_\-\_\-init\_\-\_\-@{\_\-\_\-init\_\-\_\-}}
+\index{\_\-\_\-init\_\-\_\-@{\_\-\_\-init\_\-\_\-}!Mode::Mode@{Mode::Mode}}
+\subsubsection[{\_\-\_\-init\_\-\_\-}]{\setlength{\rightskip}{0pt plus 5cm}def Mode.Mode.\_\-\_\-init\_\-\_\- (
+\begin{DoxyParamCaption}
+\item[{}]{ self, }
+\item[{}]{ name, }
+\item[{}]{ settings\_\-file = {\ttfamily None}, }
+\item[{}]{ settings}
+\end{DoxyParamCaption}
+)}}
+\label{class_mode_1_1_mode_add2325e8a6bf4ff3aacb7c1dd3299e5a}
+
+
+Init function (Constructor). 
+
+Inits a new \hyperlink{class_mode_1_1_mode}{Mode} object and adds properties to it. 
+\begin{DoxyParams}{Parameters}
+\item[{\em name}]The name of the mode \item[{\em settings\_\-file}]The settings file which is include when the mode gets activated. \item[{\em settings}]Additional settings. \end{DoxyParams}
+
+
+Definition at line 132 of file Mode.py.
+
+\hypertarget{class_mode_1_1_mode_a6cf2ccffddfb377d9abdb116ba74bd3b}{
+\index{Mode::Mode@{Mode::Mode}!activate@{activate}}
+\index{activate@{activate}!Mode::Mode@{Mode::Mode}}
+\subsubsection[{activate}]{\setlength{\rightskip}{0pt plus 5cm}def Mode.Mode.activate (
+\begin{DoxyParamCaption}
+\item[{}]{ self, }
+\item[{}]{ kill = {\ttfamily True}}
+\end{DoxyParamCaption}
+)}}
+\label{class_mode_1_1_mode_a6cf2ccffddfb377d9abdb116ba74bd3b}
+
+
+Enables the mode. 
+
+Includes the file given with settings\_\-file and sets all the other settings. 
+\begin{DoxyParams}{Parameters}
+\item[{\em kill}]Kill all players to activate the mode? Default True \end{DoxyParams}
+
+
+Definition at line 197 of file Mode.py.
+
+\hypertarget{class_mode_1_1_mode_a48c269456fe39631862a8be79627b0e5}{
+\index{Mode::Mode@{Mode::Mode}!addRespoint@{addRespoint}}
+\index{addRespoint@{addRespoint}!Mode::Mode@{Mode::Mode}}
+\subsubsection[{addRespoint}]{\setlength{\rightskip}{0pt plus 5cm}def Mode.Mode.addRespoint (
+\begin{DoxyParamCaption}
+\item[{}]{ self, }
+\item[{}]{ x, }
+\item[{}]{ y, }
+\item[{}]{ xdir, }
+\item[{}]{ ydir, }
+\item[{}]{ team = {\ttfamily -\/1}}
+\end{DoxyParamCaption}
+)}}
+\label{class_mode_1_1_mode_a48c269456fe39631862a8be79627b0e5}
+
+
+Adds a respoint. 
+
+Adds the given respoint to the internal respoint list. 
+\begin{DoxyParams}{Parameters}
+\item[{\em x}]The x-\/coordinate of the respoint. \item[{\em y}]The y-\/coordinate of the respoint. \item[{\em xdir}]The x-\/direction \item[{\em ydir}]The y-\/direction \item[{\em team}]Optional the number of the team for which the respoint should be used. If not given, the respoint is used for all teams. \end{DoxyParams}
+
+
+Definition at line 151 of file Mode.py.
+
+\hypertarget{class_mode_1_1_mode_ae24a354b3b872ac4d0c12c43cec5f475}{
+\index{Mode::Mode@{Mode::Mode}!addZone@{addZone}}
+\index{addZone@{addZone}!Mode::Mode@{Mode::Mode}}
+\subsubsection[{addZone}]{\setlength{\rightskip}{0pt plus 5cm}def Mode.Mode.addZone (
+\begin{DoxyParamCaption}
+\item[{}]{ self, }
+\item[{}]{ team, }
+\item[{}]{ zone}
+\end{DoxyParamCaption}
+)}}
+\label{class_mode_1_1_mode_ae24a354b3b872ac4d0c12c43cec5f475}
+
+
+Adds a zone. 
+
+Adds the given zone to the internal zone list. 
+\begin{DoxyParams}{Parameters}
+\item[{\em team}]The number of the team for which the zone should be spawned, or None if it should be spawned for all teams. \item[{\em zone}]The zone to add \end{DoxyParams}
+
+
+Definition at line 282 of file Mode.py.
+
+\hypertarget{class_mode_1_1_mode_a098cfc6ad819a1db17be57c9548bd199}{
+\index{Mode::Mode@{Mode::Mode}!deleteRespoints@{deleteRespoints}}
+\index{deleteRespoints@{deleteRespoints}!Mode::Mode@{Mode::Mode}}
+\subsubsection[{deleteRespoints}]{\setlength{\rightskip}{0pt plus 5cm}def Mode.Mode.deleteRespoints (
+\begin{DoxyParamCaption}
+\item[{}]{ self}
+\end{DoxyParamCaption}
+)}}
+\label{class_mode_1_1_mode_a098cfc6ad819a1db17be57c9548bd199}
+
+
+Deletes all respoints. 
+
+Cleans the intern respoint list. 
+
+Definition at line 158 of file Mode.py.
+
+\hypertarget{class_mode_1_1_mode_ac1d907aa0ec93e0908aa3fa2cac0bde7}{
+\index{Mode::Mode@{Mode::Mode}!getEscapedName@{getEscapedName}}
+\index{getEscapedName@{getEscapedName}!Mode::Mode@{Mode::Mode}}
+\subsubsection[{getEscapedName}]{\setlength{\rightskip}{0pt plus 5cm}def Mode.Mode.getEscapedName (
+\begin{DoxyParamCaption}
+\item[{}]{ self}
+\end{DoxyParamCaption}
+)}}
+\label{class_mode_1_1_mode_ac1d907aa0ec93e0908aa3fa2cac0bde7}
+
+
+Returns an escaped name for the mode. 
+
+Returns the mode name with all spaces replaced by underscores and all letters lowercased. \begin{DoxyReturn}{Returns}
+The escaped mode name. 
+\end{DoxyReturn}
+
+
+Definition at line 299 of file Mode.py.
+
+\hypertarget{class_mode_1_1_mode_a982f3bf8cfcade38459c67bbf6a64409}{
+\index{Mode::Mode@{Mode::Mode}!getRepoints@{getRepoints}}
+\index{getRepoints@{getRepoints}!Mode::Mode@{Mode::Mode}}
+\subsubsection[{getRepoints}]{\setlength{\rightskip}{0pt plus 5cm}def Mode.Mode.getRepoints (
+\begin{DoxyParamCaption}
+\item[{}]{ self}
+\end{DoxyParamCaption}
+)}}
+\label{class_mode_1_1_mode_a982f3bf8cfcade38459c67bbf6a64409}
+
+
+Gets respoints. 
+
+Returns a deepcopy of the intern respoint list. \begin{DoxyReturn}{Returns}
+A deepcopy of the repoints. 
+\end{DoxyReturn}
+
+
+Definition at line 164 of file Mode.py.
+
+\hypertarget{class_mode_1_1_mode_a2bf7c935b63449284449c845ad6b5321}{
+\index{Mode::Mode@{Mode::Mode}!getZones@{getZones}}
+\index{getZones@{getZones}!Mode::Mode@{Mode::Mode}}
+\subsubsection[{getZones}]{\setlength{\rightskip}{0pt plus 5cm}def Mode.Mode.getZones (
+\begin{DoxyParamCaption}
+\item[{}]{ self}
+\end{DoxyParamCaption}
+)}}
+\label{class_mode_1_1_mode_a2bf7c935b63449284449c845ad6b5321}
+
+
+Get zones. 
+
+Get a copy of the internal zone list. \begin{DoxyReturn}{Returns}
+A deep copy of the zone list. 
+\end{DoxyReturn}
+
+
+Definition at line 293 of file Mode.py.
+
+\hypertarget{class_mode_1_1_mode_a68362e7b1cdd6ee60378f3cc1322a144}{
+\index{Mode::Mode@{Mode::Mode}!playerCrashed@{playerCrashed}}
+\index{playerCrashed@{playerCrashed}!Mode::Mode@{Mode::Mode}}
+\subsubsection[{playerCrashed}]{\setlength{\rightskip}{0pt plus 5cm}def Mode.Mode.playerCrashed (
+\begin{DoxyParamCaption}
+\item[{}]{ self, }
+\item[{}]{ player, }
+\item[{}]{ type = {\ttfamily None}}
+\end{DoxyParamCaption}
+)}}
+\label{class_mode_1_1_mode_a68362e7b1cdd6ee60378f3cc1322a144}
+
+
+Call this when a player crashed. 
+
+This function will handle the crash and if the lives of the player arent't 0, it will respawn the player. 
+\begin{DoxyParams}{Parameters}
+\item[{\em player}]The ladder name of the player who crashed. \item[{\em type}]The type of the crash(\char`\"{}DEATH\_\-FRAG\char`\"{},\char`\"{}DEATH\_\-TEAMKILL\char`\"{},...) \end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Has the player been respawned? 
+\end{DoxyReturn}
+
+
+Definition at line 173 of file Mode.py.
+
+\hypertarget{class_mode_1_1_mode_ac957f54f8b2dae24ec1d72af3d53f0ef}{
+\index{Mode::Mode@{Mode::Mode}!removeZones@{removeZones}}
+\index{removeZones@{removeZones}!Mode::Mode@{Mode::Mode}}
+\subsubsection[{removeZones}]{\setlength{\rightskip}{0pt plus 5cm}def Mode.Mode.removeZones (
+\begin{DoxyParamCaption}
+\item[{}]{ self}
+\end{DoxyParamCaption}
+)}}
+\label{class_mode_1_1_mode_ac957f54f8b2dae24ec1d72af3d53f0ef}
+
+
+Remove all zones. 
+
+Remove all zone from the internal zone list. 
+
+Definition at line 287 of file Mode.py.
+
+\hypertarget{class_mode_1_1_mode_a356d4927de4587c311227527e55eaada}{
+\index{Mode::Mode@{Mode::Mode}!spawnTeams@{spawnTeams}}
+\index{spawnTeams@{spawnTeams}!Mode::Mode@{Mode::Mode}}
+\subsubsection[{spawnTeams}]{\setlength{\rightskip}{0pt plus 5cm}def Mode.Mode.spawnTeams (
+\begin{DoxyParamCaption}
+\item[{}]{ self}
+\end{DoxyParamCaption}
+)}}
+\label{class_mode_1_1_mode_a356d4927de4587c311227527e55eaada}
+
+
+Spawns all players (teams). 
+
+Spawns all teams by using the respoints. 
+
+Definition at line 215 of file Mode.py.
+
+\hypertarget{class_mode_1_1_mode_a152e7d0cf7d765c82810d69662f8af40}{
+\index{Mode::Mode@{Mode::Mode}!spawnZones@{spawnZones}}
+\index{spawnZones@{spawnZones}!Mode::Mode@{Mode::Mode}}
+\subsubsection[{spawnZones}]{\setlength{\rightskip}{0pt plus 5cm}def Mode.Mode.spawnZones (
+\begin{DoxyParamCaption}
+\item[{}]{ self}
+\end{DoxyParamCaption}
+)}}
+\label{class_mode_1_1_mode_a152e7d0cf7d765c82810d69662f8af40}
+
+
+Spawns all zones. 
+
+Spawns all zones related to the mode 
+
+Definition at line 229 of file Mode.py.
+
+
+
+\subsection{Member Data Documentation}
+\hypertarget{class_mode_1_1_mode_a93dd6d85da76655a5ca8f5a4873109f9}{
+\index{Mode::Mode@{Mode::Mode}!\_\-\_\-last\_\-respoint@{\_\-\_\-last\_\-respoint}}
+\index{\_\-\_\-last\_\-respoint@{\_\-\_\-last\_\-respoint}!Mode::Mode@{Mode::Mode}}
+\subsubsection[{\_\-\_\-last\_\-respoint}]{\setlength{\rightskip}{0pt plus 5cm}{\bf Mode.Mode::\_\-\_\-last\_\-respoint}\hspace{0.3cm}{\ttfamily  \mbox{[}private\mbox{]}}}}
+\label{class_mode_1_1_mode_a93dd6d85da76655a5ca8f5a4873109f9}
+
+
+The last used respoint. 
+
+The number of the last-\/used respoint for each team. 
+
+Definition at line 141 of file Mode.py.
+
+\hypertarget{class_mode_1_1_mode_a2e07ed5d08d3ced387d24587f8a87967}{
+\index{Mode::Mode@{Mode::Mode}!\_\-\_\-respoints@{\_\-\_\-respoints}}
+\index{\_\-\_\-respoints@{\_\-\_\-respoints}!Mode::Mode@{Mode::Mode}}
+\subsubsection[{\_\-\_\-respoints}]{\setlength{\rightskip}{0pt plus 5cm}{\bf Mode.Mode::\_\-\_\-respoints}\hspace{0.3cm}{\ttfamily  \mbox{[}private\mbox{]}}}}
+\label{class_mode_1_1_mode_a2e07ed5d08d3ced387d24587f8a87967}
+
+
+Respoints of this mode. 
+
+List of respawn points. Each respawn point is a tuple of team,x,y,xdir and ydir. Where x,y are the coordinates, and xdir and ydir are the dirtion. If the respoint should be avaliable for all teams, set team to None. Else set team to the number of the team for which the respoint should be avaliable. 
+
+Definition at line 137 of file Mode.py.
+
+\hypertarget{class_mode_1_1_mode_a1fd32aea9872573e444d08b65ec28ef2}{
+\index{Mode::Mode@{Mode::Mode}!\_\-\_\-restype@{\_\-\_\-restype}}
+\index{\_\-\_\-restype@{\_\-\_\-restype}!Mode::Mode@{Mode::Mode}}
+\subsubsection[{\_\-\_\-restype}]{\setlength{\rightskip}{0pt plus 5cm}{\bf Mode.Mode::\_\-\_\-restype}\hspace{0.3cm}{\ttfamily  \mbox{[}private\mbox{]}}}}
+\label{class_mode_1_1_mode_a1fd32aea9872573e444d08b65ec28ef2}
+
+
+How should the respoints be used? 
+
+Could be random\_\-roundstart, random\_\-allways, toggle\_\-roundstart, toggle\_\-allways,toggle\_\-whileround, random\_\-whileround or first. 
+
+Definition at line 140 of file Mode.py.
+
+\hypertarget{class_mode_1_1_mode_a6f65d9a9362971bd8896a81a0d71c642}{
+\index{Mode::Mode@{Mode::Mode}!\_\-\_\-slots\_\-\_\-@{\_\-\_\-slots\_\-\_\-}}
+\index{\_\-\_\-slots\_\-\_\-@{\_\-\_\-slots\_\-\_\-}!Mode::Mode@{Mode::Mode}}
+\subsubsection[{\_\-\_\-slots\_\-\_\-}]{\setlength{\rightskip}{0pt plus 5cm}tuple {\bf Mode.Mode.\_\-\_\-slots\_\-\_\-}\hspace{0.3cm}{\ttfamily  \mbox{[}static, private\mbox{]}}}}
+\label{class_mode_1_1_mode_a6f65d9a9362971bd8896a81a0d71c642}
+{\bfseries Initial value:}
+\begin{DoxyCode}
+("name","__zones","max_teams","max_team_members","settings_file",
+                   "__respoints","settings","__restype","__last_respoint")
+\end{DoxyCode}
+
+
+Slots  See \href{http://docs.python.org}{\tt http://docs.python.org} OOP. 
+
+
+
+Definition at line 125 of file Mode.py.
+
+\hypertarget{class_mode_1_1_mode_a0672655c12a3e18e65d084c395d9378c}{
+\index{Mode::Mode@{Mode::Mode}!\_\-\_\-zones@{\_\-\_\-zones}}
+\index{\_\-\_\-zones@{\_\-\_\-zones}!Mode::Mode@{Mode::Mode}}
+\subsubsection[{\_\-\_\-zones}]{\setlength{\rightskip}{0pt plus 5cm}{\bf Mode.Mode::\_\-\_\-zones}\hspace{0.3cm}{\ttfamily  \mbox{[}private\mbox{]}}}}
+\label{class_mode_1_1_mode_a0672655c12a3e18e65d084c395d9378c}
+
+
+The zones of the modes. 
+
+A list of zones. Each item is a tuple of team and the zone object. The team could be None if the zone should be spawned for all teams. Otherwise, set team to the number of the team for which the zone should be spawned, or -\/1 if the zone doesn't belong to any team and should allways be spawned. 
+
+Definition at line 136 of file Mode.py.
+
+\hypertarget{class_mode_1_1_mode_ad4ba6cae17b92d4c8c85c35dc9418c8b}{
+\index{Mode::Mode@{Mode::Mode}!max\_\-team\_\-members@{max\_\-team\_\-members}}
+\index{max\_\-team\_\-members@{max\_\-team\_\-members}!Mode::Mode@{Mode::Mode}}
+\subsubsection[{max\_\-team\_\-members}]{\setlength{\rightskip}{0pt plus 5cm}{\bf Mode.Mode::max\_\-team\_\-members}}}
+\label{class_mode_1_1_mode_ad4ba6cae17b92d4c8c85c35dc9418c8b}
+
+
+How much members a team can have maximaly. 
+
+Number of maximal members per team or 0 for unlimited. 
+
+Definition at line 138 of file Mode.py.
+
+\hypertarget{class_mode_1_1_mode_a55c4e205a8cb20550c0f3924471522ab}{
+\index{Mode::Mode@{Mode::Mode}!max\_\-teams@{max\_\-teams}}
+\index{max\_\-teams@{max\_\-teams}!Mode::Mode@{Mode::Mode}}
+\subsubsection[{max\_\-teams}]{\setlength{\rightskip}{0pt plus 5cm}{\bf Mode.Mode::max\_\-teams}}}
+\label{class_mode_1_1_mode_a55c4e205a8cb20550c0f3924471522ab}
+
+
+Maximal teams that can be active in this mode. 
+
+The number of teams the could be active in this mode or 0 for unlimited. 
+
+Definition at line 139 of file Mode.py.
+
+\hypertarget{class_mode_1_1_mode_a38afa93ee0f4ad9e8258a510ccdbaa9c}{
+\index{Mode::Mode@{Mode::Mode}!name@{name}}
+\index{name@{name}!Mode::Mode@{Mode::Mode}}
+\subsubsection[{name}]{\setlength{\rightskip}{0pt plus 5cm}{\bf Mode.Mode::name}}}
+\label{class_mode_1_1_mode_a38afa93ee0f4ad9e8258a510ccdbaa9c}
+
+
+The name of the mode. 
+
+A string which contains the name of the mode. 
+
+Definition at line 133 of file Mode.py.
+
+\hypertarget{class_mode_1_1_mode_af4bebfeddda24f7437fc086bc52ca711}{
+\index{Mode::Mode@{Mode::Mode}!settings@{settings}}
+\index{settings@{settings}!Mode::Mode@{Mode::Mode}}
+\subsubsection[{settings}]{\setlength{\rightskip}{0pt plus 5cm}{\bf Mode.Mode::settings}}}
+\label{class_mode_1_1_mode_af4bebfeddda24f7437fc086bc52ca711}
+
+
+Additional settings. 
+
+Dictionary of settings where the key is the name of the setting and the value is the value of the setting. 
+
+Definition at line 135 of file Mode.py.
+
+\hypertarget{class_mode_1_1_mode_a40402dcfd634686dcd9b2ce8b8f3d4eb}{
+\index{Mode::Mode@{Mode::Mode}!settings\_\-file@{settings\_\-file}}
+\index{settings\_\-file@{settings\_\-file}!Mode::Mode@{Mode::Mode}}
+\subsubsection[{settings\_\-file}]{\setlength{\rightskip}{0pt plus 5cm}{\bf Mode.Mode::settings\_\-file}}}
+\label{class_mode_1_1_mode_a40402dcfd634686dcd9b2ce8b8f3d4eb}
+
+
+The settings file which to include when the mode gets activated. 
+
+The path of the file which gets include when the mode is activated, relative to settings\_\-prefix 
+
+Definition at line 134 of file Mode.py.
+
+
+
+The documentation for this class was generated from the following file:\begin{DoxyCompactItemize}
+\item 
+\hyperlink{_mode_8py}{Mode.py}\end{DoxyCompactItemize}

@@ -1,0 +1,213 @@
+#!/usr/bin/python3
+## @file Commands.py
+ # @brief Commands
+ # @details This file declares commands
+
+import Armagetronad
+import Zone
+import Player
+import Team
+import Mode
+import Armagetronad
+import Messages
+import textwrap
+###################################### COMMAND HELPERS ###################################
+
+## @brief Gets the parameter of a command
+ # @details Gets the parameter of the given command from the function definition.
+ # @param Command
+ # @return A tuple of (minargcount, maxargcount, defaultvalues, names)
+def getArgs(command):
+	commandf=globals()[command]
+	defline=""
+	with open(__file__) as f:
+		defline=f.readlines()[commandf.__code__.co_firstlineno-1]
+	defline=defline[defline.find("(")+1:defline.rfind(")")]
+	args=defline.split(",")
+	minargcount=0
+	maxargcount=0
+	names=list()
+	optionalvalues=list()
+	for arg in args:
+		arg=arg.strip()
+		if arg.find("=")==-1:
+			minargcount=minargcount+1
+			maxargcount=maxargcount+1
+			if arg.startswith("*"):
+				arg=arg[1:]
+				maxargcount=100000000000000000000 # Make the number as big as you want
+			names.append(arg)
+		else:
+			argname, unused, defaultvalue=arg.partition("=")
+			argname=argname.strip()
+			defaultvalue=defaultvalue.replace("\"","").replace("'","").strip()
+			names.append(argname)
+			optionalvalues.append(defaultvalue)
+			maxargcount=maxargcount+1
+	return minargcount, maxargcount, optionalvalues, names
+
+## @brief Checks the usage of a command
+ # @details Checks if a command could be called with the given parameters.
+ # @param command The command for which to check the usage.
+ # @param args The args which to pass to the command
+ # @return True if it could be called with that parameters, False otherwise.
+def checkUsage(command, *args):
+	if command.startswith("/"):
+		command=command[1:]
+	commandf=globals()[command]
+	minargcount, maxargcount, unused, unused=getArgs(command)
+	if minargcount - 1 <= len(args) <= maxargcount - 1:
+		return True
+	else:
+		return False
+
+## @brief Gets an usage message for a command
+ # @details Returns an usage message for the given command
+ # @param command The command for which to generate the usage message.
+ # @return The usage message
+def getUsage(command):
+	if command.startswith("/"):
+		command=command[1:] #Remove the slash
+	commandf=globals()[command]
+	# Get command usage line
+	minargcount, maxargcount, defaultvalues, argnames=getArgs(command)
+	neededargs=argnames[1:minargcount] # Don't show the player arg
+	optionalargs=argnames[minargcount:maxargcount]
+	optionalargsstr=""
+	if len(optionalargs):
+		optionalargsstr="["+(" [").join(optionalargs)+"]"*len(optionalargs)
+	neededargsstr=" ".join(neededargs)
+	commandstr="/"+command+" "+neededargsstr+" "+optionalargsstr
+	# Get documentation commentar of the command function
+	lines=""
+	commentars=list()
+	currentlineno=0
+	with open(__file__) as f:
+		lines=f.readlines()
+		currentlineno=commandf.__code__.co_firstlineno - 2
+	while True:
+		if lines[currentlineno].strip()=="":
+			currentlineno=currentlineno-1
+			continue
+		if lines[currentlineno].strip().startswith("##"):
+			commentars.append(lines[currentlineno].strip()[2:].strip() ) #Remove the "##"
+			break
+		if not lines[currentlineno].strip().startswith("#"):
+			break
+		commentars.append(lines[currentlineno].strip()[1:].strip() ) #Remove the "#"
+		currentlineno=currentlineno-1
+	# Extract parameter and command description from the commentar
+	params=list()
+	commanddesc=""
+	for commentaritem in commentars:
+		if commentaritem.startswith("@brief"):
+			commentaritem=commentaritem[len("@brief"):]
+			commanddesc=commentaritem.strip()
+			commanddesc=commanddesc.replace("of a player","")
+			commanddesc=commanddesc.replace("a player","you")
+		elif commentaritem.startswith("@param"):
+			commentaritem=commentaritem[len("@param"):].strip()
+			param, desc=commentaritem.split(" ",1)
+			if param=="player": 
+				continue
+			desc=desc.replace("player's ","your")
+			desc=desc.replace("the player ","you")
+			if not desc.endswith("."):
+				desc=desc+"."
+			if param in optionalargs:
+				desc=desc+" Defaults to "+str(defaultvalues[optionalargs.index(param)])+"."
+			desc=textwrap.wrap(desc, 75)
+			for curdescl in reversed(desc[1:]):
+				params.append(" "*7+curdescl)
+			params.append(param+" "*(7-len(param))+desc[0])
+	paramstr="\n    "+"\n    ".join(reversed(params) )
+	if len(params)==0:
+		paramstr="None"
+	usagestr="Usage: "+commandstr+"\n"+"Description: "+commanddesc+"\nParameters: "+paramstr
+	return usagestr
+	
+			
+
+###################################### COMMANDS ##########################################
+#START COMMANDS
+##Don't remove the comment before this one, it's needed by the script.
+
+## @brief Evaluates the given code
+ # @details This function is used for the /script command in the game
+ # @param code The code to evaluate.
+ # @param player The player who called /script
+def script(player, *code):
+	code=" ".join(code)
+	code.replace("\"","'")
+	try:
+		exec(code.replace("print(","Armagetronad.PrintPlayerMessage('"+player+"','[Script Command] Output: ' + ") )
+		Armagetronad.PrintPlayerMessage(player, "[Script Command] Script execution finished.")
+	except Exception as e:
+		Armagetronad.PrintPlayerMessage(player, "[Script Command] Exception: " + e.__class__.__name__+" "+str(e))
+
+## @brief Executes the buffer of a player
+ # @param player The player who executed this command
+ # @param flush_buffer Flush the player's buffer after it was executed?
+ # @details Executes the buffer of the given player
+def execbuffer(player, flush_buffer=False):
+	if "buffer" not in Player.players[player].data: 
+		Player.players[player].data["buffer"]=[""]
+	string="\n".join(Player.players[player].data["buffer"])
+	if string.strip().replace("\n","").replace("\t","")=="":
+		msg="You don't have any text to exec in your buffer. Use / <text> to add some."
+		Armagetronad.PrintPlayerMessage(player,msg)
+		return
+	script(player, string)
+	if flush_buffer:
+		del Player.players[player].data["buffer"]
+
+## @brief Empties the buffer of a player
+ # @details Clears the buffer of the given player
+ # @param player The player for who to clear the buffer.
+def clearbuffer(player):
+	if "buffer" in Player.players[player].data:
+		del Player.players[player].data["buffer"]
+		Armagetronad.PrintPlayerMessage(player,"Buffer cleared.")
+
+## @brief Prints the buffer of a player
+ # @details Prints the buffer of the given player to the player.
+ # @param player The player of who to print the buffer and to who to print the buffer.
+def printbuffer(player):
+	if "buffer" in Player.players[player].data and "\n".join(Player.players[player].data["buffer"]).strip() != "":
+		Armagetronad.PrintPlayerMessage(player,"Buffer: \n" + "\n".join(Player.players[player].data["buffer"]) )
+	else:
+		Armagetronad.PrintPlayerMessage(player,"Buffer: Empty")
+
+## @brief Teleports a player to the given position
+ # @details Teleports the given player to the given position.
+ # @param x The x coordinate to which to teleport
+ # @param y The y coordinate to which to teleport
+ # @param xdir The x direction
+ # @param ydir The y direction
+def tele(player, x, y, xdir=0, ydir=1):
+	Player.players[player].respawn(x,y,xdir,ydir,True)
+	Armagetronad.PrintMessage(Messages.PlayerTeleport.format(player=player,x=x,xdir=xdir, ydir=ydir) )
+
+## @brief Activates a mode.
+ # @details This is the /mode command
+ # @param player The player who executed this command
+ # @param mode The mode which to activate.
+ # @param type Optional How does the mode get activated? Could be set or vote. Set isn't avaliable for normal players.
+ # @param when Optional When gets the mode activated? Only affects if type set. Could be now, roundend or matchend (currently only now is supported)
+def mode(player, mode, type="vote", when="now"):
+	mode=mode.lower()
+	if(type=="vote"):
+		Armagetronad.PrintPlayerMessage(player, Messages.FeatureNotImplemented.format(feature="Voting"),Messages.PlayerColorCode)
+		return
+	elif type=="set":
+		if when=="now":
+			if mode not in Mode.modes:
+				Armagetronad.PrintPlayerMessage(player, Messages.ModeNotExist.format(mode=mode), Messages.PlayerColorCode)
+				return
+			else:
+				Mode.modes[mode].activate(True)
+		else:
+			pass
+	else:
+		pass
+		

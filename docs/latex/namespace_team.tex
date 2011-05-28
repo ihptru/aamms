@@ -1,0 +1,185 @@
+\hypertarget{namespace_team}{
+\section{Package Team}
+\label{namespace_team}\index{Team@{Team}}
+}
+
+
+Functions and classes for team management.  
+
+
+\subsection*{Classes}
+\begin{DoxyCompactItemize}
+\item 
+class \hyperlink{class_team_1_1_team}{Team}
+\begin{DoxyCompactList}\small\item\em A team. \item\end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+def \hyperlink{namespace_team_ae156f7420c5c0c650a78e5eea3880645}{Add}
+\begin{DoxyCompactList}\small\item\em Adds a team. \item\end{DoxyCompactList}\item 
+def \hyperlink{namespace_team_aad0c17f9553c3ed62fc6216b1e6c9869}{Remove}
+\begin{DoxyCompactList}\small\item\em Removes a team. \item\end{DoxyCompactList}\item 
+def \hyperlink{namespace_team_a391de1d02502546ec5d88de1632b3bc2}{enableLogging}
+\begin{DoxyCompactList}\small\item\em Enables logging. \item\end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Variables}
+\begin{DoxyCompactItemize}
+\item 
+tuple \hyperlink{namespace_team_aeda58b8cc54d371e3187f3c9af31f8cf}{log} = logging.getLogger(\char`\"{}TeamModule\char`\"{})
+\begin{DoxyCompactList}\small\item\em The logging object. \item\end{DoxyCompactList}\item 
+tuple \hyperlink{namespace_team_a6e402bba79c6732149986dc7571493f2}{teams} = dict()
+\begin{DoxyCompactList}\small\item\em All teams. \item\end{DoxyCompactList}\item 
+tuple \hyperlink{namespace_team_abf2a7386d9dc3f37352480f92b9a4003}{events} = \hyperlink{class_event_1_1_event_group}{Event.EventGroup}(\char`\"{}TeamEvents\char`\"{})
+\begin{DoxyCompactList}\small\item\em Eventgroup of this module. \item\end{DoxyCompactList}\item 
+int \hyperlink{namespace_team_aea621f4ad9dbc98e75632e31f37c4ea4}{max\_\-teams} = 1
+\begin{DoxyCompactList}\small\item\em The maximal teams. \item\end{DoxyCompactList}\item 
+int \hyperlink{namespace_team_adf6b13168904a599042d6b67dd5e773b}{max\_\-team\_\-members} = 1
+\begin{DoxyCompactList}\small\item\em The maximal team members. \item\end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+Functions and classes for team management. This file contains functions and class for team management 
+
+\subsection{Function Documentation}
+\hypertarget{namespace_team_ae156f7420c5c0c650a78e5eea3880645}{
+\index{Team@{Team}!Add@{Add}}
+\index{Add@{Add}!Team@{Team}}
+\subsubsection[{Add}]{\setlength{\rightskip}{0pt plus 5cm}def Team.Add (
+\begin{DoxyParamCaption}
+\item[{}]{ name, }
+\item[{}]{ members}
+\end{DoxyParamCaption}
+)}}
+\label{namespace_team_ae156f7420c5c0c650a78e5eea3880645}
+
+
+Adds a team. 
+
+Creates a new team and saves it in the teams list 
+\begin{DoxyParams}{Parameters}
+\item[{\em name}]The name of the team to create \item[{\em members}]Optional members to add to the team. \end{DoxyParams}
+\begin{DoxyNote}{Note}
+This triggers the event \char`\"{}Team added\char`\"{}. 
+\end{DoxyNote}
+
+
+Definition at line 44 of file Team.py.
+
+\hypertarget{namespace_team_a391de1d02502546ec5d88de1632b3bc2}{
+\index{Team@{Team}!enableLogging@{enableLogging}}
+\index{enableLogging@{enableLogging}!Team@{Team}}
+\subsubsection[{enableLogging}]{\setlength{\rightskip}{0pt plus 5cm}def Team.enableLogging (
+\begin{DoxyParamCaption}
+\item[{}]{ level = {\ttfamily logging.DEBUG}, }
+\item[{}]{ h = {\ttfamily None}, }
+\item[{}]{ f = {\ttfamily None}}
+\end{DoxyParamCaption}
+)}}
+\label{namespace_team_a391de1d02502546ec5d88de1632b3bc2}
+
+
+Enables logging. 
+
+This function enables logging for this module. 
+\begin{DoxyParams}{Parameters}
+\item[{\em h}]The handler used for logging \item[{\em f}]The formatter used for logging \item[{\em level}]The logging level \end{DoxyParams}
+
+
+Definition at line 276 of file Team.py.
+
+\hypertarget{namespace_team_aad0c17f9553c3ed62fc6216b1e6c9869}{
+\index{Team@{Team}!Remove@{Remove}}
+\index{Remove@{Remove}!Team@{Team}}
+\subsubsection[{Remove}]{\setlength{\rightskip}{0pt plus 5cm}def Team.Remove (
+\begin{DoxyParamCaption}
+\item[{}]{ name}
+\end{DoxyParamCaption}
+)}}
+\label{namespace_team_aad0c17f9553c3ed62fc6216b1e6c9869}
+
+
+Removes a team. 
+
+Removes the given team 
+\begin{DoxyParams}{Parameters}
+\item[{\em name}]The escaped name of the team to remove. \end{DoxyParams}
+
+\begin{DoxyExceptions}{Exceptions}
+\item[{\em RuntimeError}]Raised if the team doesn't exist. \end{DoxyExceptions}
+\begin{DoxyNote}{Note}
+This triggers the event \char`\"{}Team removed\char`\"{}. 
+\end{DoxyNote}
+
+
+Definition at line 54 of file Team.py.
+
+
+
+\subsection{Variable Documentation}
+\hypertarget{namespace_team_abf2a7386d9dc3f37352480f92b9a4003}{
+\index{Team@{Team}!events@{events}}
+\index{events@{events}!Team@{Team}}
+\subsubsection[{events}]{\setlength{\rightskip}{0pt plus 5cm}tuple {\bf Team.events} = {\bf Event.EventGroup}(\char`\"{}TeamEvents\char`\"{})}}
+\label{namespace_team_abf2a7386d9dc3f37352480f92b9a4003}
+
+
+Eventgroup of this module. 
+
+Events used by this module: \char`\"{}Team added\char`\"{}: Triggered when a new team is added \char`\"{}Team removed\char`\"{}: Triggered when a team is removed \char`\"{}Team renamed\char`\"{}: Triggered when a team is renamed 
+
+Definition at line 31 of file Team.py.
+
+\hypertarget{namespace_team_aeda58b8cc54d371e3187f3c9af31f8cf}{
+\index{Team@{Team}!log@{log}}
+\index{log@{log}!Team@{Team}}
+\subsubsection[{log}]{\setlength{\rightskip}{0pt plus 5cm}tuple {\bf Team.log} = logging.getLogger(\char`\"{}TeamModule\char`\"{})}}
+\label{namespace_team_aeda58b8cc54d371e3187f3c9af31f8cf}
+
+
+The logging object. 
+
+Used for logging by this module \begin{DoxyNote}{Note}
+To enable or disable logging of this module use \hyperlink{namespace_team_a391de1d02502546ec5d88de1632b3bc2}{Team.enableLogging} 
+\end{DoxyNote}
+
+
+Definition at line 17 of file Team.py.
+
+\hypertarget{namespace_team_adf6b13168904a599042d6b67dd5e773b}{
+\index{Team@{Team}!max\_\-team\_\-members@{max\_\-team\_\-members}}
+\index{max\_\-team\_\-members@{max\_\-team\_\-members}!Team@{Team}}
+\subsubsection[{max\_\-team\_\-members}]{\setlength{\rightskip}{0pt plus 5cm}int {\bf Team.max\_\-team\_\-members} = 1}}
+\label{namespace_team_adf6b13168904a599042d6b67dd5e773b}
+
+
+The maximal team members. 
+
+The number of members that a team can have. A value less or equal 0 stands for no limit. 
+
+Definition at line 68 of file Team.py.
+
+\hypertarget{namespace_team_aea621f4ad9dbc98e75632e31f37c4ea4}{
+\index{Team@{Team}!max\_\-teams@{max\_\-teams}}
+\index{max\_\-teams@{max\_\-teams}!Team@{Team}}
+\subsubsection[{max\_\-teams}]{\setlength{\rightskip}{0pt plus 5cm}int {\bf Team.max\_\-teams} = 1}}
+\label{namespace_team_aea621f4ad9dbc98e75632e31f37c4ea4}
+
+
+The maximal teams. 
+
+The maximal number of teams that could be created. A value less or equal 0 stands for no limit. 
+
+Definition at line 63 of file Team.py.
+
+\hypertarget{namespace_team_a6e402bba79c6732149986dc7571493f2}{
+\index{Team@{Team}!teams@{teams}}
+\index{teams@{teams}!Team@{Team}}
+\subsubsection[{teams}]{\setlength{\rightskip}{0pt plus 5cm}tuple {\bf Team.teams} = dict()}}
+\label{namespace_team_a6e402bba79c6732149986dc7571493f2}
+
+
+All teams. 
+
+Dictionary of team added with \hyperlink{namespace_team_ae156f7420c5c0c650a78e5eea3880645}{Add()}, where the escaped team name is the key. 
+
+Definition at line 23 of file Team.py.
+
