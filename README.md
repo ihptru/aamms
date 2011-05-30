@@ -1,5 +1,5 @@
 AAMMS is an Armagetronad Advanced server script with multi mode support.
-The script is based on the Ladderlog.txt file, like all scripts for Armagetronad Advanced are.
+The script is based on the Ladderlog.txt file, like all scripts for Armagetronad Advanced do.
 It requires the ct+sty version of Armagetron Advanced.
 
 #Features:
