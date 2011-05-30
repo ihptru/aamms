@@ -1,4 +1,6 @@
-AAMMS is an armagetronad advanced server script with multi mode support.
+AAMMS is an Armagetronad Advanced server script with multi mode support.
+The script is based on the Ladderlog.txt file, like all scripts for Armagetronad Advanced are.
+It requires the ct+sty version of Armagetron Advanced.
 
 #Features:
 * Multi mode support
