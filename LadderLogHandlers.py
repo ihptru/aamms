@@ -12,6 +12,7 @@ import logging
 import logging.handlers
 import Team
 import Mode
+import Vote
 
 ## @brief The logging object
  # @private
@@ -20,8 +21,17 @@ import Mode
 log=logging.getLogger("LadderModule")
 log.addHandler(logging.NullHandler() )
 
+## @brief Round end handlers
+ # @details List of functions called after a round ended. Functions are every object that is callable.
+ # @note This list is cleared every time after all the functions were executed.
+atRoundend=[]
+
+## @brief Is the round started?
+ # @details True if yes, False otherwise.
+roundStarted=False
+
 ## @brief Handles commands
- # @details Every time when a command that isn't handled by the server is entered, this 
+ # @details Every time when a command that isn't handled by the server is entered, this
  #          function will be called.
  # @param command The command
  # @param player The ladder of the player who tried to execute the command
@@ -56,12 +66,11 @@ def InvalidCommand(command, player, ip, access, *args):
 		return
 	if not AccessLevel.isAllowed(command,access):
 		Armagetronad.PrintPlayerMessage(player, Messages.NotAllowed.format(command=command) )
-		print(access)
 		return
 	if not Commands.checkUsage(command, *args):
 		Armagetronad.PrintPlayerMessage(player, Commands.getUsage(command))
 		return
-	args=(player,) + args
+	args=(access,player) + args
 	try:
 		getattr(Commands,command)(*args)
 	except Exception as e:
@@ -136,12 +145,31 @@ def OnlinePlayer(lname, red, green, blue, ping, teamname=None):
  # @param time The time when the new round is started.
  # @param timezone The timezone of the server.
 def NewRound(date, time, timezone):
+	global roundStarted
+	global atRoundend
+	roundStarted=False
 	log.info("New round started -----------------------------")
 	# Flush bot list (NEEDED because no PlayerLeft is called for bots)
 	bots=Player.getBots()
 	for bot in bots:
 		Player.Remove(bot)
+	# Handle roundend actions
+	for func in atRoundend:
+		try:
+			func()
+		except Exception as e:
+			log.error("Could not execute round end handler "+str(func)+": "+str(e.__class__.__name__) )
+	atRoundend=list() # Flush list
+	# Votes
+	if Vote.current_vote != None:
+		if Vote.current_vote.aliveRounds==0:
+			Vote.current_vote.CheckResult()
+		else:
+			Armagetronad.PrintMessage(Messages.VoteInProgress.format(target=Vote.current_vote.target, expire=Vote.current_vote.aliveRounds) )
+			Vote.current_vote.aliveRounds=Vote.current_vote.aliveRounds-1
+
 	Armagetronad.SendCommand("LADDERLOG_WRITE_GAME_TIME 1")
+	roundStarted=True
 
 ## @brief Handles cycle created
  # @details For each cycle which is created, this function is called.
@@ -167,14 +195,13 @@ def GameTime(time):
  # @details This function enables logging for this module.
  # @param h The handler used for logging
  # @param f The formatter used for logging
- # @param level The logging level 
+ # @param level The logging level
 def enableLogging(level=logging.DEBUG, h=None,f=None):
 	log.setLevel(level)
 	if not h:
 		h=logging.StreamHandler()
 		h.setLevel(level)
-	if not f: 
+	if not f:
 		f=logging.Formatter("[%(name)s] (%(asctime)s) %(levelname)s: %(message)s")
 	h.setFormatter(f)
 	log.addHandler(h)
-

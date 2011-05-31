@@ -12,6 +12,7 @@ import random
 import Armagetronad
 import logging
 import logging.handlers
+import LadderLogHandlers
 
 ## @brief Global settings directory
  # @details This is used as default for settings_prefix by new modes.
@@ -66,10 +67,10 @@ class Mode:
 	## @property name
 	 # @brief The name of the mode
 	 # @details A string which contains the name of the mode.
-	
+
 	## @property __zones
-	 # @brief The zones of the modes. 
-	 # @details A list of zones. Each item is a tuple of team and the zone object. 
+	 # @brief The zones of the modes.
+	 # @details A list of zones. Each item is a tuple of team and the zone object.
 	 #          The team could be None if the zone should be spawned for all teams.
 	 #          Otherwise, set team to the number of the team for which the zone
 	 #          should be spawned, or -1 if the zone doesn't belong to any team and
@@ -78,16 +79,16 @@ class Mode:
 	## @property max_teams
 	 # @brief Maximal teams that can be active in this mode.
 	 # @details The number of teams the could be active in this mode or 0 for unlimited.
-	
+
 	## @property max_team_members
 	 # @brief How much members a team can have maximaly.
 	 # @details Number of maximal members per team or 0 for unlimited.
-	
+
 	## @property settings_file
 	 # @brief The settings file which to include when the mode gets activated.
 	 # @details The path of the file which gets include when the mode is activated, relative
 	 #          to settings_prefix
-	
+
 	## @property settings_prefix
 	 # @brief The directory under which the settings files are stored.
 	 # @details Path to the directory which contains the setting files.
@@ -108,13 +109,13 @@ class Mode:
 
 	## @property __restype
 	 # @brief How should the respoints be used?
-	 # @details Could be random_roundstart, random_allways, toggle_roundstart, 
+	 # @details Could be random_roundstart, random_allways, toggle_roundstart,
 	 #          toggle_allways,toggle_whileround, random_whileround or first.
 
 	## @property __last_respoint
 	 # @brief The last used respoint.
 	 # @details The number of the last-used respoint for each team.
-	
+
 	## @property lives
 	 # @brief How much lives does a player have?
 	 # @details Number of lives a player has in this mode.
@@ -152,18 +153,18 @@ class Mode:
 		if team not in self.__last_respoint:
 			self.__last_respoint[team]=0
 		self.__respoints.append( (team,x,y,xdir,ydir) )
-	
+
 	## @brief Deletes all respoints
 	 # @details Cleans the intern respoint list.
 	def deleteRespoints(self):
 		self.__respoints=list()
-	
+
 	## @brief Gets respoints.
 	 # @details Returns a deepcopy of the intern respoint list.
 	 # @return A deepcopy of the repoints.
 	def getRepoints(self):
 		return copy.deepcopy(self.__respoints)
-	
+
 	## @brief Call this when a player crashed.
 	 # @details This function will handle the crash and if the lives of the player arent't
 	 #          0, it will respawn the player.
@@ -174,7 +175,7 @@ class Mode:
 		Player.players[player].crashed()
 		if Player.players[player].getLives()==0:
 			return
-		if len(self.__respoints)==0:	
+		if len(self.__respoints)==0:
 			log.warning("No respoints for mode {0} registered.".format(self.name) )
 			return False
 		# get a repoint
@@ -190,13 +191,18 @@ class Mode:
 		respoint=self.getRespoint("normal",i)
 		t,x,y,xdir,ydir=respoint
 		Player.players[player].respawn(x,y,xdir,ydir,False)
-	
+
 	## @brief Enables the mode
 	 # @details Includes the file given with settings_file and sets all the other settings.
-	 # @param kill Kill all players to activate the mode? Default True
-	def activate(self, kill=True):
+	 # @param kill Kill all players to activate the mode? Default True when round is already started, otherwise False.
+	def activate(self, kill=None):
 		global settings_prefix
 		global current_mode
+		if kill == None:
+			if LadderLogHandlers.roundStarted:
+				kill=True
+			else:
+				kill=False
 		settings_prefix=settings_prefix.rstrip("/")
 		Armagetronad.SendCommand("INCLUDE {0}/{1}".format(settings_prefix, self.settings_file) )
 		for setting, value in self.settings:
@@ -275,7 +281,7 @@ class Mode:
 
 	## @brief Adds a zone
 	 # @details Adds the given zone to the internal zone list.
-	 # @param team The number of the team for which the zone should be spawned, or None 
+	 # @param team The number of the team for which the zone should be spawned, or None
 	 #             if it should be spawned for all teams.
 	 # @param zone The zone to add
 	def addZone(self, team, zone):
@@ -285,7 +291,7 @@ class Mode:
 	 # @details Remove all zone from the internal zone list.
 	def removeZones(self):
 		self.__zones=list()
-	
+
 	## @brief Get zones
 	 # @details Get a copy of the internal zone list.
 	 # @return A deep copy of the zone list.
@@ -302,14 +308,14 @@ class Mode:
  # @details This function enables logging for this module.
  # @param h The handler used for logging
  # @param f The formatter used for logging
- # @param level The logging level 
+ # @param level The logging level
 def enableLogging(level=logging.DEBUG, h=None,f=None):
 	global log
 	log.setLevel(level)
 	if not h:
 		h=logging.StreamHandler()
 		h.setLevel(level)
-	if not f: 
+	if not f:
 		f=logging.Formatter("[%(name)s] (%(asctime)s) %(levelname)s: %(message)s")
 	h.setFormatter(f)
 	log.addHandler(h)

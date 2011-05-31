@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 ## @file Global.py
- # @brief Global functions and variables 
+ # @brief Global functions and variables
  # @details This file contains global functions and variables.
 
 import Player
@@ -16,4 +16,3 @@ def reloadPlayerList():
 		Armagetronad.SendCommand("UNBAN_USER "+ln)
 		Armagetronad.SendCommand("UNBAN_IP "+Player.players[ln].ip)
 		del Player.players[ln]
-		

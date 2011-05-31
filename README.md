@@ -9,10 +9,10 @@ It requires the ct+sty version of Armagetron Advanced.
 * Dynamic respawn points ( can be changed at run time without changing map )
 * Dynamic zones ( can be changed at run time without changing map )
 * Access levels
+* Voting for Modes
 
 #Todo:
 * Command to change access levels
-* Voting
 * Add some modes :)
 * some other stuff
 
@@ -23,4 +23,4 @@ It requires the ct+sty version of Armagetron Advanced.
 4. If you are done with developing code at a pull request. I'll review the changes and see
    what i accept then.
 
-Documentation for programmers can be found in the docs directory. 
+Documentation for programmers can be found in the docs directory.

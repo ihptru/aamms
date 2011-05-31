@@ -64,10 +64,11 @@ def UpdatePlayer(oldname,newname):
 ## @brief Removes a player
  # @details This function removes the given player from the \link Player.players\endlink list.
  # @param name The ladder name of the player to remove
+ # @exception RuntimeError Raised if the player doesn't exist.'
  # @note This triggers the event "Player removed"
 def Remove(name):
 	if name not in players:
-		log.warning("Trying to remove player „"+name+"“, but it doesn't exist.")
+		raise RuntimeError("Trying to remove player „"+name+"“, but it doesn't exist.")
 	del players[name]
 	events.triggerEvent("Player removed")
 
@@ -102,15 +103,15 @@ class Player:
 	 # @details This variable is set to the escaped name or login of the player. It's
 	 #          used to indentify the player.
 	 # @private
-	
+
 	## @property name
 	 # @brief The name of the player
 	 # @details The full name of the player as it's used in the game
-	 
+
 	## @property ip
 	 # @brief The player's ip
 	 # @details The ip of the player. Used for votes.
-	
+
 	## @property __lives
 	 # @brief Remaining lives
 	 # @details The remaining lives of the player. 0 if the player is death.
@@ -123,7 +124,7 @@ class Player:
 	 # @brief The name of the team in which the player is in.
 	 # @details The name of the player's team. None if the player is spectating, or
 	 #          AI if the player is in the AI team.
-	
+
 	## @property __logged_in
 	 # @brief If the player is logged in?
 	 # @details True if the player is logged in, False if not.
@@ -131,7 +132,7 @@ class Player:
 	## @property ping
 	 # @brief The ping of the player
 	 # @details The current ping of the player.
-	 # @note Currently there's no use for the ping of the player, but it may be used 
+	 # @note Currently there's no use for the ping of the player, but it may be used
 	 #       in future.
 
 	## @property __old_name
@@ -168,7 +169,7 @@ class Player:
 		self.__team=None
 		self.__old_ladder_name=ladder_name
 		self.__logged_in=False
-		self.ping=0 
+		self.ping=0
 		self.__old_name=self.name
 		self.color=15,0,0
 		self.is_human=True
@@ -178,10 +179,10 @@ class Player:
 	 # @details Removes the player from his team
 	def __del__(self):
 		self.leaveTeam()
-	
+
 	## @brief Sets the team of the player
 	 # @details This function lets the player join the given team
-	 # @param teamname The escaped name of the team to which to add the player. 
+	 # @param teamname The escaped name of the team to which to add the player.
 	 #                 None if the player is specating. AI if the player is in the AI team.
 	 # @param force Create the team if it doesn't exist?
 	 # @param quiet If True, don't print info log messages
@@ -217,7 +218,7 @@ class Player:
 			Team.teams[teamname].color=self.color
 
 	## @brief Lets the player leave the team
-	 # @details This function lets the player leave the team. 
+	 # @details This function lets the player leave the team.
 	 # @param quiet If True, don't print info log messages
 	 # @note This also calls Team::removePlayer (removes the player from the team)
 	 # @note This triggers the event "Player left team".
@@ -238,13 +239,13 @@ class Player:
 	 #          0 means the player is death.
 	 # @param lives The lives
 	 # @note If the number of lives is less than 0, 0 is used for lives.
-	 # @note Setting the lives to 0 does NOT immenediately kill the player. For that, 
+	 # @note Setting the lives to 0 does NOT immenediately kill the player. For that,
 	 #       use Player::kill.
 	def setLives(self, lives):
 		if lives < 0:
 			lives=0
 		self.__lives=lives
-	
+
 	## @brief This decreases the player's lives counter by 1
 	 # @details Call this function when the player crashed.
 	 # @return Remaining lives. 0 is the player is death.
@@ -270,22 +271,22 @@ class Player:
 		events.triggerEvent("Player died",self.__ladder_name)
 		self.__lives=0
 		log.info("Player " + self.__old_ladder_name + " got killed by the script.")
-	
+
 	## @brief Sets the ladder name
-	 # @details This function sets the ladder name. 
+	 # @details This function sets the ladder name.
 	 # @param name The new ladder name
 	 # @note This triggers the event "Player renamed"
 	def setLadderName(self, name):
 		oldname=self.__ladder_name
 		self.__ladder_name=name
 		events.triggerEvent("Player renamed",oldname,self.__ladder_name)
-	
+
 	## @brief Respawns the player
 	 # @details This function respawns the player at the given position.
 	 # @param x The x-coordinate of the position where to respawn
 	 # @param y The y-coordinate of the position where to respawn
 	 # @param xdir The x direction
-	 # @param ydir The y direction	
+	 # @param ydir The y direction
 	 # @param force Force position changing(teleporting) ?
 	 # @note This sets Player's lives to 1 if they are less or equal 0
 	 # @note This triggers the event "Player respawned"
@@ -301,13 +302,13 @@ class Player:
 			#            y,x,xdir,ydir) )
 			pass
 		events.triggerEvent("Player respawned",self.__ladder_name)
-		
+
 	## @brief Gets ladder name
 	 # @details This function gets the ladder name
 	 # @return The ladder name
 	def getLadderName(self):
 		return self.ladderName()
-	
+
 	## @brief Applies all changes
 	 # @details Should be only called at the end of the round, when the player can rename.
 	 # @param force Force renaming?
@@ -320,7 +321,7 @@ class Player:
 			else:
 				SendCommand("ALLOW_RENAME_PLAYER "+self.__ladder_name)
 		self.__old_ladder_name=self.__ladder_name
-	
+
 	## @brief Player logged in
 	 # @details Sets logged_in to True and ladder_name to the login
 	 # @param global_id The login
@@ -352,30 +353,30 @@ class Player:
 		return self.__old_ladder_name
 
 	## @brief Returns in-game name
-	 # @details This function returns the name of the player that is currently used 
+	 # @details This function returns the name of the player that is currently used
 	 #          in the game
 	 # @return The in-game name
 	def getInGameName(self):
-		return self.__old_name	
+		return self.__old_name
 
 	## @brief Gets the team name
 	 # @details Returns the name of the team the player is in.
 	 # @return The escaped name of the team or None of the player is spectating.
 	def getTeam(self):
-		return self.__team	
+		return self.__team
 
 ## @brief Enables Logging
  # @details This function enables logging for all Player classes. For more information see
  #          the logging module.
  # @param h The handler used for logging
  # @param f The formatter used for logging
- # @param level The logging level 
+ # @param level The logging level
 def enableLogging(level=logging.DEBUG, h=None,f=None):
 	logging.getLogger("PlayerModule").setLevel(level)
 	if not h:
 		h=logging.StreamHandler()
 		h.setLevel(level)
-	if not f: 
+	if not f:
 		f=logging.Formatter("[%(name)s] (%(asctime)s) %(levelname)s: %(message)s")
 	h.setFormatter(f)
 	logging.getLogger("PlayerModule").addHandler(h)

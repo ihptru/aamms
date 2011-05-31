@@ -38,3 +38,44 @@ FeatureNotImplemented=("{feature} is currently not supported, but it's coming so
  # @details This message is printed when a mode doesn't exist.
  # @param mode The name of the mode
 ModeNotExist=("{mode} doesn't exist! Look at /help modelist for a list of all avaliable modes.")
+
+## @brief Vote is in progress message
+ # @details This message is printed when a vote is active.
+ # @param target The target of the active vote
+ # @param expire How much rounds does this vote still stay alive?
+VoteInProgress=("0xff8800Vote for {target} in progress. Use /yes or /no to vote! This vote expires in {expire} rounds")
+
+## @brief Vote added message
+ # @details This message is displayed when a new vote was added.
+ # @param target The target of the vote which was added
+ # @param player The player who added the vote.
+VoteAdded=("0xffff00Vote for {target} submitted by {player}")
+
+## @brief Vote cancelled message
+ # @details This message is printed when an admin cancelled a vote.
+ # @param target The target of the cancelled vote.
+VoteCancelled=("0x00ffffThe vote for {target} got cancelled by an administrator.")
+
+## @brief Vote successed message
+ # @details This message is printed when a vote successed.
+ # @param target The target of the vote which successed.
+VoteSuccessed=("0x00ffffVote for {target} successed!")
+
+## @brief Vote failed message
+ # @details This message is printed when a vote failed.
+ # @param target The target of the vote which failed.
+VoteFailed=("0x00ffffVote for {target} failed!")
+
+## @brief Player voted for a vote message
+ # @details This message is displayed when a player used the /yes command
+ # @param player The name of the player who voted.
+ # @param target The target of the vote for which the player voted.
+PlayerVotedYes=("0xffff00{player} voted for {target}.")
+
+## @brief Player voted against a vote message
+ # @details This message is displayed when a player used the /no command
+ # @param player The name of the player who voted.
+ # @param target The target of the vote for which the player voted.
+PlayerVotedNo=("0xffff00{player} voted against {target}")
+
+PlayerAlreadyVoted=("You have already voted!")

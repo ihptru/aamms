@@ -23,17 +23,23 @@ log.addHandler(logging.NullHandler() )
 teams=dict()
 
 ## @brief Eventgroup of this module
- # @details Events used by this module: 
+ # @details Events used by this module:
  #            "Team added": Triggered when a new team is added
  #            "Team removed": Triggered when a team is removed
  #            "Team renamed": Triggered when a team is renamed
- #
+ #            "Team spawned": Triggered by Team.repawn()
+ #            "Team killed": Triggered by Team.kill()
+ #            "Team crashed": Triggered by Team.crash()
+ #           Events actions always have one argument: The escaped name of the team.
 events=Event.EventGroup("TeamEvents")
 
 #add events
 events.addEvent(Event.Event("Team added") )
 events.addEvent(Event.Event("Team removed") )
 events.addEvent(Event.Event("Team renamed") )
+events.addEvent(Event.Event("Team spawned") )
+events.addEvent(Event.Event("Team crashed") )
+events.addEvent(Event.Event("Team killed") )
 
 
 ## @brief Adds a team
@@ -44,7 +50,7 @@ events.addEvent(Event.Event("Team renamed") )
 def Add(name, *members):
 	t=Team(name,members)
 	teams[t.getEscapedName()]=t
-	events.triggerEvent("Team added")
+	events.triggerEvent("Team added", t.getEscapedName() )
 
 ## @brief Removes a team
  # @details Removes the given team
@@ -55,10 +61,10 @@ def Remove(name):
 	if name not in teams:
 		raise RuntimeError("Team {0} doesn't exist.".format(name) )
 	del teams[name]
-	events.triggerEvent("Team removed")
+	events.triggerEvent("Team removed", name)
 ##
 ## @brief The maximal teams
- # @details The maximal number of teams that could be created. A value less or equal 0 
+ # @details The maximal number of teams that could be created. A value less or equal 0
  #          stands for no limit.
 max_teams=-1
 
@@ -88,7 +94,7 @@ class Team:
 	 # @details Set of currently used ids
 	 # @private
 	__ids=set()
-	
+
 	## @property zones
 	 # @brief Team zones
 	 # @details The zones belong to the team
@@ -96,16 +102,16 @@ class Team:
 	## @property color
 	 # @brief The color of the team
 	 # @details Tuple of the r,g,b value of the color of the team.
-	
+
 	## @brief Slots
 	 # @internal
 	__slots__=("__members","__name","__id","__ids","zones","color")
-	
+
 	## @brief Init function (Constructor)
 	 # @details Inits a new Team and adds properties.
 	 # @param name The initial team name
 	 # @param members Initial team members
-	 # @exception RuntimeError Raised when the team is full (error code 2) or 
+	 # @exception RuntimeError Raised when the team is full (error code 2) or
 	 #                         teams limit is reached (erro code 1).
 	def __init__(self, name,*members):
 		if len(Team.__ids) == max_teams and max_teams > 0:
@@ -130,23 +136,23 @@ class Team:
 			raise AssertionError("Could not find any free id.")
 		self.__id=id
 		Team.__ids.add(id)
-	
+
 	## @brief Del function (Destructor)
 	 # @details Cleans up.
 	 # @note Do not call this function directly. Use del \<instance\> instead.
 	def __del__(self):
 		self.__ids.remove(self.__id)
-	
+
 	## @brief Sets the team name
 	 # @details This function sets the name of the team.
 	 # @param name The new team name.
 	 # @note This triggers the event "Team renamed"
 	def setName(self, name):
 		self.__name=name
-		events.triggerEvent("Team renamed")
+		events.triggerEvent("Team renamed",self.getEscapedName() )
 
 	## @brief Applies all changes
-	 # @details You must call this function to apply changes on the name or 
+	 # @details You must call this function to apply changes on the name or
 	 #          the color of the team
 	 # @param force Force team name changes by setting TEAM_NAME_AFTER_PLAYER_teamid to 0?
 	def applyChanges(self, force=True):
@@ -168,7 +174,7 @@ class Team:
 			raise RuntimeError("Team is full.",2)
 		if name not in self.__members:
 			self.__members.append(str(name) )
-	
+
 	## @brief Removes a player from the team
 	 # @details This function removes the given player from the member list of the team.
 	 # @param name The ladder name of the player to remove from the team.
@@ -180,27 +186,31 @@ class Team:
 
 	## @brief Kills the whole team
 	 # @details This function kills all members of the team.
+	 # @note This triggers the Event "Team killed"
 	 # @see Player::kill
 	def kill(self):
 		for playername in self.__members:
 			if playername not in Player.players:
-				log.warning("Found non-existing player " + playername + 
+				log.warning("Found non-existing player " + playername +
 				            " as a member of a team. This might be a Bug.")
 				continue
 			Player.players[playername].kill()
+			events.triggerEvent("Team killed",self.getEscapedName() )
 	## @brief Crashes the whole team
 	 # @details This function crashes all members of the team.
+	 # @note This triggers the Event "Team crashed".
 	 # @see Player::crash
 	def crash(self):
 		for playername in self.__members:
 			if playername not in Player.players:
-				log.warning("Found non-existing player " + playername + 
+				log.warning("Found non-existing player " + playername +
 				            " as a member of a team. This might be a Bug.")
 				continue
 			Player.players[playername].crashed()
+			events.triggerEvent("Team crashed", self.getEscapedName() )
 
 	## @brief Respawns the whole team
-	 # @details This function respawns every player in the team. 
+	 # @details This function respawns every player in the team.
 	 # @param x The x-coordinate where to spawn to player with the position 1 in the team.
 	 # @param y The y-coordinate where to spawn to player with the position 1 in the team.
 	 # @param xdir The x direction
@@ -208,7 +218,8 @@ class Team:
 	 # @param offset The offset for back-moving the players.
 	 # @param shift The offset for moving the players left or right. Should be greater than 0
 	 # @param force Force the new position for each player? True if yes.
-	 # @attention x and y coordinate are NOT relative to xdir and ydir. 
+	 # @attention x and y coordinate are NOT relative to xdir and ydir.
+	 # @note This triggers the Event "Team spawned""
 	 # @see Player::respawn
 	def respawn(self, x, y, xdir, ydir, offset, shift, force):
 		shift=abs(shift)
@@ -217,7 +228,7 @@ class Team:
 		current_shift=0
 		for playername in self.__members:
 			if playername not in Player.players:
-				log.error("Found non-existing player " + playername + 
+				log.error("Found non-existing player " + playername +
 				            " as a member of a team. This might be a Bug.")
 				continue
 			log.debug("Player "+playername+" spawned at "+str(x)+","+str(y) )
@@ -229,12 +240,13 @@ class Team:
 			if i%2==1:
 				current_shift=current_shift+shift
 			y=y-i%2*offset
+			events.triggerEvent("Team spawned", self.getEscapedName() )
 
 	## @brief Shuffles an player
 	 # @details Moves the given player to the given position in the team.
 	 # @param player The ladder name of the player who to shuffle.
 	 # @param pos The position to which to shuffle the player. 0 is the 1st position.
-	 # @exception RuntimeError Raised if the player is not a meber of the team or 
+	 # @exception RuntimeError Raised if the player is not a meber of the team or
 	 #                         does not exist.
 	def shufflePlayer(self, player, pos):
 		if player not in self.__members:
@@ -243,7 +255,7 @@ class Team:
 		self.__members[pos:pos]=[player]
 
 	## @brief Gets the position of the player
-	 # @details Returns the position of the given player in the team.	
+	 # @details Returns the position of the given player in the team.
 	 # @param name The ladder name of the player from who to get the position.
 	 # @return The position, where 0 is the 1st position.
 	 # @exception RuntimeError Raised if the player does not exist in the team.
@@ -272,13 +284,13 @@ class Team:
  # @details This function enables logging for this module.
  # @param h The handler used for logging
  # @param f The formatter used for logging
- # @param level The logging level 
+ # @param level The logging level
 def enableLogging(level=logging.DEBUG, h=None,f=None):
 	log.setLevel(level)
 	if not h:
 		h=logging.StreamHandler()
 		h.setLevel(level)
-	if not f: 
+	if not f:
 		f=logging.Formatter("[%(name)s] (%(asctime)s) %(levelname)s: %(message)s")
 	h.setFormatter(f)
 	log.addHandler(h)

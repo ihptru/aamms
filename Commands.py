@@ -8,9 +8,11 @@ import Zone
 import Player
 import Team
 import Mode
-import Armagetronad
+import LadderLogHandlers
 import Messages
 import textwrap
+import Vote
+import AccessLevel
 ###################################### COMMAND HELPERS ###################################
 
 ## @brief Gets the parameter of a command
@@ -30,6 +32,9 @@ def getArgs(command):
 	optionalvalues=list()
 	for arg in args:
 		arg=arg.strip()
+		arg=arg.replace(" ","")
+		if arg=="player" or arg=="acl": #Internal args
+			continue
 		if arg.find("=")==-1:
 			minargcount=minargcount+1
 			maxargcount=maxargcount+1
@@ -56,7 +61,7 @@ def checkUsage(command, *args):
 		command=command[1:]
 	commandf=globals()[command]
 	minargcount, maxargcount, unused, unused=getArgs(command)
-	if minargcount - 1 <= len(args) <= maxargcount - 1:
+	if minargcount <= len(args) <= maxargcount:
 		return True
 	else:
 		return False
@@ -71,7 +76,7 @@ def getUsage(command):
 	commandf=globals()[command]
 	# Get command usage line
 	minargcount, maxargcount, defaultvalues, argnames=getArgs(command)
-	neededargs=argnames[1:minargcount] # Don't show the player arg
+	neededargs=argnames[:minargcount]
 	optionalargs=argnames[minargcount:maxargcount]
 	optionalargsstr=""
 	if len(optionalargs):
@@ -108,7 +113,7 @@ def getUsage(command):
 		elif commentaritem.startswith("@param"):
 			commentaritem=commentaritem[len("@param"):].strip()
 			param, desc=commentaritem.split(" ",1)
-			if param=="player": 
+			if param not in argnames: # Probably internal arg, not needed to show the user.
 				continue
 			desc=desc.replace("player's ","your")
 			desc=desc.replace("the player ","you")
@@ -125,8 +130,8 @@ def getUsage(command):
 		paramstr="None"
 	usagestr="Usage: "+commandstr+"\n"+"Description: "+commanddesc+"\nParameters: "+paramstr
 	return usagestr
-	
-			
+
+
 
 ###################################### COMMANDS ##########################################
 #START COMMANDS
@@ -136,7 +141,7 @@ def getUsage(command):
  # @details This function is used for the /script command in the game
  # @param code The code to evaluate.
  # @param player The player who called /script
-def script(player, *code):
+def script(acl, player, *code):
 	code=" ".join(code)
 	code.replace("\"","'")
 	try:
@@ -149,22 +154,22 @@ def script(player, *code):
  # @param player The player who executed this command
  # @param flush_buffer Flush the player's buffer after it was executed?
  # @details Executes the buffer of the given player
-def execbuffer(player, flush_buffer=False):
-	if "buffer" not in Player.players[player].data: 
+def execbuffer(acl, player, flush_buffer=False):
+	if "buffer" not in Player.players[player].data:
 		Player.players[player].data["buffer"]=[""]
 	string="\n".join(Player.players[player].data["buffer"])
 	if string.strip().replace("\n","").replace("\t","")=="":
 		msg="You don't have any text to exec in your buffer. Use / <text> to add some."
 		Armagetronad.PrintPlayerMessage(player,msg)
 		return
-	script(player, string)
+	script(acl, player, string)
 	if flush_buffer:
 		del Player.players[player].data["buffer"]
 
 ## @brief Empties the buffer of a player
  # @details Clears the buffer of the given player
  # @param player The player for who to clear the buffer.
-def clearbuffer(player):
+def clearbuffer(acl, player):
 	if "buffer" in Player.players[player].data:
 		del Player.players[player].data["buffer"]
 		Armagetronad.PrintPlayerMessage(player,"Buffer cleared.")
@@ -172,7 +177,7 @@ def clearbuffer(player):
 ## @brief Prints the buffer of a player
  # @details Prints the buffer of the given player to the player.
  # @param player The player of who to print the buffer and to who to print the buffer.
-def printbuffer(player):
+def printbuffer(acl, player):
 	if "buffer" in Player.players[player].data and "\n".join(Player.players[player].data["buffer"]).strip() != "":
 		Armagetronad.PrintPlayerMessage(player,"Buffer: \n" + "\n".join(Player.players[player].data["buffer"]) )
 	else:
@@ -184,7 +189,7 @@ def printbuffer(player):
  # @param y The y coordinate to which to teleport
  # @param xdir The x direction
  # @param ydir The y direction
-def tele(player, x, y, xdir=0, ydir=1):
+def tele(acl, player, x, y, xdir=0, ydir=1):
 	Player.players[player].respawn(x,y,xdir,ydir,True)
 	Armagetronad.PrintMessage(Messages.PlayerTeleport.format(player=player,x=x,y=y,xdir=xdir, ydir=ydir) )
 
@@ -193,21 +198,50 @@ def tele(player, x, y, xdir=0, ydir=1):
  # @param player The player who executed this command
  # @param mode The mode which to activate.
  # @param type Optional How does the mode get activated? Could be set or vote. Set isn't avaliable for normal players.
- # @param when Optional When gets the mode activated? Only affects if type set. Could be now, roundend or matchend (currently only now is supported)
-def mode(player, mode, type="vote", when="now"):
+ # @param when Optional When gets the mode activated? Only affects if type set. Could be now, roundend or matchend (currently only now and roundend is supported)
+def mode(acl, player, mode, type="vote", when="now"):
 	mode=mode.lower()
+	if mode not in Mode.modes:
+		Armagetronad.PrintPlayerMessage(player, Messages.ModeNotExist.format(mode=mode))
+		return
 	if(type=="vote"):
-		Armagetronad.PrintPlayerMessage(player, Messages.FeatureNotImplemented.format(feature="Voting"))
+		Vote.Add(Mode.modes[mode].name, Mode.modes[mode].activate)
+		Armagetronad.PrintMessage(Messages.VoteAdded.format(target=Mode.modes[mode].name, player=Player.players[player].name) )
 		return
 	elif type=="set":
+		if (not AccessLevel.isAllowed("mode_set_now",acl) and when=="now") or (not AccessLevel.isAllowed("mode_set_roundend",acl) and when=="roundend"):
+			Armagetronad.PrintPlayerMessage(Player, "You're not allowed to do this.")
 		if when=="now":
-			if mode not in Mode.modes:
-				Armagetronad.PrintPlayerMessage(player, Messages.ModeNotExist.format(mode=mode))
-				return
-			else:
-				Mode.modes[mode].activate(True)
+			Mode.modes[mode].activate(True)
+		elif when=="roundend":
+			LadderLogHandlers.atRoundend.append(Mode.modes[mode].activate)
 		else:
 			pass
 	else:
 		pass
-		
+
+## @brief Vote for a vote
+ # @details Adds the player to the list of yes voters
+ # @param acl The accesslevel of the player
+ # @param player The name of the player
+def yes(acl, player):
+	if not Vote.current_vote:
+		return #TODO: PRINT A MESSAGE
+	try:
+		Vote.current_vote.SetPlayerVote(player, True)
+		Armagetronad.PrintMessage(Messages.PlayerVotedYes.format(player=Player.players[player].name, target=Vote.current_vote.target) )
+	except RuntimeError:
+		Armagetronad.PrintPlayerMessage(Messages.PlayerAlreadyVoted)
+
+## @brief Vote against a vote
+ # @details Adds the player to the list of no voters
+ # @param acl The accesslevel of the player
+ # @param player The name of the player
+def no(acl, player):
+	if not Vote.current_vote:
+		return #TODO: PRINT A MESSAGE
+	try:
+		Vote.current_vote.SetPlayerVote(player, False)
+		Armagetronad.PrintMessage(Messages.PlayerVotedNo.format(player=Player.players[player].name, target=Vote.current_vote.target) )
+	except RuntimeError:
+		Armagetronad.PrintPlayerMessage(Messages.PlayerAlreadyVoted)

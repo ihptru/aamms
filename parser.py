@@ -9,6 +9,11 @@ import Armagetronad
 import Zone
 import Mode
 import Global
+import atexit
+
+def exit():
+	Armagetronad.PrintMessage("0xff0000Script exited.")
+
 log=logging.getLogger("MainModule")
 h=logging.StreamHandler()
 h.setLevel(logging.DEBUG)
@@ -20,7 +25,7 @@ Player.enableLogging()
 Team.enableLogging()
 LadderLogHandlers.enableLogging()
 Mode.enableLogging()
-#We need some special settings. Set it 
+#We need some special settings. Set it
 Armagetronad.SendCommand("LADDERLOG_WRITE_ONLINE_PLAYER 1")
 Armagetronad.SendCommand("LADDERLOG_WRITE_CYCLE_CREATED 1")
 Armagetronad.SendCommand("LADDERLOG_WRITE_INVALID_COMMAND 1")
@@ -31,6 +36,7 @@ Armagetronad.PrintMessage("0xff0000Script started")
 #Init
 Team.Add("AI")
 log.info("Script started")
+atexit.register(exit)
 while(True):
 	line=""
 	try:
@@ -56,9 +62,8 @@ while(True):
 		except TypeError:
 			log.warning("Wrong arguments for ladder log handler function. This might be a bug.")
 		except Exception as e:
-			log.error("Exception " +e.__class__.__name__ 
+			log.error("Exception " +e.__class__.__name__
 			            + " raised in Ladder log handler. This might be a bug.")
-			break
+			raise(e)
 	else:
 		log.debug("No ladder log handler for ladder event „" + command + "“.")
-Armagetronad.PrintMessage("0xff0000Script exited.")
