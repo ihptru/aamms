@@ -5,14 +5,12 @@
 
 import Player
 import Armagetronad
+import yaml
+import Mode
 
 ## @brief Call to reload player list.
- # @details This will kick all players to the server (so they leave and come back) to reload player list.
+ # @details This will kill all players and reset match score so the script can reload the player list.
 def reloadPlayerList():
-	Armagetronad.SendCommand("DEFAULT_KICK_TO_SERVER "+"127.0.0.1")
-	Armagetronad.SendCommand("DEFAULT_KICK_TO_REASON Sorry, the server's script crashed. All players have to rejoin to reload the script's player list. ")
-	for ln, player in Player.players.items():
-		Armagetronad.SendCommand("KICK_TO "+ln)
-		Armagetronad.SendCommand("UNBAN_USER "+ln)
-		Armagetronad.SendCommand("UNBAN_IP "+Player.players[ln].ip)
-		del Player.players[ln]
+	Armagetronad.SendCommand("START_NEW_MATCH")
+	Armagetronad.SendCommand("CYCLE_RUBBER -1")
+	Armagertronad.SendCommand("CYCLE_RUBBER 1")

@@ -13,6 +13,12 @@ import Armagetronad
 import logging
 import logging.handlers
 import LadderLogHandlers
+import yaml
+from glob import glob
+import os.path
+import os
+import imp
+imp.reload(Zone)
 
 ## @brief Global settings directory
  # @details This is used as default for settings_prefix by new modes.
@@ -60,10 +66,43 @@ def Remove(name):
 		modes.values()[0].activate()
 	log.info("Mode "+dname+" removed.")
 
+## @brief Saves all modes
+ # @details Saves the modes listened in Mode.modes.
+ # @param dir Optional The directory where the mode files should be written.
+ # @param ext Optional The file extension which the mode files should have, including the point.
+def saveModes(dir="Modes", ext=".aamode"):
+	global modes
+	if not dir.endswith("/"):
+		dir=dir+"/"
+	if not os.path.exists(dir):
+		os.mkdir(dir)
+	for mode in modes.values():
+		f=open(dir+mode.getEscapedName()+ext,"w")
+		yaml.dump(mode, f)
+
+## @brief Loads modes
+ # @details Loads the modes from a directory.
+ # @param dir Optional The directory from which the modes should be loaded.
+ # @param ext Optional The file extensions that mode files have, including the point.
+def loadModes(dir="Modes", ext=".aamode"):
+	if not os.path.exists(dir):
+		return
+	global modes
+	if not dir.endswith("/"):
+		dir=dir+"/"
+	modefiles=glob(dir+"*"+ext)
+	for filename in modefiles:
+		log.debug("Loading mode from "+filename+" ...")
+		f=open(filename, "r")
+		m=yaml.load(f)
+		modes[m.getEscapedName()]=m
+		log.debug("Loaded mode "+m.name)
+	
+
 ## @class Mode.Mode
  # @brief A mode
  # @details This class represents a mode. It stores all information about the mode.
-class Mode:
+class Mode(yaml.YAMLObject):
 	## @property name
 	 # @brief The name of the mode
 	 # @details A string which contains the name of the mode.
@@ -121,10 +160,20 @@ class Mode:
 	 # @details Number of lives a player has in this mode.
 
 	## @brief Slots
-	 # @dertails See http://docs.python.org OOP
+	 # @details See http://docs.python.org OOP
 	 # @internal
 	__slots__=("name","__zones","max_teams","max_team_members","settings_file",
 	           "__respoints","settings","__restype","__last_respoint")
+	## @brief Yaml tag
+	 # @details See http://pyyaml.org/wiki/PyYAMLDocumentation for details to the PyYaml library.
+	 # @internal
+	yaml_tag="!mode"
+
+	## @brief Which variables shouldn't be saved by object serialized?
+	 # @details Variables to exclude in __get_state__
+	 # @internal
+	__not_persistent=("__last_respoint")
+ 
 	## @brief Init function (Constructor)
 	 # @details Inits a new Mode object and adds properties to it.
 	 # @param name The name of the mode
@@ -204,7 +253,8 @@ class Mode:
 			else:
 				kill=False
 		settings_prefix=settings_prefix.rstrip("/")
-		Armagetronad.SendCommand("INCLUDE {0}/{1}".format(settings_prefix, self.settings_file) )
+		if self.settings_file != None:
+			Armagetronad.SendCommand("INCLUDE {0}/{1}".format(settings_prefix, self.settings_file) )
 		for setting, value in self.settings:
 			Armagetronad.SendCommand("{0} {1}".format(setting,value) )
 		Team.max_teams=self.max_teams
@@ -293,16 +343,47 @@ class Mode:
 		self.__zones=list()
 
 	## @brief Get zones
-	 # @details Get a copy of the internal zone list.
-	 # @return A deep copy of the zone list.
+	 # @details Get the internal zone list.
+	 # @return The internal zone list.
 	def getZones(self):
-		return copy.deepcopy(self.__zones)
+		return self.__zones
 
 	## @brief Returns an escaped name for the mode
 	 # @details Returns the mode name with all spaces replaced by underscores and all letters lowercased.
 	 # @return The escaped mode name.
 	def getEscapedName(self):
 		return self.name.replace(" ","_").lower()
+
+	## @brief Returns current object state.
+	 # @details Used by pickle and other serializing modules.
+	 # @return A dictionary of the current object state
+	def __getstate__(self):
+		__state=dict()
+		for var in self.__slots__:
+			if var not in self.__not_persistent:
+				varname=var
+				settingsname=var
+				if var.startswith("__"):
+					varname=var.replace("__","_Mode__",1)
+					settingsname=var.replace("__","",1)
+					if hasattr(self, settingsname):
+						continue # Ignore private variables if a public one with the same name exists.
+				__state[settingsname]=getattr(self, varname)
+		return __state
+
+	## @brief Sets the current object state
+	 # @details Used by pickle and other serializing modules.
+	 # @param state The state to which to set the current object state.
+	def __setstate__(self, state):
+		for var, value in state.items():
+			if var not in self.__not_persistent:
+				if not var in self.__slots__:
+					var="__"+var
+					if not var in self.__slots__:
+						raise Exception("Error: Invalid state (var "+str(var)+" doesn't exist.)")
+					else:
+						var="_Mode"+var
+				setattr(self, var, value)
 
 ## @brief Enables logging
  # @details This function enables logging for this module.

@@ -8,6 +8,7 @@ import Event
 import logging
 import logging.handlers
 import Team
+import yaml
 
 ## @brief The logging object
  # @private
@@ -35,7 +36,7 @@ events.addEvent(Event.Event("Zone renamed") )
 ## @class Zone.Zone
  # @brief A zone
  # @details This class represents a zone. Zones can be spawned, collapsed, have a name, ...
-class Zone:
+class Zone(yaml.YAMLObject):
 	## @property name
 	 # @brief The zone name
 	 # @details The name of the zone or None if the zone is unnamed.
@@ -108,6 +109,16 @@ class Zone:
 	 # @details See docs.python.org OOP Slots
 	__slots__=("name","__name","color", "position", "radius","__alive", "growth","interactive", 
 	          "teamnames", "settings", "killteam", "target_size", "teleport_settings","dir","__type")
+
+	## @brief Yaml tag
+	 # @details See http://pyyaml.org/wiki/PyYAMLDocumentation for details to the PyYaml library.
+	 # @internal
+	yaml_tag="!zone"
+
+	## @brief Which variables shouldn't be saved by object serialized?
+	 # @details Variables to exclude in __get_state__
+	 # @internal
+	__not_persistent=("__alive, teamnames")
 	
 	## @brief Init function (Constructor)
 	 # @details Inits a new Zone and adds properties.
@@ -209,8 +220,8 @@ class Zone:
 	 # @param name The new name of the zone or None if the zone should be unnamed.
 	 # @note This triggers the event "Zone renamed"
 	@name.setter
-	def setName(self, name):
-		self.name=name
+	def setName(self, newname):
+		self.__name=newname
 		events.triggerEvent("Zone renamed")
 
 	## @brief Returns the alive state of the zone
@@ -227,6 +238,37 @@ class Zone:
 		if type not in __ZONE_TYPES:
 			raise ValueError("Wrong zone type.",0)
 		self.__type=type
+
+	## @brief Returns current object state.
+	 # @details Used by pickle and other serializing modules.
+	 # @return A dictionary of the current object state
+	def __getstate__(self):
+		__state=dict()
+		for var in self.__slots__:
+			if var not in self.__not_persistent:
+				varname=var
+				settingsname=var
+				if var.startswith("__"):
+					varname=var.replace("__","_Zone__",1)
+					settingsname=var.replace("__","",1)
+				if (hasattr(self, settingsname) and settingsname!=varname) or not hasattr(self, varname):
+					continue # Ignore private variables if a public one with the same name exists.
+				__state[settingsname]=getattr(self, varname)
+		return __state
+
+	## @brief Sets the current object state
+	 # @details Used by pickle and other serializing modules.
+	 # @param state The state to which to set the current object state.
+	def __setstate__(self, state):
+		for var, value in state.items():
+			if var not in self.__not_persistent:
+				if not var in self.__slots__:
+					var="__"+var
+					if not var in self.__slots__:
+						raise Exception("Error: Invalid state (var "+str(var)+" doesn't exist.)")
+					else:
+						var="_Zone"+var
+				setattr(self, var, value)
 
 ## @brief Enables logging
  # @details This function enables logging for this module.
