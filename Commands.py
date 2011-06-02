@@ -13,6 +13,7 @@ import Messages
 import textwrap
 import Vote
 import AccessLevel
+import re
 ###################################### COMMAND HELPERS ###################################
 
 ## @brief Gets the parameter of a command
@@ -66,15 +67,32 @@ def checkUsage(command, *args):
 	else:
 		return False
 
-## @brief Gets an usage message for a command
- # @details Returns an usage message for the given command
- # @param command The command for which to generate the usage message.
- # @return The usage message
-def getUsage(command):
+## @brief Returns all avaliable commands.
+ # @details Searches this file for commands and return its names.
+ # @return The command names.
+def getCommands():
+	lines=list()
+	with open(__file__) as f:
+		lines=f.readlines()
+	start=lines.index("#START COMMANDS\n")
+	lines=lines[start:]
+	lines="".join(lines)
+	match_func_def=re.compile("def [^(]+\([^)]*\)\s*:")
+	func_defs=match_func_def.findall(lines)
+	func_names=list()
+	for func_def in func_defs:
+		func_name=func_def[3:func_def.find("(")].strip()
+		func_names.append(func_name)
+	return func_names
+		
+
+## @brief Gets the command line ( /command neededparams [optionalparams]
+ # @details Retuns the command line for the given command.
+ # @param command The command for which to get the command line.
+ # @return The command line.
+def getCommandLine(command):
 	if command.startswith("/"):
 		command=command[1:] #Remove the slash
-	commandf=globals()[command]
-	# Get command usage line
 	minargcount, maxargcount, defaultvalues, argnames=getArgs(command)
 	neededargs=argnames[:minargcount]
 	optionalargs=argnames[minargcount:maxargcount]
@@ -82,8 +100,25 @@ def getUsage(command):
 	if len(optionalargs):
 		optionalargsstr="["+(" [").join(optionalargs)+"]"*len(optionalargs)
 	neededargsstr=" ".join(neededargs)
-	commandstr="/"+command+" "+neededargsstr+" "+optionalargsstr
-	# Get documentation commentar of the command function
+	command=command.strip()
+	if neededargsstr.strip()=="":
+		neededargsstr=""
+	else:
+		neededargsstr=" "+neededargsstr
+	optionalargsstr=" "+optionalargsstr
+	return ("/" + command + neededargsstr + optionalargsstr).strip()
+## @brief Gets the command description including the param description.
+ # @details Returns the description for the given command.
+ # @param command The command for which to get the description
+ # @return Tuple of command description, param description for the given command
+def getDescription(command):
+	if command.startswith("/"):
+		command=command[1:] #Remove the slash
+	commandf=globals()[command]
+	minargcount, maxargcount, defaultvalues, argnames=getArgs(command)
+	neededargs=argnames[:minargcount]
+	optionalargs=argnames[minargcount:maxargcount]
+
 	lines=""
 	commentars=list()
 	currentlineno=0
@@ -101,7 +136,7 @@ def getUsage(command):
 			break
 		commentars.append(lines[currentlineno].strip()[1:].strip() ) #Remove the "#"
 		currentlineno=currentlineno-1
-	# Extract parameter and command description from the commentar
+
 	params=list()
 	commanddesc=""
 	for commentaritem in commentars:
@@ -125,6 +160,17 @@ def getUsage(command):
 			for curdescl in reversed(desc[1:]):
 				params.append(" "*7+curdescl)
 			params.append(param+" "*(7-len(param))+desc[0])
+	return commanddesc, params
+	
+
+
+## @brief Gets a help message for a command
+ # @details Returns a help message for the given command
+ # @param command The command for which to generate the help message.
+ # @return The help message
+def getHelp(command):
+	commandstr=getCommandLine(command)
+	commanddesc, params=getDescription(command)
 	paramstr="\n    "+"\n    ".join(reversed(params) )
 	if len(params)==0:
 		paramstr="None"

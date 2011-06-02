@@ -12,6 +12,7 @@ import Global
 import atexit
 
 def exit():
+	#Mode.saveModes()
 	Armagetronad.PrintMessage("0xff0000Script exited.")
 
 log=logging.getLogger("MainModule")
@@ -35,7 +36,11 @@ Armagetronad.SendCommand("EXTRA_ROUND_TIME 1")
 Armagetronad.PrintMessage("0xff0000Script started")
 #Init
 Team.Add("AI")
+Mode.loadModes()
+Global.updateHelpTopics()
 log.info("Script started")
+#We need to refresh player list
+Global.reloadPlayerList()
 atexit.register(exit)
 while(True):
 	line=""
@@ -59,8 +64,9 @@ while(True):
 	if(hasattr(LadderLogHandlers,command) ):
 		try:
 			getattr(LadderLogHandlers,command)(*args)
-		except TypeError:
-			log.warning("Wrong arguments for ladder log handler function. This might be a bug.")
+		except TypeError as e:
+			log.warning("Wrong arguments for ladder log handler for "+command+". This might be a bug.")
+			raise e
 		except Exception as e:
 			log.error("Exception " +e.__class__.__name__
 			            + " raised in Ladder log handler. This might be a bug.")

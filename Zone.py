@@ -4,6 +4,7 @@
  # @details This file contains functions and classes that are used for zone management.
 
 from Armagetronad import SendCommand
+import Armagetronad
 import Event
 import logging
 import logging.handlers
@@ -19,9 +20,9 @@ log.addHandler(logging.NullHandler() )
 
 ## @brief All avaliable zone types
  # @details List of all avaliable zone types used to determine if a zone type is valid.
-__ZONE_TYPES=["win", "death", "ball", "ballTeam", "blast", "deathTeam", "koh", 
-              "fortress", "flag","rubber", "sumo", "target", "teleport", "zombie",
-              "zombieOwner"]
+_ZONE_TYPES=["win", "death", "ball", "ballTeam", "blast", "deathTeam", "koh", 
+             "fortress", "flag","rubber", "sumo", "target", "teleport", "zombie",
+             "zombieOwner"]
 
 ## @brief Eventgroup of this module
  # @details Events used by this module:
@@ -166,7 +167,7 @@ class Zone(yaml.YAMLObject):
 					else:
 						log.error("Team assigned with zone doesn't exist")
 				else:
-					teams=teams+team
+					teams=teams+[team]
 		teams=" ".join(teams)
 		tele_settings=""
 		if self.__type=="teleport":
@@ -234,10 +235,10 @@ class Zone(yaml.YAMLObject):
 	 #          http://crazy-tronners.com/wiki/index.php/Settings#type
 	 # @param type The name of the zone type.
 	 # @exception ValueError Raised if the zone type doesn't exist.
-	def setType(self, type):
-		if type not in __ZONE_TYPES:
+	def setType(self, ztype):
+		if ztype not in _ZONE_TYPES:
 			raise ValueError("Wrong zone type.",0)
-		self.__type=type
+		self.__type=ztype
 
 	## @brief Returns current object state.
 	 # @details Used by pickle and other serializing modules.
@@ -245,7 +246,7 @@ class Zone(yaml.YAMLObject):
 	def __getstate__(self):
 		__state=dict()
 		for var in self.__slots__:
-			if var not in self.__not_persistent:
+			if var not in self.__not_persistent or var == name:
 				varname=var
 				settingsname=var
 				if var.startswith("__"):
@@ -261,14 +262,21 @@ class Zone(yaml.YAMLObject):
 	 # @param state The state to which to set the current object state.
 	def __setstate__(self, state):
 		for var, value in state.items():
-			if var not in self.__not_persistent:
+			if not var in self.__slots__:
+				var="__"+var
 				if not var in self.__slots__:
-					var="__"+var
-					if not var in self.__slots__:
-						raise Exception("Error: Invalid state (var "+str(var)+" doesn't exist.)")
-					else:
-						var="_Zone"+var
+					raise Exception("Error: Invalid state (var "+str(var)+" doesn't exist.)")
+				else:
+					var="_Zone"+var
+			try:
 				setattr(self, var, value)
+			except AttributeError:
+				if ("__"+var) in self.__slots__:
+					Armagetronad.PrintMessage(str(self.__slots__) )
+					var="_Zone__"+var
+					setattr(self, var, value)
+		self.__alive=False
+		self.teamnames=list()
 
 ## @brief Enables logging
  # @details This function enables logging for this module.

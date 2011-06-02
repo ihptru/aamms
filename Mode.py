@@ -17,8 +17,6 @@ import yaml
 from glob import glob
 import os.path
 import os
-import imp
-imp.reload(Zone)
 
 ## @brief Global settings directory
  # @details This is used as default for settings_prefix by new modes.
@@ -255,7 +253,7 @@ class Mode(yaml.YAMLObject):
 		settings_prefix=settings_prefix.rstrip("/")
 		if self.settings_file != None:
 			Armagetronad.SendCommand("INCLUDE {0}/{1}".format(settings_prefix, self.settings_file) )
-		for setting, value in self.settings:
+		for setting, value in self.settings.items():
 			Armagetronad.SendCommand("{0} {1}".format(setting,value) )
 		Team.max_teams=self.max_teams
 		Team.max_team_members=self.max_team_members
@@ -285,9 +283,11 @@ class Mode(yaml.YAMLObject):
 		log.debug("Spawn zones ...")
 		for team,zone in self.__zones:
 			if team==None:
-				for teams in Team.teams:
-					zone.color=teams.color
+				for team in Team.teams.values():
+					zone.color=team.color
+					zone.teamnames=[team.getEscapedName(),]
 					zone.spawn()
+				return
 			elif team == -1:
 					zone.spawn()
 			else:
