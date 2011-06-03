@@ -119,7 +119,7 @@ class Zone(yaml.YAMLObject):
 	## @brief Which variables shouldn't be saved by object serialized?
 	 # @details Variables to exclude in __get_state__
 	 # @internal
-	__not_persistent=("__alive, teamnames")
+	__not_persistent=("__alive", "teamnames")
 	
 	## @brief Init function (Constructor)
 	 # @details Inits a new Zone and adds properties.
