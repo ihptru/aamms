@@ -116,7 +116,7 @@ class Zone(yaml.YAMLObject):
 	 # @internal
 	yaml_tag="!zone"
 
-	## @brief Which variables shouldn't be saved by object serialized?
+	## @brief Which variables shouldn't be saved by object serializion?
 	 # @details Variables to exclude in __get_state__
 	 # @internal
 	__not_persistent=("__alive", "teamnames")
@@ -246,7 +246,7 @@ class Zone(yaml.YAMLObject):
 	def __getstate__(self):
 		__state=dict()
 		for var in self.__slots__:
-			if var not in self.__not_persistent or var == name:
+			if var not in self.__not_persistent:
 				varname=var
 				settingsname=var
 				if var.startswith("__"):
@@ -268,13 +268,7 @@ class Zone(yaml.YAMLObject):
 					raise Exception("Error: Invalid state (var "+str(var)+" doesn't exist.)")
 				else:
 					var="_Zone"+var
-			try:
-				setattr(self, var, value)
-			except AttributeError:
-				if ("__"+var) in self.__slots__:
-					Armagetronad.PrintMessage(str(self.__slots__) )
-					var="_Zone__"+var
-					setattr(self, var, value)
+			setattr(self, var, value)
 		self.__alive=False
 		self.teamnames=list()
 
