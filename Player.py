@@ -178,7 +178,10 @@ class Player:
 	## @brief Del function
 	 # @details Removes the player from his team
 	def __del__(self):
-		self.leaveTeam()
+		try:
+			self.leaveTeam()
+		except:
+			pass	
 
 	## @brief Sets the team of the player
 	 # @details This function lets the player join the given team

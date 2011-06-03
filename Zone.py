@@ -268,7 +268,11 @@ class Zone(yaml.YAMLObject):
 					raise Exception("Error: Invalid state (var "+str(var)+" doesn't exist.)")
 				else:
 					var="_Zone"+var
-			setattr(self, var, value)
+			try:
+				setattr(self, var, value)
+			except AttributeError:
+				if "__"+var in self.__slots__:
+					setattr(self, "_Zone__"+var,value)
 		self.__alive=False
 		self.teamnames=list()
 

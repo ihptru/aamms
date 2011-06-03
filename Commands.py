@@ -252,6 +252,7 @@ def mode(acl, player, mode, type="vote", when="now"):
 		return
 	if(type=="vote"):
 		Vote.Add(Mode.modes[mode].name, Mode.modes[mode].activate)
+		Vote.current_vote.SetPlayerVote(player, True)
 		Armagetronad.PrintMessage(Messages.VoteAdded.format(target=Mode.modes[mode].name, player=Player.players[player].name) )
 		return
 	elif type=="set":
@@ -277,7 +278,7 @@ def yes(acl, player):
 		Vote.current_vote.SetPlayerVote(player, True)
 		Armagetronad.PrintMessage(Messages.PlayerVotedYes.format(player=Player.players[player].name, target=Vote.current_vote.target) )
 	except RuntimeError:
-		Armagetronad.PrintPlayerMessage(Messages.PlayerAlreadyVoted)
+		Armagetronad.PrintPlayerMessage(player, Messages.PlayerAlreadyVoted)
 
 ## @brief Vote against a vote
  # @details Adds the player to the list of no voters
@@ -290,4 +291,4 @@ def no(acl, player):
 		Vote.current_vote.SetPlayerVote(player, False)
 		Armagetronad.PrintMessage(Messages.PlayerVotedNo.format(player=Player.players[player].name, target=Vote.current_vote.target) )
 	except RuntimeError:
-		Armagetronad.PrintPlayerMessage(Messages.PlayerAlreadyVoted)
+		Armagetronad.PrintPlayerMessage(player, Messages.PlayerAlreadyVoted)

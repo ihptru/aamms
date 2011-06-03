@@ -4,6 +4,7 @@
  # @details This file contains some usefull functions for %Armagetronad server scripting.
 
 import Messages
+import sys
 
 ## @brief Executes a command
  # @details Send a command to the server. You only have to replace this function if you
@@ -17,6 +18,7 @@ def SendCommand(command):
  # @param msg The message to print
 def PrintMessage(msg):
 	SendCommand("CONSOLE_MESSAGE "+str(msg) )
+	sys.stdout.flush()
 
 ## @brief Prints a message to a player
  # @param msg The message to print
