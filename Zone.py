@@ -132,7 +132,7 @@ class Zone(yaml.YAMLObject):
 	 # @param color Tuple of the r,g,b values of the color used for the zone,
 	 # @param target_size \copybrief target_size
 	def __init__(self, name, position=(0,0), radius=5, growth=0,direction=(0,0), 
-	             interactive=False, color=(0,0,1), target_size=-1 ):
+	             interactive=False, color=(0,0,1), target_size=-1,type="target" ):
 		self.__name=name 
 		self.position=position
 		self.radius=radius
@@ -146,7 +146,7 @@ class Zone(yaml.YAMLObject):
 		self.killteam=False
 		self.settings=[]
 		self.teleport_settings=[]
-		self.__type="target"
+		self.setType(type)
 
 	## @brief Spawns the zone
 	 # @details Spawns the zone and sets alive to True
@@ -156,8 +156,8 @@ class Zone(yaml.YAMLObject):
 		command=""
 		teams=list()
 		command=str("SPAWN_ZONE {name} {type} {teams} {x} {y} {radius} {grow} {dirx} {diry} "
-		        "{tele_settings} {intera} {r} {g} {b} {ts} {ztss}")
-		if self.name != None:
+		        "{tele_settings} {ztss} {intera} {r} {g} {b} {ts}")
+		if self.name != None and self.name.strip()!="":
 			name="n "+self.name.replace(" ","_")
 		if len(self.teamnames)!=0:
 			for team in self.teamnames:
@@ -167,6 +167,8 @@ class Zone(yaml.YAMLObject):
 					else:
 						log.error("Team assigned with zone doesn't exist")
 				else:
+					if team == "ai":
+						team="ai_team"
 					teams=teams+[team]
 		teams=" ".join(teams)
 		tele_settings=""

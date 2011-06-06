@@ -245,15 +245,20 @@ def tele(acl, player, x, y, xdir=0, ydir=1):
  # @param mode The mode which to activate.
  # @param type Optional How does the mode get activated? Could be set or vote. Set isn't avaliable for normal players.
  # @param when Optional When gets the mode activated? Only affects if type set. Could be now, roundend or matchend (currently only now and roundend is supported)
-def mode(acl, player, mode, type="vote", when="now"):
-	mode=mode.lower()
+def mode(acl, player, gmode, type="vote", when="now"):
+	smode=""
+	mode=None
+	for mn, m in Mode.modes.items():
+		if m.short_name.lower()==gmode.lower():
+			mode=mn
+			smode=m.short_name.lower()
 	if mode not in Mode.modes:
-		Armagetronad.PrintPlayerMessage(player, Messages.ModeNotExist.format(mode=mode))
+		Armagetronad.PrintPlayerMessage(player, Messages.ModeNotExist.format(mode=smode))
 		return
 	if(type=="vote"):
 		Vote.Add(Mode.modes[mode].name, Mode.modes[mode].activate)
 		Vote.current_vote.SetPlayerVote(player, True)
-		Armagetronad.PrintMessage(Messages.VoteAdded.format(target=Mode.modes[mode].name, player=Player.players[player].name) )
+		Armagetronad.PrintMessage(Messages.VoteAdded.format(target=smode, player=Player.players[player].name) )
 		return
 	elif type=="set":
 		if (not AccessLevel.isAllowed("mode_set_now",acl) and when=="now") or (not AccessLevel.isAllowed("mode_set_roundend",acl) and when=="roundend"):

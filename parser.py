@@ -10,11 +10,15 @@ import Zone
 import Mode
 import Global
 import atexit
+import sys
+import os
+import os.path
 
 def exit():
-	#Mode.saveModes()
+	Mode.saveModes()
 	Armagetronad.PrintMessage("0xff0000Script exited.")
 
+os.chdir(os.path.dirname(sys.argv[0]) )
 log=logging.getLogger("MainModule")
 h=logging.StreamHandler()
 h.setLevel(logging.DEBUG)

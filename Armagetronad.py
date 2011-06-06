@@ -12,6 +12,7 @@ import sys
  # @param command The command to send
 def SendCommand(command):
 	print(command)
+	sys.stdout.flush()
 
 ## @brief Prints a message
  # @details Writes a message to the game

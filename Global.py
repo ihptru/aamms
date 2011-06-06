@@ -14,7 +14,7 @@ import Commands
 def reloadPlayerList():
 	Armagetronad.SendCommand("START_NEW_MATCH")
 	Armagetronad.SendCommand("CYCLE_RUBBER -1")
-	time.sleep(10)
+	time.sleep(2)
 	Armagetronad.SendCommand("CYCLE_RUBBER 1")
 
 ## @brief Update help topics

@@ -68,7 +68,7 @@ def InvalidCommand(command, player, ip, access, *args):
 		Armagetronad.PrintPlayerMessage(player, Messages.NotAllowed.format(command=command) )
 		return
 	if not Commands.checkUsage(command, *args):
-		Armagetronad.PrintPlayerMessage(player, Commands.getUsage(command))
+		Armagetronad.PrintPlayerMessage(player, Commands.getHelp(command))
 		return
 	args=(access,player) + args
 	try:

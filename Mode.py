@@ -161,7 +161,7 @@ class Mode(yaml.YAMLObject):
 	 # @details See http://docs.python.org OOP
 	 # @internal
 	__slots__=("name","__zones","max_teams","max_team_members","settings_file",
-	           "__respoints","settings","__restype","__last_respoint")
+	           "__respoints","settings","__restype","__last_respoint","short_name")
 	## @brief Yaml tag
 	 # @details See http://pyyaml.org/wiki/PyYAMLDocumentation for details to the PyYaml library.
 	 # @internal
@@ -187,6 +187,7 @@ class Mode(yaml.YAMLObject):
 		self.max_teams=-1
 		self.__restype="toggle_roundstart"
 		self.__last_respoint=dict()
+		self.short_name=name.replace(" ","_").lower()
 
 	## @brief Adds a respoint
 	 # @details Adds the given respoint to the internal respoint list.
@@ -253,6 +254,8 @@ class Mode(yaml.YAMLObject):
 		settings_prefix=settings_prefix.rstrip("/")
 		if self.settings_file != None:
 			Armagetronad.SendCommand("INCLUDE {0}/{1}".format(settings_prefix, self.settings_file) )
+		Armagetronad.SendCommand("TEAMS_MAX "+str(self.max_teams) )
+		Armagetronad.SendCommand("TEAM_MAX_PLAYERS "+str(self.max_team_members) )
 		for setting, value in self.settings.items():
 			Armagetronad.SendCommand("{0} {1}".format(setting,value) )
 		Team.max_teams=self.max_teams
@@ -291,8 +294,9 @@ class Mode(yaml.YAMLObject):
 			elif team == -1:
 					zone.spawn()
 			else:
-				if len(Team.teams)-1 < team:
+				if len(Team.teams)-1 < team-1:
 					continue
+				zone.teamnames=[list(Team.teams.keys())[team-1]]
 				zone.spawn()
 	## @brief Gets a respoint
 	 # @details Gets a respoint for roundstart or normal for the given team
@@ -375,6 +379,7 @@ class Mode(yaml.YAMLObject):
 	 # @details Used by pickle and other serializing modules.
 	 # @param state The state to which to set the current object state.
 	def __setstate__(self, state):
+		self.__init__(state['name'])
 		for var, value in state.items():
 			if var not in self.__not_persistent:
 				if not var in self.__slots__:
