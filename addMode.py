@@ -17,15 +17,15 @@ res_num=None
 while max_teams==None or max_team_members==None or zone_num==None or res_num==None:
 	try:
 		if max_teams==None:
-			max_teams=input("Maximal teams [-1 for unlimited]: ")
+			max_teams=input("Maximal teams [0 for unlimited]: ")
 			if max_teams.strip()=="":
-				max_teams=-1
+				max_teams=0
 			else:
 				max_teams=int(max_teams)
 		if max_team_members == None:
-			max_team_members=input("Maximal members per team [-1 for unlimited]: ")
+			max_team_members=input("Maximal members per team [0 for unlimited]: ")
 			if max_team_members.strip()=="":
-				max_team_members=-1
+				max_team_members=0
 			else:
 				max_team_members=int(max_team_members)
 		if zone_num==None:
@@ -42,8 +42,10 @@ m.max_teams=max_teams
 m.max_team_members=max_team_members
 print("-"*20 + " Zone settings " + "-"*20)
 for i in range(zone_num):
-	print("Zone "+str(i))
-	name=input("Name of the zone [You can leave it empty]: ")
+	print("Zone "+str(i+1),"-----------------------")
+	name=input("Name of the zone [You can leave it empty, default is Zone"+str(i+1)+"]: ")
+	if name.strip=="":
+		name="Zone"+str(i+1)
 	x,y=input("Position [x|y]: ").split("|")
 	x,y=(int(x),int(y))
 	s=int(input("Zone size: ") )
@@ -54,7 +56,7 @@ for i in range(zone_num):
 		direction=0,0
 	else:
 		direction=direction.split("|")
-	team=int(input("Number of the team for which the zone is spawned\n[0: the zone should be spawned once per team\n -1: if the zone should only be spawned once.]: "))
+	team=int(input("Number of the team for which the zone is spawned\n[0: the zone should be spawned once per team\n -1: if the zone should only be spawned once without a team assigned.]: "))
 	color=0,0,0
 	if team == 0:
 		team=None
@@ -80,25 +82,26 @@ print("-"*20 + " Respoints settings " + "-"*16)
 for i in range(res_num):
 	print("Settings for respoint",i+1)
 	direction, pos, team=None, None, None
-	while(None in [direction, position, team]):
+	while(None in [direction, pos, team]):
 		try:
-			if position == None:
+			if pos == None:
 				x,y=input("Position [x|y]: ").split("|")
 				pos=int(x), int(y)
 				if len(pos)!=2:
 					raise ValueError()
 			if direction == None:
-				xdir, ydir=input("Direction [xdir|ydir]: ").split("|")
+				xdir, ydir=input("Initial drive direction [xdir|ydir]: ").split("|")
 				direction=int(xdir), int(ydir)
 				if len(direction)!=2:
 					raise ValueError()
 			if team==None:
-				team=input("Team for which the should be used [leave empty if for all teams]: ")
+				team=input("Number of team for which the should be used [leave empty if for all teams]: ")
 				if team.strip()=="":
 					team=-1
-				team=int(team)
+				team=int(team)-1
 		except ValueError:
 			print("Invalid value entered!")
-		m.addRespoint(*pos, *direction, team)
+			continue
+		m.addRespoint(pos[0],pos[1],direction[0], direction[1], team)
 Mode.modes[m.getEscapedName() ]=m
 Mode.saveModes()

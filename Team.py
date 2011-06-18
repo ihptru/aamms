@@ -9,6 +9,7 @@ import logging.handlers
 import Event
 from Armagetronad import SendCommand
 import Player
+import math
 
 ## @brief The logging object
  # @private
@@ -115,7 +116,8 @@ class Team:
 	 #                         teams limit is reached (erro code 1).
 	def __init__(self, name,*members):
 		if len(Team.__ids) == max_teams and max_teams > 0:
-			raise RuntimeError("Maximal teams limit reached.",1)
+			#raise RuntimeError("Maximal teams limit reached.",1) This should be handled by the server, not by the script.
+			pass
 		self.__members=list()
 		if len(members) != 0:
 			self.__members=list(*members)
@@ -171,7 +173,8 @@ class Team:
 	 # @exception RuntimeError Raised if the team is full.
 	def addPlayer(self, name):
 		if len(self.__members)==max_team_members:
-			raise RuntimeError("Team is full.",2)
+			#raise RuntimeError("Team is full.",2) This should be handled by the server, not by the script.
+			pass
 		if name not in self.__members:
 			self.__members.append(str(name) )
 
@@ -226,6 +229,12 @@ class Team:
 		i=0
 		log.debug("Spawn team "+self.__name)
 		current_shift=0
+		hyp=math.sqrt(xdir**2 + ydir**2) # a² + b² = c²
+		cosa=ydir/hyp
+		sina=xdir/hyp
+		rotmat=[[cosa, -sina],
+		        [sina,  cosa]]
+		relative_y=0
 		for playername in self.__members:
 			if playername not in Player.players:
 				log.error("Found non-existing player " + playername +
@@ -234,13 +243,15 @@ class Team:
 			factor=1
 			if i%2==1:
 				factor=-1
-			Player.players[playername].respawn(x+current_shift*factor,y,xdir,ydir,force)
-			log.debug("Player "+playername+" spawned at "+str(x+current_shift*factor)+"|"+str(y) )
-			log.debug("Current shifting: "+str(current_shift*factor) )
+			relative_x=current_shift*factor
+			rotated_x=rotmat[0][0]*relative_x+rotmat[0][1]*relative_y
+			rotated_y=rotmat[1][0]*relative_x+rotmat[1][1]*relative_y
+			Player.players[playername].respawn(x+rotated_x,y+rotated_y,xdir,ydir,force)
+			log.debug("Player "+playername+" spawned at "+str(x+rotated_x)+"|"+str(y+rotated_y) )
 			i=i+1
 			if i%2==1:
 				current_shift=current_shift+shift
-			y=y-i%2*offset
+			relative_y=relative_y-i%2*offset
 			events.triggerEvent("Team spawned", self.getEscapedName() )
 
 	## @brief Shuffles an player

@@ -210,7 +210,7 @@ class Mode(yaml.YAMLObject):
 	## @brief Gets respoints.
 	 # @details Returns a deepcopy of the intern respoint list.
 	 # @return A deepcopy of the repoints.
-	def getRepoints(self):
+	def getRespoints(self):
 		return copy.deepcopy(self.__respoints)
 
 	## @brief Call this when a player crashed.
