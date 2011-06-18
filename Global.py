@@ -5,8 +5,9 @@
 
 import Player
 import Armagetronad
-import time
+import AccessLevel
 import Mode
+from time import sleep
 import Commands
 
 ## @brief Call to reload player list.
@@ -14,8 +15,10 @@ import Commands
 def reloadPlayerList():
 	Armagetronad.SendCommand("START_NEW_MATCH")
 	Armagetronad.SendCommand("CYCLE_RUBBER -1")
-	time.sleep(2)
+	sleep(2)
 	Armagetronad.SendCommand("CYCLE_RUBBER 1")
+	if Mode.current_mode in Mode.modes:
+		Mode.modes[Mode.current_mode].activate(False)
 
 ## @brief Update help topics
  # @details Updates help topics for modes and commands
@@ -28,12 +31,14 @@ def updateHelpTopics():
 		cl="0x44ff00"+cl
 		cd,cda=Commands.getDescription(command)
 		cd="0xdddddd"+cd
-		cht.append(cl+": "+cd)
+		if AccessLevel.isAllowed(command, 15):
+			cht.append(cl+": "+cd)
 	commandhelp=r"\n".join(cht)
 	modehelp=""
 	mht=list()
 	for mode in modes:
-		mht.append("0x44ff00"+mode+": 0xdddddd"+Mode.modes[mode].name)
+		name=Mode.modes[mode].short_name
+		mht.append("0x44ff00"+name+": 0xdddddd"+Mode.modes[mode].name)
 	commandhelp=commandhelp.replace(" ",r"\ ")
 	modehelp=r"\n".join(mht)
 	modehelp=modehelp.replace(" ",r"\ ")

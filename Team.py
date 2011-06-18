@@ -231,11 +231,12 @@ class Team:
 				log.error("Found non-existing player " + playername +
 				            " as a member of a team. This might be a Bug.")
 				continue
-			log.debug("Player "+playername+" spawned at "+str(x)+","+str(y) )
 			factor=1
 			if i%2==1:
 				factor=-1
 			Player.players[playername].respawn(x+current_shift*factor,y,xdir,ydir,force)
+			log.debug("Player "+playername+" spawned at "+str(x+current_shift*factor)+"|"+str(y) )
+			log.debug("Current shifting: "+str(current_shift*factor) )
 			i=i+1
 			if i%2==1:
 				current_shift=current_shift+shift

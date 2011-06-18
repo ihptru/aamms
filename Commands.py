@@ -14,6 +14,7 @@ import textwrap
 import Vote
 import AccessLevel
 import re
+import Global
 ###################################### COMMAND HELPERS ###################################
 
 ## @brief Gets the parameter of a command
@@ -248,15 +249,15 @@ def tele(acl, player, x, y, xdir=0, ydir=1):
 def mode(acl, player, gmode, type="vote", when="now"):
 	smode=""
 	mode=None
-	for mn, m in Mode.modes.items():
-		if m.short_name.lower()==gmode.lower():
-			mode=mn
+	for key, m in Mode.modes.items():
+		if m.short_name.lower()==gmode.lower() or m.getEscapedName==gmode.lower():
+			mode=key
 			smode=m.short_name.lower()
 	if mode not in Mode.modes:
-		Armagetronad.PrintPlayerMessage(player, Messages.ModeNotExist.format(mode=smode))
+		Armagetronad.PrintPlayerMessage(player, Messages.ModeNotExist.format(mode=gmode))
 		return
 	if(type=="vote"):
-		Vote.Add(Mode.modes[mode].name, Mode.modes[mode].activate)
+		Vote.Add(Mode.modes[mode].short_name, Mode.modes[mode].activate)
 		Vote.current_vote.SetPlayerVote(player, True)
 		Armagetronad.PrintMessage(Messages.VoteAdded.format(target=smode, player=Player.players[player].name) )
 		return
@@ -278,7 +279,8 @@ def mode(acl, player, gmode, type="vote", when="now"):
  # @param player The name of the player
 def yes(acl, player):
 	if not Vote.current_vote:
-		return #TODO: PRINT A MESSAGE
+		Armagetronad.PrintPlayerMessage(player, Messages.NoActiveVote)
+		return
 	try:
 		Vote.current_vote.SetPlayerVote(player, True)
 		Armagetronad.PrintMessage(Messages.PlayerVotedYes.format(player=Player.players[player].name, target=Vote.current_vote.target) )
@@ -291,9 +293,34 @@ def yes(acl, player):
  # @param player The name of the player
 def no(acl, player):
 	if not Vote.current_vote:
-		return #TODO: PRINT A MESSAGE
+		Armagetronad.PrintPlayerMessage(player, Messages.NoActiveVote)
+		return
 	try:
 		Vote.current_vote.SetPlayerVote(player, False)
 		Armagetronad.PrintMessage(Messages.PlayerVotedNo.format(player=Player.players[player].name, target=Vote.current_vote.target) )
 	except RuntimeError:
 		Armagetronad.PrintPlayerMessage(player, Messages.PlayerAlreadyVoted)
+
+## @brief Cancel a vote.
+ # @details Cancel the current vote if a vote is active.
+ # @param acl The accesslevel of the player
+ # @param player The name of the player
+def cancel(acl, player):
+	if Vote.current_vote:
+		Armagetronad.PrintMessage(Messages.VoteCancelled.format(target=Vote.current_vote.target) )
+
+## @brief Set the access level that is needed for a specific command.
+ # @details Calls AccessLevel.setAccessLevel()
+ # @param acl The accesslevel of the player
+ # @param player The name of the player
+ # @param command The command for which to set the access level.#
+ # @param access Optional The minmal access level that a user must have to excute the given command.
+def acl(acl, player, command, access=0):
+	try:
+		access=int(access)
+	except:
+		return
+	AccessLevel.setAccessLevel(command, access)
+	Armagetronad.PrintPlayerMessage(player, Messages.AccessLevelChanged.format(command=command, access=access) )
+	Global.updateHelpTopics()
+

@@ -31,7 +31,7 @@ def isAllowed(command, access):
  # @param command The command for which to change the access level 
  # @param access The access level
 def setAccessLevel(command,access):
-	if access < 0:
-		log.warning("Access level lower than 0. Using 0 as access level.")
-		access=0
+	if access < -1:
+		log.warning("Access level lower than -1. Using -1 as access level.")
+		access=-1
 	__accessLevels[command]=access

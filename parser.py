@@ -18,7 +18,7 @@ def exit():
 	Mode.saveModes()
 	Armagetronad.PrintMessage("0xff0000Script exited.")
 
-os.chdir(os.path.dirname(sys.argv[0]) )
+os.chdir(os.path.join(os.path.dirname(sys.argv[0]), "run") )
 log=logging.getLogger("MainModule")
 h=logging.StreamHandler()
 h.setLevel(logging.DEBUG)

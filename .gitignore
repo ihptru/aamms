@@ -1,3 +1,7 @@
 *.pyc
 /Backup
 /Backup/*
+/run
+/run/*
+
+

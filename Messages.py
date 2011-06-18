@@ -37,24 +37,24 @@ FeatureNotImplemented=("{feature} is currently not supported, but it's coming so
 ## @brief Mode not exists message
  # @details This message is printed when a mode doesn't exist.
  # @param mode The name of the mode
-ModeNotExist=("{mode} doesn't exist! Look at /help modelist for a list of all avaliable modes.")
+ModeNotExist=("{mode} doesn't exist! Look at /help modes for a list of all avaliable modes.")
 
 ## @brief Vote is in progress message
  # @details This message is printed when a vote is active.
  # @param target The target of the active vote
  # @param expire How much rounds does this vote still stay alive?
-VoteInProgress=("0xff8800Vote for {target} in progress. Use /yes or /no to vote! This vote expires in {expire} rounds")
+VoteInProgress=("0xff8844Vote for {target} in progress. Use /yes or /no to vote! This vote expires in {expire} rounds")
 
 ## @brief Vote added message
  # @details This message is displayed when a new vote was added.
  # @param target The target of the vote which was added
  # @param player The player who added the vote.
-VoteAdded=("0xffff00Vote for {target} submitted by {player}")
+VoteAdded=("0x00ff00Vote for {target} submitted by {player}")
 
 ## @brief Vote cancelled message
  # @details This message is printed when an admin cancelled a vote.
  # @param target The target of the cancelled vote.
-VoteCancelled=("0x00ffffThe vote for {target} got cancelled by an administrator.")
+VoteCancelled=("0xff2200The vote about {target} got cancelled by an administrator.")
 
 ## @brief Vote successed message
  # @details This message is printed when a vote successed.
@@ -76,6 +76,20 @@ PlayerVotedYes=("0xffff00{player} voted for {target}.")
  # @details This message is displayed when a player used the /no command
  # @param player The name of the player who voted.
  # @param target The target of the vote for which the player voted.
-PlayerVotedNo=("0xffff00{player} voted against {target}")
+PlayerVotedNo=("0x99ff99{player} voted against {target}")
 
-PlayerAlreadyVoted=("You have already voted!")
+## @brief Player has already voted message.
+ # @details This message is printed when a player tries to use the /yes or /no commands
+ #          but has already voted.
+PlayerAlreadyVoted=("0xff0033You have already voted!")
+
+## @brief No vote active message.
+ # @details This message is printed when a player tries to use the /yes or /no commands, but
+ #          there isn't any active vote at the time.
+NoActiveVote=("There's no vote in progress!")
+
+## @brief Access level changed message.
+ # @details This message is printed when /acl was successfully called.
+ # @param command The command of which the access level has changed.
+ # @param access The access level to which the required access level has changed.
+AccessLevelChanged=("0x00ff00The needed access level for command /{command} has been changed to {access}.")

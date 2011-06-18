@@ -13,6 +13,7 @@ import logging.handlers
 import Team
 import Mode
 import Vote
+import imp
 
 ## @brief The logging object
  # @private
@@ -50,6 +51,7 @@ def InvalidCommand(command, player, ip, access, *args):
 			Player.players[player].data["buffer"]=[" ".join(args)]
 		Armagetronad.PrintPlayerMessage(player," ".join(args) )
 		return
+	imp.reload(Commands)
 	# get start of commands in file
 	lines=list()
 	start=0
@@ -167,7 +169,7 @@ def NewRound(date, time, timezone):
 		else:
 			Armagetronad.PrintMessage(Messages.VoteInProgress.format(target=Vote.current_vote.target, expire=Vote.current_vote.aliveRounds) )
 			Vote.current_vote.aliveRounds=Vote.current_vote.aliveRounds-1
-
+	
 	Armagetronad.SendCommand("LADDERLOG_WRITE_GAME_TIME 1")
 	roundStarted=True
 
@@ -188,8 +190,8 @@ def GameTime(time):
 	if time=="-4" and (Mode.current_mode in Mode.modes):
 		Mode.modes[Mode.current_mode].spawnTeams()
 	if time=="-2" and (Mode.current_mode in Mode.modes):
-		Mode.modes[Mode.current_mode].spawnZones()
 		Armagetronad.SendCommand("LADDERLOG_WRITE_GAME_TIME 0")
+		Mode.modes[Mode.current_mode].spawnZones()
 
 ## @brief Enables logging
  # @details This function enables logging for this module.
