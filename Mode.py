@@ -188,6 +188,7 @@ class Mode(yaml.YAMLObject):
 		self.__restype="toggle_roundstart"
 		self.__last_respoint=dict()
 		self.short_name=name.replace(" ","_").lower()
+		self.lives=1
 
 	## @brief Adds a respoint
 	 # @details Adds the given respoint to the internal respoint list.

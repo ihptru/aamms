@@ -23,7 +23,11 @@ def \hyperlink{class_zone_1_1_zone_a01a15c4548a4e2675890cec3b6172beb}{setName}
 def \hyperlink{class_zone_1_1_zone_af99fbbc555e6f93d62126c17ae9a8052}{isAlive}
 \begin{DoxyCompactList}\small\item\em Returns the alive state of the zone. \item\end{DoxyCompactList}\item 
 def \hyperlink{class_zone_1_1_zone_ae86cd40bd98448e74ed206e515a1f5da}{setType}
-\begin{DoxyCompactList}\small\item\em Sets the zone type. \item\end{DoxyCompactList}\end{DoxyCompactItemize}
+\begin{DoxyCompactList}\small\item\em Sets the zone type. \item\end{DoxyCompactList}\item 
+def \hyperlink{class_zone_1_1_zone_a5a7b3f0b78ec9afe8a4bb61f3b7b3dc6}{\_\-\_\-getstate\_\-\_\-}
+\begin{DoxyCompactList}\small\item\em Returns current object state. \item\end{DoxyCompactList}\item 
+def \hyperlink{class_zone_1_1_zone_a5de944ddd9b301373881c3e867ddae8b}{\_\-\_\-setstate\_\-\_\-}
+\begin{DoxyCompactList}\small\item\em Sets the current object state. \item\end{DoxyCompactList}\end{DoxyCompactItemize}
 \subsection*{Public Attributes}
 \begin{DoxyCompactItemize}
 \item 
@@ -48,9 +52,12 @@ def \hyperlink{class_zone_1_1_zone_ae86cd40bd98448e74ed206e515a1f5da}{setType}
 \hyperlink{class_zone_1_1_zone_a57b65c53ff747cf9504c88ff37d7b9ee}{settings}
 \begin{DoxyCompactList}\small\item\em \hyperlink{class_zone_1_1_zone}{Zone} type specific settings. \item\end{DoxyCompactList}\item 
 \hyperlink{class_zone_1_1_zone_a2b9ae272876347626e25ead4d48f9a97}{teleport\_\-settings}
-\begin{DoxyCompactList}\small\item\em Extra settings for teleport zones. \item\end{DoxyCompactList}\item 
-\hyperlink{class_zone_1_1_zone_ad03356df7f4de16fb473ba7bd8fbe2c8}{name}
-\begin{DoxyCompactList}\small\item\em The zone name. \item\end{DoxyCompactList}\end{DoxyCompactItemize}
+\begin{DoxyCompactList}\small\item\em Extra settings for teleport zones. \item\end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Static Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+string \hyperlink{class_zone_1_1_zone_aceea2ada107fbe1e78976e88a9bc74df}{yaml\_\-tag} = \char`\"{}!zone\char`\"{}
+\begin{DoxyCompactList}\small\item\em Yaml tag. \item\end{DoxyCompactList}\end{DoxyCompactItemize}
 \subsection*{Private Attributes}
 \begin{DoxyCompactItemize}
 \item 
@@ -64,17 +71,39 @@ def \hyperlink{class_zone_1_1_zone_ae86cd40bd98448e74ed206e515a1f5da}{setType}
 \begin{DoxyCompactItemize}
 \item 
 tuple \hyperlink{class_zone_1_1_zone_ad5bde96ea6dea6f68ee68d33a6c90850}{\_\-\_\-slots\_\-\_\-}
-\begin{DoxyCompactList}\small\item\em slots \item\end{DoxyCompactList}\end{DoxyCompactItemize}
+\begin{DoxyCompactList}\small\item\em slots \item\end{DoxyCompactList}\item 
+tuple \hyperlink{class_zone_1_1_zone_a3e925f38205ecb6e4c2bab8c79182573}{\_\-\_\-not\_\-persistent} = (\char`\"{}\_\-\_\-alive\char`\"{}, \char`\"{}\hyperlink{class_zone_1_1_zone_a0f3f8429ae8a37672f700da3f2805a91}{teamnames}\char`\"{})
+\begin{DoxyCompactList}\small\item\em Which variables shouldn't be saved by object serializion? \item\end{DoxyCompactList}\end{DoxyCompactItemize}
 
 
 \subsection{Detailed Description}
 A zone. This class represents a zone. Zones can be spawned, collapsed, have a name, ... 
 
-Definition at line 38 of file Zone.py.
+Definition at line 40 of file Zone.py.
 
 
 
 \subsection{Member Function Documentation}
+\hypertarget{class_zone_1_1_zone_a5a7b3f0b78ec9afe8a4bb61f3b7b3dc6}{
+\index{Zone::Zone@{Zone::Zone}!\_\-\_\-getstate\_\-\_\-@{\_\-\_\-getstate\_\-\_\-}}
+\index{\_\-\_\-getstate\_\-\_\-@{\_\-\_\-getstate\_\-\_\-}!Zone::Zone@{Zone::Zone}}
+\subsubsection[{\_\-\_\-getstate\_\-\_\-}]{\setlength{\rightskip}{0pt plus 5cm}def Zone.Zone.\_\-\_\-getstate\_\-\_\- (
+\begin{DoxyParamCaption}
+\item[{}]{ self}
+\end{DoxyParamCaption}
+)}}
+\label{class_zone_1_1_zone_a5a7b3f0b78ec9afe8a4bb61f3b7b3dc6}
+
+
+Returns current object state. 
+
+Used by pickle and other serializing modules. \begin{DoxyReturn}{Returns}
+A dictionary of the current object state 
+\end{DoxyReturn}
+
+
+Definition at line 245 of file Zone.py.
+
 \hypertarget{class_zone_1_1_zone_afe0e971765baa04ca770cbdc685efbb6}{
 \index{Zone::Zone@{Zone::Zone}!\_\-\_\-init\_\-\_\-@{\_\-\_\-init\_\-\_\-}}
 \index{\_\-\_\-init\_\-\_\-@{\_\-\_\-init\_\-\_\-}!Zone::Zone@{Zone::Zone}}
@@ -88,7 +117,8 @@ Definition at line 38 of file Zone.py.
 \item[{}]{ direction = {\ttfamily (0,0}, }
 \item[{}]{ interactive = {\ttfamily False}, }
 \item[{}]{ color = {\ttfamily (0,0}, }
-\item[{}]{ target\_\-size = {\ttfamily -\/1}}
+\item[{}]{ target\_\-size = {\ttfamily -\/1}, }
+\item[{}]{ type = {\ttfamily \char`\"{}target\char`\"{}}}
 \end{DoxyParamCaption}
 )}}
 \label{class_zone_1_1_zone_afe0e971765baa04ca770cbdc685efbb6}
@@ -98,10 +128,31 @@ Init function (Constructor).
 
 Inits a new \hyperlink{class_zone_1_1_zone}{Zone} and adds properties. 
 \begin{DoxyParams}{Parameters}
-\item[{\em name}]The name of the zone \item[{\em position}]Tuple of the x and y coordinate of the position of the zone. \item[{\em radius}]\hyperlink{class_zone_1_1_zone}{Zone} size (radius) \item[{\em growth}]The growth of the zone.  \item[{\em direction}]Direction in which the zone should move.  \item[{\em interactive}]Should the zone bounce at walls?  \item[{\em color}]Tuple of the r,g,b values of the color used for the zone, \item[{\em target\_\-size}]max or min size of the zone  \end{DoxyParams}
+\item[{\em name}]The name of the zone \item[{\em position}]Tuple of the x and y coordinate of the position of the zone. \item[{\em radius}]\hyperlink{class_zone_1_1_zone}{Zone} size (radius) \item[{\em growth}]The growth of the zone.  \item[{\em direction}]Direction in which the zone should move.  \item[{\em interactive}]Should the zone bounce at walls?  \item[{\em color}]Tuple of the r,g,b values of the color used for the zone, \item[{\em target\_\-size}]max or min size of the zone  \item[{\em type}]The zone type \end{DoxyParams}
 
 
-Definition at line 122 of file Zone.py.
+Definition at line 131 of file Zone.py.
+
+\hypertarget{class_zone_1_1_zone_a5de944ddd9b301373881c3e867ddae8b}{
+\index{Zone::Zone@{Zone::Zone}!\_\-\_\-setstate\_\-\_\-@{\_\-\_\-setstate\_\-\_\-}}
+\index{\_\-\_\-setstate\_\-\_\-@{\_\-\_\-setstate\_\-\_\-}!Zone::Zone@{Zone::Zone}}
+\subsubsection[{\_\-\_\-setstate\_\-\_\-}]{\setlength{\rightskip}{0pt plus 5cm}def Zone.Zone.\_\-\_\-setstate\_\-\_\- (
+\begin{DoxyParamCaption}
+\item[{}]{ self, }
+\item[{}]{ state}
+\end{DoxyParamCaption}
+)}}
+\label{class_zone_1_1_zone_a5de944ddd9b301373881c3e867ddae8b}
+
+
+Sets the current object state. 
+
+Used by pickle and other serializing modules. 
+\begin{DoxyParams}{Parameters}
+\item[{\em state}]The state to which to set the current object state. \end{DoxyParams}
+
+
+Definition at line 262 of file Zone.py.
 
 \hypertarget{class_zone_1_1_zone_a82cd5417c0fd6dc0cb7d1b8a3399e174}{
 \index{Zone::Zone@{Zone::Zone}!collapse@{collapse}}
@@ -124,7 +175,7 @@ This triggers the event \char`\"{}Zone collapsed\char`\"{}
 \end{DoxyNote}
 
 
-Definition at line 183 of file Zone.py.
+Definition at line 194 of file Zone.py.
 
 \hypertarget{class_zone_1_1_zone_af99fbbc555e6f93d62126c17ae9a8052}{
 \index{Zone::Zone@{Zone::Zone}!isAlive@{isAlive}}
@@ -144,12 +195,12 @@ True if the zone is alive, False otherwise.
 \end{DoxyReturn}
 
 
-Definition at line 218 of file Zone.py.
+Definition at line 229 of file Zone.py.
 
 \hypertarget{class_zone_1_1_zone_acbb02f4e05a741d0f0817f3f7a72b215}{
 \index{Zone::Zone@{Zone::Zone}!name@{name}}
 \index{name@{name}!Zone::Zone@{Zone::Zone}}
-\subsubsection[{name}]{\setlength{\rightskip}{0pt plus 5cm}def {\bf Zone.Zone.name} (
+\subsubsection[{name}]{\setlength{\rightskip}{0pt plus 5cm}def Zone.Zone.name (
 \begin{DoxyParamCaption}
 \item[{}]{ self}
 \end{DoxyParamCaption}
@@ -164,7 +215,7 @@ The zone name or None if the zone is unnamed.
 \end{DoxyReturn}
 
 
-Definition at line 205 of file Zone.py.
+Definition at line 216 of file Zone.py.
 
 \hypertarget{class_zone_1_1_zone_a01a15c4548a4e2675890cec3b6172beb}{
 \index{Zone::Zone@{Zone::Zone}!setName@{setName}}
@@ -172,7 +223,7 @@ Definition at line 205 of file Zone.py.
 \subsubsection[{setName}]{\setlength{\rightskip}{0pt plus 5cm}def Zone.Zone.setName (
 \begin{DoxyParamCaption}
 \item[{}]{ self, }
-\item[{}]{ name}
+\item[{}]{ newname}
 \end{DoxyParamCaption}
 )}}
 \label{class_zone_1_1_zone_a01a15c4548a4e2675890cec3b6172beb}
@@ -182,13 +233,13 @@ Sets the zone name.
 
 
 \begin{DoxyParams}{Parameters}
-\item[{\em name}]The new name of the zone or None if the zone should be unnamed. \end{DoxyParams}
+\item[{\em newname}]The new name of the zone or None if the zone should be unnamed. \end{DoxyParams}
 \begin{DoxyNote}{Note}
 This triggers the event \char`\"{}Zone renamed\char`\"{} 
 \end{DoxyNote}
 
 
-Definition at line 212 of file Zone.py.
+Definition at line 223 of file Zone.py.
 
 \hypertarget{class_zone_1_1_zone_ae86cd40bd98448e74ed206e515a1f5da}{
 \index{Zone::Zone@{Zone::Zone}!setType@{setType}}
@@ -196,7 +247,7 @@ Definition at line 212 of file Zone.py.
 \subsubsection[{setType}]{\setlength{\rightskip}{0pt plus 5cm}def Zone.Zone.setType (
 \begin{DoxyParamCaption}
 \item[{}]{ self, }
-\item[{}]{ type}
+\item[{}]{ ztype}
 \end{DoxyParamCaption}
 )}}
 \label{class_zone_1_1_zone_ae86cd40bd98448e74ed206e515a1f5da}
@@ -206,13 +257,13 @@ Sets the zone type.
 
 For more information about zone types go to \href{http://crazy-tronners.com/wiki/index.php/Settings#type}{\tt http://crazy-\/tronners.com/wiki/index.php/Settings\#type} 
 \begin{DoxyParams}{Parameters}
-\item[{\em type}]The name of the zone type. \end{DoxyParams}
+\item[{\em ztype}]The name of the zone type. \end{DoxyParams}
 
 \begin{DoxyExceptions}{Exceptions}
 \item[{\em ValueError}]Raised if the zone type doesn't exist. \end{DoxyExceptions}
 
 
-Definition at line 226 of file Zone.py.
+Definition at line 237 of file Zone.py.
 
 \hypertarget{class_zone_1_1_zone_a6197bd3a82e33df84c7a24a2bd698516}{
 \index{Zone::Zone@{Zone::Zone}!spawn@{spawn}}
@@ -232,7 +283,7 @@ This triggers the event \char`\"{}Zone spawned\char`\"{}
 \end{DoxyNote}
 
 
-Definition at line 142 of file Zone.py.
+Definition at line 151 of file Zone.py.
 
 
 
@@ -248,7 +299,7 @@ Is the zone still alive?
 
 True if yes, False if no. 
 
-Definition at line 127 of file Zone.py.
+Definition at line 136 of file Zone.py.
 
 \hypertarget{class_zone_1_1_zone_a72ab1886c15120f42281d35955ab21b5}{
 \index{Zone::Zone@{Zone::Zone}!\_\-\_\-name@{\_\-\_\-name}}
@@ -261,7 +312,20 @@ Used to store the name.
 
 Internal variable for the name. 
 
-Definition at line 123 of file Zone.py.
+Definition at line 132 of file Zone.py.
+
+\hypertarget{class_zone_1_1_zone_a3e925f38205ecb6e4c2bab8c79182573}{
+\index{Zone::Zone@{Zone::Zone}!\_\-\_\-not\_\-persistent@{\_\-\_\-not\_\-persistent}}
+\index{\_\-\_\-not\_\-persistent@{\_\-\_\-not\_\-persistent}!Zone::Zone@{Zone::Zone}}
+\subsubsection[{\_\-\_\-not\_\-persistent}]{\setlength{\rightskip}{0pt plus 5cm}tuple {\bf Zone.Zone.\_\-\_\-not\_\-persistent} = (\char`\"{}\_\-\_\-alive\char`\"{}, \char`\"{}{\bf teamnames}\char`\"{})\hspace{0.3cm}{\ttfamily  \mbox{[}static, private\mbox{]}}}}
+\label{class_zone_1_1_zone_a3e925f38205ecb6e4c2bab8c79182573}
+
+
+Which variables shouldn't be saved by object serializion? 
+
+Variables to exclude in \_\-\_\-get\_\-state\_\-\_\- 
+
+Definition at line 118 of file Zone.py.
 
 \hypertarget{class_zone_1_1_zone_ad5bde96ea6dea6f68ee68d33a6c90850}{
 \index{Zone::Zone@{Zone::Zone}!\_\-\_\-slots\_\-\_\-@{\_\-\_\-slots\_\-\_\-}}
@@ -281,7 +345,7 @@ slots
 
 
 
-Definition at line 109 of file Zone.py.
+Definition at line 107 of file Zone.py.
 
 \hypertarget{class_zone_1_1_zone_a5164f57edacb2b3a7b3dfca3ba949139}{
 \index{Zone::Zone@{Zone::Zone}!\_\-\_\-type@{\_\-\_\-type}}
@@ -294,7 +358,7 @@ The type of the zone.
 
 Could be: win, death, ball, ballTeam, blast, deathTeam, koh, fortress, flag, rubber, sumo, target, teleport, zombie, zombieOwner 
 
-Definition at line 136 of file Zone.py.
+Definition at line 172 of file Zone.py.
 
 \hypertarget{class_zone_1_1_zone_a0e94d3602835417fef9d1345cf1e739c}{
 \index{Zone::Zone@{Zone::Zone}!color@{color}}
@@ -307,7 +371,7 @@ The zone color.
 
 The color of the zone is the tuple of r,g,b. The maximal values for each r, g or b are 1. 
 
-Definition at line 128 of file Zone.py.
+Definition at line 137 of file Zone.py.
 
 \hypertarget{class_zone_1_1_zone_a20a50ae6ea7f05c4bb403ef0306ba83f}{
 \index{Zone::Zone@{Zone::Zone}!dir@{dir}}
@@ -320,7 +384,7 @@ Direction in which the zone should move.
 
 Tuple of xdir and ydir. 0,0 if the zone shouldn't move. 
 
-Definition at line 130 of file Zone.py.
+Definition at line 139 of file Zone.py.
 
 \hypertarget{class_zone_1_1_zone_a42d231813671766976464bbf2dfdf387}{
 \index{Zone::Zone@{Zone::Zone}!growth@{growth}}
@@ -333,7 +397,7 @@ The growth of the zone.
 
 How much should the zone grow? 
 
-Definition at line 126 of file Zone.py.
+Definition at line 135 of file Zone.py.
 
 \hypertarget{class_zone_1_1_zone_a574bf43b0f15767743c104faabbae973}{
 \index{Zone::Zone@{Zone::Zone}!interactive@{interactive}}
@@ -346,7 +410,7 @@ Should the zone bounce at walls?
 
 True if yes, False if no. 
 
-Definition at line 129 of file Zone.py.
+Definition at line 138 of file Zone.py.
 
 \hypertarget{class_zone_1_1_zone_a45db96faa826bf1e485c70da9c07d83e}{
 \index{Zone::Zone@{Zone::Zone}!killteam@{killteam}}
@@ -359,23 +423,7 @@ Kill the team when the zone collapses?
 
 True if yes, False otherwise. 
 
-Definition at line 133 of file Zone.py.
-
-\hypertarget{class_zone_1_1_zone_ad03356df7f4de16fb473ba7bd8fbe2c8}{
-\index{Zone::Zone@{Zone::Zone}!name@{name}}
-\index{name@{name}!Zone::Zone@{Zone::Zone}}
-\subsubsection[{name}]{\setlength{\rightskip}{0pt plus 5cm}{\bf Zone.Zone::name}}}
-\label{class_zone_1_1_zone_ad03356df7f4de16fb473ba7bd8fbe2c8}
-
-
-The zone name. 
-
-The name of the zone or None if the zone is unnamed. \begin{DoxyNote}{Note}
-Changing this triggers the event \char`\"{}Zone renamed\char`\"{} 
-\end{DoxyNote}
-
-
-Definition at line 213 of file Zone.py.
+Definition at line 142 of file Zone.py.
 
 \hypertarget{class_zone_1_1_zone_ae30b162378f40661dfcb854ec7926bdb}{
 \index{Zone::Zone@{Zone::Zone}!position@{position}}
@@ -388,7 +436,7 @@ The position of the zone.
 
 Tuple of x,y 
 
-Definition at line 124 of file Zone.py.
+Definition at line 133 of file Zone.py.
 
 \hypertarget{class_zone_1_1_zone_a6ee5fd031ade8ecb6b2f41455ad309c4}{
 \index{Zone::Zone@{Zone::Zone}!radius@{radius}}
@@ -401,7 +449,7 @@ Definition at line 124 of file Zone.py.
 
 The radius of the zone. 
 
-Definition at line 125 of file Zone.py.
+Definition at line 134 of file Zone.py.
 
 \hypertarget{class_zone_1_1_zone_a57b65c53ff747cf9504c88ff37d7b9ee}{
 \index{Zone::Zone@{Zone::Zone}!settings@{settings}}
@@ -414,7 +462,7 @@ Definition at line 125 of file Zone.py.
 
 List of settings. 
 
-Definition at line 134 of file Zone.py.
+Definition at line 143 of file Zone.py.
 
 \hypertarget{class_zone_1_1_zone_a9962b673a138b53b1631158d18cf5279}{
 \index{Zone::Zone@{Zone::Zone}!target\_\-size@{target\_\-size}}
@@ -427,7 +475,7 @@ max or min size of the zone
 
 Max or min radius of the zone, depends on the zone shrinks or expands. 
 
-Definition at line 131 of file Zone.py.
+Definition at line 140 of file Zone.py.
 
 \hypertarget{class_zone_1_1_zone_a0f3f8429ae8a37672f700da3f2805a91}{
 \index{Zone::Zone@{Zone::Zone}!teamnames@{teamnames}}
@@ -440,7 +488,7 @@ The team name(s) of the team(s) to pass to the zone before x and y.
 
 The escaped name of the teams or None when no teams should be passed. 
 
-Definition at line 132 of file Zone.py.
+Definition at line 141 of file Zone.py.
 
 \hypertarget{class_zone_1_1_zone_a2b9ae272876347626e25ead4d48f9a97}{
 \index{Zone::Zone@{Zone::Zone}!teleport\_\-settings@{teleport\_\-settings}}
@@ -453,7 +501,20 @@ Extra settings for teleport zones.
 
 This setting is needed because the different types of zones has different settings. The extra settings are allways at the end, except for teleport zones. This settings are passed to SPAWN\_\-ZONE at this position, but only if the zone is a teleport zone. 
 
-Definition at line 135 of file Zone.py.
+Definition at line 144 of file Zone.py.
+
+\hypertarget{class_zone_1_1_zone_aceea2ada107fbe1e78976e88a9bc74df}{
+\index{Zone::Zone@{Zone::Zone}!yaml\_\-tag@{yaml\_\-tag}}
+\index{yaml\_\-tag@{yaml\_\-tag}!Zone::Zone@{Zone::Zone}}
+\subsubsection[{yaml\_\-tag}]{\setlength{\rightskip}{0pt plus 5cm}string {\bf Zone.Zone.yaml\_\-tag} = \char`\"{}!zone\char`\"{}\hspace{0.3cm}{\ttfamily  \mbox{[}static\mbox{]}}}}
+\label{class_zone_1_1_zone_aceea2ada107fbe1e78976e88a9bc74df}
+
+
+Yaml tag. 
+
+See \href{http://pyyaml.org/wiki/PyYAMLDocumentation}{\tt http://pyyaml.org/wiki/PyYAMLDocumentation} for details to the PyYaml library. 
+
+Definition at line 113 of file Zone.py.
 
 
 

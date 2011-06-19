@@ -56,6 +56,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
   <div class="summary">
 <a href="#pub-methods">Public Member Functions</a> &#124;
 <a href="#pub-attribs">Public Attributes</a> &#124;
+<a href="#pub-static-attribs">Static Public Attributes</a> &#124;
 <a href="#pri-attribs">Private Attributes</a> &#124;
 <a href="#pri-static-attribs">Static Private Attributes</a>  </div>
   <div class="headertitle">
@@ -84,6 +85,10 @@ Public Member Functions</h2></td></tr>
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Returns the alive state of the zone.  <a href="#af99fbbc555e6f93d62126c17ae9a8052"></a><br/></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">def&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_zone_1_1_zone.html#ae86cd40bd98448e74ed206e515a1f5da">setType</a></td></tr>
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Sets the zone type.  <a href="#ae86cd40bd98448e74ed206e515a1f5da"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">def&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_zone_1_1_zone.html#a5a7b3f0b78ec9afe8a4bb61f3b7b3dc6">__getstate__</a></td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Returns current object state.  <a href="#a5a7b3f0b78ec9afe8a4bb61f3b7b3dc6"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">def&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_zone_1_1_zone.html#a5de944ddd9b301373881c3e867ddae8b">__setstate__</a></td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Sets the current object state.  <a href="#a5de944ddd9b301373881c3e867ddae8b"></a><br/></td></tr>
 <tr><td colspan="2"><h2><a name="pub-attribs"></a>
 Public Attributes</h2></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_zone_1_1_zone.html#ae30b162378f40661dfcb854ec7926bdb">position</a></td></tr>
@@ -108,8 +113,10 @@ Public Attributes</h2></td></tr>
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight"><a class="el" href="class_zone_1_1_zone.html" title="A zone.">Zone</a> type specific settings.  <a href="#a57b65c53ff747cf9504c88ff37d7b9ee"></a><br/></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_zone_1_1_zone.html#a2b9ae272876347626e25ead4d48f9a97">teleport_settings</a></td></tr>
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Extra settings for teleport zones.  <a href="#a2b9ae272876347626e25ead4d48f9a97"></a><br/></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_zone_1_1_zone.html#ad03356df7f4de16fb473ba7bd8fbe2c8">name</a></td></tr>
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">The zone name.  <a href="#ad03356df7f4de16fb473ba7bd8fbe2c8"></a><br/></td></tr>
+<tr><td colspan="2"><h2><a name="pub-static-attribs"></a>
+Static Public Attributes</h2></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">string&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_zone_1_1_zone.html#aceea2ada107fbe1e78976e88a9bc74df">yaml_tag</a> = &quot;!zone&quot;</td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Yaml tag.  <a href="#aceea2ada107fbe1e78976e88a9bc74df"></a><br/></td></tr>
 <tr><td colspan="2"><h2><a name="pri-attribs"></a>
 Private Attributes</h2></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_zone_1_1_zone.html#a72ab1886c15120f42281d35955ab21b5">__name</a></td></tr>
@@ -122,13 +129,39 @@ Private Attributes</h2></td></tr>
 Static Private Attributes</h2></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">tuple&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_zone_1_1_zone.html#ad5bde96ea6dea6f68ee68d33a6c90850">__slots__</a></td></tr>
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">slots  <a href="#ad5bde96ea6dea6f68ee68d33a6c90850"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">tuple&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_zone_1_1_zone.html#a3e925f38205ecb6e4c2bab8c79182573">__not_persistent</a> = (&quot;__alive&quot;, &quot;<a class="el" href="class_zone_1_1_zone.html#a0f3f8429ae8a37672f700da3f2805a91">teamnames</a>&quot;)</td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Which variables shouldn't be saved by object serializion?  <a href="#a3e925f38205ecb6e4c2bab8c79182573"></a><br/></td></tr>
 </table>
 <hr/><a name="_details"></a><h2>Detailed Description</h2>
 <p>A zone. </p>
 <p>This class represents a zone. Zones can be spawned, collapsed, have a name, ... </p>
 
-<p>Definition at line <a class="el" href="_zone_8py_source.html#l00038">38</a> of file <a class="el" href="_zone_8py_source.html">Zone.py</a>.</p>
+<p>Definition at line <a class="el" href="_zone_8py_source.html#l00040">40</a> of file <a class="el" href="_zone_8py_source.html">Zone.py</a>.</p>
 <hr/><h2>Member Function Documentation</h2>
+<a class="anchor" id="a5a7b3f0b78ec9afe8a4bb61f3b7b3dc6"></a><!-- doxytag: member="Zone::Zone::__getstate__" ref="a5a7b3f0b78ec9afe8a4bb61f3b7b3dc6" args="" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">def Zone.Zone.__getstate__ </td>
+          <td>(</td>
+          <td class="paramtype">&nbsp;</td>
+          <td class="paramname"> <em>self</em></td>
+          <td>&nbsp;)&nbsp;</td>
+          <td></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>Returns current object state. </p>
+<p>Used by pickle and other serializing modules. </p>
+<dl class="return"><dt><b>Returns:</b></dt><dd>A dictionary of the current object state </dd></dl>
+
+<p>Definition at line <a class="el" href="_zone_8py_source.html#l00245">245</a> of file <a class="el" href="_zone_8py_source.html">Zone.py</a>.</p>
+
+</div>
+</div>
 <a class="anchor" id="afe0e971765baa04ca770cbdc685efbb6"></a><!-- doxytag: member="Zone::Zone::__init__" ref="afe0e971765baa04ca770cbdc685efbb6" args="" -->
 <div class="memitem">
 <div class="memproto">
@@ -185,7 +218,13 @@ Static Private Attributes</h2></td></tr>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">&nbsp;</td>
-          <td class="paramname"> <em>target_size</em> = <code>-1</code></td><td>&nbsp;</td>
+          <td class="paramname"> <em>target_size</em> = <code>-1</code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&nbsp;</td>
+          <td class="paramname"> <em>type</em> = <code>&quot;target&quot;</code></td><td>&nbsp;</td>
         </tr>
         <tr>
           <td></td>
@@ -212,11 +251,50 @@ Static Private Attributes</h2></td></tr>
     <tr><td valign="top"></td><td valign="top"><em>color</em>&nbsp;</td><td>Tuple of the r,g,b values of the color used for the zone, </td></tr>
     <tr><td valign="top"></td><td valign="top"><em>target_size</em>&nbsp;</td><td><p>max or min size of the zone </p>
  </td></tr>
+    <tr><td valign="top"></td><td valign="top"><em>type</em>&nbsp;</td><td>The zone type </td></tr>
   </table>
   </dd>
 </dl>
 
-<p>Definition at line <a class="el" href="_zone_8py_source.html#l00122">122</a> of file <a class="el" href="_zone_8py_source.html">Zone.py</a>.</p>
+<p>Definition at line <a class="el" href="_zone_8py_source.html#l00131">131</a> of file <a class="el" href="_zone_8py_source.html">Zone.py</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a5de944ddd9b301373881c3e867ddae8b"></a><!-- doxytag: member="Zone::Zone::__setstate__" ref="a5de944ddd9b301373881c3e867ddae8b" args="" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">def Zone.Zone.__setstate__ </td>
+          <td>(</td>
+          <td class="paramtype">&nbsp;</td>
+          <td class="paramname"> <em>self</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&nbsp;</td>
+          <td class="paramname"> <em>state</em></td><td>&nbsp;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td><td></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>Sets the current object state. </p>
+<p>Used by pickle and other serializing modules. </p>
+<dl><dt><b>Parameters:</b></dt><dd>
+  <table border="0" cellspacing="2" cellpadding="0">
+    <tr><td valign="top"></td><td valign="top"><em>state</em>&nbsp;</td><td>The state to which to set the current object state. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+<p>Definition at line <a class="el" href="_zone_8py_source.html#l00262">262</a> of file <a class="el" href="_zone_8py_source.html">Zone.py</a>.</p>
 
 </div>
 </div>
@@ -241,7 +319,7 @@ Static Private Attributes</h2></td></tr>
 <dl class="warning"><dt><b>Warning:</b></dt><dd>If the zone name is None, all zones with no name are collapsed. </dd></dl>
 <dl class="note"><dt><b>Note:</b></dt><dd>This triggers the event "Zone collapsed" </dd></dl>
 
-<p>Definition at line <a class="el" href="_zone_8py_source.html#l00183">183</a> of file <a class="el" href="_zone_8py_source.html">Zone.py</a>.</p>
+<p>Definition at line <a class="el" href="_zone_8py_source.html#l00194">194</a> of file <a class="el" href="_zone_8py_source.html">Zone.py</a>.</p>
 
 </div>
 </div>
@@ -264,7 +342,7 @@ Static Private Attributes</h2></td></tr>
 <p>Returns the alive state of the zone. </p>
 <dl class="return"><dt><b>Returns:</b></dt><dd>True if the zone is alive, False otherwise. </dd></dl>
 
-<p>Definition at line <a class="el" href="_zone_8py_source.html#l00218">218</a> of file <a class="el" href="_zone_8py_source.html">Zone.py</a>.</p>
+<p>Definition at line <a class="el" href="_zone_8py_source.html#l00229">229</a> of file <a class="el" href="_zone_8py_source.html">Zone.py</a>.</p>
 
 </div>
 </div>
@@ -273,7 +351,7 @@ Static Private Attributes</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">def <a class="el" href="class_zone_1_1_zone.html#ad03356df7f4de16fb473ba7bd8fbe2c8">Zone.Zone.name</a> </td>
+          <td class="memname">def Zone.Zone.name </td>
           <td>(</td>
           <td class="paramtype">&nbsp;</td>
           <td class="paramname"> <em>self</em></td>
@@ -287,7 +365,7 @@ Static Private Attributes</h2></td></tr>
 <p>Gets the zone name. </p>
 <dl class="return"><dt><b>Returns:</b></dt><dd>The zone name or None if the zone is unnamed. </dd></dl>
 
-<p>Definition at line <a class="el" href="_zone_8py_source.html#l00205">205</a> of file <a class="el" href="_zone_8py_source.html">Zone.py</a>.</p>
+<p>Definition at line <a class="el" href="_zone_8py_source.html#l00216">216</a> of file <a class="el" href="_zone_8py_source.html">Zone.py</a>.</p>
 
 </div>
 </div>
@@ -305,7 +383,7 @@ Static Private Attributes</h2></td></tr>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">&nbsp;</td>
-          <td class="paramname"> <em>name</em></td><td>&nbsp;</td>
+          <td class="paramname"> <em>newname</em></td><td>&nbsp;</td>
         </tr>
         <tr>
           <td></td>
@@ -319,13 +397,13 @@ Static Private Attributes</h2></td></tr>
 <p>Sets the zone name. </p>
 <dl><dt><b>Parameters:</b></dt><dd>
   <table border="0" cellspacing="2" cellpadding="0">
-    <tr><td valign="top"></td><td valign="top"><em>name</em>&nbsp;</td><td>The new name of the zone or None if the zone should be unnamed. </td></tr>
+    <tr><td valign="top"></td><td valign="top"><em>newname</em>&nbsp;</td><td>The new name of the zone or None if the zone should be unnamed. </td></tr>
   </table>
   </dd>
 </dl>
 <dl class="note"><dt><b>Note:</b></dt><dd>This triggers the event "Zone renamed" </dd></dl>
 
-<p>Definition at line <a class="el" href="_zone_8py_source.html#l00212">212</a> of file <a class="el" href="_zone_8py_source.html">Zone.py</a>.</p>
+<p>Definition at line <a class="el" href="_zone_8py_source.html#l00223">223</a> of file <a class="el" href="_zone_8py_source.html">Zone.py</a>.</p>
 
 </div>
 </div>
@@ -343,7 +421,7 @@ Static Private Attributes</h2></td></tr>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">&nbsp;</td>
-          <td class="paramname"> <em>type</em></td><td>&nbsp;</td>
+          <td class="paramname"> <em>ztype</em></td><td>&nbsp;</td>
         </tr>
         <tr>
           <td></td>
@@ -358,7 +436,7 @@ Static Private Attributes</h2></td></tr>
 <p>For more information about zone types go to <a href="http://crazy-tronners.com/wiki/index.php/Settings#type">http://crazy-tronners.com/wiki/index.php/Settings#type</a> </p>
 <dl><dt><b>Parameters:</b></dt><dd>
   <table border="0" cellspacing="2" cellpadding="0">
-    <tr><td valign="top"></td><td valign="top"><em>type</em>&nbsp;</td><td>The name of the zone type. </td></tr>
+    <tr><td valign="top"></td><td valign="top"><em>ztype</em>&nbsp;</td><td>The name of the zone type. </td></tr>
   </table>
   </dd>
 </dl>
@@ -369,7 +447,7 @@ Static Private Attributes</h2></td></tr>
   </dd>
 </dl>
 
-<p>Definition at line <a class="el" href="_zone_8py_source.html#l00226">226</a> of file <a class="el" href="_zone_8py_source.html">Zone.py</a>.</p>
+<p>Definition at line <a class="el" href="_zone_8py_source.html#l00237">237</a> of file <a class="el" href="_zone_8py_source.html">Zone.py</a>.</p>
 
 </div>
 </div>
@@ -393,7 +471,7 @@ Static Private Attributes</h2></td></tr>
 <p>Spawns the zone and sets alive to True </p>
 <dl class="note"><dt><b>Note:</b></dt><dd>This triggers the event "Zone spawned" </dd></dl>
 
-<p>Definition at line <a class="el" href="_zone_8py_source.html#l00142">142</a> of file <a class="el" href="_zone_8py_source.html">Zone.py</a>.</p>
+<p>Definition at line <a class="el" href="_zone_8py_source.html#l00151">151</a> of file <a class="el" href="_zone_8py_source.html">Zone.py</a>.</p>
 
 </div>
 </div>
@@ -412,7 +490,7 @@ Static Private Attributes</h2></td></tr>
 <p>Is the zone still alive? </p>
 <p>True if yes, False if no. </p>
 
-<p>Definition at line <a class="el" href="_zone_8py_source.html#l00127">127</a> of file <a class="el" href="_zone_8py_source.html">Zone.py</a>.</p>
+<p>Definition at line <a class="el" href="_zone_8py_source.html#l00136">136</a> of file <a class="el" href="_zone_8py_source.html">Zone.py</a>.</p>
 
 </div>
 </div>
@@ -430,7 +508,25 @@ Static Private Attributes</h2></td></tr>
 <p>Used to store the name. </p>
 <p>Internal variable for the name. </p>
 
-<p>Definition at line <a class="el" href="_zone_8py_source.html#l00123">123</a> of file <a class="el" href="_zone_8py_source.html">Zone.py</a>.</p>
+<p>Definition at line <a class="el" href="_zone_8py_source.html#l00132">132</a> of file <a class="el" href="_zone_8py_source.html">Zone.py</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a3e925f38205ecb6e4c2bab8c79182573"></a><!-- doxytag: member="Zone::Zone::__not_persistent" ref="a3e925f38205ecb6e4c2bab8c79182573" args="" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">tuple <a class="el" href="class_zone_1_1_zone.html#a3e925f38205ecb6e4c2bab8c79182573">Zone.Zone.__not_persistent</a> = (&quot;__alive&quot;, &quot;<a class="el" href="class_zone_1_1_zone.html#a0f3f8429ae8a37672f700da3f2805a91">teamnames</a>&quot;)<code> [static, private]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>Which variables shouldn't be saved by object serializion? </p>
+<p>Variables to exclude in __get_state__ </p>
+
+<p>Definition at line <a class="el" href="_zone_8py_source.html#l00118">118</a> of file <a class="el" href="_zone_8py_source.html">Zone.py</a>.</p>
 
 </div>
 </div>
@@ -449,7 +545,7 @@ Static Private Attributes</h2></td></tr>
 </pre></div>
 <p>slots </p>
 
-<p>Definition at line <a class="el" href="_zone_8py_source.html#l00109">109</a> of file <a class="el" href="_zone_8py_source.html">Zone.py</a>.</p>
+<p>Definition at line <a class="el" href="_zone_8py_source.html#l00107">107</a> of file <a class="el" href="_zone_8py_source.html">Zone.py</a>.</p>
 
 </div>
 </div>
@@ -467,7 +563,7 @@ Static Private Attributes</h2></td></tr>
 <p>The type of the zone. </p>
 <p>Could be: win, death, ball, ballTeam, blast, deathTeam, koh, fortress, flag, rubber, sumo, target, teleport, zombie, zombieOwner </p>
 
-<p>Definition at line <a class="el" href="_zone_8py_source.html#l00136">136</a> of file <a class="el" href="_zone_8py_source.html">Zone.py</a>.</p>
+<p>Definition at line <a class="el" href="_zone_8py_source.html#l00172">172</a> of file <a class="el" href="_zone_8py_source.html">Zone.py</a>.</p>
 
 </div>
 </div>
@@ -485,7 +581,7 @@ Static Private Attributes</h2></td></tr>
 <p>The zone color. </p>
 <p>The color of the zone is the tuple of r,g,b. The maximal values for each r, g or b are 1. </p>
 
-<p>Definition at line <a class="el" href="_zone_8py_source.html#l00128">128</a> of file <a class="el" href="_zone_8py_source.html">Zone.py</a>.</p>
+<p>Definition at line <a class="el" href="_zone_8py_source.html#l00137">137</a> of file <a class="el" href="_zone_8py_source.html">Zone.py</a>.</p>
 
 </div>
 </div>
@@ -503,7 +599,7 @@ Static Private Attributes</h2></td></tr>
 <p>Direction in which the zone should move. </p>
 <p>Tuple of xdir and ydir. 0,0 if the zone shouldn't move. </p>
 
-<p>Definition at line <a class="el" href="_zone_8py_source.html#l00130">130</a> of file <a class="el" href="_zone_8py_source.html">Zone.py</a>.</p>
+<p>Definition at line <a class="el" href="_zone_8py_source.html#l00139">139</a> of file <a class="el" href="_zone_8py_source.html">Zone.py</a>.</p>
 
 </div>
 </div>
@@ -521,7 +617,7 @@ Static Private Attributes</h2></td></tr>
 <p>The growth of the zone. </p>
 <p>How much should the zone grow? </p>
 
-<p>Definition at line <a class="el" href="_zone_8py_source.html#l00126">126</a> of file <a class="el" href="_zone_8py_source.html">Zone.py</a>.</p>
+<p>Definition at line <a class="el" href="_zone_8py_source.html#l00135">135</a> of file <a class="el" href="_zone_8py_source.html">Zone.py</a>.</p>
 
 </div>
 </div>
@@ -539,7 +635,7 @@ Static Private Attributes</h2></td></tr>
 <p>Should the zone bounce at walls? </p>
 <p>True if yes, False if no. </p>
 
-<p>Definition at line <a class="el" href="_zone_8py_source.html#l00129">129</a> of file <a class="el" href="_zone_8py_source.html">Zone.py</a>.</p>
+<p>Definition at line <a class="el" href="_zone_8py_source.html#l00138">138</a> of file <a class="el" href="_zone_8py_source.html">Zone.py</a>.</p>
 
 </div>
 </div>
@@ -557,26 +653,7 @@ Static Private Attributes</h2></td></tr>
 <p>Kill the team when the zone collapses? </p>
 <p>True if yes, False otherwise. </p>
 
-<p>Definition at line <a class="el" href="_zone_8py_source.html#l00133">133</a> of file <a class="el" href="_zone_8py_source.html">Zone.py</a>.</p>
-
-</div>
-</div>
-<a class="anchor" id="ad03356df7f4de16fb473ba7bd8fbe2c8"></a><!-- doxytag: member="Zone::Zone::name" ref="ad03356df7f4de16fb473ba7bd8fbe2c8" args="" -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname"><a class="el" href="class_zone_1_1_zone.html#ad03356df7f4de16fb473ba7bd8fbe2c8">Zone.Zone::name</a></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-<p>The zone name. </p>
-<p>The name of the zone or None if the zone is unnamed. </p>
-<dl class="note"><dt><b>Note:</b></dt><dd>Changing this triggers the event "Zone renamed" </dd></dl>
-
-<p>Definition at line <a class="el" href="_zone_8py_source.html#l00213">213</a> of file <a class="el" href="_zone_8py_source.html">Zone.py</a>.</p>
+<p>Definition at line <a class="el" href="_zone_8py_source.html#l00142">142</a> of file <a class="el" href="_zone_8py_source.html">Zone.py</a>.</p>
 
 </div>
 </div>
@@ -594,7 +671,7 @@ Static Private Attributes</h2></td></tr>
 <p>The position of the zone. </p>
 <p>Tuple of x,y </p>
 
-<p>Definition at line <a class="el" href="_zone_8py_source.html#l00124">124</a> of file <a class="el" href="_zone_8py_source.html">Zone.py</a>.</p>
+<p>Definition at line <a class="el" href="_zone_8py_source.html#l00133">133</a> of file <a class="el" href="_zone_8py_source.html">Zone.py</a>.</p>
 
 </div>
 </div>
@@ -612,7 +689,7 @@ Static Private Attributes</h2></td></tr>
 <p><a class="el" href="class_zone_1_1_zone.html" title="A zone.">Zone</a> radius. </p>
 <p>The radius of the zone. </p>
 
-<p>Definition at line <a class="el" href="_zone_8py_source.html#l00125">125</a> of file <a class="el" href="_zone_8py_source.html">Zone.py</a>.</p>
+<p>Definition at line <a class="el" href="_zone_8py_source.html#l00134">134</a> of file <a class="el" href="_zone_8py_source.html">Zone.py</a>.</p>
 
 </div>
 </div>
@@ -630,7 +707,7 @@ Static Private Attributes</h2></td></tr>
 <p><a class="el" href="class_zone_1_1_zone.html" title="A zone.">Zone</a> type specific settings. </p>
 <p>List of settings. </p>
 
-<p>Definition at line <a class="el" href="_zone_8py_source.html#l00134">134</a> of file <a class="el" href="_zone_8py_source.html">Zone.py</a>.</p>
+<p>Definition at line <a class="el" href="_zone_8py_source.html#l00143">143</a> of file <a class="el" href="_zone_8py_source.html">Zone.py</a>.</p>
 
 </div>
 </div>
@@ -648,7 +725,7 @@ Static Private Attributes</h2></td></tr>
 <p>max or min size of the zone </p>
 <p>Max or min radius of the zone, depends on the zone shrinks or expands. </p>
 
-<p>Definition at line <a class="el" href="_zone_8py_source.html#l00131">131</a> of file <a class="el" href="_zone_8py_source.html">Zone.py</a>.</p>
+<p>Definition at line <a class="el" href="_zone_8py_source.html#l00140">140</a> of file <a class="el" href="_zone_8py_source.html">Zone.py</a>.</p>
 
 </div>
 </div>
@@ -666,7 +743,7 @@ Static Private Attributes</h2></td></tr>
 <p>The team name(s) of the team(s) to pass to the zone before x and y. </p>
 <p>The escaped name of the teams or None when no teams should be passed. </p>
 
-<p>Definition at line <a class="el" href="_zone_8py_source.html#l00132">132</a> of file <a class="el" href="_zone_8py_source.html">Zone.py</a>.</p>
+<p>Definition at line <a class="el" href="_zone_8py_source.html#l00141">141</a> of file <a class="el" href="_zone_8py_source.html">Zone.py</a>.</p>
 
 </div>
 </div>
@@ -684,7 +761,25 @@ Static Private Attributes</h2></td></tr>
 <p>Extra settings for teleport zones. </p>
 <p>This setting is needed because the different types of zones has different settings. The extra settings are allways at the end, except for teleport zones. This settings are passed to SPAWN_ZONE at this position, but only if the zone is a teleport zone. </p>
 
-<p>Definition at line <a class="el" href="_zone_8py_source.html#l00135">135</a> of file <a class="el" href="_zone_8py_source.html">Zone.py</a>.</p>
+<p>Definition at line <a class="el" href="_zone_8py_source.html#l00144">144</a> of file <a class="el" href="_zone_8py_source.html">Zone.py</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="aceea2ada107fbe1e78976e88a9bc74df"></a><!-- doxytag: member="Zone::Zone::yaml_tag" ref="aceea2ada107fbe1e78976e88a9bc74df" args="" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">string <a class="el" href="class_zone_1_1_zone.html#aceea2ada107fbe1e78976e88a9bc74df">Zone.Zone.yaml_tag</a> = &quot;!zone&quot;<code> [static]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>Yaml tag. </p>
+<p>See <a href="http://pyyaml.org/wiki/PyYAMLDocumentation">http://pyyaml.org/wiki/PyYAMLDocumentation</a> for details to the PyYaml library. </p>
+
+<p>Definition at line <a class="el" href="_zone_8py_source.html#l00113">113</a> of file <a class="el" href="_zone_8py_source.html">Zone.py</a>.</p>
 
 </div>
 </div>
@@ -706,7 +801,7 @@ Static Private Attributes</h2></td></tr>
 </iframe>
 </div>
 
-<hr class="footer"/><address class="footer"><small>Generated on Sat May 28 2011 11:16:29 for Armagetron MultiModeScript by&nbsp;
+<hr class="footer"/><address class="footer"><small>Generated on Sun Jun 19 2011 16:16:47 for Armagetron MultiModeScript by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.7.1 </small></address>
 </body>

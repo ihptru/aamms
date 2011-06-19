@@ -59,7 +59,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <table class="memberdecls">
 <tr><td colspan="2"><h2><a name="var-members"></a>
 Variables</h2></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">string&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespace_messages.html#a3e3faaf68afad52c8ae777f0f47bb334">Messages.PlayerColorCode</a> = &quot;0xbbbbbb&quot;</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">string&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespace_messages.html#a3e3faaf68afad52c8ae777f0f47bb334">Messages.PlayerColorCode</a> = &quot;0xddffdd&quot;</td></tr>
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">The color code for user messages.  <a href="#a3e3faaf68afad52c8ae777f0f47bb334"></a><br/></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">string&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespace_messages.html#ac8c1ff58f613cf1b6c546425b8ca3d01">Messages.CommandNotFound</a> = &quot;Sorry, command /{command} doesn't exist. Maybe you can try /help.&quot;</td></tr>
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Command not found message.  <a href="#ac8c1ff58f613cf1b6c546425b8ca3d01"></a><br/></td></tr>
@@ -69,10 +69,30 @@ Variables</h2></td></tr>
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight"><a class="el" href="namespace_player.html" title="Functions and classes for player management.">Player</a> not found message.  <a href="#a77552d65bc4e9f1f3aba447d0f7a3545"></a><br/></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">tuple&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespace_messages.html#ae1e90af63bd5ca7c6c23067c1dba6167">Messages.PlayerTeleport</a> = (&quot;0xff0088Player {player} teleported himself to ({x}|{y})&quot;)</td></tr>
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Teleport message.  <a href="#ae1e90af63bd5ca7c6c23067c1dba6167"></a><br/></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">tuple&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespace_messages.html#aafc8a4035cb479fff402fadf136fd551">Messages.FeatureNotAvaliable</a> = (&quot;{feature} is currently not supported, but it's coming soon! :)&quot;)</td></tr>
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Feature not implemented message.  <a href="#aafc8a4035cb479fff402fadf136fd551"></a><br/></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">tuple&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespace_messages.html#afa3b2eb455a55fa640142e621cda0298">Messages.ModeNotExist</a> = (&quot;{mode} doesn't exist! Look at /help modelist for a list of all avaliable modes.&quot;)</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">tuple&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespace_messages.html#a4465383f0a23d7a182e18447c782ecd5">Messages.FeatureNotImplemented</a> = (&quot;{feature} is currently not supported, but it's coming soon! :)&quot;)</td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Feature not implemented message.  <a href="#a4465383f0a23d7a182e18447c782ecd5"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">tuple&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespace_messages.html#afa3b2eb455a55fa640142e621cda0298">Messages.ModeNotExist</a> = (&quot;{mode} doesn't exist! Look at /help modes for a list of all avaliable modes.&quot;)</td></tr>
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Mode not exists message.  <a href="#afa3b2eb455a55fa640142e621cda0298"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">tuple&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespace_messages.html#aff519efc9c26287f1852afe761563602">Messages.VoteInProgress</a> = (&quot;0xff8844Vote for {target} in progress. Use /yes or /no to vote! This vote expires in {expire} rounds&quot;)</td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight"><a class="el" href="namespace_vote.html" title="Classes and functions for votes.">Vote</a> is in progress message.  <a href="#aff519efc9c26287f1852afe761563602"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">tuple&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespace_messages.html#a6d7f3162f38c3a6552a3dab5b6754f43">Messages.VoteAdded</a> = (&quot;0x00ff00Vote for {target} submitted by {player}&quot;)</td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight"><a class="el" href="namespace_vote.html" title="Classes and functions for votes.">Vote</a> added message.  <a href="#a6d7f3162f38c3a6552a3dab5b6754f43"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">tuple&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespace_messages.html#ac02b12d249d61f97eec79cb5e1ea8a08">Messages.VoteCancelled</a> = (&quot;0xff2200The vote about {target} got cancelled by an administrator.&quot;)</td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight"><a class="el" href="namespace_vote.html" title="Classes and functions for votes.">Vote</a> cancelled message.  <a href="#ac02b12d249d61f97eec79cb5e1ea8a08"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">tuple&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespace_messages.html#a199081dd923e4998d3885a0509a001c8">Messages.VoteSuccessed</a> = (&quot;0x00ffffVote for {target} successed!&quot;)</td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight"><a class="el" href="namespace_vote.html" title="Classes and functions for votes.">Vote</a> successed message.  <a href="#a199081dd923e4998d3885a0509a001c8"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">tuple&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespace_messages.html#aa8d5980986423956ec12fcdcfa80de25">Messages.VoteFailed</a> = (&quot;0x00ffffVote for {target} failed!&quot;)</td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight"><a class="el" href="namespace_vote.html" title="Classes and functions for votes.">Vote</a> failed message.  <a href="#aa8d5980986423956ec12fcdcfa80de25"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">tuple&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespace_messages.html#a20034f79dd8add47d2e3bf20575d3e23">Messages.PlayerVotedYes</a> = (&quot;0xffff00{player} voted for {target}.&quot;)</td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight"><a class="el" href="namespace_player.html" title="Functions and classes for player management.">Player</a> voted for a vote message.  <a href="#a20034f79dd8add47d2e3bf20575d3e23"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">tuple&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespace_messages.html#a3502d8215e70215b9fe39cbf1f1164a0">Messages.PlayerVotedNo</a> = (&quot;0x99ff99{player} voted against {target}&quot;)</td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight"><a class="el" href="namespace_player.html" title="Functions and classes for player management.">Player</a> voted against a vote message.  <a href="#a3502d8215e70215b9fe39cbf1f1164a0"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">tuple&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespace_messages.html#ae29d170f9e6ecde8edb516f5e113a133">Messages.PlayerAlreadyVoted</a> = (&quot;0xff0033You have already voted!&quot;)</td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight"><a class="el" href="namespace_player.html" title="Functions and classes for player management.">Player</a> has already voted message.  <a href="#ae29d170f9e6ecde8edb516f5e113a133"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">tuple&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespace_messages.html#a2b4a710a776b5ad20064ceaeba25c177">Messages.NoActiveVote</a> = (&quot;There's no vote in progress!&quot;)</td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">No vote active message.  <a href="#a2b4a710a776b5ad20064ceaeba25c177"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">tuple&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespace_messages.html#afef66c4b2e2a4abdc9d2309fff00ad0b">Messages.AccessLevelChanged</a> = (&quot;0x00ff00The needed access level for command /{command} has been changed to {access}.&quot;)</td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Access level changed message.  <a href="#afef66c4b2e2a4abdc9d2309fff00ad0b"></a><br/></td></tr>
 </table>
 <hr/><a name="_details"></a><h2>Detailed Description</h2>
 <p>Game messages. </p>
@@ -94,7 +114,7 @@ Variables</h2></td></tr>
 </iframe>
 </div>
 
-<hr class="footer"/><address class="footer"><small>Generated on Sat May 28 2011 11:16:28 for Armagetron MultiModeScript by&nbsp;
+<hr class="footer"/><address class="footer"><small>Generated on Sun Jun 19 2011 16:16:46 for Armagetron MultiModeScript by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.7.1 </small></address>
 </body>

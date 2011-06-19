@@ -56,6 +56,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
   <div class="summary">
 <a href="#pub-methods">Public Member Functions</a> &#124;
 <a href="#pub-attribs">Public Attributes</a> &#124;
+<a href="#pub-static-attribs">Static Public Attributes</a> &#124;
 <a href="#pri-methods">Private Member Functions</a> &#124;
 <a href="#pri-attribs">Private Attributes</a> &#124;
 <a href="#pri-static-attribs">Static Private Attributes</a>  </div>
@@ -77,8 +78,8 @@ Public Member Functions</h2></td></tr>
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Adds a respoint.  <a href="#a48c269456fe39631862a8be79627b0e5"></a><br/></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">def&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_mode_1_1_mode.html#a098cfc6ad819a1db17be57c9548bd199">deleteRespoints</a></td></tr>
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Deletes all respoints.  <a href="#a098cfc6ad819a1db17be57c9548bd199"></a><br/></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">def&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_mode_1_1_mode.html#a982f3bf8cfcade38459c67bbf6a64409">getRepoints</a></td></tr>
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Gets respoints.  <a href="#a982f3bf8cfcade38459c67bbf6a64409"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">def&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_mode_1_1_mode.html#a1f3ca2f4e28ef874943310e4397f6ac2">getRespoints</a></td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Gets respoints.  <a href="#a1f3ca2f4e28ef874943310e4397f6ac2"></a><br/></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">def&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_mode_1_1_mode.html#a68362e7b1cdd6ee60378f3cc1322a144">playerCrashed</a></td></tr>
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Call this when a player crashed.  <a href="#a68362e7b1cdd6ee60378f3cc1322a144"></a><br/></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">def&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_mode_1_1_mode.html#a6cf2ccffddfb377d9abdb116ba74bd3b">activate</a></td></tr>
@@ -95,6 +96,10 @@ Public Member Functions</h2></td></tr>
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Get zones.  <a href="#a2bf7c935b63449284449c845ad6b5321"></a><br/></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">def&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_mode_1_1_mode.html#ac1d907aa0ec93e0908aa3fa2cac0bde7">getEscapedName</a></td></tr>
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Returns an escaped name for the mode.  <a href="#ac1d907aa0ec93e0908aa3fa2cac0bde7"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">def&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_mode_1_1_mode.html#afa8fd4a33bbaada7fe3a2a16a818c48f">__getstate__</a></td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Returns current object state.  <a href="#afa8fd4a33bbaada7fe3a2a16a818c48f"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">def&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_mode_1_1_mode.html#a0b54ab72ab5d8fbbcba81dc953b3368a">__setstate__</a></td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Sets the current object state.  <a href="#a0b54ab72ab5d8fbbcba81dc953b3368a"></a><br/></td></tr>
 <tr><td colspan="2"><h2><a name="pub-attribs"></a>
 Public Attributes</h2></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_mode_1_1_mode.html#a38afa93ee0f4ad9e8258a510ccdbaa9c">name</a></td></tr>
@@ -107,6 +112,14 @@ Public Attributes</h2></td></tr>
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">How much members a team can have maximaly.  <a href="#ad4ba6cae17b92d4c8c85c35dc9418c8b"></a><br/></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_mode_1_1_mode.html#a55c4e205a8cb20550c0f3924471522ab">max_teams</a></td></tr>
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Maximal teams that can be active in this mode.  <a href="#a55c4e205a8cb20550c0f3924471522ab"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="acffe429e6af52f60fc386830811c33ed"></a><!-- doxytag: member="Mode::Mode::short_name" ref="acffe429e6af52f60fc386830811c33ed" args="" -->
+&nbsp;</td><td class="memItemRight" valign="bottom"><b>short_name</b></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_mode_1_1_mode.html#a62c4256349100a948a336e4f41e73367">lives</a></td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">How much lives does a player have?  <a href="#a62c4256349100a948a336e4f41e73367"></a><br/></td></tr>
+<tr><td colspan="2"><h2><a name="pub-static-attribs"></a>
+Static Public Attributes</h2></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">string&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_mode_1_1_mode.html#ae57cf492ec773e7116974023cfec575b">yaml_tag</a> = &quot;!mode&quot;</td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Yaml tag.  <a href="#ae57cf492ec773e7116974023cfec575b"></a><br/></td></tr>
 <tr><td colspan="2"><h2><a name="pri-methods"></a>
 Private Member Functions</h2></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">def&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_mode_1_1_mode.html#af6ee8ed30365011c35b48d4c5696e05b">__getRespoint</a></td></tr>
@@ -124,13 +137,15 @@ Private Attributes</h2></td></tr>
 <tr><td colspan="2"><h2><a name="pri-static-attribs"></a>
 Static Private Attributes</h2></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">tuple&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_mode_1_1_mode.html#a6f65d9a9362971bd8896a81a0d71c642">__slots__</a></td></tr>
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Slots  See <a href="http://docs.python.org">http://docs.python.org</a> OOP.  <a href="#a6f65d9a9362971bd8896a81a0d71c642"></a><br/></td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Slots.  <a href="#a6f65d9a9362971bd8896a81a0d71c642"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">tuple&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_mode_1_1_mode.html#af525bdda09b2a2c9c560be5062d7c55b">__not_persistent</a> = (&quot;__last_respoint&quot;)</td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Which variables shouldn't be saved by object serialized?  <a href="#af525bdda09b2a2c9c560be5062d7c55b"></a><br/></td></tr>
 </table>
 <hr/><a name="_details"></a><h2>Detailed Description</h2>
 <p>A mode. </p>
 <p>This class represents a mode. It stores all information about the mode. </p>
 
-<p>Definition at line <a class="el" href="_mode_8py_source.html#l00065">65</a> of file <a class="el" href="_mode_8py_source.html">Mode.py</a>.</p>
+<p>Definition at line <a class="el" href="_mode_8py_source.html#l00103">103</a> of file <a class="el" href="_mode_8py_source.html">Mode.py</a>.</p>
 <hr/><h2>Member Function Documentation</h2>
 <a class="anchor" id="af6ee8ed30365011c35b48d4c5696e05b"></a><!-- doxytag: member="Mode::Mode::__getRespoint" ref="af6ee8ed30365011c35b48d4c5696e05b" args="" -->
 <div class="memitem">
@@ -180,7 +195,31 @@ Static Private Attributes</h2></td></tr>
   </dd>
 </dl>
 
-<p>Definition at line <a class="el" href="_mode_8py_source.html#l00248">248</a> of file <a class="el" href="_mode_8py_source.html">Mode.py</a>.</p>
+<p>Definition at line <a class="el" href="_mode_8py_source.html#l00308">308</a> of file <a class="el" href="_mode_8py_source.html">Mode.py</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="afa8fd4a33bbaada7fe3a2a16a818c48f"></a><!-- doxytag: member="Mode::Mode::__getstate__" ref="afa8fd4a33bbaada7fe3a2a16a818c48f" args="" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">def Mode.Mode.__getstate__ </td>
+          <td>(</td>
+          <td class="paramtype">&nbsp;</td>
+          <td class="paramname"> <em>self</em></td>
+          <td>&nbsp;)&nbsp;</td>
+          <td></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>Returns current object state. </p>
+<p>Used by pickle and other serializing modules. </p>
+<dl class="return"><dt><b>Returns:</b></dt><dd>A dictionary of the current object state </dd></dl>
+
+<p>Definition at line <a class="el" href="_mode_8py_source.html#l00365">365</a> of file <a class="el" href="_mode_8py_source.html">Mode.py</a>.</p>
 
 </div>
 </div>
@@ -232,7 +271,45 @@ Static Private Attributes</h2></td></tr>
   </dd>
 </dl>
 
-<p>Definition at line <a class="el" href="_mode_8py_source.html#l00132">132</a> of file <a class="el" href="_mode_8py_source.html">Mode.py</a>.</p>
+<p>Definition at line <a class="el" href="_mode_8py_source.html#l00180">180</a> of file <a class="el" href="_mode_8py_source.html">Mode.py</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a0b54ab72ab5d8fbbcba81dc953b3368a"></a><!-- doxytag: member="Mode::Mode::__setstate__" ref="a0b54ab72ab5d8fbbcba81dc953b3368a" args="" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">def Mode.Mode.__setstate__ </td>
+          <td>(</td>
+          <td class="paramtype">&nbsp;</td>
+          <td class="paramname"> <em>self</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&nbsp;</td>
+          <td class="paramname"> <em>state</em></td><td>&nbsp;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td><td></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>Sets the current object state. </p>
+<p>Used by pickle and other serializing modules. </p>
+<dl><dt><b>Parameters:</b></dt><dd>
+  <table border="0" cellspacing="2" cellpadding="0">
+    <tr><td valign="top"></td><td valign="top"><em>state</em>&nbsp;</td><td>The state to which to set the current object state. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+<p>Definition at line <a class="el" href="_mode_8py_source.html#l00382">382</a> of file <a class="el" href="_mode_8py_source.html">Mode.py</a>.</p>
 
 </div>
 </div>
@@ -250,7 +327,7 @@ Static Private Attributes</h2></td></tr>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">&nbsp;</td>
-          <td class="paramname"> <em>kill</em> = <code>True</code></td><td>&nbsp;</td>
+          <td class="paramname"> <em>kill</em> = <code>None</code></td><td>&nbsp;</td>
         </tr>
         <tr>
           <td></td>
@@ -265,12 +342,12 @@ Static Private Attributes</h2></td></tr>
 <p>Includes the file given with settings_file and sets all the other settings. </p>
 <dl><dt><b>Parameters:</b></dt><dd>
   <table border="0" cellspacing="2" cellpadding="0">
-    <tr><td valign="top"></td><td valign="top"><em>kill</em>&nbsp;</td><td>Kill all players to activate the mode? Default True </td></tr>
+    <tr><td valign="top"></td><td valign="top"><em>kill</em>&nbsp;</td><td>Kill all players to activate the mode? Default True when round is already started, otherwise False. </td></tr>
   </table>
   </dd>
 </dl>
 
-<p>Definition at line <a class="el" href="_mode_8py_source.html#l00197">197</a> of file <a class="el" href="_mode_8py_source.html">Mode.py</a>.</p>
+<p>Definition at line <a class="el" href="_mode_8py_source.html#l00247">247</a> of file <a class="el" href="_mode_8py_source.html">Mode.py</a>.</p>
 
 </div>
 </div>
@@ -336,7 +413,7 @@ Static Private Attributes</h2></td></tr>
   </dd>
 </dl>
 
-<p>Definition at line <a class="el" href="_mode_8py_source.html#l00151">151</a> of file <a class="el" href="_mode_8py_source.html">Mode.py</a>.</p>
+<p>Definition at line <a class="el" href="_mode_8py_source.html#l00201">201</a> of file <a class="el" href="_mode_8py_source.html">Mode.py</a>.</p>
 
 </div>
 </div>
@@ -381,7 +458,7 @@ Static Private Attributes</h2></td></tr>
   </dd>
 </dl>
 
-<p>Definition at line <a class="el" href="_mode_8py_source.html#l00282">282</a> of file <a class="el" href="_mode_8py_source.html">Mode.py</a>.</p>
+<p>Definition at line <a class="el" href="_mode_8py_source.html#l00342">342</a> of file <a class="el" href="_mode_8py_source.html">Mode.py</a>.</p>
 
 </div>
 </div>
@@ -404,7 +481,7 @@ Static Private Attributes</h2></td></tr>
 <p>Deletes all respoints. </p>
 <p>Cleans the intern respoint list. </p>
 
-<p>Definition at line <a class="el" href="_mode_8py_source.html#l00158">158</a> of file <a class="el" href="_mode_8py_source.html">Mode.py</a>.</p>
+<p>Definition at line <a class="el" href="_mode_8py_source.html#l00208">208</a> of file <a class="el" href="_mode_8py_source.html">Mode.py</a>.</p>
 
 </div>
 </div>
@@ -428,16 +505,16 @@ Static Private Attributes</h2></td></tr>
 <p>Returns the mode name with all spaces replaced by underscores and all letters lowercased. </p>
 <dl class="return"><dt><b>Returns:</b></dt><dd>The escaped mode name. </dd></dl>
 
-<p>Definition at line <a class="el" href="_mode_8py_source.html#l00299">299</a> of file <a class="el" href="_mode_8py_source.html">Mode.py</a>.</p>
+<p>Definition at line <a class="el" href="_mode_8py_source.html#l00359">359</a> of file <a class="el" href="_mode_8py_source.html">Mode.py</a>.</p>
 
 </div>
 </div>
-<a class="anchor" id="a982f3bf8cfcade38459c67bbf6a64409"></a><!-- doxytag: member="Mode::Mode::getRepoints" ref="a982f3bf8cfcade38459c67bbf6a64409" args="" -->
+<a class="anchor" id="a1f3ca2f4e28ef874943310e4397f6ac2"></a><!-- doxytag: member="Mode::Mode::getRespoints" ref="a1f3ca2f4e28ef874943310e4397f6ac2" args="" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">def Mode.Mode.getRepoints </td>
+          <td class="memname">def Mode.Mode.getRespoints </td>
           <td>(</td>
           <td class="paramtype">&nbsp;</td>
           <td class="paramname"> <em>self</em></td>
@@ -452,7 +529,7 @@ Static Private Attributes</h2></td></tr>
 <p>Returns a deepcopy of the intern respoint list. </p>
 <dl class="return"><dt><b>Returns:</b></dt><dd>A deepcopy of the repoints. </dd></dl>
 
-<p>Definition at line <a class="el" href="_mode_8py_source.html#l00164">164</a> of file <a class="el" href="_mode_8py_source.html">Mode.py</a>.</p>
+<p>Definition at line <a class="el" href="_mode_8py_source.html#l00214">214</a> of file <a class="el" href="_mode_8py_source.html">Mode.py</a>.</p>
 
 </div>
 </div>
@@ -473,10 +550,10 @@ Static Private Attributes</h2></td></tr>
 <div class="memdoc">
 
 <p>Get zones. </p>
-<p>Get a copy of the internal zone list. </p>
-<dl class="return"><dt><b>Returns:</b></dt><dd>A deep copy of the zone list. </dd></dl>
+<p>Get the internal zone list. </p>
+<dl class="return"><dt><b>Returns:</b></dt><dd>The internal zone list. </dd></dl>
 
-<p>Definition at line <a class="el" href="_mode_8py_source.html#l00293">293</a> of file <a class="el" href="_mode_8py_source.html">Mode.py</a>.</p>
+<p>Definition at line <a class="el" href="_mode_8py_source.html#l00353">353</a> of file <a class="el" href="_mode_8py_source.html">Mode.py</a>.</p>
 
 </div>
 </div>
@@ -522,7 +599,7 @@ Static Private Attributes</h2></td></tr>
 </dl>
 <dl class="return"><dt><b>Returns:</b></dt><dd>Has the player been respawned? </dd></dl>
 
-<p>Definition at line <a class="el" href="_mode_8py_source.html#l00173">173</a> of file <a class="el" href="_mode_8py_source.html">Mode.py</a>.</p>
+<p>Definition at line <a class="el" href="_mode_8py_source.html#l00223">223</a> of file <a class="el" href="_mode_8py_source.html">Mode.py</a>.</p>
 
 </div>
 </div>
@@ -545,7 +622,7 @@ Static Private Attributes</h2></td></tr>
 <p>Remove all zones. </p>
 <p>Remove all zone from the internal zone list. </p>
 
-<p>Definition at line <a class="el" href="_mode_8py_source.html#l00287">287</a> of file <a class="el" href="_mode_8py_source.html">Mode.py</a>.</p>
+<p>Definition at line <a class="el" href="_mode_8py_source.html#l00347">347</a> of file <a class="el" href="_mode_8py_source.html">Mode.py</a>.</p>
 
 </div>
 </div>
@@ -568,7 +645,7 @@ Static Private Attributes</h2></td></tr>
 <p>Spawns all players (teams). </p>
 <p>Spawns all teams by using the respoints. </p>
 
-<p>Definition at line <a class="el" href="_mode_8py_source.html#l00215">215</a> of file <a class="el" href="_mode_8py_source.html">Mode.py</a>.</p>
+<p>Definition at line <a class="el" href="_mode_8py_source.html#l00272">272</a> of file <a class="el" href="_mode_8py_source.html">Mode.py</a>.</p>
 
 </div>
 </div>
@@ -591,7 +668,7 @@ Static Private Attributes</h2></td></tr>
 <p>Spawns all zones. </p>
 <p>Spawns all zones related to the mode </p>
 
-<p>Definition at line <a class="el" href="_mode_8py_source.html#l00229">229</a> of file <a class="el" href="_mode_8py_source.html">Mode.py</a>.</p>
+<p>Definition at line <a class="el" href="_mode_8py_source.html#l00286">286</a> of file <a class="el" href="_mode_8py_source.html">Mode.py</a>.</p>
 
 </div>
 </div>
@@ -610,7 +687,25 @@ Static Private Attributes</h2></td></tr>
 <p>The last used respoint. </p>
 <p>The number of the last-used respoint for each team. </p>
 
-<p>Definition at line <a class="el" href="_mode_8py_source.html#l00141">141</a> of file <a class="el" href="_mode_8py_source.html">Mode.py</a>.</p>
+<p>Definition at line <a class="el" href="_mode_8py_source.html#l00189">189</a> of file <a class="el" href="_mode_8py_source.html">Mode.py</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="af525bdda09b2a2c9c560be5062d7c55b"></a><!-- doxytag: member="Mode::Mode::__not_persistent" ref="af525bdda09b2a2c9c560be5062d7c55b" args="" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">tuple <a class="el" href="class_mode_1_1_mode.html#af525bdda09b2a2c9c560be5062d7c55b">Mode.Mode.__not_persistent</a> = (&quot;__last_respoint&quot;)<code> [static, private]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>Which variables shouldn't be saved by object serialized? </p>
+<p>Variables to exclude in __get_state__ </p>
+
+<p>Definition at line <a class="el" href="_mode_8py_source.html#l00173">173</a> of file <a class="el" href="_mode_8py_source.html">Mode.py</a>.</p>
 
 </div>
 </div>
@@ -628,7 +723,7 @@ Static Private Attributes</h2></td></tr>
 <p>Respoints of this mode. </p>
 <p>List of respawn points. Each respawn point is a tuple of team,x,y,xdir and ydir. Where x,y are the coordinates, and xdir and ydir are the dirtion. If the respoint should be avaliable for all teams, set team to None. Else set team to the number of the team for which the respoint should be avaliable. </p>
 
-<p>Definition at line <a class="el" href="_mode_8py_source.html#l00137">137</a> of file <a class="el" href="_mode_8py_source.html">Mode.py</a>.</p>
+<p>Definition at line <a class="el" href="_mode_8py_source.html#l00185">185</a> of file <a class="el" href="_mode_8py_source.html">Mode.py</a>.</p>
 
 </div>
 </div>
@@ -646,7 +741,7 @@ Static Private Attributes</h2></td></tr>
 <p>How should the respoints be used? </p>
 <p>Could be random_roundstart, random_allways, toggle_roundstart, toggle_allways,toggle_whileround, random_whileround or first. </p>
 
-<p>Definition at line <a class="el" href="_mode_8py_source.html#l00140">140</a> of file <a class="el" href="_mode_8py_source.html">Mode.py</a>.</p>
+<p>Definition at line <a class="el" href="_mode_8py_source.html#l00188">188</a> of file <a class="el" href="_mode_8py_source.html">Mode.py</a>.</p>
 
 </div>
 </div>
@@ -661,11 +756,12 @@ Static Private Attributes</h2></td></tr>
 </div>
 <div class="memdoc">
 <b>Initial value:</b><div class="fragment"><pre class="fragment">(<span class="stringliteral">&quot;name&quot;</span>,<span class="stringliteral">&quot;__zones&quot;</span>,<span class="stringliteral">&quot;max_teams&quot;</span>,<span class="stringliteral">&quot;max_team_members&quot;</span>,<span class="stringliteral">&quot;settings_file&quot;</span>,
-                   <span class="stringliteral">&quot;__respoints&quot;</span>,<span class="stringliteral">&quot;settings&quot;</span>,<span class="stringliteral">&quot;__restype&quot;</span>,<span class="stringliteral">&quot;__last_respoint&quot;</span>)
+                   <span class="stringliteral">&quot;__respoints&quot;</span>,<span class="stringliteral">&quot;settings&quot;</span>,<span class="stringliteral">&quot;__restype&quot;</span>,<span class="stringliteral">&quot;__last_respoint&quot;</span>,<span class="stringliteral">&quot;short_name&quot;</span>)
 </pre></div>
-<p>Slots  See <a href="http://docs.python.org">http://docs.python.org</a> OOP. </p>
+<p>Slots. </p>
+<p>See <a href="http://docs.python.org">http://docs.python.org</a> OOP </p>
 
-<p>Definition at line <a class="el" href="_mode_8py_source.html#l00125">125</a> of file <a class="el" href="_mode_8py_source.html">Mode.py</a>.</p>
+<p>Definition at line <a class="el" href="_mode_8py_source.html#l00163">163</a> of file <a class="el" href="_mode_8py_source.html">Mode.py</a>.</p>
 
 </div>
 </div>
@@ -683,7 +779,25 @@ Static Private Attributes</h2></td></tr>
 <p>The zones of the modes. </p>
 <p>A list of zones. Each item is a tuple of team and the zone object. The team could be None if the zone should be spawned for all teams. Otherwise, set team to the number of the team for which the zone should be spawned, or -1 if the zone doesn't belong to any team and should allways be spawned. </p>
 
-<p>Definition at line <a class="el" href="_mode_8py_source.html#l00136">136</a> of file <a class="el" href="_mode_8py_source.html">Mode.py</a>.</p>
+<p>Definition at line <a class="el" href="_mode_8py_source.html#l00184">184</a> of file <a class="el" href="_mode_8py_source.html">Mode.py</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a62c4256349100a948a336e4f41e73367"></a><!-- doxytag: member="Mode::Mode::lives" ref="a62c4256349100a948a336e4f41e73367" args="" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="class_mode_1_1_mode.html#a62c4256349100a948a336e4f41e73367">Mode.Mode::lives</a></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>How much lives does a player have? </p>
+<p>Number of lives a player has in this mode. </p>
+
+<p>Definition at line <a class="el" href="_mode_8py_source.html#l00191">191</a> of file <a class="el" href="_mode_8py_source.html">Mode.py</a>.</p>
 
 </div>
 </div>
@@ -701,7 +815,7 @@ Static Private Attributes</h2></td></tr>
 <p>How much members a team can have maximaly. </p>
 <p>Number of maximal members per team or 0 for unlimited. </p>
 
-<p>Definition at line <a class="el" href="_mode_8py_source.html#l00138">138</a> of file <a class="el" href="_mode_8py_source.html">Mode.py</a>.</p>
+<p>Definition at line <a class="el" href="_mode_8py_source.html#l00186">186</a> of file <a class="el" href="_mode_8py_source.html">Mode.py</a>.</p>
 
 </div>
 </div>
@@ -719,7 +833,7 @@ Static Private Attributes</h2></td></tr>
 <p>Maximal teams that can be active in this mode. </p>
 <p>The number of teams the could be active in this mode or 0 for unlimited. </p>
 
-<p>Definition at line <a class="el" href="_mode_8py_source.html#l00139">139</a> of file <a class="el" href="_mode_8py_source.html">Mode.py</a>.</p>
+<p>Definition at line <a class="el" href="_mode_8py_source.html#l00187">187</a> of file <a class="el" href="_mode_8py_source.html">Mode.py</a>.</p>
 
 </div>
 </div>
@@ -737,7 +851,7 @@ Static Private Attributes</h2></td></tr>
 <p>The name of the mode. </p>
 <p>A string which contains the name of the mode. </p>
 
-<p>Definition at line <a class="el" href="_mode_8py_source.html#l00133">133</a> of file <a class="el" href="_mode_8py_source.html">Mode.py</a>.</p>
+<p>Definition at line <a class="el" href="_mode_8py_source.html#l00181">181</a> of file <a class="el" href="_mode_8py_source.html">Mode.py</a>.</p>
 
 </div>
 </div>
@@ -755,7 +869,7 @@ Static Private Attributes</h2></td></tr>
 <p>Additional settings. </p>
 <p>Dictionary of settings where the key is the name of the setting and the value is the value of the setting. </p>
 
-<p>Definition at line <a class="el" href="_mode_8py_source.html#l00135">135</a> of file <a class="el" href="_mode_8py_source.html">Mode.py</a>.</p>
+<p>Definition at line <a class="el" href="_mode_8py_source.html#l00183">183</a> of file <a class="el" href="_mode_8py_source.html">Mode.py</a>.</p>
 
 </div>
 </div>
@@ -773,7 +887,25 @@ Static Private Attributes</h2></td></tr>
 <p>The settings file which to include when the mode gets activated. </p>
 <p>The path of the file which gets include when the mode is activated, relative to settings_prefix </p>
 
-<p>Definition at line <a class="el" href="_mode_8py_source.html#l00134">134</a> of file <a class="el" href="_mode_8py_source.html">Mode.py</a>.</p>
+<p>Definition at line <a class="el" href="_mode_8py_source.html#l00182">182</a> of file <a class="el" href="_mode_8py_source.html">Mode.py</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="ae57cf492ec773e7116974023cfec575b"></a><!-- doxytag: member="Mode::Mode::yaml_tag" ref="ae57cf492ec773e7116974023cfec575b" args="" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">string <a class="el" href="class_mode_1_1_mode.html#ae57cf492ec773e7116974023cfec575b">Mode.Mode.yaml_tag</a> = &quot;!mode&quot;<code> [static]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>Yaml tag. </p>
+<p>See <a href="http://pyyaml.org/wiki/PyYAMLDocumentation">http://pyyaml.org/wiki/PyYAMLDocumentation</a> for details to the PyYaml library. </p>
+
+<p>Definition at line <a class="el" href="_mode_8py_source.html#l00168">168</a> of file <a class="el" href="_mode_8py_source.html">Mode.py</a>.</p>
 
 </div>
 </div>
@@ -795,7 +927,7 @@ Static Private Attributes</h2></td></tr>
 </iframe>
 </div>
 
-<hr class="footer"/><address class="footer"><small>Generated on Sat May 28 2011 11:16:28 for Armagetron MultiModeScript by&nbsp;
+<hr class="footer"/><address class="footer"><small>Generated on Sun Jun 19 2011 16:16:46 for Armagetron MultiModeScript by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.7.1 </small></address>
 </body>

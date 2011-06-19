@@ -38,10 +38,6 @@ events.addEvent(Event.Event("Zone renamed") )
  # @brief A zone
  # @details This class represents a zone. Zones can be spawned, collapsed, have a name, ...
 class Zone(yaml.YAMLObject):
-	## @property name
-	 # @brief The zone name
-	 # @details The name of the zone or None if the zone is unnamed.
-	 # @note Changing this triggers the event "Zone renamed"
 	
 	## @property __name
 	 # @brief Used to store the name
@@ -131,6 +127,7 @@ class Zone(yaml.YAMLObject):
 	 # @param interactive \copybrief interactive
 	 # @param color Tuple of the r,g,b values of the color used for the zone,
 	 # @param target_size \copybrief target_size
+	 # @param type The zone type
 	def __init__(self, name, position=(0,0), radius=5, growth=0,direction=(0,0), 
 	             interactive=False, color=(0,0,1), target_size=-1,type="target" ):
 		self.__name=name 
@@ -220,7 +217,7 @@ class Zone(yaml.YAMLObject):
 		return self.__name
 
 	## @brief Sets the zone name
-	 # @param name The new name of the zone or None if the zone should be unnamed.
+	 # @param newname The new name of the zone or None if the zone should be unnamed.
 	 # @note This triggers the event "Zone renamed"
 	@name.setter
 	def setName(self, newname):
@@ -235,7 +232,7 @@ class Zone(yaml.YAMLObject):
 	## @brief Sets the zone type
 	 # @details For more information about zone types go to 
 	 #          http://crazy-tronners.com/wiki/index.php/Settings#type
-	 # @param type The name of the zone type.
+	 # @param ztype The name of the zone type.
 	 # @exception ValueError Raised if the zone type doesn't exist.
 	def setType(self, ztype):
 		if ztype not in _ZONE_TYPES:
@@ -278,7 +275,7 @@ class Zone(yaml.YAMLObject):
 		self.__alive=False
 		self.teamnames=list()
 
-## @brief Enables logging
+## @brief Enabl								es logging
  # @details This function enables logging for this module.
  # @param h The handler used for logging
  # @param f The formatter used for logging

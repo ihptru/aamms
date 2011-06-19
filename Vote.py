@@ -86,7 +86,7 @@ class Vote:
 	## @brief Init function (Constructor)
 	 # @details Inits a new vote.
 	 # @param target Human readable target of the vote.
-	 # @param mtarget Action. None if no function should be called.
+	 # @param action Action. None if no function should be called.
 	def __init__(self, target, action=None):
 		global defaultStayAlive
 		self.target=target
@@ -155,7 +155,7 @@ class Vote:
 	 # @details Checks if the player is a spectator. If yes and
 	 #          spec_allowed is set to False, return immendiately. Otherwise,
 	 #          add the player to the list of players who voted for|agains the vote.
-	 # @param name The ladder name of the player who voted.
+	 # @param player The ladder name of the player who voted.
 	 # @param vote True if the player voted for the voted, False otherwise.
 	 # @exception RuntimeError Raised if the player has already voted.
 	 # @exception ValueError Raised if the player doesn't exist.'

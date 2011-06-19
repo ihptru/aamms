@@ -1,0 +1,176 @@
+\hypertarget{namespace_vote}{
+\section{Package Vote}
+\label{namespace_vote}\index{Vote@{Vote}}
+}
+
+
+Classes and functions for votes.  
+
+
+\subsection*{Classes}
+\begin{DoxyCompactItemize}
+\item 
+class \hyperlink{class_vote_1_1_vote}{Vote}
+\begin{DoxyCompactList}\small\item\em The vote class. \item\end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+def \hyperlink{namespace_vote_a9c7157cc8fb02e15e7103b7cdf58d3d5}{Add}
+\begin{DoxyCompactList}\small\item\em Adds a new vote. \item\end{DoxyCompactList}\item 
+def \hyperlink{namespace_vote_a5d75127361161b29f9a36a7f8d3cc1ed}{Cancel}
+\begin{DoxyCompactList}\small\item\em Cancels the current vote. \item\end{DoxyCompactList}\item 
+def \hyperlink{namespace_vote_acfb2109b9dab2995578ab19517868aa3}{enableLogging}
+\begin{DoxyCompactList}\small\item\em Enables logging. \item\end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Variables}
+\begin{DoxyCompactItemize}
+\item 
+tuple \hyperlink{namespace_vote_a081b01b11b311cef57a1bd37c864d363}{log} = logging.getLogger(\char`\"{}VoteModule\char`\"{})
+\begin{DoxyCompactList}\small\item\em The logging object. \item\end{DoxyCompactList}\item 
+tuple \hyperlink{namespace_vote_a611c4a69371fcbdcc7683a654b737a14}{events} = \hyperlink{class_event_1_1_event_group}{Event.EventGroup}(\char`\"{}VoteEvents\char`\"{})
+\begin{DoxyCompactList}\small\item\em The EventGroup. \item\end{DoxyCompactList}\item 
+\hyperlink{namespace_vote_a6f1e35e3cde6d6b591ca9c8a2eaa5064}{current\_\-vote} = None
+\begin{DoxyCompactList}\small\item\em The current vote. \item\end{DoxyCompactList}\item 
+\hyperlink{namespace_vote_ae0bddda424d524ab6f934decff807faa}{spec\_\-allowed} = False
+\begin{DoxyCompactList}\small\item\em Can spectators vote? \item\end{DoxyCompactList}\item 
+int \hyperlink{namespace_vote_a3ed2d759405d2be1e6f53c128aef371a}{defaultStayAlive} = 5
+\begin{DoxyCompactList}\small\item\em When should a vote expire? (Default value). \item\end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+Classes and functions for votes. This file contains classes and functions needed for votes. 
+
+\subsection{Function Documentation}
+\hypertarget{namespace_vote_a9c7157cc8fb02e15e7103b7cdf58d3d5}{
+\index{Vote@{Vote}!Add@{Add}}
+\index{Add@{Add}!Vote@{Vote}}
+\subsubsection[{Add}]{\setlength{\rightskip}{0pt plus 5cm}def Vote.Add (
+\begin{DoxyParamCaption}
+\item[{}]{ target\_\-human, }
+\item[{}]{ target\_\-machine}
+\end{DoxyParamCaption}
+)}}
+\label{namespace_vote_a9c7157cc8fb02e15e7103b7cdf58d3d5}
+
+
+Adds a new vote. 
+
+Adds a vote with the given name and set it as current\_\-vote. 
+\begin{DoxyExceptions}{Exceptions}
+\item[{\em RuntimeError}]Raised if there is already a vote. (current\_\-vote not None) \end{DoxyExceptions}
+
+\begin{DoxyParams}{Parameters}
+\item[{\em target\_\-human}]The human readable target of the vote (What is the vote about? ). Used for displaying. \item[{\em target\_\-machine}]The target of the vote (What is the vote about? ). Could be used to check what to do when the vote successed. \end{DoxyParams}
+
+
+Definition at line 49 of file Vote.py.
+
+\hypertarget{namespace_vote_a5d75127361161b29f9a36a7f8d3cc1ed}{
+\index{Vote@{Vote}!Cancel@{Cancel}}
+\index{Cancel@{Cancel}!Vote@{Vote}}
+\subsubsection[{Cancel}]{\setlength{\rightskip}{0pt plus 5cm}def Vote.Cancel (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)}}
+\label{namespace_vote_a5d75127361161b29f9a36a7f8d3cc1ed}
+
+
+Cancels the current vote. 
+
+Sets current\_\-vote to None and prints a message. 
+
+Definition at line 58 of file Vote.py.
+
+\hypertarget{namespace_vote_acfb2109b9dab2995578ab19517868aa3}{
+\index{Vote@{Vote}!enableLogging@{enableLogging}}
+\index{enableLogging@{enableLogging}!Vote@{Vote}}
+\subsubsection[{enableLogging}]{\setlength{\rightskip}{0pt plus 5cm}def Vote.enableLogging (
+\begin{DoxyParamCaption}
+\item[{}]{ level = {\ttfamily logging.DEBUG}, }
+\item[{}]{ h = {\ttfamily None}, }
+\item[{}]{ f = {\ttfamily None}}
+\end{DoxyParamCaption}
+)}}
+\label{namespace_vote_acfb2109b9dab2995578ab19517868aa3}
+
+
+Enables logging. 
+
+This function enables logging for this module. 
+\begin{DoxyParams}{Parameters}
+\item[{\em h}]The handler used for logging \item[{\em f}]The formatter used for logging \item[{\em level}]The logging level \end{DoxyParams}
+
+
+Definition at line 180 of file Vote.py.
+
+
+
+\subsection{Variable Documentation}
+\hypertarget{namespace_vote_a6f1e35e3cde6d6b591ca9c8a2eaa5064}{
+\index{Vote@{Vote}!current\_\-vote@{current\_\-vote}}
+\index{current\_\-vote@{current\_\-vote}!Vote@{Vote}}
+\subsubsection[{current\_\-vote}]{\setlength{\rightskip}{0pt plus 5cm}{\bf Vote.current\_\-vote} = None}}
+\label{namespace_vote_a6f1e35e3cde6d6b591ca9c8a2eaa5064}
+
+
+The current vote. 
+
+None or an instance of the current vote. 
+
+Definition at line 34 of file Vote.py.
+
+\hypertarget{namespace_vote_a3ed2d759405d2be1e6f53c128aef371a}{
+\index{Vote@{Vote}!defaultStayAlive@{defaultStayAlive}}
+\index{defaultStayAlive@{defaultStayAlive}!Vote@{Vote}}
+\subsubsection[{defaultStayAlive}]{\setlength{\rightskip}{0pt plus 5cm}int {\bf Vote.defaultStayAlive} = 5}}
+\label{namespace_vote_a3ed2d759405d2be1e6f53c128aef371a}
+
+
+When should a vote expire? (Default value). 
+
+Default number of rounds for which a vote stays alive. 
+
+Definition at line 42 of file Vote.py.
+
+\hypertarget{namespace_vote_a611c4a69371fcbdcc7683a654b737a14}{
+\index{Vote@{Vote}!events@{events}}
+\index{events@{events}!Vote@{Vote}}
+\subsubsection[{events}]{\setlength{\rightskip}{0pt plus 5cm}tuple {\bf Vote.events} = {\bf Event.EventGroup}(\char`\"{}VoteEvents\char`\"{})}}
+\label{namespace_vote_a611c4a69371fcbdcc7683a654b737a14}
+
+
+The EventGroup. 
+
+EventGroup used by this module. Events definied by this module: \hyperlink{namespace_vote}{Vote} created: triggered when a new vote was created. \hyperlink{namespace_vote}{Vote} successed: triggered when a vote successed. (After a call to \hyperlink{class_vote_1_1_vote_acda3525e83e91d9e4622218635f92d4b}{Vote.Vote.CheckResult()} ) \hyperlink{namespace_vote}{Vote} failed: triggered when a vote failed. (After a call to \hyperlink{class_vote_1_1_vote_acda3525e83e91d9e4622218635f92d4b}{Vote.Vote.CheckResult()} ) \hyperlink{namespace_vote}{Vote} cancelled: triggered by \hyperlink{namespace_vote_a5d75127361161b29f9a36a7f8d3cc1ed}{Vote.Cancel()} . Handlers for Events triggered by this module don't have any arguments.' 
+
+Definition at line 26 of file Vote.py.
+
+\hypertarget{namespace_vote_a081b01b11b311cef57a1bd37c864d363}{
+\index{Vote@{Vote}!log@{log}}
+\index{log@{log}!Vote@{Vote}}
+\subsubsection[{log}]{\setlength{\rightskip}{0pt plus 5cm}tuple {\bf Vote.log} = logging.getLogger(\char`\"{}VoteModule\char`\"{})}}
+\label{namespace_vote_a081b01b11b311cef57a1bd37c864d363}
+
+
+The logging object. 
+
+The logging object used for log messages by this module. \begin{DoxyNote}{Note}
+To enable or disable logging for this module use \hyperlink{namespace_vote_acfb2109b9dab2995578ab19517868aa3}{Vote.enableLogging} 
+\end{DoxyNote}
+
+
+Definition at line 15 of file Vote.py.
+
+\hypertarget{namespace_vote_ae0bddda424d524ab6f934decff807faa}{
+\index{Vote@{Vote}!spec\_\-allowed@{spec\_\-allowed}}
+\index{spec\_\-allowed@{spec\_\-allowed}!Vote@{Vote}}
+\subsubsection[{spec\_\-allowed}]{\setlength{\rightskip}{0pt plus 5cm}{\bf Vote.spec\_\-allowed} = False}}
+\label{namespace_vote_ae0bddda424d524ab6f934decff807faa}
+
+
+Can spectators vote? 
+
+If set to True, votes of spectators are ignored. 
+
+Definition at line 38 of file Vote.py.
+
