@@ -10,15 +10,12 @@ import Zone
 import Mode
 import Global
 import atexit
-import sys
-import os
-import os.path
 
-def exit():
-	Mode.saveModes()
+def exit(normal=False):
+	if normal:
+		Mode.saveModes()
 	Armagetronad.PrintMessage("0xff0000Script exited.")
 
-os.chdir(os.path.join(os.path.dirname(sys.argv[0]), "run") )
 log=logging.getLogger("MainModule")
 h=logging.StreamHandler()
 h.setLevel(logging.DEBUG)
@@ -77,3 +74,4 @@ while(True):
 			raise(e)
 	else:
 		log.debug("No ladder log handler for ladder event „" + command + "“.")
+exit(True)
