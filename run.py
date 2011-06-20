@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 ## @file run.py
  # @brief Starter for the script
  # @details Starts the script.
@@ -11,6 +12,7 @@ import sys
 import io
 import time
 import traceback
+import yaml
 
 # GLOBAL VARIABLES ######################################
 p=None
@@ -39,52 +41,80 @@ class OutputToProcess(io.TextIOWrapper):
 	def __init__(self):
 		pass
 	def write(self, x):
-		p.stdin.write(x.encode())
-		p.stdin.flush()
+		try:
+			p.stdin.write(x.encode())
+			p.stdin.flush()
+		except IOError as e:
+			pass # Ignore
 	def flush(self):
 		pass # File not buffered, ignore that.
 
 # SETTINGS ##############################################
-userdatadir="./server/userdata"
+userdatadir="./server/data"
 userconfigdir="./server/config"
 
 # COMMAND LINE OPTIONS ##################################
 parser=OptionParser()
-parser.add_option("-v", "--vardir", dest="vardir", default="/var/games/armagetronad/", help="Path to the var directory (server)")
-parser.add_option("-d", "--datadir", dest="datadir", default="/usr/share/games/armagetronad/", help="Path to the data directory (server)")
-parser.add_option("-c", "--configdir", dest="configdir", default="/etc/armagetronad-dedicated/", help="Path to the config directory (server)")
-parser.add_option("-e", "--executable", dest="server", default="/usr/games/armagetronad-dedicated", help="Path of the server executable")
+#parser.add_option("-v", "--vardir", dest="vardir", default=None, help="Path to the var directory (server)")
+parser.add_option("-d", "--datadir", dest="datadir", default=None, help="Path to the data directory (server)")
+parser.add_option("-c", "--configdir", dest="configdir", default=None, help="Path to the config directory (server)")
+parser.add_option("-e", "--executable", dest="server", default=None, help="Path of the server executable")
 options, args=parser.parse_args()
+options.vardir="server/var"
+optionsdict=dict()
+save_options=["vardir","configdir","server","datadir"]
 
 # START #################################################
 os.chdir(os.path.dirname(sys.argv[0]) )
 if not os.path.exists("run"):
 	os.mkdir("run")
 os.chdir("run")
+
+# Read and write config files
+if os.path.exists("config.conf"):
+	optionsdict2=yaml.load(open("config.conf","r") )
+	for key,value in optionsdict2.items():
+		try:
+			if getattr(options, key)==None:
+				setattr(options, key, value)
+		except:
+			pass
+for save_option in save_options:
+	optionsdict[save_option]=getattr(options, save_option)
+yaml.dump(optionsdict, open("config.conf","w"), default_flow_style=False )
+
 if not os.path.exists(userconfigdir):
 	os.makedirs(userconfigdir)
 if not os.path.exists(userdatadir):
 	os.makedirs(userdatadir)
+if not os.path.exists(options.vardir):
+	os.makedirs(options.vardir)
+open(os.path.join(options.vardir,"ladderlog.txt"),"w" ).close()
+print("[START] Starting server. Serverlog can be found in run/server.log")
 args=["--vardir",options.vardir, "--datadir",options.datadir, "--configdir",options.configdir,
       "--userdatadir",userdatadir, "--userconfigdir",userconfigdir]
-p=subprocess.Popen([options.server]+args, stdin=subprocess.PIPE)
+p=subprocess.Popen([options.server]+args, stdin=subprocess.PIPE, stdout=open("server.log","w"), stderr=subprocess.STDOUT )
 sys.stdout=OutputToProcess()
 sys.stdin=WatchFile(open(os.path.join(options.vardir,"ladderlog.txt") ) )
 sys.stdin.skipUnreadLines()
-time.sleep(30)
+sys.stderr=sys.__stdout__
+
 while True:
-	try:	
-		sys.stderr.write("------ Starting script. Press ctrl+c to exit.\n")
-		sys.stderr.flush()
+	try:
+		sys.stderr.write("[START] Starting script.\n")
+		sys.stderr.write("[START] Press ctrl+c to exit.\n")
+		sys.stderr.flush()	
 		import parser
+		parser.main()
 	except KeyboardInterrupt:
 		break
 	except Exception as e:
-		sys.stderr.write("[SCRIPT] Script crashed: "+e.__class__.__name__+" ("+str(e.args)[1:-1]+")\n")
+		sys.stderr.write("Script crashed: "+e.__class__.__name__+" ("+str(e.args)[1:-1]+")\n")
 		traceback.print_exc(file=sys.stderr)
 		sys.stderr.flush()
 		parser.exit(False)
-		sys.stderr.write("[SCRIPT] Restarting ... ")
+		sys.stderr.write("Restarting ... ")
 		continue
 	break
 p.terminate()
+p.wait()

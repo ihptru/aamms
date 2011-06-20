@@ -9,6 +9,10 @@ import AccessLevel
 import Mode
 from time import sleep
 import Commands
+import imp
+import glob
+import os.path
+import sys
 
 ## @brief Call to reload player list.
  # @details This will kill all players and reset match score so the script can reload the player list.
@@ -42,5 +46,15 @@ def updateHelpTopics():
 	commandhelp=commandhelp.replace(" ",r"\ ")
 	modehelp=r"\n".join(mht)
 	modehelp=modehelp.replace(" ",r"\ ")
-	Armagetronad.SendCommand(r"ADD_HELP_TOPIC commands_extra Extra\ commands\ on\ this\ server "+commandhelp)
+	Armagetronad.SendCommand(r"ADD_HELP_TOPIC extracommands Extra\ commands\ on\ this\ server "+commandhelp)
 	Armagetronad.SendCommand(r"ADD_HELP_TOPIC modes Modes\ avaliable\ on\ this\ server "+modehelp)
+
+## @brief Reloads all modules used by this script
+ # @details Reloads all modules loaded by the dcript by calling imp.reload(Module) for each Module
+def reloadModules():
+		for f in glob.glob(os.path.join(os.path.dirname(__file__),"*.py") ):
+			f=os.path.basename(f)
+			f=f[:-3]
+			if f in sys.modules:
+				sys.stderr.write("[RELOADING] Module: "+f+"\n")
+				imp.reload(sys.modules[f])

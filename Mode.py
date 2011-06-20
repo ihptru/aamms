@@ -90,11 +90,10 @@ def loadModes(dir="Modes", ext=".aamode"):
 		dir=dir+"/"
 	modefiles=glob(dir+"*"+ext)
 	for filename in modefiles:
-		log.debug("Loading mode from "+filename+" ...")
 		f=open(filename, "r")
 		m=yaml.load(f)
 		modes[m.getEscapedName()]=m
-		log.debug("Loaded mode "+m.name)
+		log.info("Loaded mode "+m.name)
 	
 
 ## @class Mode.Mode
@@ -162,10 +161,12 @@ class Mode(yaml.YAMLObject):
 	 # @internal
 	__slots__=("name","__zones","max_teams","max_team_members","settings_file",
 	           "__respoints","settings","__restype","__last_respoint","short_name","lives")
-	## @brief Yaml tag
+	## @brief Yaml settings
 	 # @details See http://pyyaml.org/wiki/PyYAMLDocumentation for details to the PyYaml library.
 	 # @internal
+	 # @cond
 	yaml_tag="!mode"
+	## @endcond
 
 	## @brief Which variables shouldn't be saved by object serialized?
 	 # @details Variables to exclude in __get_state__

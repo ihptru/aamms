@@ -107,10 +107,12 @@ class Zone(yaml.YAMLObject):
 	__slots__=("name","__name","color", "position", "radius","__alive", "growth","interactive", 
 	          "teamnames", "settings", "killteam", "target_size", "teleport_settings","dir","__type")
 
-	## @brief Yaml tag
+	## @brief Yaml settings
 	 # @details See http://pyyaml.org/wiki/PyYAMLDocumentation for details to the PyYaml library.
 	 # @internal
+	 # @cond
 	yaml_tag="!zone"
+	## @endcond
 
 	## @brief Which variables shouldn't be saved by object serializion?
 	 # @details Variables to exclude in __get_state__
