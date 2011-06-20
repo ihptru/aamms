@@ -257,8 +257,13 @@ def mode(acl, player, gmode, type="vote", when="now"):
 		Armagetronad.PrintPlayerMessage(player, Messages.ModeNotExist.format(mode=gmode))
 		return
 	if(type=="vote"):
+		if Vote.current_vote != None:
+			Armagetronad.PrintPlayerMessage(player, Messages.VoteAlreadyActive)
+			return
 		Vote.Add(Mode.modes[mode].short_name, Mode.modes[mode].activate)
 		Vote.current_vote.SetPlayerVote(player, True)
+		if len(Player.players)-len(Player.getBots() ) == 1:
+			Vote.current_vote.aliveRounds=0
 		Armagetronad.PrintMessage(Messages.VoteAdded.format(target=smode, player=Player.players[player].name) )
 		return
 	elif type=="set":
@@ -308,6 +313,7 @@ def no(acl, player):
 def cancel(acl, player):
 	if Vote.current_vote:
 		Armagetronad.PrintMessage(Messages.VoteCancelled.format(target=Vote.current_vote.target) )
+		Vote.Cancel()
 
 ## @brief Set the access level that is needed for a specific command.
  # @details Calls AccessLevel.setAccessLevel()

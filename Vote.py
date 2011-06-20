@@ -45,12 +45,17 @@ defaultStayAlive=5
  # @details Adds a vote with the given name and set it as current_vote.
  # @exception RuntimeError Raised if there is already a vote. (current_vote not None)
  # @param target_human The human readable target of the vote (What is the vote about? ). Used for displaying.
- # @param target_machine The target of the vote (What is the vote about? ). Could be used to check what to do when the vote successed.
-def Add(target_human, target_machine):
+ # @param action Function that is executed when the vote successed.
+ # @param force Cancel current vote if a vote is already active? 
+
+def Add(target_human, action, force=False):
 	global current_vote
 	if current_vote != None:
-		raise RuntimeError("Already a vote active", 1)
-	current_vote=Vote(target_human, target_machine)
+		if not force:
+			raise RuntimeError("Already a vote active", 1)
+		else:
+			Cancel()
+	current_vote=Vote(target_human, action)
 	events.triggerEvent("Vote created")
 
 ## @brief Cancels the current vote.

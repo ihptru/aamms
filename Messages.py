@@ -59,7 +59,7 @@ VoteCancelled=("0xff2200The vote about {target} got cancelled by an administrato
 ## @brief Vote successed message
  # @details This message is printed when a vote successed.
  # @param target The target of the vote which successed.
-VoteSuccessed=("0x00ffffVote for {target} successed!")
+VoteSuccessed=("0x00ffffThe vote about {target} successed!")
 
 ## @brief Vote failed message
  # @details This message is printed when a vote failed.
@@ -93,3 +93,7 @@ NoActiveVote=("There's no vote in progress!")
  # @param command The command of which the access level has changed.
  # @param access The access level to which the required access level has changed.
 AccessLevelChanged=("0x00ff00The needed access level for command /{command} has been changed to {access}.")
+
+## @brief Already a vote active message
+ # @details This message is printed when a player tries to create a vote, but there is already one active.
+VoteAlreadyActive=("0xff4400There is already a vote in progress! Try again when the vote finished.")

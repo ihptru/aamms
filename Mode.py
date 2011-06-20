@@ -161,7 +161,7 @@ class Mode(yaml.YAMLObject):
 	 # @details See http://docs.python.org OOP
 	 # @internal
 	__slots__=("name","__zones","max_teams","max_team_members","settings_file",
-	           "__respoints","settings","__restype","__last_respoint","short_name")
+	           "__respoints","settings","__restype","__last_respoint","short_name","lives")
 	## @brief Yaml tag
 	 # @details See http://pyyaml.org/wiki/PyYAMLDocumentation for details to the PyYaml library.
 	 # @internal

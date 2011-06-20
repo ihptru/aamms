@@ -10,13 +10,31 @@ import os.path
 import sys
 import io
 import time
-import threading
-import select
+import traceback
 
 # GLOBAL VARIABLES ######################################
 p=None
 
 # CLASSES ###############################################
+class WatchFile():
+	def __init__(self, f):
+		self.f=f
+		self.last_read=""
+	def read(self, b=0):
+		while(True):
+			r=self.f.read()
+			if r!='':
+				return r
+			time.sleep(0.05)
+	def skipUnreadLines(self):
+		self.f.seek(0, io.SEEK_END)
+	def readline(self):
+		r=self.last_read
+		while(r.find("\n")==-1):
+			r=self.read()
+		self.last_read=r.split("\n",1)[1]
+		return r.split("\n")[0]
+
 class OutputToProcess(io.TextIOWrapper):
 	def __init__(self):
 		pass
@@ -25,24 +43,6 @@ class OutputToProcess(io.TextIOWrapper):
 		p.stdin.flush()
 	def flush(self):
 		pass # File not buffered, ignore that.
-
-# FUNCTIONS #############################################
-def handleStdinInput(stdin):
-	cur_text=""
-	while(True):
-		#select.select(sys.stdin, [], [])
-		i=stdin.read(1)
-		if i.decode().strip()=='':
-			time.sleep(1)
-			continue
-		elif i=='\n':
-			print(cur_text)
-			sys.stderr.write("Got command: "+cur_text+"\n")
-			sys.stderr.flush()
-			cur_text=""
-		else:
-			sys.stderr.write("Got command: "+i.decode()+"\n")
-			cur_text=cur_text+i.decode()
 
 # SETTINGS ##############################################
 userdatadir="./server/userdata"
@@ -60,6 +60,7 @@ options, args=parser.parse_args()
 os.chdir(os.path.dirname(sys.argv[0]) )
 if not os.path.exists("run"):
 	os.mkdir("run")
+os.chdir("run")
 if not os.path.exists(userconfigdir):
 	os.makedirs(userconfigdir)
 if not os.path.exists(userdatadir):
@@ -68,22 +69,22 @@ args=["--vardir",options.vardir, "--datadir",options.datadir, "--configdir",opti
       "--userdatadir",userdatadir, "--userconfigdir",userconfigdir]
 p=subprocess.Popen([options.server]+args, stdin=subprocess.PIPE)
 sys.stdout=OutputToProcess()
-sys.stdin.read(1)
-stdinThread=threading.Thread(handleStdinInput, args=(sys.stdin,))
-stdinThread.start()
+sys.stdin=WatchFile(open(os.path.join(options.vardir,"ladderlog.txt") ) )
+sys.stdin.skipUnreadLines()
 time.sleep(30)
 while True:
 	try:	
 		sys.stderr.write("------ Starting script. Press ctrl+c to exit.\n")
+		sys.stderr.flush()
 		import parser
 	except KeyboardInterrupt:
 		break
 	except Exception as e:
-		sys.stderr.write("[SCRIPT] Script crashed: "+e.__class__.__name__+" ("+str(e.args)[1:-1]+")")
+		sys.stderr.write("[SCRIPT] Script crashed: "+e.__class__.__name__+" ("+str(e.args)[1:-1]+")\n")
+		traceback.print_exc(file=sys.stderr)
+		sys.stderr.flush()
 		parser.exit(False)
 		sys.stderr.write("[SCRIPT] Restarting ... ")
 		continue
 	break
-if stdinThread.is_alive:
-	stdinThread.terminate()
-	stdinThread.join()
+p.terminate()
