@@ -95,147 +95,152 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <a name="l00045"></a>00045  <span class="comment"># @details Adds a vote with the given name and set it as current_vote.</span>
 <a name="l00046"></a>00046  <span class="comment"># @exception RuntimeError Raised if there is already a vote. (current_vote not None)</span>
 <a name="l00047"></a>00047  <span class="comment"># @param target_human The human readable target of the vote (What is the vote about? ). Used for displaying.</span>
-<a name="l00048"></a>00048  <span class="comment"># @param target_machine The target of the vote (What is the vote about? ). Could be used to check what to do when the vote successed.</span>
-<a name="l00049"></a><a class="code" href="namespace_vote.html#a9c7157cc8fb02e15e7103b7cdf58d3d5">00049</a> <span class="keyword">def </span><a class="code" href="namespace_vote.html#a9c7157cc8fb02e15e7103b7cdf58d3d5" title="Adds a new vote.">Add</a>(target_human, target_machine):
-<a name="l00050"></a>00050         <span class="keyword">global</span> current_vote
-<a name="l00051"></a>00051         <span class="keywordflow">if</span> current_vote != <span class="keywordtype">None</span>:
-<a name="l00052"></a>00052                 <span class="keywordflow">raise</span> RuntimeError(<span class="stringliteral">&quot;Already a vote active&quot;</span>, 1)
-<a name="l00053"></a>00053         current_vote=Vote(target_human, target_machine)
-<a name="l00054"></a>00054         events.triggerEvent(<span class="stringliteral">&quot;Vote created&quot;</span>)
-<a name="l00055"></a>00055 
-<a name="l00056"></a>00056 <span class="comment">## @brief Cancels the current vote.</span>
-<a name="l00057"></a>00057  <span class="comment"># @details Sets current_vote to None and prints a message.</span>
-<a name="l00058"></a><a class="code" href="namespace_vote.html#a5d75127361161b29f9a36a7f8d3cc1ed">00058</a> <span class="keyword">def </span><a class="code" href="namespace_vote.html#a5d75127361161b29f9a36a7f8d3cc1ed" title="Cancels the current vote.">Cancel</a>():
-<a name="l00059"></a>00059         <span class="keyword">global</span> current_vote
-<a name="l00060"></a>00060         current_vote=<span class="keywordtype">None</span>
-<a name="l00061"></a>00061 
-<a name="l00062"></a>00062 
-<a name="l00063"></a>00063 <span class="comment">## @brief The vote class</span>
-<a name="l00064"></a>00064  <span class="comment"># @details This class is used to manage a vote.</span>
-<a name="l00065"></a><a class="code" href="class_vote_1_1_vote.html">00065</a> <span class="keyword">class </span><a class="code" href="class_vote_1_1_vote.html" title="The vote class.">Vote</a>:
-<a name="l00066"></a>00066         <span class="comment">## @property __players_voted_yes</span>
-<a name="l00067"></a>00067          <span class="comment"># @brief What players voted for the vote?</span>
-<a name="l00068"></a>00068          <span class="comment"># @details Set of the players who voted for the vote.</span>
-<a name="l00069"></a>00069 
-<a name="l00070"></a>00070         <span class="comment">## @property __players_voted_no</span>
-<a name="l00071"></a>00071          <span class="comment"># @brief What players voted against the vote?</span>
-<a name="l00072"></a>00072          <span class="comment"># @details Set of the players who voted against the vote.</span>
-<a name="l00073"></a>00073 
-<a name="l00074"></a>00074         <span class="comment">## @property target</span>
-<a name="l00075"></a>00075          <span class="comment"># @brief The human readable target of the vote.</span>
-<a name="l00076"></a>00076          <span class="comment"># @details Target: What is the vote about? Used by the script to display to the user.</span>
-<a name="l00077"></a>00077 
-<a name="l00078"></a>00078         <span class="comment">## @property action</span>
-<a name="l00079"></a>00079          <span class="comment"># @brief Function that is called when the vote success.</span>
-<a name="l00080"></a>00080          <span class="comment"># @details Function could be every object that has a __call__ method(is callable)</span>
-<a name="l00081"></a>00081 
-<a name="l00082"></a>00082         <span class="comment">## @property aliveRounds</span>
-<a name="l00083"></a>00083          <span class="comment"># @brief When does the vote expire?</span>
-<a name="l00084"></a>00084          <span class="comment"># @details Number of round for which the vote stays &quot;alive&quot;.</span>
-<a name="l00085"></a>00085 
-<a name="l00086"></a>00086         <span class="comment">## @brief Init function (Constructor)</span>
-<a name="l00087"></a>00087          <span class="comment"># @details Inits a new vote.</span>
-<a name="l00088"></a>00088          <span class="comment"># @param target Human readable target of the vote.</span>
-<a name="l00089"></a>00089          <span class="comment"># @param action Action. None if no function should be called.</span>
-<a name="l00090"></a><a class="code" href="class_vote_1_1_vote.html#a21a4fb73105ec2d18322bb9c9776a800">00090</a>         <span class="keyword">def </span><a class="code" href="class_vote_1_1_vote.html#a21a4fb73105ec2d18322bb9c9776a800" title="Init function (Constructor).">__init__</a>(self, target, action=None):
-<a name="l00091"></a>00091                 <span class="keyword">global</span> defaultStayAlive
-<a name="l00092"></a><a class="code" href="class_vote_1_1_vote.html#afe0be7a3c2d7d0439a478b1ef0b30ed6">00092</a>                 self.<a class="code" href="class_vote_1_1_vote.html#afe0be7a3c2d7d0439a478b1ef0b30ed6" title="The human readable target of the vote.">target</a>=target
-<a name="l00093"></a><a class="code" href="class_vote_1_1_vote.html#a7540d71a94e58d4a4877a8a949232fe3">00093</a>                 self.<a class="code" href="class_vote_1_1_vote.html#a7540d71a94e58d4a4877a8a949232fe3" title="Function that is called when the vote success.">action</a>=action
-<a name="l00094"></a><a class="code" href="class_vote_1_1_vote.html#af6004cd9228253e93b618b769dbc8855">00094</a>                 self.<a class="code" href="class_vote_1_1_vote.html#af6004cd9228253e93b618b769dbc8855" title="When does the vote expire?">aliveRounds</a>=defaultStayAlive
-<a name="l00095"></a><a class="code" href="class_vote_1_1_vote.html#ad28b3d5cd63141ad2e23a900927724e6">00095</a>                 self.<a class="code" href="class_vote_1_1_vote.html#ad28b3d5cd63141ad2e23a900927724e6" title="What players voted against the vote?">__players_voted_no</a>=[]
-<a name="l00096"></a><a class="code" href="class_vote_1_1_vote.html#a6a3289f868e2d8898c27e6905fe68e19">00096</a>                 self.<a class="code" href="class_vote_1_1_vote.html#a6a3289f868e2d8898c27e6905fe68e19" title="What players voted for the vote?">__players_voted_yes</a>=[]
-<a name="l00097"></a>00097 
-<a name="l00098"></a>00098         <span class="comment">## @brief Checks the result of the vote.</span>
-<a name="l00099"></a>00099          <span class="comment"># @details Checks if the vote successed or failed and triggers &quot;Vote successed&quot;</span>
-<a name="l00100"></a>00100          <span class="comment">#          or &quot;Vote failed&quot; event.</span>
-<a name="l00101"></a>00101          <span class="comment"># @param not_voted What happens with players who didn&#39;t vote?</span>
-<a name="l00102"></a>00102          <span class="comment">#                  Could be &quot;yes&quot;, &quot;no&quot; or &quot;dont_count&quot;.</span>
-<a name="l00103"></a>00103          <span class="comment">#                  If &quot;yes&quot;|&quot;no&quot; is given, players who didn&#39;t vote are counted</span>
-<a name="l00104"></a>00104          <span class="comment">#                  as if the had voted &quot;yes&quot;|&quot;no&quot;. Otherwise, they aren&#39;t counted.</span>
-<a name="l00105"></a>00105          <span class="comment">#                  Default is &quot;dont_count&quot;.</span>
-<a name="l00106"></a>00106          <span class="comment"># @param not_voted_spec Same as not_voted, but only for spectators. If not given</span>
-<a name="l00107"></a>00107          <span class="comment">#                       or set to None, not_voted is used.</span>
-<a name="l00108"></a>00108          <span class="comment"># @param min_needed How much precent yes votes are at least needed that the vote gets</span>
-<a name="l00109"></a>00109          <span class="comment">#                   accepted? Default 51.</span>
-<a name="l00110"></a>00110          <span class="comment"># @exception ValueError Raised if not_voted ot not_voted_spec aren&#39;t on of</span>
-<a name="l00111"></a>00111          <span class="comment">#                      &quot;yes&quot;, &quot;no&quot; or &quot;dont_count&quot;.</span>
-<a name="l00112"></a><a class="code" href="class_vote_1_1_vote.html#acda3525e83e91d9e4622218635f92d4b">00112</a>         <span class="keyword">def </span><a class="code" href="class_vote_1_1_vote.html#acda3525e83e91d9e4622218635f92d4b" title="Checks the result of the vote.">CheckResult</a>(self, not_voted=&quot;dont_count&quot;, not_voted_spec=None, min_needed=51):
-<a name="l00113"></a>00113                 <span class="keywordflow">if</span> not_voted <span class="keywordflow">not</span> <span class="keywordflow">in</span> {<span class="stringliteral">&quot;dont_count&quot;</span>,<span class="stringliteral">&quot;yes&quot;</span>,<span class="stringliteral">&quot;no&quot;</span>}:
-<a name="l00114"></a>00114                         <span class="keywordflow">raise</span> ValueError(<span class="stringliteral">&quot;Invalid value of argument not_voted&quot;</span>)
-<a name="l00115"></a>00115                 <span class="keywordflow">if</span> not_voted_spec == <span class="keywordtype">None</span>:
-<a name="l00116"></a>00116                         not_voted_spec=not_voted
-<a name="l00117"></a>00117                 <span class="keywordflow">elif</span> not_voted_spec <span class="keywordflow">not</span> <span class="keywordflow">in</span> {<span class="stringliteral">&quot;dont_count&quot;</span>,<span class="stringliteral">&quot;yes&quot;</span>,<span class="stringliteral">&quot;no&quot;</span>}:
-<a name="l00118"></a>00118                         <span class="keywordflow">raise</span> ValueError(<span class="stringliteral">&quot;Invalid value of argument not_voted&quot;</span>)
-<a name="l00119"></a>00119                 <span class="keywordflow">if</span> min_needed&gt;100:
-<a name="l00120"></a>00120                         min_needed=100
-<a name="l00121"></a>00121                 <span class="keywordflow">elif</span> min_needed&lt;0:
-<a name="l00122"></a>00122                         min_needed=0
-<a name="l00123"></a>00123                 yes_count=len(self.<a class="code" href="class_vote_1_1_vote.html#a6a3289f868e2d8898c27e6905fe68e19" title="What players voted for the vote?">__players_voted_yes</a>)
-<a name="l00124"></a>00124                 no_count=len(self.<a class="code" href="class_vote_1_1_vote.html#ad28b3d5cd63141ad2e23a900927724e6" title="What players voted against the vote?">__players_voted_no</a>)
-<a name="l00125"></a>00125                 voted_players=self.<a class="code" href="class_vote_1_1_vote.html#a6a3289f868e2d8898c27e6905fe68e19" title="What players voted for the vote?">__players_voted_yes</a> + self.<a class="code" href="class_vote_1_1_vote.html#ad28b3d5cd63141ad2e23a900927724e6" title="What players voted against the vote?">__players_voted_no</a>
-<a name="l00126"></a>00126                 bots=Player.getBots()
-<a name="l00127"></a>00127                 cur_mode=<span class="keywordtype">None</span>
-<a name="l00128"></a>00128                 <span class="keywordflow">for</span> player <span class="keywordflow">in</span> Player.players:
-<a name="l00129"></a>00129                         <span class="keywordflow">if</span> player <span class="keywordflow">in</span> bots <span class="keywordflow">or</span> player <span class="keywordflow">in</span> voted_players:
-<a name="l00130"></a>00130                                 <span class="keywordflow">continue</span>
-<a name="l00131"></a>00131                         <span class="keywordflow">if</span> Player.players[player].getTeam()==<span class="keywordtype">None</span>: <span class="comment"># Player is spectating</span>
-<a name="l00132"></a>00132                                 cur_mode=not_voted_spec
-<a name="l00133"></a>00133                         <span class="keywordflow">else</span>:
-<a name="l00134"></a>00134                                 cur_mode=not_voted
-<a name="l00135"></a>00135                         <span class="keywordflow">if</span> cur_mode == <span class="stringliteral">&quot;yes&quot;</span>:
-<a name="l00136"></a>00136                                 yes_count=yes_count+1
-<a name="l00137"></a>00137                         <span class="keywordflow">elif</span> cur_mode == <span class="stringliteral">&quot;no&quot;</span>:
-<a name="l00138"></a>00138                                 no_count=no_count+1
-<a name="l00139"></a>00139                         <span class="keywordflow">else</span>:
-<a name="l00140"></a>00140                                 <span class="keywordflow">pass</span>
-<a name="l00141"></a>00141                 precent_yes=yes_count/(yes_count+no_count)*100
-<a name="l00142"></a>00142                 <span class="keywordflow">if</span> precent_yes &gt;= min_needed:
-<a name="l00143"></a>00143                         events.triggerEvent(<span class="stringliteral">&quot;Vote successed&quot;</span>)
-<a name="l00144"></a>00144                         log.info(<span class="stringliteral">&quot;Vote for {0} successed.&quot;</span>.format(self.<a class="code" href="class_vote_1_1_vote.html#afe0be7a3c2d7d0439a478b1ef0b30ed6" title="The human readable target of the vote.">target</a>) )
-<a name="l00145"></a>00145                         Armagetronad.PrintMessage(Messages.VoteSuccessed.format(target=self.<a class="code" href="class_vote_1_1_vote.html#afe0be7a3c2d7d0439a478b1ef0b30ed6" title="The human readable target of the vote.">target</a>) )
-<a name="l00146"></a>00146                         self.<a class="code" href="class_vote_1_1_vote.html#a7540d71a94e58d4a4877a8a949232fe3" title="Function that is called when the vote success.">action</a>()
-<a name="l00147"></a>00147                 <span class="keywordflow">else</span>:
-<a name="l00148"></a>00148                         events.triggerEvent(<span class="stringliteral">&quot;Vote failed&quot;</span>)
-<a name="l00149"></a>00149                         log.info(<span class="stringliteral">&quot;Vote for {0} failed.&quot;</span>)
-<a name="l00150"></a>00150                         Armagetronad.PrintMessage(Messages.VoteFailed.format(target=self.<a class="code" href="class_vote_1_1_vote.html#afe0be7a3c2d7d0439a478b1ef0b30ed6" title="The human readable target of the vote.">target</a>) )
-<a name="l00151"></a>00151                 <span class="keyword">global</span> current_vote
-<a name="l00152"></a>00152                 current_vote=<span class="keywordtype">None</span>
-<a name="l00153"></a>00153 
-<a name="l00154"></a>00154         <span class="comment">## @brief Sets what a player voted.</span>
-<a name="l00155"></a>00155          <span class="comment"># @details Checks if the player is a spectator. If yes and</span>
-<a name="l00156"></a>00156          <span class="comment">#          spec_allowed is set to False, return immendiately. Otherwise,</span>
-<a name="l00157"></a>00157          <span class="comment">#          add the player to the list of players who voted for|agains the vote.</span>
-<a name="l00158"></a>00158          <span class="comment"># @param player The ladder name of the player who voted.</span>
-<a name="l00159"></a>00159          <span class="comment"># @param vote True if the player voted for the voted, False otherwise.</span>
-<a name="l00160"></a>00160          <span class="comment"># @exception RuntimeError Raised if the player has already voted.</span>
-<a name="l00161"></a>00161          <span class="comment"># @exception ValueError Raised if the player doesn&#39;t exist.&#39;</span>
-<a name="l00162"></a><a class="code" href="class_vote_1_1_vote.html#aaf3a60226df03a3f737c2e0f7ea37d4d">00162</a>         <span class="keyword">def </span><a class="code" href="class_vote_1_1_vote.html#aaf3a60226df03a3f737c2e0f7ea37d4d" title="Sets what a player voted.">SetPlayerVote</a>(self, player, vote):
-<a name="l00163"></a>00163                 <span class="keywordflow">if</span> player <span class="keywordflow">not</span> <span class="keywordflow">in</span> Player.players:
-<a name="l00164"></a>00164                         <span class="keywordflow">raise</span> RuntimeError(<span class="stringliteral">&quot;Player doesn&#39;t exist&quot;</span>, 2)
-<a name="l00165"></a>00165                 <span class="keywordflow">if</span> player <span class="keywordflow">in</span> (self.<a class="code" href="class_vote_1_1_vote.html#a6a3289f868e2d8898c27e6905fe68e19" title="What players voted for the vote?">__players_voted_yes</a> + self.<a class="code" href="class_vote_1_1_vote.html#ad28b3d5cd63141ad2e23a900927724e6" title="What players voted against the vote?">__players_voted_no</a>):
-<a name="l00166"></a>00166                         <span class="keywordflow">raise</span> RuntimeError(<span class="stringliteral">&quot;Player already voted&quot;</span>, 1)
-<a name="l00167"></a>00167                 <span class="keywordflow">if</span> Player.players[player].getTeam()==<span class="keywordtype">None</span> <span class="keywordflow">and</span> <span class="keywordflow">not</span> spec_allowed: <span class="comment">#spec not allowed and player is spectator</span>
-<a name="l00168"></a>00168                         <span class="keywordflow">return</span>
-<a name="l00169"></a>00169                 <span class="keywordflow">if</span> vote:
-<a name="l00170"></a>00170                         self.<a class="code" href="class_vote_1_1_vote.html#a6a3289f868e2d8898c27e6905fe68e19" title="What players voted for the vote?">__players_voted_yes</a>.append(player)
-<a name="l00171"></a>00171                 <span class="keywordflow">else</span>:
-<a name="l00172"></a>00172                         self.<a class="code" href="class_vote_1_1_vote.html#ad28b3d5cd63141ad2e23a900927724e6" title="What players voted against the vote?">__players_voted_no</a>.appemd(player)
-<a name="l00173"></a>00173 
-<a name="l00174"></a>00174 
-<a name="l00175"></a>00175 <span class="comment">## @brief Enables logging</span>
-<a name="l00176"></a>00176  <span class="comment"># @details This function enables logging for this module.</span>
-<a name="l00177"></a>00177  <span class="comment"># @param h The handler used for logging</span>
-<a name="l00178"></a>00178  <span class="comment"># @param f The formatter used for logging</span>
-<a name="l00179"></a>00179  <span class="comment"># @param level The logging level</span>
-<a name="l00180"></a><a class="code" href="namespace_vote.html#acfb2109b9dab2995578ab19517868aa3">00180</a> <span class="keyword">def </span><a class="code" href="namespace_vote.html#acfb2109b9dab2995578ab19517868aa3" title="Enables logging.">enableLogging</a>(level=logging.DEBUG, h=None,f=None):
-<a name="l00181"></a>00181         log.setLevel(level)
-<a name="l00182"></a>00182         <span class="keywordflow">if</span> <span class="keywordflow">not</span> h:
-<a name="l00183"></a>00183                 h=logging.StreamHandler()
-<a name="l00184"></a>00184                 h.setLevel(level)
-<a name="l00185"></a>00185         <span class="keywordflow">if</span> <span class="keywordflow">not</span> f:
-<a name="l00186"></a>00186                 f=logging.Formatter(<span class="stringliteral">&quot;[%(name)s] (%(asctime)s) %(levelname)s: %(message)s&quot;</span>)
-<a name="l00187"></a>00187         h.setFormatter(f)
-<a name="l00188"></a>00188         log.addHandler(h)
+<a name="l00048"></a>00048  <span class="comment"># @param action Function that is executed when the vote successed.</span>
+<a name="l00049"></a>00049  <span class="comment"># @param force Cancel current vote if a vote is already active? </span>
+<a name="l00050"></a>00050 
+<a name="l00051"></a><a class="code" href="namespace_vote.html#a9c7157cc8fb02e15e7103b7cdf58d3d5">00051</a> <span class="keyword">def </span><a class="code" href="namespace_vote.html#a9c7157cc8fb02e15e7103b7cdf58d3d5" title="Adds a new vote.">Add</a>(target_human, action, force=False):
+<a name="l00052"></a>00052         <span class="keyword">global</span> current_vote
+<a name="l00053"></a>00053         <span class="keywordflow">if</span> current_vote != <span class="keywordtype">None</span>:
+<a name="l00054"></a>00054                 <span class="keywordflow">if</span> <span class="keywordflow">not</span> force:
+<a name="l00055"></a>00055                         <span class="keywordflow">raise</span> RuntimeError(<span class="stringliteral">&quot;Already a vote active&quot;</span>, 1)
+<a name="l00056"></a>00056                 <span class="keywordflow">else</span>:
+<a name="l00057"></a>00057                         Cancel()
+<a name="l00058"></a>00058         current_vote=Vote(target_human, action)
+<a name="l00059"></a>00059         events.triggerEvent(<span class="stringliteral">&quot;Vote created&quot;</span>)
+<a name="l00060"></a>00060 
+<a name="l00061"></a>00061 <span class="comment">## @brief Cancels the current vote.</span>
+<a name="l00062"></a>00062  <span class="comment"># @details Sets current_vote to None and prints a message.</span>
+<a name="l00063"></a><a class="code" href="namespace_vote.html#a5d75127361161b29f9a36a7f8d3cc1ed">00063</a> <span class="keyword">def </span><a class="code" href="namespace_vote.html#a5d75127361161b29f9a36a7f8d3cc1ed" title="Cancels the current vote.">Cancel</a>():
+<a name="l00064"></a>00064         <span class="keyword">global</span> current_vote
+<a name="l00065"></a>00065         current_vote=<span class="keywordtype">None</span>
+<a name="l00066"></a>00066 
+<a name="l00067"></a>00067 
+<a name="l00068"></a>00068 <span class="comment">## @brief The vote class</span>
+<a name="l00069"></a>00069  <span class="comment"># @details This class is used to manage a vote.</span>
+<a name="l00070"></a><a class="code" href="class_vote_1_1_vote.html">00070</a> <span class="keyword">class </span><a class="code" href="class_vote_1_1_vote.html" title="The vote class.">Vote</a>:
+<a name="l00071"></a>00071         <span class="comment">## @property __players_voted_yes</span>
+<a name="l00072"></a>00072          <span class="comment"># @brief What players voted for the vote?</span>
+<a name="l00073"></a>00073          <span class="comment"># @details Set of the players who voted for the vote.</span>
+<a name="l00074"></a>00074 
+<a name="l00075"></a>00075         <span class="comment">## @property __players_voted_no</span>
+<a name="l00076"></a>00076          <span class="comment"># @brief What players voted against the vote?</span>
+<a name="l00077"></a>00077          <span class="comment"># @details Set of the players who voted against the vote.</span>
+<a name="l00078"></a>00078 
+<a name="l00079"></a>00079         <span class="comment">## @property target</span>
+<a name="l00080"></a>00080          <span class="comment"># @brief The human readable target of the vote.</span>
+<a name="l00081"></a>00081          <span class="comment"># @details Target: What is the vote about? Used by the script to display to the user.</span>
+<a name="l00082"></a>00082 
+<a name="l00083"></a>00083         <span class="comment">## @property action</span>
+<a name="l00084"></a>00084          <span class="comment"># @brief Function that is called when the vote success.</span>
+<a name="l00085"></a>00085          <span class="comment"># @details Function could be every object that has a __call__ method(is callable)</span>
+<a name="l00086"></a>00086 
+<a name="l00087"></a>00087         <span class="comment">## @property aliveRounds</span>
+<a name="l00088"></a>00088          <span class="comment"># @brief When does the vote expire?</span>
+<a name="l00089"></a>00089          <span class="comment"># @details Number of round for which the vote stays &quot;alive&quot;.</span>
+<a name="l00090"></a>00090 
+<a name="l00091"></a>00091         <span class="comment">## @brief Init function (Constructor)</span>
+<a name="l00092"></a>00092          <span class="comment"># @details Inits a new vote.</span>
+<a name="l00093"></a>00093          <span class="comment"># @param target Human readable target of the vote.</span>
+<a name="l00094"></a>00094          <span class="comment"># @param action Action. None if no function should be called.</span>
+<a name="l00095"></a><a class="code" href="class_vote_1_1_vote.html#a21a4fb73105ec2d18322bb9c9776a800">00095</a>         <span class="keyword">def </span><a class="code" href="class_vote_1_1_vote.html#a21a4fb73105ec2d18322bb9c9776a800" title="Init function (Constructor).">__init__</a>(self, target, action=None):
+<a name="l00096"></a>00096                 <span class="keyword">global</span> defaultStayAlive
+<a name="l00097"></a><a class="code" href="class_vote_1_1_vote.html#afe0be7a3c2d7d0439a478b1ef0b30ed6">00097</a>                 self.<a class="code" href="class_vote_1_1_vote.html#afe0be7a3c2d7d0439a478b1ef0b30ed6" title="The human readable target of the vote.">target</a>=target
+<a name="l00098"></a><a class="code" href="class_vote_1_1_vote.html#a7540d71a94e58d4a4877a8a949232fe3">00098</a>                 self.<a class="code" href="class_vote_1_1_vote.html#a7540d71a94e58d4a4877a8a949232fe3" title="Function that is called when the vote success.">action</a>=action
+<a name="l00099"></a><a class="code" href="class_vote_1_1_vote.html#af6004cd9228253e93b618b769dbc8855">00099</a>                 self.<a class="code" href="class_vote_1_1_vote.html#af6004cd9228253e93b618b769dbc8855" title="When does the vote expire?">aliveRounds</a>=defaultStayAlive
+<a name="l00100"></a><a class="code" href="class_vote_1_1_vote.html#ad28b3d5cd63141ad2e23a900927724e6">00100</a>                 self.<a class="code" href="class_vote_1_1_vote.html#ad28b3d5cd63141ad2e23a900927724e6" title="What players voted against the vote?">__players_voted_no</a>=[]
+<a name="l00101"></a><a class="code" href="class_vote_1_1_vote.html#a6a3289f868e2d8898c27e6905fe68e19">00101</a>                 self.<a class="code" href="class_vote_1_1_vote.html#a6a3289f868e2d8898c27e6905fe68e19" title="What players voted for the vote?">__players_voted_yes</a>=[]
+<a name="l00102"></a>00102 
+<a name="l00103"></a>00103         <span class="comment">## @brief Checks the result of the vote.</span>
+<a name="l00104"></a>00104          <span class="comment"># @details Checks if the vote successed or failed and triggers &quot;Vote successed&quot;</span>
+<a name="l00105"></a>00105          <span class="comment">#          or &quot;Vote failed&quot; event.</span>
+<a name="l00106"></a>00106          <span class="comment"># @param not_voted What happens with players who didn&#39;t vote?</span>
+<a name="l00107"></a>00107          <span class="comment">#                  Could be &quot;yes&quot;, &quot;no&quot; or &quot;dont_count&quot;.</span>
+<a name="l00108"></a>00108          <span class="comment">#                  If &quot;yes&quot;|&quot;no&quot; is given, players who didn&#39;t vote are counted</span>
+<a name="l00109"></a>00109          <span class="comment">#                  as if the had voted &quot;yes&quot;|&quot;no&quot;. Otherwise, they aren&#39;t counted.</span>
+<a name="l00110"></a>00110          <span class="comment">#                  Default is &quot;dont_count&quot;.</span>
+<a name="l00111"></a>00111          <span class="comment"># @param not_voted_spec Same as not_voted, but only for spectators. If not given</span>
+<a name="l00112"></a>00112          <span class="comment">#                       or set to None, not_voted is used.</span>
+<a name="l00113"></a>00113          <span class="comment"># @param min_needed How much precent yes votes are at least needed that the vote gets</span>
+<a name="l00114"></a>00114          <span class="comment">#                   accepted? Default 51.</span>
+<a name="l00115"></a>00115          <span class="comment"># @exception ValueError Raised if not_voted ot not_voted_spec aren&#39;t on of</span>
+<a name="l00116"></a>00116          <span class="comment">#                      &quot;yes&quot;, &quot;no&quot; or &quot;dont_count&quot;.</span>
+<a name="l00117"></a><a class="code" href="class_vote_1_1_vote.html#acda3525e83e91d9e4622218635f92d4b">00117</a>         <span class="keyword">def </span><a class="code" href="class_vote_1_1_vote.html#acda3525e83e91d9e4622218635f92d4b" title="Checks the result of the vote.">CheckResult</a>(self, not_voted=&quot;dont_count&quot;, not_voted_spec=None, min_needed=51):
+<a name="l00118"></a>00118                 <span class="keywordflow">if</span> not_voted <span class="keywordflow">not</span> <span class="keywordflow">in</span> {<span class="stringliteral">&quot;dont_count&quot;</span>,<span class="stringliteral">&quot;yes&quot;</span>,<span class="stringliteral">&quot;no&quot;</span>}:
+<a name="l00119"></a>00119                         <span class="keywordflow">raise</span> ValueError(<span class="stringliteral">&quot;Invalid value of argument not_voted&quot;</span>)
+<a name="l00120"></a>00120                 <span class="keywordflow">if</span> not_voted_spec == <span class="keywordtype">None</span>:
+<a name="l00121"></a>00121                         not_voted_spec=not_voted
+<a name="l00122"></a>00122                 <span class="keywordflow">elif</span> not_voted_spec <span class="keywordflow">not</span> <span class="keywordflow">in</span> {<span class="stringliteral">&quot;dont_count&quot;</span>,<span class="stringliteral">&quot;yes&quot;</span>,<span class="stringliteral">&quot;no&quot;</span>}:
+<a name="l00123"></a>00123                         <span class="keywordflow">raise</span> ValueError(<span class="stringliteral">&quot;Invalid value of argument not_voted&quot;</span>)
+<a name="l00124"></a>00124                 <span class="keywordflow">if</span> min_needed&gt;100:
+<a name="l00125"></a>00125                         min_needed=100
+<a name="l00126"></a>00126                 <span class="keywordflow">elif</span> min_needed&lt;0:
+<a name="l00127"></a>00127                         min_needed=0
+<a name="l00128"></a>00128                 yes_count=len(self.<a class="code" href="class_vote_1_1_vote.html#a6a3289f868e2d8898c27e6905fe68e19" title="What players voted for the vote?">__players_voted_yes</a>)
+<a name="l00129"></a>00129                 no_count=len(self.<a class="code" href="class_vote_1_1_vote.html#ad28b3d5cd63141ad2e23a900927724e6" title="What players voted against the vote?">__players_voted_no</a>)
+<a name="l00130"></a>00130                 voted_players=self.<a class="code" href="class_vote_1_1_vote.html#a6a3289f868e2d8898c27e6905fe68e19" title="What players voted for the vote?">__players_voted_yes</a> + self.<a class="code" href="class_vote_1_1_vote.html#ad28b3d5cd63141ad2e23a900927724e6" title="What players voted against the vote?">__players_voted_no</a>
+<a name="l00131"></a>00131                 bots=Player.getBots()
+<a name="l00132"></a>00132                 cur_mode=<span class="keywordtype">None</span>
+<a name="l00133"></a>00133                 <span class="keywordflow">for</span> player <span class="keywordflow">in</span> Player.players:
+<a name="l00134"></a>00134                         <span class="keywordflow">if</span> player <span class="keywordflow">in</span> bots <span class="keywordflow">or</span> player <span class="keywordflow">in</span> voted_players:
+<a name="l00135"></a>00135                                 <span class="keywordflow">continue</span>
+<a name="l00136"></a>00136                         <span class="keywordflow">if</span> Player.players[player].getTeam()==<span class="keywordtype">None</span>: <span class="comment"># Player is spectating</span>
+<a name="l00137"></a>00137                                 cur_mode=not_voted_spec
+<a name="l00138"></a>00138                         <span class="keywordflow">else</span>:
+<a name="l00139"></a>00139                                 cur_mode=not_voted
+<a name="l00140"></a>00140                         <span class="keywordflow">if</span> cur_mode == <span class="stringliteral">&quot;yes&quot;</span>:
+<a name="l00141"></a>00141                                 yes_count=yes_count+1
+<a name="l00142"></a>00142                         <span class="keywordflow">elif</span> cur_mode == <span class="stringliteral">&quot;no&quot;</span>:
+<a name="l00143"></a>00143                                 no_count=no_count+1
+<a name="l00144"></a>00144                         <span class="keywordflow">else</span>:
+<a name="l00145"></a>00145                                 <span class="keywordflow">pass</span>
+<a name="l00146"></a>00146                 precent_yes=yes_count/(yes_count+no_count)*100
+<a name="l00147"></a>00147                 <span class="keywordflow">if</span> precent_yes &gt;= min_needed:
+<a name="l00148"></a>00148                         events.triggerEvent(<span class="stringliteral">&quot;Vote successed&quot;</span>)
+<a name="l00149"></a>00149                         log.info(<span class="stringliteral">&quot;Vote for {0} successed.&quot;</span>.format(self.<a class="code" href="class_vote_1_1_vote.html#afe0be7a3c2d7d0439a478b1ef0b30ed6" title="The human readable target of the vote.">target</a>) )
+<a name="l00150"></a>00150                         Armagetronad.PrintMessage(Messages.VoteSuccessed.format(target=self.<a class="code" href="class_vote_1_1_vote.html#afe0be7a3c2d7d0439a478b1ef0b30ed6" title="The human readable target of the vote.">target</a>) )
+<a name="l00151"></a>00151                         self.<a class="code" href="class_vote_1_1_vote.html#a7540d71a94e58d4a4877a8a949232fe3" title="Function that is called when the vote success.">action</a>()
+<a name="l00152"></a>00152                 <span class="keywordflow">else</span>:
+<a name="l00153"></a>00153                         events.triggerEvent(<span class="stringliteral">&quot;Vote failed&quot;</span>)
+<a name="l00154"></a>00154                         log.info(<span class="stringliteral">&quot;Vote for {0} failed.&quot;</span>)
+<a name="l00155"></a>00155                         Armagetronad.PrintMessage(Messages.VoteFailed.format(target=self.<a class="code" href="class_vote_1_1_vote.html#afe0be7a3c2d7d0439a478b1ef0b30ed6" title="The human readable target of the vote.">target</a>) )
+<a name="l00156"></a>00156                 <span class="keyword">global</span> current_vote
+<a name="l00157"></a>00157                 current_vote=<span class="keywordtype">None</span>
+<a name="l00158"></a>00158 
+<a name="l00159"></a>00159         <span class="comment">## @brief Sets what a player voted.</span>
+<a name="l00160"></a>00160          <span class="comment"># @details Checks if the player is a spectator. If yes and</span>
+<a name="l00161"></a>00161          <span class="comment">#          spec_allowed is set to False, return immendiately. Otherwise,</span>
+<a name="l00162"></a>00162          <span class="comment">#          add the player to the list of players who voted for|agains the vote.</span>
+<a name="l00163"></a>00163          <span class="comment"># @param player The ladder name of the player who voted.</span>
+<a name="l00164"></a>00164          <span class="comment"># @param vote True if the player voted for the voted, False otherwise.</span>
+<a name="l00165"></a>00165          <span class="comment"># @exception RuntimeError Raised if the player has already voted.</span>
+<a name="l00166"></a>00166          <span class="comment"># @exception ValueError Raised if the player doesn&#39;t exist.&#39;</span>
+<a name="l00167"></a><a class="code" href="class_vote_1_1_vote.html#aaf3a60226df03a3f737c2e0f7ea37d4d">00167</a>         <span class="keyword">def </span><a class="code" href="class_vote_1_1_vote.html#aaf3a60226df03a3f737c2e0f7ea37d4d" title="Sets what a player voted.">SetPlayerVote</a>(self, player, vote):
+<a name="l00168"></a>00168                 <span class="keywordflow">if</span> player <span class="keywordflow">not</span> <span class="keywordflow">in</span> Player.players:
+<a name="l00169"></a>00169                         <span class="keywordflow">raise</span> RuntimeError(<span class="stringliteral">&quot;Player doesn&#39;t exist&quot;</span>, 2)
+<a name="l00170"></a>00170                 <span class="keywordflow">if</span> player <span class="keywordflow">in</span> (self.<a class="code" href="class_vote_1_1_vote.html#a6a3289f868e2d8898c27e6905fe68e19" title="What players voted for the vote?">__players_voted_yes</a> + self.<a class="code" href="class_vote_1_1_vote.html#ad28b3d5cd63141ad2e23a900927724e6" title="What players voted against the vote?">__players_voted_no</a>):
+<a name="l00171"></a>00171                         <span class="keywordflow">raise</span> RuntimeError(<span class="stringliteral">&quot;Player already voted&quot;</span>, 1)
+<a name="l00172"></a>00172                 <span class="keywordflow">if</span> Player.players[player].getTeam()==<span class="keywordtype">None</span> <span class="keywordflow">and</span> <span class="keywordflow">not</span> spec_allowed: <span class="comment">#spec not allowed and player is spectator</span>
+<a name="l00173"></a>00173                         <span class="keywordflow">return</span>
+<a name="l00174"></a>00174                 <span class="keywordflow">if</span> vote:
+<a name="l00175"></a>00175                         self.<a class="code" href="class_vote_1_1_vote.html#a6a3289f868e2d8898c27e6905fe68e19" title="What players voted for the vote?">__players_voted_yes</a>.append(player)
+<a name="l00176"></a>00176                 <span class="keywordflow">else</span>:
+<a name="l00177"></a>00177                         self.<a class="code" href="class_vote_1_1_vote.html#ad28b3d5cd63141ad2e23a900927724e6" title="What players voted against the vote?">__players_voted_no</a>.appemd(player)
+<a name="l00178"></a>00178 
+<a name="l00179"></a>00179 
+<a name="l00180"></a>00180 <span class="comment">## @brief Enables logging</span>
+<a name="l00181"></a>00181  <span class="comment"># @details This function enables logging for this module.</span>
+<a name="l00182"></a>00182  <span class="comment"># @param h The handler used for logging</span>
+<a name="l00183"></a>00183  <span class="comment"># @param f The formatter used for logging</span>
+<a name="l00184"></a>00184  <span class="comment"># @param level The logging level</span>
+<a name="l00185"></a><a class="code" href="namespace_vote.html#acfb2109b9dab2995578ab19517868aa3">00185</a> <span class="keyword">def </span><a class="code" href="namespace_vote.html#acfb2109b9dab2995578ab19517868aa3" title="Enables logging.">enableLogging</a>(level=logging.DEBUG, h=None,f=None):
+<a name="l00186"></a>00186         log.setLevel(level)
+<a name="l00187"></a>00187         <span class="keywordflow">if</span> <span class="keywordflow">not</span> h:
+<a name="l00188"></a>00188                 h=logging.StreamHandler()
+<a name="l00189"></a>00189                 h.setLevel(level)
+<a name="l00190"></a>00190         <span class="keywordflow">if</span> <span class="keywordflow">not</span> f:
+<a name="l00191"></a>00191                 f=logging.Formatter(<span class="stringliteral">&quot;[%(name)s] (%(asctime)s) %(levelname)s: %(message)s&quot;</span>)
+<a name="l00192"></a>00192         h.setFormatter(f)
+<a name="l00193"></a>00193         log.addHandler(h)
 </pre></div></div>
 </div>
 <!--- window showing the filter options -->
@@ -252,7 +257,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 </iframe>
 </div>
 
-<hr class="footer"/><address class="footer"><small>Generated on Sun Jun 19 2011 16:16:46 for Armagetron MultiModeScript by&nbsp;
+<hr class="footer"/><address class="footer"><small>Generated on Mon Jun 20 2011 14:23:55 for Armagetron MultiModeScript by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.7.1 </small></address>
 </body>

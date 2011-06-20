@@ -109,7 +109,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <a name="l00059"></a>00059 <span class="comment">## @brief Vote successed message</span>
 <a name="l00060"></a>00060  <span class="comment"># @details This message is printed when a vote successed.</span>
 <a name="l00061"></a>00061  <span class="comment"># @param target The target of the vote which successed.</span>
-<a name="l00062"></a>00062 VoteSuccessed=(<span class="stringliteral">&quot;0x00ffffVote for {target} successed!&quot;</span>)
+<a name="l00062"></a>00062 VoteSuccessed=(<span class="stringliteral">&quot;0x00ffffThe vote about {target} successed!&quot;</span>)
 <a name="l00063"></a>00063 
 <a name="l00064"></a>00064 <span class="comment">## @brief Vote failed message</span>
 <a name="l00065"></a>00065  <span class="comment"># @details This message is printed when a vote failed.</span>
@@ -143,6 +143,10 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <a name="l00093"></a>00093  <span class="comment"># @param command The command of which the access level has changed.</span>
 <a name="l00094"></a>00094  <span class="comment"># @param access The access level to which the required access level has changed.</span>
 <a name="l00095"></a>00095 AccessLevelChanged=(<span class="stringliteral">&quot;0x00ff00The needed access level for command /{command} has been changed to {access}.&quot;</span>)
+<a name="l00096"></a>00096 
+<a name="l00097"></a>00097 <span class="comment">## @brief Already a vote active message</span>
+<a name="l00098"></a>00098  <span class="comment"># @details This message is printed when a player tries to create a vote, but there is already one active.</span>
+<a name="l00099"></a>00099 VoteAlreadyActive=(<span class="stringliteral">&quot;0xff4400There is already a vote in progress! Try again when the vote finished.&quot;</span>)
 </pre></div></div>
 </div>
 <!--- window showing the filter options -->
@@ -159,7 +163,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 </iframe>
 </div>
 
-<hr class="footer"/><address class="footer"><small>Generated on Sun Jun 19 2011 16:16:46 for Armagetron MultiModeScript by&nbsp;
+<hr class="footer"/><address class="footer"><small>Generated on Mon Jun 20 2011 14:23:54 for Armagetron MultiModeScript by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.7.1 </small></address>
 </body>

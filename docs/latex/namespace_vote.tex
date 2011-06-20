@@ -46,7 +46,8 @@ Classes and functions for votes. This file contains classes and functions needed
 \subsubsection[{Add}]{\setlength{\rightskip}{0pt plus 5cm}def Vote.Add (
 \begin{DoxyParamCaption}
 \item[{}]{ target\_\-human, }
-\item[{}]{ target\_\-machine}
+\item[{}]{ action, }
+\item[{}]{ force = {\ttfamily False}}
 \end{DoxyParamCaption}
 )}}
 \label{namespace_vote_a9c7157cc8fb02e15e7103b7cdf58d3d5}
@@ -59,10 +60,10 @@ Adds a vote with the given name and set it as current\_\-vote.
 \item[{\em RuntimeError}]Raised if there is already a vote. (current\_\-vote not None) \end{DoxyExceptions}
 
 \begin{DoxyParams}{Parameters}
-\item[{\em target\_\-human}]The human readable target of the vote (What is the vote about? ). Used for displaying. \item[{\em target\_\-machine}]The target of the vote (What is the vote about? ). Could be used to check what to do when the vote successed. \end{DoxyParams}
+\item[{\em target\_\-human}]The human readable target of the vote (What is the vote about? ). Used for displaying. \item[{\em action}]Function that is executed when the vote successed. \item[{\em force}]Cancel current vote if a vote is already active? \end{DoxyParams}
 
 
-Definition at line 49 of file Vote.py.
+Definition at line 51 of file Vote.py.
 
 \hypertarget{namespace_vote_a5d75127361161b29f9a36a7f8d3cc1ed}{
 \index{Vote@{Vote}!Cancel@{Cancel}}
@@ -79,7 +80,7 @@ Cancels the current vote.
 
 Sets current\_\-vote to None and prints a message. 
 
-Definition at line 58 of file Vote.py.
+Definition at line 63 of file Vote.py.
 
 \hypertarget{namespace_vote_acfb2109b9dab2995578ab19517868aa3}{
 \index{Vote@{Vote}!enableLogging@{enableLogging}}
@@ -101,7 +102,7 @@ This function enables logging for this module.
 \item[{\em h}]The handler used for logging \item[{\em f}]The formatter used for logging \item[{\em level}]The logging level \end{DoxyParams}
 
 
-Definition at line 180 of file Vote.py.
+Definition at line 185 of file Vote.py.
 
 
 
