@@ -13,6 +13,8 @@ import io
 import time
 import traceback
 import yaml
+import atexit
+import imp
 
 # GLOBAL VARIABLES ######################################
 p=None
@@ -49,6 +51,10 @@ class OutputToProcess(io.TextIOWrapper):
 	def flush(self):
 		pass # File not buffered, ignore that.
 
+# FUNCTIONS #############################################
+def exit():
+	p.terminate()
+	p.wait()
 # SETTINGS ##############################################
 userdatadir="./server/data"
 userconfigdir="./server/config"
@@ -94,27 +100,26 @@ print("[START] Starting server. Serverlog can be found in run/server.log")
 args=["--vardir",options.vardir, "--datadir",options.datadir, "--configdir",options.configdir,
       "--userdatadir",userdatadir, "--userconfigdir",userconfigdir]
 p=subprocess.Popen([options.server]+args, stdin=subprocess.PIPE, stdout=open("server.log","w"), stderr=subprocess.STDOUT )
+atexit.register(exit)
 sys.stdout=OutputToProcess()
 sys.stdin=WatchFile(open(os.path.join(options.vardir,"ladderlog.txt") ) )
 sys.stdin.skipUnreadLines()
 sys.stderr=sys.__stdout__
-
+import parser
 while True:
 	try:
 		sys.stderr.write("[START] Starting script.\n")
 		sys.stderr.write("[START] Press ctrl+c to exit.\n")
 		sys.stderr.flush()	
-		import parser
+		imp.reload(parser)
 		parser.main()
 	except KeyboardInterrupt:
 		break
 	except Exception as e:
-		sys.stderr.write("Script crashed: "+e.__class__.__name__+" ("+str(e.args)[1:-1]+")\n")
+		sys.stderr.write("Script crashed: "+e.__class__.__name__+" ("+str(e.args[0])[1:-1]+")\n")
 		traceback.print_exc(file=sys.stderr)
 		sys.stderr.flush()
 		parser.exit(False)
-		sys.stderr.write("Restarting ... ")
+		sys.stderr.write("Restarting ... \n")
 		continue
 	break
-p.terminate()
-p.wait()

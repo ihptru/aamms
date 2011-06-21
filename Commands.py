@@ -15,6 +15,19 @@ import Vote
 import AccessLevel
 import re
 import Global
+if "disabled" not in dir():
+	###################################### VARIABLES #########################################
+	## @brief Commands that couldn't be used in a given state.
+	 # @details List of commands that couldn't be used in the given state.
+	not_in_state={"normal":[], "mapeditor":[]}
+
+	## @brief Commands that can be only used in a given state.
+	 # @details List of commands that can be only used in the given state.
+	only_in_state={"normal":[], "mapeditor":[]}
+
+	## @brief Disabled commands.
+	 # @details List of commands that are disabled (means they cannot be used).
+	disabled=[]
 ###################################### COMMAND HELPERS ###################################
 
 ## @brief Gets the parameter of a command

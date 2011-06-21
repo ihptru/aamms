@@ -15,21 +15,26 @@ import Mode
 import Vote
 import imp
 
-## @brief The logging object
- # @private
- # @details Used for logging by this module
- # @note To enable or disable logging of this module use \link enableLogging\endlink
-log=logging.getLogger("LadderModule")
-log.addHandler(logging.NullHandler() )
+if "log" not in dir(): # Don't overwrite variables
+	## @brief The logging object
+	 # @private
+	 # @details Used for logging by this module
+	 # @note To enable or disable logging of this module use \link enableLogging\endlink
+	log=logging.getLogger("LadderModule")
+	log.addHandler(logging.NullHandler() )
 
-## @brief Round end handlers
- # @details List of functions called after a round ended. Functions are every object that is callable.
- # @note This list is cleared every time after all the functions were executed.
-atRoundend=[]
+	## @brief Round end handlers
+	 # @details List of functions called after a round ended. Functions are every object that is callable.
+	 # @note This list is cleared every time after all the functions were executed.
+	atRoundend=[]
 
-## @brief Is the round started?
- # @details True if yes, False otherwise.
-roundStarted=False
+	## @brief Is the round started?
+	 # @details True if yes, False otherwise.
+	roundStarted=False
+
+	## @brief Round number
+	 # @details Current round number starting with 1 for the first round. This number is reseted every time a new match starts.
+	roundNumber=1
 
 ## @brief Handles commands
  # @details Every time when a command that isn't handled by the server is entered, this
@@ -39,6 +44,7 @@ roundStarted=False
  # @param ip The ip of the player who tried to execute the command
  # @param access The numeric access level of the player who tried to execute the command
 def InvalidCommand(command, player, ip, access, *args):
+	# Check if the command is valid ####
 	if not player in Player.players:
 		log.error("Player „"+player+"“ doesn't exist.")
 		Armagetronad.PrintPlayerMessage(player, Messages.PlayerNotExist, Messages.PlayerColorCode)
@@ -52,7 +58,16 @@ def InvalidCommand(command, player, ip, access, *args):
 		Armagetronad.PrintPlayerMessage(player," ".join(args) )
 		return
 	imp.reload(Commands)
-	# get start of commands in file
+	if command in Commands.disabled:
+		Armagetronad.PrintPlayerMessage(player, Messages.DisabledCommand)
+		return	
+	if Global.state in Commands.not_in_state:
+		if command in Commands.not_in_state[Global.state]:
+			Armagetronad.PrintPlayerMessage(player, Messages.WrongState.format(command=command) )
+	if Global.state in Commands.only_in_state:
+		if command not in Commands.only_in_state[Global.state]:
+			Armagetronad.PrintPlayerMessage(player, Messages.WrongState.format(command=command) )
+
 	lines=list()
 	start=0
 	with open(Commands.__file__) as f:
@@ -72,6 +87,8 @@ def InvalidCommand(command, player, ip, access, *args):
 	if not Commands.checkUsage(command, *args):
 		Armagetronad.PrintPlayerMessage(player, Commands.getHelp(command))
 		return
+
+	# Process command ####
 	args=(access,player) + args
 	try:
 		getattr(Commands,command)(*args)
@@ -149,6 +166,7 @@ def OnlinePlayer(lname, red, green, blue, ping, teamname=None):
 def NewRound(date, time, timezone):
 	global roundStarted
 	global atRoundend
+	global roundNumber
 	roundStarted=False
 	log.info("New round started -----------------------------")
 	# Flush bot list (NEEDED because no PlayerLeft is called for bots)
@@ -172,6 +190,7 @@ def NewRound(date, time, timezone):
 	
 	Armagetronad.SendCommand("LADDERLOG_WRITE_GAME_TIME 1")
 	roundStarted=True
+	roundNumber=roundNumber+1
 
 ## @brief Handles cycle created
  # @details For each cycle which is created, this function is called.
@@ -192,6 +211,10 @@ def GameTime(time):
 	if time=="-2" and (Mode.current_mode in Mode.modes):
 		Armagetronad.SendCommand("LADDERLOG_WRITE_GAME_TIME 0")
 		Mode.modes[Mode.current_mode].spawnZones()
+
+def NewMatch(data, time, timezone):
+	roundNumber=1
+
 
 ## @brief Enables logging
  # @details This function enables logging for this module.

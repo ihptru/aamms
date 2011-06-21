@@ -58,3 +58,8 @@ def reloadModules():
 			if f in sys.modules:
 				sys.stderr.write("[RELOADING] Module: "+f+"\n")
 				imp.reload(sys.modules[f])
+
+if "state" not in dir():
+	## @brief Current state.
+	 # @details Could be "normal" or "mapeditor".
+	state="normal"

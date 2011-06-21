@@ -11,28 +11,29 @@ import logging.handlers
 import Team
 import yaml
 
-## @brief The logging object
- # @private
- # @details Used for logging by this module
- # @note To enable or disable logging of this module use \link Team.enableLogging\endlink
-log=logging.getLogger("TeamModule")
-log.addHandler(logging.NullHandler() )
+if "log" not in dir():
+	## @brief The logging object
+	 # @private
+	 # @details Used for logging by this module
+	 # @note To enable or disable logging of this module use \link Team.enableLogging\endlink
+	log=logging.getLogger("TeamModule")
+	log.addHandler(logging.NullHandler() )
 
-## @brief All avaliable zone types
- # @details List of all avaliable zone types used to determine if a zone type is valid.
-_ZONE_TYPES=["win", "death", "ball", "ballTeam", "blast", "deathTeam", "koh", 
-             "fortress", "flag","rubber", "sumo", "target", "teleport", "zombie",
-             "zombieOwner"]
+	## @brief All avaliable zone types
+	 # @details List of all avaliable zone types used to determine if a zone type is valid.
+	_ZONE_TYPES=["win", "death", "ball", "ballTeam", "blast", "deathTeam", "koh", 
+		         "fortress", "flag","rubber", "sumo", "target", "teleport", "zombie",
+		         "zombieOwner"]
 
-## @brief Eventgroup of this module
- # @details Events used by this module:
- #             "Zone spawned": triggered when a zone is spawned.
- #             "Zone collapsed": triggered when a zone collapsed.
- #             "Zone renamed": triggered when the name of a zone changes
-events=Event.EventGroup("ZoneEvents")
-events.addEvent(Event.Event("Zone spawned") )
-events.addEvent(Event.Event("Zone collapsed") )
-events.addEvent(Event.Event("Zone renamed") )
+	## @brief Eventgroup of this module
+	 # @details Events used by this module:
+	 #             "Zone spawned": triggered when a zone is spawned.
+	 #             "Zone collapsed": triggered when a zone collapsed.
+	 #             "Zone renamed": triggered when the name of a zone changes
+	events=Event.EventGroup("ZoneEvents")
+	events.addEvent(Event.Event("Zone spawned") )
+	events.addEvent(Event.Event("Zone collapsed") )
+	events.addEvent(Event.Event("Zone renamed") )
 
 ## @class Zone.Zone
  # @brief A zone

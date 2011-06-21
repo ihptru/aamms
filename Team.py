@@ -11,17 +11,18 @@ from Armagetronad import SendCommand
 import Player
 import math
 
-## @brief The logging object
- # @private
- # @details Used for logging by this module
- # @note To enable or disable logging of this module use \link Team.enableLogging\endlink
-log=logging.getLogger("TeamModule")
-log.addHandler(logging.NullHandler() )
+if "teams" not in dir():
+	## @brief The logging object
+	 # @private
+	 # @details Used for logging by this module
+	 # @note To enable or disable logging of this module use \link Team.enableLogging\endlink
+	log=logging.getLogger("TeamModule")
+	log.addHandler(logging.NullHandler() )
 
-## @brief All teams
- # @details Dictionary of team added with Add(), where the escaped team name
- #          is the key.
-teams=dict()
+	## @brief All teams
+	 # @details Dictionary of team added with Add(), where the escaped team name
+	 #          is the key.
+	teams=dict()
 
 ## @brief Eventgroup of this module
  # @details Events used by this module:

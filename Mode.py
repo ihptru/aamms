@@ -18,24 +18,25 @@ from glob import glob
 import os.path
 import os
 
-## @brief Global settings directory
- # @details This is used as default for settings_prefix by new modes.
-settings_prefix="MultiModeServer/"
+if "settings_prefix" not in dir():
+	## @brief Global settings directory
+	 # @details This is used as default for settings_prefix by new modes.
+	settings_prefix="MultiModeServer/"
 
-## @brief The logging object
- # @private
- # @details Used for logging by this module
- # @note To enable or disable logging of this module use \link Team.enableLogging\endlink
-log=logging.getLogger("ModeModule")
-log.addHandler(logging.NullHandler() )
+	## @brief The logging object
+	 # @private
+	 # @details Used for logging by this module
+	 # @note To enable or disable logging of this module use \link Team.enableLogging\endlink
+	log=logging.getLogger("ModeModule")
+	log.addHandler(logging.NullHandler() )
 
-## @brief Stores all modes
- # @details This is a dictionary of all avaliable modes, where the name of the mode is the key.
-modes=dict()
+	## @brief Stores all modes
+	 # @details This is a dictionary of all avaliable modes, where the name of the mode is the key.
+	modes=dict()
 
-## @brief The current mode
- # @details The escaped name of the currently active mode.
-current_mode=None
+	## @brief The current mode
+	 # @details The escaped name of the currently active mode.
+	current_mode=None
 
 ## @brief Adds a new mode
  # @details Adds a mode and stores it in the modes list

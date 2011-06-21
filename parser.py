@@ -9,14 +9,14 @@ import Armagetronad
 import Zone
 import Mode
 import Global
-import atexit
 
 def exit(normal=False):
 	if normal:
 		Mode.saveModes()
+	log.info("Exit")
 	Armagetronad.PrintMessage("0xff0000Script exited.")
 
-def main():
+def main(debug=False, disabledCommands=[]):
 	log=logging.getLogger("MainModule")
 	h=logging.StreamHandler()
 	h.setLevel(logging.DEBUG)
@@ -36,6 +36,12 @@ def main():
 	Armagetronad.SendCommand("LADDERLOG_GAME_TIME_INTERVAL 1")
 	Armagetronad.SendCommand("EXTRA_ROUND_TIME 1")
 	Armagetronad.PrintMessage("0xff0000Script started")
+	if debug:
+		log.info("Starting in debug mode.")
+		log.warning("In debug mode commands like /script and /reload are enabled.")
+	else:
+		Commands.disabled=Commands.disabled+["script","reload","execbuffer"]
+		
 	#Init
 	Team.Add("AI")
 	Mode.loadModes()
@@ -43,7 +49,6 @@ def main():
 	log.info("Script started")
 	#We need to refresh player list
 	Global.reloadPlayerList()
-	atexit.register(exit)
 	while(True):
 		line=""
 		try:

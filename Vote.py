@@ -9,37 +9,38 @@ import Armagetronad
 import Player
 import Messages
 
-## @brief The logging object
- # @details The logging object used for log messages by this module.
- # @note To enable or disable logging for this module use \link Vote.enableLogging\endlink
-log=logging.getLogger("VoteModule")
-log.addHandler(logging.NullHandler() )
+if "log" not in dir():
+	## @brief The logging object
+	 # @details The logging object used for log messages by this module.
+	 # @note To enable or disable logging for this module use \link Vote.enableLogging\endlink
+	log=logging.getLogger("VoteModule")
+	log.addHandler(logging.NullHandler() )
 
-## @brief The EventGroup
- # @details EventGroup used by this module.
- #          Events definied by this module:
- #             Vote created: triggered when a new vote was created.
- #             Vote successed: triggered when a vote successed. (After a call to \link Vote.Vote.CheckResult()\endlink )
- #             Vote failed: triggered when a vote failed. (After a call to \link Vote.Vote.CheckResult()\endlink )
- #             Vote cancelled: triggered by \link Vote.Cancel()\endlink .
- #          Handlers for Events triggered by this module don't have any arguments.'
-events=Event.EventGroup("VoteEvents")
-events.addEvent(Event.Event("Vote created") )
-events.addEvent(Event.Event("Vote successed") )
-events.addEvent(Event.Event("Vote failed") )
-events.addEvent(Event.Event("Vote cancelled") )
+	## @brief The EventGroup
+	 # @details EventGroup used by this module.
+	 #          Events definied by this module:
+	 #             Vote created: triggered when a new vote was created.
+	 #             Vote successed: triggered when a vote successed. (After a call to \link Vote.Vote.CheckResult()\endlink )
+	 #             Vote failed: triggered when a vote failed. (After a call to \link Vote.Vote.CheckResult()\endlink )
+	 #             Vote cancelled: triggered by \link Vote.Cancel()\endlink .
+	 #          Handlers for Events triggered by this module don't have any arguments.'
+	events=Event.EventGroup("VoteEvents")
+	events.addEvent(Event.Event("Vote created") )
+	events.addEvent(Event.Event("Vote successed") )
+	events.addEvent(Event.Event("Vote failed") )
+	events.addEvent(Event.Event("Vote cancelled") )
 
-## @brief The current vote
- # @details None or an instance of the current vote.
-current_vote=None
+	## @brief The current vote
+	 # @details None or an instance of the current vote.
+	current_vote=None
 
-## @brief Can spectators vote?
- # @details If set to True, votes of spectators are ignored.
-spec_allowed=False
+	## @brief Can spectators vote?
+	 # @details If set to True, votes of spectators are ignored.
+	spec_allowed=False
 
-## @brief When should a vote expire? (Default value)
- # @details Default number of rounds for which a vote stays alive.
-defaultStayAlive=5
+	## @brief When should a vote expire? (Default value)
+	 # @details Default number of rounds for which a vote stays alive.
+	defaultStayAlive=5
 
 ## @brief Adds a new vote.
  # @details Adds a vote with the given name and set it as current_vote.

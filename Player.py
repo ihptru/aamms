@@ -11,10 +11,11 @@ import Event
 from Armagetronad import SendCommand
 import copy
 
-## @brief This variable is used to store the players.
- # @details This variable is a dictionary of players where the ladder name of the player
- #          is the key.
-players=dict()
+if "players" not in dir():
+	## @brief This variable is used to store the players.
+	 # @details This variable is a dictionary of players where the ladder name of the player
+	 #          is the key.
+	players=dict()
 
 ## @brief Adds a new Player
  # @details Use this function to add a new player.
