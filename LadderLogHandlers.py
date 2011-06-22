@@ -14,6 +14,7 @@ import Team
 import Mode
 import Vote
 import imp
+import Global
 
 if "log" not in dir(): # Don't overwrite variables
 	## @brief The logging object
@@ -64,9 +65,12 @@ def InvalidCommand(command, player, ip, access, *args):
 	if Global.state in Commands.not_in_state:
 		if command in Commands.not_in_state[Global.state]:
 			Armagetronad.PrintPlayerMessage(player, Messages.WrongState.format(command=command) )
+			return
 	if Global.state in Commands.only_in_state:
-		if command not in Commands.only_in_state[Global.state]:
-			Armagetronad.PrintPlayerMessage(player, Messages.WrongState.format(command=command) )
+		for state, commands in Commands.only_in_state.items():
+			if command in commands and Global.state!=state:
+				Armagetronad.PrintPlayerMessage(player, Messages.WrongState.format(command=command) )
+				return
 
 	lines=list()
 	start=0
@@ -222,6 +226,7 @@ def NewMatch(data, time, timezone):
  # @param f The formatter used for logging
  # @param level The logging level
 def enableLogging(level=logging.DEBUG, h=None,f=None):
+	global log
 	log.setLevel(level)
 	if not h:
 		h=logging.StreamHandler()
@@ -229,4 +234,6 @@ def enableLogging(level=logging.DEBUG, h=None,f=None):
 	if not f:
 		f=logging.Formatter("[%(name)s] (%(asctime)s) %(levelname)s: %(message)s")
 	h.setFormatter(f)
+	for handler in log.handlers:
+		log.removeHandler(handler)
 	log.addHandler(h)

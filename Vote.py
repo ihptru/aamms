@@ -58,12 +58,14 @@ def Add(target_human, action, force=False):
 			Cancel()
 	current_vote=Vote(target_human, action)
 	events.triggerEvent("Vote created")
+	log.info("New vote about "+target_human+" created.")
 
 ## @brief Cancels the current vote.
  # @details Sets current_vote to None and prints a message.
 def Cancel():
 	global current_vote
 	current_vote=None
+	log.info("Vote cancelled.")
 
 
 ## @brief The vote class
@@ -152,7 +154,7 @@ class Vote:
 			self.action()
 		else:
 			events.triggerEvent("Vote failed")
-			log.info("Vote for {0} failed.")
+			log.info("Vote for {0} failed.".format(self.target) )
 			Armagetronad.PrintMessage(Messages.VoteFailed.format(target=self.target) )
 		global current_vote
 		current_vote=None
@@ -184,6 +186,7 @@ class Vote:
  # @param f The formatter used for logging
  # @param level The logging level
 def enableLogging(level=logging.DEBUG, h=None,f=None):
+	global log
 	log.setLevel(level)
 	if not h:
 		h=logging.StreamHandler()
@@ -191,4 +194,6 @@ def enableLogging(level=logging.DEBUG, h=None,f=None):
 	if not f:
 		f=logging.Formatter("[%(name)s] (%(asctime)s) %(levelname)s: %(message)s")
 	h.setFormatter(f)
+	for handler in log.handlers:
+		log.removeHandler(handler)
 	log.addHandler(h)

@@ -8,10 +8,11 @@
 import logging
 import logging.handlers
 
-## @cond
-logging.getLogger("EventModule").addHandler(logging.NullHandler())
-log=logging.getLogger("EventModule")
-## @endcond
+if "log" not in dir():
+	## @cond
+	logging.getLogger("EventModule").addHandler(logging.NullHandler())
+	log=logging.getLogger("EventModule")
+	## @endcond
 
 ## @class Event.Action
  # @brief Represents an action
@@ -271,14 +272,17 @@ class EventGroup:
  # @param f The formatter used for logging
  # @param level The logging level 
 def enableLogging(level=logging.DEBUG, h=None,f=None):
-	logging.getLogger("EventModule").setLevel(level)
+	global log
+	log.setLevel(level)
 	if not h:
 		h=logging.StreamHandler()
 		h.setLevel(level)
-	if not f: 
+	if not f:
 		f=logging.Formatter("[%(name)s] (%(asctime)s) %(levelname)s: %(message)s")
 	h.setFormatter(f)
-	logging.getLogger("EventModule").addHandler(h)
+	for handler in log.handlers:
+		log.removeHandler(handler)
+	log.addHandler(h)
 
 ## @brief Saves the result of the tests
 tests=list()

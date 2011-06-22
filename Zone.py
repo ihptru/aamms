@@ -284,11 +284,14 @@ class Zone(yaml.YAMLObject):
  # @param f The formatter used for logging
  # @param level The logging level 
 def enableLogging(level=logging.DEBUG, h=None,f=None):
+	global log
 	log.setLevel(level)
 	if not h:
 		h=logging.StreamHandler()
 		h.setLevel(level)
-	if not f: 
+	if not f:
 		f=logging.Formatter("[%(name)s] (%(asctime)s) %(levelname)s: %(message)s")
 	h.setFormatter(f)
+	for handler in log.handlers:
+		log.removeHandler(handler)
 	log.addHandler(h)

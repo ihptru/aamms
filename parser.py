@@ -9,6 +9,16 @@ import Armagetronad
 import Zone
 import Mode
 import Global
+import Commands
+if "h" in dir() and "log" in dir():
+	log.removeHandler(h)
+log=logging.getLogger("MainModule")
+h=logging.StreamHandler()
+h.setLevel(logging.DEBUG)
+f=logging.Formatter("[%(name)s] (%(asctime)s) %(levelname)s: %(message)s")
+h.setFormatter(f)
+log.addHandler(h)
+log.setLevel(logging.INFO)
 
 def exit(normal=False):
 	if normal:
@@ -17,13 +27,6 @@ def exit(normal=False):
 	Armagetronad.PrintMessage("0xff0000Script exited.")
 
 def main(debug=False, disabledCommands=[]):
-	log=logging.getLogger("MainModule")
-	h=logging.StreamHandler()
-	h.setLevel(logging.DEBUG)
-	f=logging.Formatter("[%(name)s] (%(asctime)s) %(levelname)s: %(message)s")
-	h.setFormatter(f)
-	log.addHandler(h)
-	log.setLevel(logging.INFO)
 	Player.enableLogging()
 	Team.enableLogging()
 	LadderLogHandlers.enableLogging()
@@ -41,7 +44,7 @@ def main(debug=False, disabledCommands=[]):
 		log.warning("In debug mode commands like /script and /reload are enabled.")
 	else:
 		Commands.disabled=Commands.disabled+["script","reload","execbuffer"]
-		
+	Commands.disabled=Commands.disabled+disabledCommands	
 	#Init
 	Team.Add("AI")
 	Mode.loadModes()
@@ -74,8 +77,8 @@ def main(debug=False, disabledCommands=[]):
 				log.warning("Wrong arguments for ladder log handler for "+command+". This might be a bug.")
 				raise e
 			except Exception as e:
-				log.error("Exception " +e.__class__.__name__
-					        + " raised in Ladder log handler. This might be a bug.")
+				#log.error("Exception " +e.__class__.__name__
+				#	        + " raised in Ladder log handler. This might be a bug.")
 				raise(e)
 		else:
 			log.debug("No ladder log handler for ladder event „" + command + "“.")

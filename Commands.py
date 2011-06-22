@@ -348,7 +348,6 @@ def acl(acl, player, command, access=0):
  # @param acl The accesslevel of the player
  # @param player The name of the player
 def reload(acl, player):
-	Armagetronad.PrintMessage("0xff0000Reloading script ....")
+	Armagetronad.PrintPlayerMessage(player,  "0xff0000Reloading script ....")
 	Global.reloadModules()
-	Global.reloadPlayerList()
 

@@ -53,8 +53,11 @@ class OutputToProcess(io.TextIOWrapper):
 
 # FUNCTIONS #############################################
 def exit():
+	sys.stderr.write("Exiting.\n")
+	sys.stderr.write("Killing server ...")
 	p.terminate()
 	p.wait()
+	sys.stderr.write("Done\n")
 # SETTINGS ##############################################
 userdatadir="./server/data"
 userconfigdir="./server/config"
@@ -64,11 +67,14 @@ parser=OptionParser()
 #parser.add_option("-v", "--vardir", dest="vardir", default=None, help="Path to the var directory (server)")
 parser.add_option("-d", "--datadir", dest="datadir", default=None, help="Path to the data directory (server)")
 parser.add_option("-c", "--configdir", dest="configdir", default=None, help="Path to the config directory (server)")
-parser.add_option("-e", "--executable", dest="server", default=None, help="Path of the server executable")
+parser.add_option("-e", "--executable", dest="server", default=None, help="Path of the server executable", metavar="EXECUTABLE")
+parser.add_option("--debug",dest="debug", default=False, action="store_true", help="Run in debug mode")
+parser.add_option("--disable", dest="disabledCommands", action="append", help="Disable COMMAND.", metavar="COMMAND", default=[])
+parser.add_option("--default", dest="save", action="store_true", default=False, help="Set this configuration as default")
 options, args=parser.parse_args()
 options.vardir="server/var"
 optionsdict=dict()
-save_options=["vardir","configdir","server","datadir"]
+save_options=["vardir","configdir","server","datadir", "disabledCommands"]
 
 # START #################################################
 os.chdir(os.path.dirname(sys.argv[0]) )
@@ -87,7 +93,8 @@ if os.path.exists("config.conf"):
 			pass
 for save_option in save_options:
 	optionsdict[save_option]=getattr(options, save_option)
-yaml.dump(optionsdict, open("config.conf","w"), default_flow_style=False )
+if options.save or not os.path.exists("config.conf"):
+	yaml.dump(optionsdict, open("config.conf","w"), default_flow_style=False )
 
 if not os.path.exists(userconfigdir):
 	os.makedirs(userconfigdir)
@@ -112,11 +119,11 @@ while True:
 		sys.stderr.write("[START] Press ctrl+c to exit.\n")
 		sys.stderr.flush()	
 		imp.reload(parser)
-		parser.main()
+		parser.main(debug=options.debug, disabledCommands=options.disabledCommands)
 	except KeyboardInterrupt:
 		break
 	except Exception as e:
-		sys.stderr.write("Script crashed: "+e.__class__.__name__+" ("+str(e.args[0])[1:-1]+")\n")
+		sys.stderr.write("################## SCRIPT CRASHED ###################################\n")
 		traceback.print_exc(file=sys.stderr)
 		sys.stderr.flush()
 		parser.exit(False)

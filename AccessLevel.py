@@ -24,7 +24,7 @@ def isAllowed(command, access):
 	access=int(access)
 	if command not in __accessLevels:
 		log.warning("No access level for command "+command+" registered. Using 0 as access level.")
-		return (access==0)
+		return (access<=0)
 	return __accessLevels[command]>=access
 
 ## @brief Registers or changes an access level

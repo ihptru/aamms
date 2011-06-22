@@ -376,14 +376,17 @@ class Player:
  # @param f The formatter used for logging
  # @param level The logging level
 def enableLogging(level=logging.DEBUG, h=None,f=None):
-	logging.getLogger("PlayerModule").setLevel(level)
+	global log
+	log.setLevel(level)
 	if not h:
 		h=logging.StreamHandler()
 		h.setLevel(level)
 	if not f:
 		f=logging.Formatter("[%(name)s] (%(asctime)s) %(levelname)s: %(message)s")
 	h.setFormatter(f)
-	logging.getLogger("PlayerModule").addHandler(h)
+	for handler in log.handlers:
+		log.removeHandler(handler)
+	log.addHandler(h)
 
 ## @brief Saves the result of the tests
  # @details Saves True or False for each test
