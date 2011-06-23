@@ -10,6 +10,8 @@ import logging
 import logging.handlers
 import Team
 import yaml
+import time
+from multiprocessing import Process as Thread
 
 if "log" not in dir():
 	## @brief The logging object
@@ -24,6 +26,10 @@ if "log" not in dir():
 	_ZONE_TYPES=["win", "death", "ball", "ballTeam", "blast", "deathTeam", "koh", 
 		         "fortress", "flag","rubber", "sumo", "target", "teleport", "zombie",
 		         "zombieOwner"]
+
+	## @brief All zone types that are for def.
+	 # @details List of zone types you don't need when you attack.
+	_ZONE_TYPES_DEF=["fortress", "flag"]
 
 	## @brief Eventgroup of this module
 	 # @details Events used by this module:
@@ -150,8 +156,16 @@ class Zone(yaml.YAMLObject):
 
 	## @brief Spawns the zone
 	 # @details Spawns the zone and sets alive to True
+	 # @param delay Spawn after delay secounds.
 	 # @note This triggers the event "Zone spawned"
-	def spawn(self):
+	def spawn(self, delay=0):
+		if delay != 0:
+			def run(delay, func):
+				time.sleep(delay)
+				func()
+			t=Thread(None, run, args=(delay, self.spawn))
+			t.start()
+			return
 		name=""
 		command=""
 		teams=list()
