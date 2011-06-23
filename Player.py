@@ -1,4 +1,4 @@
-#!/usr/bin/python3
+#!/usr/bin/env python3
 ## @file Player.py
  # @package Player
  # @brief Functions and classes for player management.
@@ -311,7 +311,7 @@ class Player:
 	 # @details This function gets the ladder name
 	 # @return The ladder name
 	def getLadderName(self):
-		return self.ladderName()
+		return self.__ladder_name
 
 	## @brief Applies all changes
 	 # @details Should be only called at the end of the round, when the player can rename.
@@ -369,6 +369,12 @@ class Player:
 	def getTeam(self):
 		return self.__team
 
+	## @brief Get the login state.
+	 # @details Get if the player is logged in or not.
+	 # @return True if the player is logged in, False otherwise.
+	def isLoggedIn(self):
+		return self.__logged_in
+
 ## @brief Enables Logging
  # @details This function enables logging for all Player classes. For more information see
  #          the logging module.
@@ -388,36 +394,50 @@ def enableLogging(level=logging.DEBUG, h=None,f=None):
 		log.removeHandler(handler)
 	log.addHandler(h)
 
-## @brief Saves the result of the tests
- # @details Saves True or False for each test
-__tests=list()
+##################### TESTS ###################################################
+import unittest
 
-## @brief runs tests
-def __runTest(param=None,i=None):
-	p=Player("Ladder_name","Real name","127.0.0.1")
-	p.setLives(10)
-	p.setLadderName("Ladder_name2")
-	if p.getInGameLadderName() == "Ladder_name":
-		__tests.append(True)
-	else:
-		__tests.append(False)
-	p.applyChanges()
-	p.crashed()
-	p.kill()
-	if p.getLives()==0:
-		__tests.append(True)
-	else:
-		__tests.append(False)
-	i=1
-	print("TEST RESULTS --------------------------------")
-	for testres in __tests:
-		state="failed"
-		if testres:
-			state="succeed"
-		print("Test "+str(i)+" "+state)
-		i=i+1
+## @brief Test the player module
+class PlayerModuleTest(unittest.TestCase):
+	def setUp(self):
+		self.saved_players=players
 
-if __name__ == '__main__':
-	Event.enableLogging()
-	enableLogging()
-	__runTest()
+	def test_adding(self):
+		Add("test_adding_laddername","Test Real name", "127.0.0.1")
+		self.assertIn("test_adding_laddername", players.keys(), "Adding of a player failed")
+
+	def test_renaming(self):
+		Add("test_rename_player","Test rename player", "127.0.0.1")	
+		old_player=players["test_rename_player"]
+		players["test_rename_player"].setLadderName("renamed_player")
+		self.assertNotIn("test_rename_player", players.keys(), "Renaming of a player failed: Old player got not removed from player list")
+		self.assertIn("renamed_player", players.keys(), "Renaming of a player failed: Player isn't moved to the new position in the player list")
+		self.assertEqual(players["renamed_player"].getLadderName(), "renamed_player", "Renaming of a player failed: Laddername isn't changed")
+	
+	def test_removing(self):
+		Add("test_remove_player","Test remove player", "127.0.0.1")
+		Remove("test_remove_player")
+		self.assertNotIn("test_remove_player", players.keys(), "Removing of a player failed")
+
+	def test_killing(self):
+		testPlayer=Player("test_player", "Test player", "127.0.0.1")
+		testPlayer.kill()
+		self.assertEqual(testPlayer.getLives(), 0, "Killing failed: Player's lives wasn't set to 0")
+
+	def test_crashing(self):
+		testPlayer=Player("test_player", "Test player", "127.0.0.1")
+		testPlayer.setLives(1)
+		testPlayer.crashed()
+		self.assertEqual(testPlayer.getLives(), 0, "Crashing failed: Lives wasn't counted down")
+
+	def tearDown(self):
+		players=self.saved_players
+
+## @brief Get a test suite
+def suite():
+	return unittest.defaultTestLoader.loadTestsFromTestCase(PlayerModuleTest)
+
+if __name__=="__main__":
+	nullFunction=lambda *args: None
+	SendCommand=nullFunction
+	unittest.TextTestRunner(verbosity=2).run(suite() )
