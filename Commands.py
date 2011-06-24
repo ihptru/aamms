@@ -19,15 +19,20 @@ if "disabled" not in dir():
 	###################################### VARIABLES #########################################
 	## @brief Commands that couldn't be used in a given state.
 	 # @details List of commands that couldn't be used in the given state.
-	not_in_state={"normal":[], "mapeditor":[]}
+	not_in_state={"normal":["normal"], "modeeditor":[]}
 
 	## @brief Commands that can be only used in a given state.
 	 # @details List of commands that can be only used in the given state.
-	only_in_state={"normal":[], "mapeditor":[]}
+	only_in_state={"normal":["yes","no","mode"], "modeeditor":["save","makeZone","makeRes", "go","stop", "moreSpeed", "lessSpeed"]}
 
 	## @brief Disabled commands.
 	 # @details List of commands that are disabled (means they cannot be used).
 	disabled=[]
+	
+	## @brief State specific data
+	 # @details Data that is only need for a specific state.
+	data=None
+
 ###################################### COMMAND HELPERS ###################################
 
 ## @brief Gets the parameter of a command
@@ -45,11 +50,9 @@ def getArgs(command):
 	maxargcount=0
 	names=list()
 	optionalvalues=list()
-	for arg in args:
+	for arg in args[2:]:
 		arg=arg.strip()
 		arg=arg.replace(" ","")
-		if arg=="player" or arg=="acl": #Internal args
-			continue
 		if arg.find("=")==-1:
 			minargcount=minargcount+1
 			maxargcount=maxargcount+1
@@ -153,14 +156,16 @@ def getDescription(command):
 
 	params=list()
 	commanddesc=""
+	commentars="".join(commentars).split("@")
 	for commentaritem in commentars:
-		if commentaritem.startswith("@brief"):
-			commentaritem=commentaritem[len("@brief"):]
+		commentaritem=commentaritem.strip()
+		if commentaritem.startswith("brief"):
+			commentaritem=commentaritem[len("brief"):]
 			commanddesc=commentaritem.strip()
 			commanddesc=commanddesc.replace("of a player","")
 			commanddesc=commanddesc.replace("a player","you")
-		elif commentaritem.startswith("@param"):
-			commentaritem=commentaritem[len("@param"):].strip()
+		elif commentaritem.startswith("param"):
+			commentaritem=commentaritem[len("param"):].strip()
 			param, desc=commentaritem.split(" ",1)
 			if param not in argnames: # Probably internal arg, not needed to show the user.
 				continue
@@ -173,7 +178,9 @@ def getDescription(command):
 			desc=textwrap.wrap(desc, 60)
 			for curdescl in reversed(desc[1:]):
 				params.append(" "*7+curdescl)
-			params.append(param+" "*(7-len(param))+desc[0])
+			if len(param)<7: len_param=len(param)
+			if len(param)>=7: len_param=6 
+			params.append(param+" "*(7-len_param)+desc[0])
 	return commanddesc, params
 	
 
@@ -214,7 +221,7 @@ def script(acl, player, *code):
  # @param player The player who executed this command
  # @param flush_buffer Flush the player's buffer after it was executed?
  # @details Executes the buffer of the given player
-def execbuffer(acl, player, flush_buffer=False):
+def execBuffer(acl, player, flush_buffer=False):
 	if "buffer" not in Player.players[player].data:
 		Player.players[player].data["buffer"]=[""]
 	string="\n".join(Player.players[player].data["buffer"])
@@ -229,7 +236,7 @@ def execbuffer(acl, player, flush_buffer=False):
 ## @brief Empties the buffer of a player
  # @details Clears the buffer of the given player
  # @param player The player for who to clear the buffer.
-def clearbuffer(acl, player):
+def clearBuffer(acl, player):
 	if "buffer" in Player.players[player].data:
 		del Player.players[player].data["buffer"]
 		Armagetronad.PrintPlayerMessage(player,"Buffer cleared.")
@@ -237,7 +244,7 @@ def clearbuffer(acl, player):
 ## @brief Prints the buffer of a player
  # @details Prints the buffer of the given player to the player.
  # @param player The player of who to print the buffer and to who to print the buffer.
-def printbuffer(acl, player):
+def printBuffer(acl, player):
 	if "buffer" in Player.players[player].data and "\n".join(Player.players[player].data["buffer"]).strip() != "":
 		Armagetronad.PrintPlayerMessage(player,"Buffer: \n" + "\n".join(Player.players[player].data["buffer"]) )
 	else:
@@ -256,9 +263,9 @@ def tele(acl, player, x, y, xdir=0, ydir=1):
 ## @brief Activates a mode.
  # @details This is the /mode command
  # @param player The player who executed this command
- # @param mode The mode which to activate.
+ # @param gmode The mode which to activate.
  # @param type Optional How does the mode get activated? Could be set or vote. Set isn't avaliable for normal players.
- # @param when Optional When gets the mode activated? Only affects if type set. Could be now, roundend or matchend (currently only now and roundend is supported)
+ # @param when Optional When gets the mode activated? Only affects if type is set. Could be now, roundend or matchend (currently only now and roundend is supported)
 def mode(acl, player, gmode, type="vote", when="now"):
 	smode=""
 	mode=None
@@ -351,3 +358,111 @@ def reload(acl, player):
 	Armagetronad.PrintPlayerMessage(player,  "0xff0000Reloading script ....")
 	Global.reloadModules()
 
+## @brief Enter the mode editor.
+ # @details This command changes the state to modeeditor.
+ # @param acl The accesslevel of the player
+ # @param playername The name of the player
+def modeEditor(acl, player):
+	Armagetronad.SendCommand("INCLUDE settings.cfg")
+	Armagetronad.SendCommand("SINCLUDE settings_custom.cfg")
+	Armagetronad.SendCommand("DEFAULT_KICK_REASON Server\ under\ maintenance.")
+	Armagetronad.SendCommand("MAX_CLIENTS 1")
+	Armagetronad.SendCommand("SP_TEAMS_MAX 1")
+	Armagetronad.SendCommand("TEAMS_MAX 1")
+	Armagetronad.SendCommand("SP_AUTO_AIS 0")
+	Armagetronad.SendCommand("AUTO_AIS 0")
+	Armagetronad.SendCommand("SP_NUM_AIS 0")
+	Armagetronad.SendCommand("NUM_AIS 0")
+	Armagetronad.SendCommand("CYCLE_SPEED_MIN 0")
+	Armagetronad.SendCommand("CYCLE_RUBBER 10000000")
+	Armagetronad.SendCommand("SP_WALLS_LENGTH 0.000001")
+	Armagetronad.SendCommand("CYCLE_SPEED 5")
+	Armagetronad.SendCommand("CYCLE_BRAKE -100")
+	Armagetronad.SendCommand("CYCLE_BRAKE_DEPLETE 0")
+	Armagetronad.SendCommand("CYCLE_SPEED_DECAY_ABOVE 1.5")
+	Armagetronad.SendCommand("CYCLE_ACCEL 0")
+	Armagetronad.SendCommand("SP_MIN_PLAYERS 0")
+	Armagetronad.SendCommand("CYCLE_TURN_SPEED_FACTOR 1")
+	Armagetronad.SendCommand("CYCLE_SPEED_DECAY_BELOW 2")
+	Vote.Cancel()
+	Mode.current_mode=None
+	Armagetronad.SendCommand("NETWORK_AUTOBAN_FACTOR 0")
+	Armagetronad.PrintPlayerMessage(player, "0xff0000Kicking other players ...")
+	for playero in Player.players.values():
+		if playero.ip!=Player.players[player].ip:
+			Armagetronad.SendCommand("KICK "+playero.getLadderName() )
+		else:
+			playero.kill()	
+	Armagetronad.SendCommand("NETWORK_AUTOBAN_FACTOR 10")
+	Global.state="modeeditor"
+	global data
+	data=dict()
+	data["speed"]=5
+	data["mode"]=Mode.Mode("Unsaved")
+	data["stopped"]=False
+
+## @brief Go back to normal state.
+ # @details Changes the state to normal.
+def normal(acl, player):
+	Armagetronad.SendCommand("INCLUDE settings.cfg")
+	Armagetronad.SendCommand("SINCLUDE settings_custom.cfg")
+	Global.reloadPlayerList()
+	if Mode.current_mode:
+		Mode.current_mode.activate(True)
+	Global.state="normal"
+	global data
+	data=None
+
+## @brief Stop the cycle.
+ # @details Stop the moving cycle.
+def stop(acl, player):
+	Armagetronad.SendCommand("CYCLE_SPEED_DECAY_ABOVE 10000000000000000000000000")
+	Armagetronad.SendCommand("CYCLE_SPEED_DECAY_BELOW 10000000000000000000000000")
+	Armagetronad.SendCommand("CYCLE_SPEED 0")
+	global data
+	data["stoppped"]=True
+
+## @brief Let the cycle move again.
+ # @details Sets CYCLE_SPEED to data["speed"]
+def go(acl, player):
+	global data
+	Armagetronad.SendCommand("CYCLE_SPEED_DECAY_ABOVE 1.5")
+	Armagetronad.SendCommand("CYCLE_SPEED_DECAY_BELOW 2")
+	Armagetronad.SendCommand("CYCLE_SPEED "+str(data["speed"]) )
+	data["stopped"]=False
+
+## @brief Incrase or set the speed of the cycle.
+ # @param speed If given, the speed is set to this value. Otherwise it will be incrased by 5.
+def moreSpeed(acl, player, speed=None):
+	global data
+	if speed!=None:
+		try:
+			data["speed"]=int(speed)
+		except:
+			data["speed"]=int(data["speed"])+5
+	else:
+		data["speed"]=int(data["speed"])+5
+	if not data["stopped"]:
+		Armagetronad.SendCommand("CYCLE_SPEED "+str(data["speed"]) )
+
+## @brief Decrase the speed of the cycle.
+def lessSpeed(acl, player):
+	global data
+	data["speed"]=int(data["speed"])-5
+	if data["speed"]<0:
+		data["speed"]=0
+	if not data["stopped"]:
+		Armagetronad.SendCommand("CYCLE_SPEED "+str(data["speed"]) )
+
+## @brief Create a zone at the current cycle's position.
+ # @param name The name of the zone.
+ # @param size The size of the zone.
+ # @param grow The zone growth. Negative values will let the zone shrink.
+ # @param team The team for which the zone should get spawned. 
+ #             -1 if the zone doesn't belong to any team. 
+ #              0 if the zone should be spawned once for every team.
+ # @param type The type of the zone (Win, death, deathTeam, fortress, ....)
+ # @param extrasettings Additional settings for the zone type (like <rubber> for rubber zones)
+def makeZone(acl, player, name, size, grow, team, type, *extrasettings):
+	
+	pass

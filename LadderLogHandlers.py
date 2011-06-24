@@ -29,6 +29,10 @@ if "log" not in dir(): # Don't overwrite variables
 	 # @note This list is cleared every time after all the functions were executed.
 	atRoundend=[]
 
+	atMatchend=[]
+
+	extraHandlers=dict()
+
 	## @brief Is the round started?
 	 # @details True if yes, False otherwise.
 	roundStarted=False
@@ -59,6 +63,14 @@ def InvalidCommand(command, player, ip, access, *args):
 		Armagetronad.PrintPlayerMessage(player," ".join(args) )
 		return
 	imp.reload(Commands)
+	saved_command=command
+	command=[realcommand for realcommand in Commands.getCommands() if realcommand.lower()==command]
+	if len(command)>1:
+		log.warning("More than one function for command "+command[0]+". Chosing 1st one.")
+	elif len(command)<1:
+		Armagetronad.PrintPlayerMessage(player, Messages.CommandNotFound.format(command=saved_command) )
+		return
+	command=command[0]
 	if command in Commands.disabled:
 		Armagetronad.PrintPlayerMessage(player, Messages.DisabledCommand)
 		return	
@@ -71,20 +83,6 @@ def InvalidCommand(command, player, ip, access, *args):
 			if command in commands and Global.state!=state:
 				Armagetronad.PrintPlayerMessage(player, Messages.WrongState.format(command=command) )
 				return
-
-	lines=list()
-	start=0
-	with open(Commands.__file__) as f:
-		lines=f.readlines()
-	try:
-		start=lines.index("#START COMMANDS")
-	except ValueError:
-		start=0
-	del lines
-
-	if not hasattr(Commands, command) or getattr(Commands, command).__code__.co_firstlineno<start:
-		Armagetronad.PrintPlayerMessage(player, Messages.CommandNotFound.format(command=command) )
-		return
 	if not AccessLevel.isAllowed(command,access):
 		Armagetronad.PrintPlayerMessage(player, Messages.NotAllowed.format(command=command) )
 		return
@@ -215,9 +213,20 @@ def GameTime(time):
 	if time=="-2" and (Mode.current_mode in Mode.modes):
 		Armagetronad.SendCommand("LADDERLOG_WRITE_GAME_TIME 0")
 		Mode.modes[Mode.current_mode].spawnZones()
+	if int(time)>0:
+		Armagetronad.SendCommand("LADDERLOG_WRITE_GAME_TIME 0")
 
 def NewMatch(data, time, timezone):
+	global roundNumber
+	global atMatchend
 	roundNumber=1
+	for func in atMatchend:
+		try:
+			func()
+		except Exception as e:
+			log.error("Could not execute match end handler "+str(func)+": "+str(e.__class__.__name__) )
+	atMatchend=[]
+	
 
 
 ## @brief Enables logging

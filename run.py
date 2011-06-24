@@ -29,7 +29,7 @@ class WatchFile():
 			r=self.f.read()
 			if r!='':
 				return r
-			time.sleep(0.05)
+			time.sleep(0.07)
 	def skipUnreadLines(self):
 		self.f.seek(0, io.SEEK_END)
 	def readline(self):

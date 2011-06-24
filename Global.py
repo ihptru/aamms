@@ -61,5 +61,5 @@ def reloadModules():
 
 if "state" not in dir():
 	## @brief Current state.
-	 # @details Could be "normal" or "mapeditor".
+	 # @details Possible values are "normal" or "modeeditor".
 	state="normal"

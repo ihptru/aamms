@@ -10,6 +10,7 @@ import Zone
 import Mode
 import Global
 import Commands
+import Vote
 if "h" in dir() and "log" in dir():
 	log.removeHandler(h)
 log=logging.getLogger("MainModule")
@@ -27,10 +28,6 @@ def exit(normal=False):
 	Armagetronad.PrintMessage("0xff0000Script exited.")
 
 def main(debug=False, disabledCommands=[]):
-	Player.enableLogging()
-	Team.enableLogging()
-	LadderLogHandlers.enableLogging()
-	Mode.enableLogging()
 	#We need some special settings. Set it
 	Armagetronad.SendCommand("LADDERLOG_WRITE_ONLINE_PLAYER 1")
 	Armagetronad.SendCommand("LADDERLOG_WRITE_CYCLE_CREATED 1")
@@ -42,8 +39,21 @@ def main(debug=False, disabledCommands=[]):
 	if debug:
 		log.info("Starting in debug mode.")
 		log.warning("In debug mode commands like /script and /reload are enabled.")
+		Player.enableLogging(logging.DEBUG)
+		Team.enableLogging(logging.DEBUG)
+		LadderLogHandlers.enableLogging(logging.DEBUG)
+		Mode.enableLogging(logging.DEBUG)
+		Vote.enableLogging(logging.DEBUG)
+		Zone.enableLogging(logging.DEBUG)
 	else:
 		Commands.disabled=Commands.disabled+["script","reload","execbuffer"]
+		Player.enableLogging(logging.WARNING)
+		Team.enableLogging(logging.WARNING)
+		LadderLogHandlers.enableLogging(logging.WARNING)
+		Mode.enableLogging(logging.INFO)
+		Vote.enableLogging(logging.WARNING)
+		Zone.enableLogging(logging.WARNING)
+
 	Commands.disabled=Commands.disabled+disabledCommands	
 	#Init
 	Team.Add("AI")
@@ -64,7 +74,8 @@ def main(debug=False, disabledCommands=[]):
 		command=keywords[0]
 		args=keywords[1:]
 		del keywords
-		#beautify command name
+		#make command name CamelCase
+		real_commandname=command.upper()
 		command=command.lower()
 		command=command.replace("_"," ")
 		command=command.title()
@@ -80,8 +91,11 @@ def main(debug=False, disabledCommands=[]):
 				#log.error("Exception " +e.__class__.__name__
 				#	        + " raised in Ladder log handler. This might be a bug.")
 				raise(e)
-		else:
-			log.debug("No ladder log handler for ladder event „" + command + "“.")
+		if real_commandname in LadderLogHandlers.extraHandlers:
+			for extraHandler in LadderLogHandlers.extraHandlers[real_commandname]:
+				try: extraHandler(*args)
+				except TypeError: log.error("Wrong arguments for extra ladderlog handler "+f.__name__)
+				except: log.error("Extra Ladderlog handler "+f.__name__+" raised an exception.")
 if __name__=="__main__":
 	main()
 	exit(True)
