@@ -11,6 +11,7 @@ import sys
  #          don't want to print commands to stdout.
  # @param command The command to send
 def SendCommand(command):
+	command=command.replace("\n","\\n") # Never allow to execute more than one command.
 	print(command)
 	sys.stdout.flush()
 
