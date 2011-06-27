@@ -124,12 +124,15 @@ def PlayerRenamed(oldlname,newlname, ip, logged_in, *name):
 	Player.players[oldlname].name=name
 	Player.players[oldlname].ip=ip
 	if logged_in=="1":
-		log.info("Player {0} logged in as {1}".format(oldlname,newlname) )
+		log.info("Player {0} logged in as {1}".format(Player.players[oldlname].name,newlname) )
 		Player.players[oldlname].login(newlname)
-	else:
-		log.info("Player {0} renamed to {1}".format(oldlname,newlname) )
+	elif Player.players[oldlname].isLoggedIn():
+		log.info("Player {0} logged out as {1}".format(Player.players[oldlname].name, Player.players[oldlname].getLadderName()) )
 		Player.players[oldlname].logout(newlname)
-	Player.players[newlname].applyChanges(False)
+	else:
+		log.info("Player {0} renamed to {1}".format(Player.players[oldlname].name, name) )
+		Player.players[oldlname].setLadderName(newlname)
+	#Player.players[newlname].applyChanges(False)
 
 ## @brief Handles player left
  # @details Every time a player left the game, this function is called.
@@ -157,7 +160,8 @@ def OnlinePlayer(lname, red, green, blue, ping, teamname=None):
 	if not teamname in Team.teams and teamname != None:
 		Team.Add(teamname.replace("_"," ").capitalize() )
 	Player.players[lname].color=red,green,blue
-	Player.players[lname].joinTeam(teamname)
+	if not (teamname == None and Player.players[lname].is_human==False):
+		Player.players[lname].joinTeam(teamname)
 	Player.players[lname].ping=ping
 
 ## @brief Handles new round
@@ -205,7 +209,7 @@ def CycleCreated(lname, x, y, xdir, ydir):
 	if lname in Player.players:
 		return
 	Player.Add(lname,lname,"127.0.0.1")
-	Player.players[lname].joinTeam("ai")
+	Player.players[lname].joinTeam("ai", quiet=True)
 
 def GameTime(time):
 	if time=="-4" and (Mode.current_mode in Mode.modes):
@@ -243,6 +247,6 @@ def enableLogging(level=logging.DEBUG, h=None,f=None):
 	if not f:
 		f=logging.Formatter("[%(name)s] (%(asctime)s) %(levelname)s: %(message)s")
 	h.setFormatter(f)
-	for handler in log.handlers:
-		log.removeHandler(handler)
+	for i in range(len(log.handlers) ):
+		log.removeHandler(log.handlers[i])
 	log.addHandler(h)

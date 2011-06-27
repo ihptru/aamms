@@ -51,15 +51,18 @@ def UpdatePlayer(oldname,newname):
 		log.error("Player „"+oldname+"“ should be renamed to „"+newname+"“ , but it doesn't exist. Adding it.")
 		Add(newname,newname,"127.0.0.1")
 		return
-	team=players[oldname].getTeam()
-	if team != None:
-		pos=Team.teams[team].getPlayerPosition(oldname)
-	team=players[oldname].getTeam()
+	#team=players[oldname].getTeam()
+	#if team != None:
+	#	pos=Team.teams[team].getPlayerPosition(oldname)
+	#team=players[oldname].getTeam()
 	players[oldname].leaveTeam(True)
 	players[newname]=players[oldname]
-	players[newname].joinTeam(team,quiet=True)
-	if team != None:
-		Team.teams[team].shufflePlayer(newname,pos)
+	#try:
+	#	players[newname].joinTeam(team,quiet=True)
+	#	if team != None:
+	#		Team.teams[team].shufflePlayer(newname,pos)
+	#except:
+	#		pass
 	del players[oldname]
 
 ## @brief Removes a player
@@ -209,7 +212,7 @@ class Player:
 		if teamname not in Team.teams:
 			if force:
 				log.debug("Team „"+teamname+"“ doesn't exist. Creating it.")
-				Team.add(teamname)
+				Team.Add(teamname)
 			else:
 				raise RuntimeError("Team „" + teamname + "“ doesn't exist.")
 		Team.teams[teamname].addPlayer(self.__ladder_name)
@@ -232,7 +235,12 @@ class Player:
 		try:
 			Team.teams[self.__team].removePlayer(self.__ladder_name)
 		except:
-			Team.teams[self.__team].removePlayer(self.__old_ladder_name)
+			try:
+				Team.teams[self.__team].removePlayer(self.__old_ladder_name)
+			except:
+				log.debug("Team: "+str(Team.teams[self.__team].getMembers()) )
+		if len(Team.teams[self.__team].getMembers())==0 and self.__team!="ai":
+			Team.Remove(self.__team)
 		events.triggerEvent("Player left team",self.__ladder_name, self.__team)
 		if not quiet:
 			log.info("Player „"+self.name+"” left team „"+Team.teams[self.__team].getName()+"“.")

@@ -292,7 +292,7 @@ class Zone(yaml.YAMLObject):
 		self.__alive=False
 		self.teamnames=list()
 
-## @brief Enabl								es logging
+## @brief Enables logging
  # @details This function enables logging for this module.
  # @param h The handler used for logging
  # @param f The formatter used for logging
@@ -306,6 +306,6 @@ def enableLogging(level=logging.DEBUG, h=None,f=None):
 	if not f:
 		f=logging.Formatter("[%(name)s] (%(asctime)s) %(levelname)s: %(message)s")
 	h.setFormatter(f)
-	for handler in log.handlers:
-		log.removeHandler(handler)
+	for i in range(len(log.handlers) ):
+		log.removeHandler(log.handlers[i])
 	log.addHandler(h)
