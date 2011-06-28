@@ -280,8 +280,9 @@ def enableLogging(level=logging.DEBUG, h=None,f=None):
 	if not f:
 		f=logging.Formatter("[%(name)s] (%(asctime)s) %(levelname)s: %(message)s")
 	h.setFormatter(f)
-	for i in range(len(log.handlers) ):
-		log.removeHandler(log.handlers[i])
+	for handler in log.handlers:
+		if type(handler)==type(h):
+			log.removeHandler(handler)
 	log.addHandler(h)
 
 ## @brief Saves the result of the tests

@@ -15,6 +15,8 @@ import Mode
 import Vote
 import imp
 import Global
+from threading import Thread
+import threading
 
 if "log" not in dir(): # Don't overwrite variables
 	## @brief The logging object
@@ -24,11 +26,10 @@ if "log" not in dir(): # Don't overwrite variables
 	log=logging.getLogger("LadderModule")
 	log.addHandler(logging.NullHandler() )
 
-	## @brief Round end handlers
-	 # @details List of functions called after a round ended. Functions are every object that is callable.
+	## @brief Round|match end handlers
+	 # @details List of functions called after a round|match ended. Functions can be every object that is callable.
 	 # @note This list is cleared every time after all the functions were executed.
 	atRoundend=[]
-
 	atMatchend=[]
 
 	extraHandlers=dict()
@@ -41,6 +42,7 @@ if "log" not in dir(): # Don't overwrite variables
 	 # @details Current round number starting with 1 for the first round. This number is reseted every time a new match starts.
 	roundNumber=1
 
+	runningCommands=[]
 ## @brief Handles commands
  # @details Every time when a command that isn't handled by the server is entered, this
  #          function will be called.
@@ -91,12 +93,21 @@ def InvalidCommand(command, player, ip, access, *args):
 		return
 
 	# Process command ####
-	args=(access,player) + args
-	try:
-		getattr(Commands,command)(*args)
-	except Exception as e:
-		log.error("The command handler for the command /{0} raised an exception.".format(command) )
-		raise e
+	def ProcessCommand(command, args):
+		global runningCommands
+		args=(access,player) + args
+		try:
+			getattr(Commands,command)(*args)
+		except Exception as e:
+			#log.error("The command handler for the command /{0} raised an exception.".format(command) )
+			runningCommands.remove(threading.current_thread() )
+			raise e
+		runningCommands.remove(threading.current_thread() )
+	t=Thread(target=ProcessCommand, args=(command, args), name="HandleCommand"+command.capitalize() )
+	t.daemon=True
+	t.start()
+	global runningCommands
+	runningCommands.append(t)
 
 ## @brief Handles player joined
  # @details Every time when a player joins the game this function is called.
@@ -157,11 +168,22 @@ def OnlinePlayer(lname, red, green, blue, ping, teamname=None):
 	if not lname in Player.players:
 		log.warning("Player „"+lname+"“ doesn't exist in OnlinePlayer. Ignoring.")
 		return
+	if Team.max_teams<9 and Team.max_teams>0 and Team.max_team_members>1:
+		teamname=teamname.replace("_", " ").capitalize()
+	else:
+		teamname=Player.players[lname].name
+	if Player.players[lname].getTeam()!=None and teamname!=None:
+		if Player.players[lname].getTeam().replace(" ","").replace("_","").lower()!=teamname.replace("_","").lower():
+			if not teamname in Team.teams and teamname != None:
+				Team.Add(Player.players[lname].name)
+			Player.players[lname].joinTeam(teamname)
+		else:
+			teamname=Player.players[lname].getTeam()
+	elif teamname==None:
+		Player.players[lname].leaveTeam()
 	if not teamname in Team.teams and teamname != None:
-		Team.Add(teamname.replace("_"," ").capitalize() )
+		Team.Add(Player.players[lname].name)
 	Player.players[lname].color=red,green,blue
-	if not (teamname == None and Player.players[lname].is_human==False):
-		Player.players[lname].joinTeam(teamname)
 	Player.players[lname].ping=ping
 
 ## @brief Handles new round
@@ -228,7 +250,7 @@ def NewMatch(data, time, timezone):
 		try:
 			func()
 		except Exception as e:
-			log.error("Could not execute match end handler "+str(func)+": "+str(e.__class__.__name__) )
+			log.debug("Could not execute match end handler "+str(func)+": "+str(e.__class__.__name__) )
 	atMatchend=[]
 	
 
@@ -247,6 +269,7 @@ def enableLogging(level=logging.DEBUG, h=None,f=None):
 	if not f:
 		f=logging.Formatter("[%(name)s] (%(asctime)s) %(levelname)s: %(message)s")
 	h.setFormatter(f)
-	for i in range(len(log.handlers) ):
-		log.removeHandler(log.handlers[i])
+	for handler in log.handlers:
+		if type(handler)==type(h):
+			log.removeHandler(handler)
 	log.addHandler(h)

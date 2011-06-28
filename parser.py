@@ -21,11 +21,15 @@ h.setFormatter(f)
 log.addHandler(h)
 log.setLevel(logging.INFO)
 
-def exit(normal=False):
+def exit(normal=False, quiet=False):
 	if normal:
 		Mode.saveModes()
-	log.info("Exit")
-	Armagetronad.PrintMessage("0xff0000Script exited.")
+	if not quiet:
+		log.info("Exit")
+	if normal:
+		Armagetronad.PrintMessage("0xff0000Script exited.")
+	else:
+		Armagetronad.PrintMessage("0xff0000Script crashed.")
 
 def main(debug=False, disabledCommands=[]):
 	#We need some special settings. Set it
@@ -35,7 +39,6 @@ def main(debug=False, disabledCommands=[]):
 	Armagetronad.SendCommand("INTERCEPT_UNKNOWN_COMMANDS 1")
 	Armagetronad.SendCommand("LADDERLOG_GAME_TIME_INTERVAL 1")
 	Armagetronad.SendCommand("EXTRA_ROUND_TIME 1")
-	Armagetronad.PrintMessage("0xff0000Script started")
 	if debug:
 		log.info("Starting in debug mode.")
 		log.warning("In debug mode commands like /script and /reload are enabled.")
@@ -59,7 +62,8 @@ def main(debug=False, disabledCommands=[]):
 	Team.Add("AI")
 	Mode.loadModes()
 	Global.updateHelpTopics()
-	log.info("Script started")
+	log.info("Script started")	
+	Armagetronad.PrintMessage("0xff0000Script started")
 	#We need to refresh player list
 	Global.reloadPlayerList()
 	while(True):

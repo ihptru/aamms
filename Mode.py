@@ -255,6 +255,7 @@ class Mode(yaml.YAMLObject):
 			else:
 				kill=False
 		settings_prefix=settings_prefix.rstrip("/")
+		Armagetronad.SendCommand("START_NEW_MATCH")
 		if self.settings_file != None:
 			Armagetronad.SendCommand("INCLUDE {0}/{1}".format(settings_prefix, self.settings_file) )
 		Armagetronad.SendCommand("TEAMS_MAX "+str(self.max_teams) )
@@ -313,7 +314,6 @@ class Mode(yaml.YAMLObject):
 			if respoint[0]==team_num or respoint[0]==-1:
 				team_respoints.append(respoint)
 		if len(team_respoints)==0:
-			log.error("No respoint for team with number "+str(team_num) )
 			raise RuntimeError("Team with number "+str(team_num)+" has no respoints.",0)
 		if team_num not in self.__last_respoint:
 			self.__last_respoint[team_num]=0
@@ -407,6 +407,7 @@ def enableLogging(level=logging.DEBUG, h=None,f=None):
 	if not f:
 		f=logging.Formatter("[%(name)s] (%(asctime)s) %(levelname)s: %(message)s")
 	h.setFormatter(f)
-	for i in range(len(log.handlers) ):
-		log.removeHandler(log.handlers[i])
+	for handler in log.handlers:
+		if type(handler)==type(h):
+			log.removeHandler(handler)
 	log.addHandler(h)

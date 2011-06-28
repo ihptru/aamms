@@ -15,6 +15,7 @@ import traceback
 import yaml
 import atexit
 import imp
+from threading import Thread
 
 # GLOBAL VARIABLES ######################################
 p=None
@@ -54,10 +55,22 @@ class OutputToProcess(io.TextIOWrapper):
 # FUNCTIONS #############################################
 def exit():
 	sys.stderr.write("Exiting.\n")
-	sys.stderr.write("Killing server ...")
+	sys.stderr.write("Killing server ... ")
 	p.terminate()
 	p.wait()
 	sys.stderr.write("Done\n")
+def runServerForever(args):	
+	global p
+	while(True):
+		p=subprocess.Popen(args, stdin=subprocess.PIPE, stdout=open("server.log","w"), stderr=subprocess.STDOUT )
+		while(True):
+			p.poll()
+			if p.returncode==0:
+				return
+			elif p.returncode!=None:
+				sys.stderr.write("------- SERVER CRASHED. Restarting.")
+				break
+			time.sleep(2)
 # SETTINGS ##############################################
 userdatadir="./server/data"
 userconfigdir="./server/config"
@@ -106,7 +119,11 @@ open(os.path.join(options.vardir,"ladderlog.txt"),"w" ).close()
 print("[START] Starting server. Serverlog can be found in run/server.log")
 args=["--vardir",options.vardir, "--datadir",options.datadir, "--configdir",options.configdir,
       "--userdatadir",userdatadir, "--userconfigdir",userconfigdir]
-p=subprocess.Popen([options.server]+args, stdin=subprocess.PIPE, stdout=open("server.log","w"), stderr=subprocess.STDOUT )
+t=Thread(None, target=runServerForever,args=([options.server]+args,) )
+t.daemon=True
+t.start()
+while(p==None):
+	time.sleep(2) # Give the the server some time to start up
 atexit.register(exit)
 sys.stdout=OutputToProcess()
 sys.stdin=WatchFile(open(os.path.join(options.vardir,"ladderlog.txt") ) )
@@ -117,16 +134,25 @@ while True:
 	try:
 		sys.stderr.write("[START] Starting script.\n")
 		sys.stderr.write("[START] Press ctrl+c to exit.\n")
+		sys.stderr.write("\n")
 		sys.stderr.flush()	
 		imp.reload(parser)
 		parser.main(debug=options.debug, disabledCommands=options.disabledCommands)
 	except KeyboardInterrupt:
 		break
 	except Exception as e:
+		sys.stderr.write("#####################################################################\n")
 		sys.stderr.write("################## SCRIPT CRASHED ###################################\n")
+		sys.stderr.write("#####################################################################\n")
 		traceback.print_exc(file=sys.stderr)
+		sys.stderr.write("#####################################################################\n")
 		sys.stderr.flush()
-		parser.exit(False)
-		sys.stderr.write("Restarting ... \n")
+		parser.exit(False, quiet=True)		
+		try:
+			sys.stderr.write("Restarting in 3 secounds ... \n")		
+			sys.stderr.write("\n")
+			time.sleep(3)
+		except KeyboardInterrupt:
+			break
 		continue
 	break

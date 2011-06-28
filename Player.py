@@ -51,14 +51,16 @@ def UpdatePlayer(oldname,newname):
 		log.error("Player „"+oldname+"“ should be renamed to „"+newname+"“ , but it doesn't exist. Adding it.")
 		Add(newname,newname,"127.0.0.1")
 		return
-	#team=players[oldname].getTeam()
-	#if team != None:
+	#team=players[oldname].getTeam() #### The team code is buggy. In case players
+	#if team != None:                #### rename only at roundend when ONLINE_PLAYER
+	#                                #### is written to ladderlog too we could just skip it
+	#                                #### and set the team to None (leave the current team.)
 	#	pos=Team.teams[team].getPlayerPosition(oldname)
 	#team=players[oldname].getTeam()
 	players[oldname].leaveTeam(True)
 	players[newname]=players[oldname]
 	#try:
-	#	players[newname].joinTeam(team,quiet=True)
+	#	players[newname].joinTeam(team,quiet=True) ### 
 	#	if team != None:
 	#		Team.teams[team].shufflePlayer(newname,pos)
 	#except:
@@ -183,7 +185,7 @@ class Player:
 	 # @details Removes the player from his team
 	def __del__(self):
 		try:
-			self.leaveTeam()
+			self.leaveTeam(quiet=True)
 		except:
 			pass	
 
@@ -198,8 +200,9 @@ class Player:
 	 # @note This triggers the event "Player joined team"
 	 # @note If the team name is AI, is_human is set to False
 	def joinTeam(self, teamname, force=False, quiet=False):
-		if self.__team == teamname:
-			return
+		if self.__team == teamname and teamname!=None and teamname in Team.teams:
+			if self.getLadderName() in Team.teams[teamname].getMembers():
+					return
 		self.leaveTeam()
 		if teamname == None:
 			self.__team=None
@@ -399,7 +402,8 @@ def enableLogging(level=logging.DEBUG, h=None,f=None):
 		f=logging.Formatter("[%(name)s] (%(asctime)s) %(levelname)s: %(message)s")
 	h.setFormatter(f)
 	for handler in log.handlers:
-		log.removeHandler(handler)
+		if type(handler)==type(h):
+			log.removeHandler(handler)
 	log.addHandler(h)
 
 ##################### TESTS ###################################################

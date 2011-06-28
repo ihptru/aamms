@@ -265,7 +265,7 @@ def tele(acl, player, x, y, xdir=0, ydir=1):
  # @param player The player who executed this command
  # @param gmode The mode which to activate.
  # @param type Optional How does the mode get activated? Could be set or vote. Set isn't avaliable for normal players.
- # @param when Optional When gets the mode activated? Only affects if type is set. Could be now, roundend or matchend (currently only now and roundend is supported)
+ # @param when Optional When gets the mode activated? Only affects if type is set. Could be now, roundend or matchend.
 def mode(acl, player, gmode, type="vote", when="now"):
 	smode=""
 	mode=None
@@ -287,12 +287,14 @@ def mode(acl, player, gmode, type="vote", when="now"):
 		Armagetronad.PrintMessage(Messages.VoteAdded.format(target=smode, player=Player.players[player].name) )
 		return
 	elif type=="set":
-		if (not AccessLevel.isAllowed("mode_set_now",acl) and when=="now") or (not AccessLevel.isAllowed("mode_set_roundend",acl) and when=="roundend"):
-			Armagetronad.PrintPlayerMessage(Player, "You're not allowed to do this.")
-		if when=="now":
+		if when=="now" and AccessLevel.isAllowed("mode_set_now", acl):
 			Mode.modes[mode].activate(True)
-		elif when=="roundend":
+		elif when=="roundend" and AccessLevel.isAllowed("mode_set_roundend", acl):
+			Armagetronad.PrintMessage("0x00ffffMode will change to {0} after this round. ".format(smode) )
 			LadderLogHandlers.atRoundend.append(Mode.modes[mode].activate)
+		elif when=="matchend" and AccessLevel.isAllowed("mode_set_matchend", acl):
+			Armagetronad.PrintMessage("0x00ffffNext match's gamemode changed to {0}.".format(smode) )
+			LadderLogHandlers.atMatchend.append(Mode.modes[mode].activate)
 		else:
 			pass
 	else:
@@ -363,6 +365,8 @@ def reload(acl, player):
  # @param acl The accesslevel of the player
  # @param playername The name of the player
 def modeEditor(acl, player):
+	if Global.state=="modeEditor":
+		Armagetronad.PrintPlayerMessage(player, "0xff0000Already in mode editor state!")
 	Armagetronad.SendCommand("INCLUDE settings.cfg")
 	Armagetronad.SendCommand("SINCLUDE settings_custom.cfg")
 	Armagetronad.SendCommand("DEFAULT_KICK_REASON Server\ under\ maintenance.")
@@ -464,5 +468,5 @@ def lessSpeed(acl, player):
  # @param type The type of the zone (Win, death, deathTeam, fortress, ....)
  # @param extrasettings Additional settings for the zone type (like <rubber> for rubber zones)
 def makeZone(acl, player, name, size, grow, team, type, *extrasettings):
-	
+	cur_pos=None
 	pass
