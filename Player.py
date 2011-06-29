@@ -235,18 +235,19 @@ class Player:
 	def leaveTeam(self,quiet=False):
 		if self.__team == None:
 			return
+		teamname=Team.teams[self.__team].getName()
 		try:
 			Team.teams[self.__team].removePlayer(self.__ladder_name)
 		except:
 			try:
 				Team.teams[self.__team].removePlayer(self.__old_ladder_name)
 			except:
-				log.debug("Team: "+str(Team.teams[self.__team].getMembers()) )
-		if len(Team.teams[self.__team].getMembers())==0 and self.__team!="ai":
+				pass
+		if len(Team.teams[self.__team].getMembers())==0:
 			Team.Remove(self.__team)
 		events.triggerEvent("Player left team",self.__ladder_name, self.__team)
 		if not quiet:
-			log.info("Player „"+self.name+"” left team „"+Team.teams[self.__team].getName()+"“.")
+			log.info("Player „"+self.name+"” left team „"+teamname+"“.")
 		self.__team=None
 
 	## @brief Set player's lives

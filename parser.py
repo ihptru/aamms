@@ -59,7 +59,6 @@ def main(debug=False, disabledCommands=[]):
 
 	Commands.disabled=Commands.disabled+disabledCommands	
 	#Init
-	Team.Add("AI")
 	Mode.loadModes()
 	Global.updateHelpTopics()
 	log.info("Script started")	
@@ -98,8 +97,10 @@ def main(debug=False, disabledCommands=[]):
 		if real_commandname in LadderLogHandlers.extraHandlers:
 			for extraHandler in LadderLogHandlers.extraHandlers[real_commandname]:
 				try: extraHandler(*args)
-				except TypeError: log.error("Wrong arguments for extra ladderlog handler "+f.__name__)
-				except: log.error("Extra Ladderlog handler "+f.__name__+" raised an exception.")
+				except TypeError as e: 
+					log.error("Wrong arguments for extra ladderlog handler "+extraHandler.__name__)
+					raise e
+				except: log.error("Extra Ladderlog handler "+extraHandler.__name__+" raised an exception.")
 if __name__=="__main__":
 	main()
 	exit(True)

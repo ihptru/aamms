@@ -20,7 +20,8 @@ def reloadPlayerList():
 	Armagetronad.SendCommand("START_NEW_MATCH")
 	Armagetronad.SendCommand("CYCLE_RUBBER -1")
 	sleep(2)
-	Armagetronad.SendCommand("CYCLE_RUBBER 1")
+	Armagetronad.SendCommand("SINCLUDE settings.cfg")
+	Armagetronad.SendCommand("SINCLUDE settings_custom.cfg")
 	if Mode.current_mode in Mode.modes:
 		Mode.modes[Mode.current_mode].activate(False)
 

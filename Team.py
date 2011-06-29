@@ -49,10 +49,12 @@ events.addEvent(Event.Event("Team killed") )
  # @param name The name of the team to create
  # @param members Optional members to add to the team.
  # @note This triggers the event "Team added".
+ # @return Escaped name of the added team.
 def Add(name, *members):
 	t=Team(name,members)
 	teams[t.getEscapedName()]=t
 	events.triggerEvent("Team added", t.getEscapedName() )
+	return t.getEscapedName()
 
 ## @brief Removes a team
  # @details Removes the given team
@@ -144,7 +146,12 @@ class Team:
 	 # @details Cleans up.
 	 # @note Do not call this function directly. Use del \<instance\> instead.
 	def __del__(self):
-		self.__ids.remove(self.__id)
+		try:
+			Team.__ids.remove(self.__id)
+		except AttributeError:
+			return
+		log.debug("Removed id " + str(self.__id) + " from team id's list")
+			
 
 	## @brief Sets the team name
 	 # @details This function sets the name of the team.

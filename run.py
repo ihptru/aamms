@@ -69,6 +69,7 @@ def runServerForever(args):
 				return
 			elif p.returncode!=None:
 				sys.stderr.write("------- SERVER CRASHED. Restarting.")
+				sys.stderr.write(str(returncode)+"\n" )
 				break
 			time.sleep(2)
 # SETTINGS ##############################################
@@ -152,7 +153,11 @@ while True:
 			sys.stderr.write("Restarting in 3 secounds ... \n")		
 			sys.stderr.write("\n")
 			time.sleep(3)
+			import Global
+			Global.reloadModules()
 		except KeyboardInterrupt:
 			break
+		except:
+			continue
 		continue
 	break

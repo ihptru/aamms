@@ -15,6 +15,7 @@ import Vote
 import AccessLevel
 import re
 import Global
+import threading
 if "disabled" not in dir():
 	###################################### VARIABLES #########################################
 	## @brief Commands that couldn't be used in a given state.
@@ -99,7 +100,8 @@ def getCommands():
 	func_names=list()
 	for func_def in func_defs:
 		func_name=func_def[3:func_def.find("(")].strip()
-		func_names.append(func_name)
+		if func_name in globals():
+			func_names.append(func_name)
 	return func_names
 		
 
@@ -142,21 +144,30 @@ def getDescription(command):
 	with open(__file__) as f:
 		lines=f.readlines()
 		currentlineno=commandf.__code__.co_firstlineno - 2
+	comstart=-1
 	while True:
+		if lines[currentlineno].strip().startswith("##"):
+			comstart=currentlineno
+			break
+		if not lines[currentlineno].strip().startswith("#"):
+			break
+		currentlineno=currentlineno-1
+	currentlineno=comstart
+	while currentlineno>-1:
 		if lines[currentlineno].strip()=="":
 			currentlineno=currentlineno-1
 			continue
 		if lines[currentlineno].strip().startswith("##"):
 			commentars.append(lines[currentlineno].strip()[2:].strip() ) #Remove the "##"
-			break
 		if not lines[currentlineno].strip().startswith("#"):
 			break
 		commentars.append(lines[currentlineno].strip()[1:].strip() ) #Remove the "#"
-		currentlineno=currentlineno-1
+		currentlineno=currentlineno+1
 
 	params=list()
 	commanddesc=""
-	commentars="".join(commentars).split("@")
+	print(commentars)
+	commentars="\n".join(commentars).split("@")
 	for commentaritem in commentars:
 		commentaritem=commentaritem.strip()
 		if commentaritem.startswith("brief"):
@@ -174,13 +185,13 @@ def getDescription(command):
 			if not desc.endswith("."):
 				desc=desc+"."
 			if param in optionalargs:
-				desc=desc+" Defaults to "+str(defaultvalues[optionalargs.index(param)])+"."
-			desc=textwrap.wrap(desc, 60)
-			for curdescl in reversed(desc[1:]):
-				params.append(" "*7+curdescl)
+				desc=desc+(" Defaults to \""+str(defaultvalues[optionalargs.index(param)])+"\".")
+			desc=textwrap.wrap(desc, 60)			
 			if len(param)<7: len_param=len(param)
 			if len(param)>=7: len_param=6 
-			params.append(param+" "*(7-len_param)+desc[0])
+			params.append(param+" "*(7-len_param)+desc[0])		
+			for curdescl in desc[1:]:
+				params.append(" "*7+curdescl)
 	return commanddesc, params
 	
 
@@ -192,10 +203,10 @@ def getDescription(command):
 def getHelp(command):
 	commandstr=getCommandLine(command)
 	commanddesc, params=getDescription(command)
-	paramstr="\n    "+"\n    ".join(reversed(params) )
+	paramstr=("\n    "+"\n    ".join(params) )
 	if len(params)==0:
 		paramstr="None"
-	usagestr="Usage: "+commandstr+"\n"+"Description: "+commanddesc+"\nParameters: "+paramstr
+	usagestr="0xff0000Usage: "+"0x00ff00"+commandstr+"\n"+"0xff0000Description: "+"0x00ffee"+commanddesc+"\n0xff0000Parameters: "+Messages.PlayerColorCode+paramstr
 	return usagestr
 
 
@@ -210,6 +221,7 @@ def getHelp(command):
  # @param player The player who called /script
 def script(acl, player, *code):
 	code=" ".join(code)
+	Armagetronad.PrintMessage("[Script Command] Started script execution")
 	code.replace("\"","'")
 	try:
 		exec(code.replace("print(","Armagetronad.PrintPlayerMessage('"+player+"','[Script Command] Output: ' + ") )
@@ -370,6 +382,8 @@ def modeEditor(acl, player):
 	Armagetronad.SendCommand("INCLUDE settings.cfg")
 	Armagetronad.SendCommand("SINCLUDE settings_custom.cfg")
 	Armagetronad.SendCommand("DEFAULT_KICK_REASON Server\ under\ maintenance.")
+	Armagetronad.SendCommand("ALLOW_TEAM_NAME_PLAYER 1")
+	Armagetronad.SendCommand("FORTRESS_CONQUEST_TIMEOUT -1")
 	Armagetronad.SendCommand("MAX_CLIENTS 1")
 	Armagetronad.SendCommand("SP_TEAMS_MAX 1")
 	Armagetronad.SendCommand("TEAMS_MAX 1")
@@ -388,6 +402,7 @@ def modeEditor(acl, player):
 	Armagetronad.SendCommand("SP_MIN_PLAYERS 0")
 	Armagetronad.SendCommand("CYCLE_TURN_SPEED_FACTOR 1")
 	Armagetronad.SendCommand("CYCLE_SPEED_DECAY_BELOW 2")
+	Armagetronad.SendCommand("FORTRESS_SURVIVE_WIN 0")
 	Vote.Cancel()
 	Mode.current_mode=None
 	Armagetronad.SendCommand("NETWORK_AUTOBAN_FACTOR 0")
@@ -441,18 +456,18 @@ def moreSpeed(acl, player, speed=None):
 	global data
 	if speed!=None:
 		try:
-			data["speed"]=int(speed)
+			data["speed"]=float(speed)
 		except:
-			data["speed"]=int(data["speed"])+5
+			data["speed"]=float(data["speed"])+5
 	else:
-		data["speed"]=int(data["speed"])+5
+		data["speed"]=float(data["speed"])+5
 	if not data["stopped"]:
 		Armagetronad.SendCommand("CYCLE_SPEED "+str(data["speed"]) )
 
 ## @brief Decrase the speed of the cycle.
 def lessSpeed(acl, player):
 	global data
-	data["speed"]=int(data["speed"])-5
+	data["speed"]=float(data["speed"])-5
 	if data["speed"]<0:
 		data["speed"]=0
 	if not data["stopped"]:
@@ -460,13 +475,45 @@ def lessSpeed(acl, player):
 
 ## @brief Create a zone at the current cycle's position.
  # @param name The name of the zone.
- # @param size The size of the zone.
+ # @param type The type of the zone (Win, death, deathTeam, fortress, ....)
+ # @param size The radius of the zone.
  # @param grow The zone growth. Negative values will let the zone shrink.
+ # @param r Red
+ # @param g Green
+ # @param b Blue
  # @param team The team for which the zone should get spawned. 
  #             -1 if the zone doesn't belong to any team. 
  #              0 if the zone should be spawned once for every team.
- # @param type The type of the zone (Win, death, deathTeam, fortress, ....)
  # @param extrasettings Additional settings for the zone type (like <rubber> for rubber zones)
-def makeZone(acl, player, name, size, grow, team, type, *extrasettings):
-	cur_pos=None
-	pass
+def makeZone(acl, player, name,type,size, grow="0", team="-1",r=0,g=0,b=15, extrasettings=""):
+	if type not in Zone._ZONE_TYPES :
+		Armagetronad.PrintMessage("0xff0000Invalid zone type!")
+		return
+	gotpos=threading.Condition()
+	def getPos(player, x, y, xdir, ydir, *args):
+		global cur_pos
+		cur_pos=tuple([round(float(i),2) for i in (x,y)] )
+		gotpos.acquire()
+		gotpos.notify_all()
+		gotpos.release()
+	if "PLAYER_GRIDPOS" not in LadderLogHandlers.extraHandlers:
+		LadderLogHandlers.extraHandlers["PLAYER_GRIDPOS"]=[]	
+	gotpos.acquire()
+	LadderLogHandlers.extraHandlers["PLAYER_GRIDPOS"].append(getPos)
+	Armagetronad.SendCommand("GRID_POSITION_INTERVAL 0")
+	Armagetronad.SendCommand("LADDERLOG_WRITE_PLAYER_GRIDPOS 1")
+	gotpos.wait()
+	Armagetronad.SendCommand("LADDERLOG_WRITE_PLAYER_GRIDPOS 0")
+	LadderLogHandlers.extraHandlers["PLAYER_GRIDPOS"].remove(getPos)
+	global cur_pos, data
+	z=Zone.Zone(name=name, radius=float(size), growth=float(grow), type=type, color=(int(r),int(g),int(b)), position=cur_pos)
+	z.settings=extrasettings.split(" ")
+	team=int(team)
+	if team==0:
+		team=None
+	data["mode"].addZone(team, z)
+	if team!=-1 or type in ["fortress", "flag", "deathTeam", "ballTeam"]:
+		z.teamnames=[Player.players[player].getTeam()]
+	z.spawn()
+	Armagetronad.PrintMessage("0xffff00Added "+type+" zone at "+"|".join(map(str, cur_pos)))
+	del cur_pos

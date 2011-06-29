@@ -100,7 +100,7 @@ def InvalidCommand(command, player, ip, access, *args):
 			getattr(Commands,command)(*args)
 		except Exception as e:
 			#log.error("The command handler for the command /{0} raised an exception.".format(command) )
-			runningCommands.remove(threading.current_thread() )
+			#runningCommands.remove(threading.current_thread() )
 			raise e
 		runningCommands.remove(threading.current_thread() )
 	t=Thread(target=ProcessCommand, args=(command, args), name="HandleCommand"+command.capitalize() )
@@ -168,14 +168,18 @@ def OnlinePlayer(lname, red, green, blue, ping, teamname=None):
 	if not lname in Player.players:
 		log.warning("Player „"+lname+"“ doesn't exist in OnlinePlayer. Ignoring.")
 		return
-	if Team.max_teams<9 and Team.max_teams>0 and Team.max_team_members>1:
+	if Team.max_teams<9 and Team.max_teams>0 and Team.max_team_members!=1 and teamname!=None:
 		teamname=teamname.replace("_", " ").capitalize()
+		Armagetronad.SendCommand("ALLOW_TEAM_NAME_PLAYER 0")
 	else:
 		teamname=Player.players[lname].name
-	if Player.players[lname].getTeam()!=None and teamname!=None:
-		if Player.players[lname].getTeam().replace(" ","").replace("_","").lower()!=teamname.replace("_","").lower():
+		Armagetronad.SendCommand("ALLOW_TEAM_NAME_PLAYER 0")
+	if teamname!=None:
+		if Player.players[lname].getTeam()==None or Player.players[lname].getTeam().replace(" ","").replace("_","").lower()!=teamname.replace("_","").replace(" ","").lower():
+			Player.players[lname].leaveTeam()
 			if not teamname in Team.teams and teamname != None:
-				Team.Add(Player.players[lname].name)
+				log.debug("Teams: "+str(Team.teams) )
+				teamname=Team.Add(teamname)
 			Player.players[lname].joinTeam(teamname)
 		else:
 			teamname=Player.players[lname].getTeam()
@@ -231,11 +235,14 @@ def CycleCreated(lname, x, y, xdir, ydir):
 	if lname in Player.players:
 		return
 	Player.Add(lname,lname,"127.0.0.1")
+	if "ai" not in Team.teams:
+		Team.Add("AI")
 	Player.players[lname].joinTeam("ai", quiet=True)
 
 def GameTime(time):
 	if time=="-4" and (Mode.current_mode in Mode.modes):
 		Mode.modes[Mode.current_mode].spawnTeams()
+		Team
 	if time=="-2" and (Mode.current_mode in Mode.modes):
 		Armagetronad.SendCommand("LADDERLOG_WRITE_GAME_TIME 0")
 		Mode.modes[Mode.current_mode].spawnZones()
@@ -252,8 +259,17 @@ def NewMatch(data, time, timezone):
 		except Exception as e:
 			log.debug("Could not execute match end handler "+str(func)+": "+str(e.__class__.__name__) )
 	atMatchend=[]
-	
 
+def Positions(team, *members):
+	team=members[0].getTeam()
+	teams=set([p.getTeam() for p in members])
+	if len(teams)!=1:
+		raise Exception("Got players that are in a different team.")
+		return
+	for pos, member in enumerate(members):
+		Team.teams[team].shufflePlayer(member, pos)
+	teamstr=" ".join(Team.teams[team].getMembers() )
+	log.info("Team "+team+": "+teamstr)
 
 ## @brief Enables logging
  # @details This function enables logging for this module.
