@@ -5,6 +5,8 @@
 
 import Messages
 import sys
+import threading
+import LadderLogHandlers
 
 ## @brief Executes a command
  # @details Send a command to the server. You only have to replace this function if you
@@ -19,7 +21,9 @@ def SendCommand(command):
  # @details Writes a message to the game
  # @param msg The message to print
 def PrintMessage(msg):
-	SendCommand("CONSOLE_MESSAGE "+str(msg) )
+	msgs=msg.split("\n")
+	for msg in msgs:
+		SendCommand("CONSOLE_MESSAGE "+str(msg) )
 	sys.stdout.flush()
 
 ## @brief Prints a message to a player
@@ -33,3 +37,31 @@ def PrintPlayerMessage(player,msg, color=None):
 	msgs=msg.split("\n")
 	for msg in msgs:
 		SendCommand("PLAYER_MESSAGE "+player+" "+color+msg.replace(" ","\\ ").strip() )
+
+## @brief Gets the position and direction of a player's cycle
+ # @details Returns the x,y coordinates and xdir and ydir of a specific player's cycle.
+ # @param player The player for which to get the position.
+ # @return A tuple x,y, xdir, ydir.
+def GetPlayerPosition(player):
+	gotpos=threading.Condition()
+	def getPos(playername, x, y, xdir, ydir, *args):
+		if playername!=player:
+			return
+		global cur_pos
+		cur_pos=tuple([round(float(i),2) for i in (x,y,xdir, ydir)] )
+		gotpos.acquire()
+		gotpos.notify_all()
+		gotpos.release()
+	if "PLAYER_GRIDPOS" not in LadderLogHandlers.extraHandlers:
+		LadderLogHandlers.extraHandlers["PLAYER_GRIDPOS"]=[]	
+	gotpos.acquire()
+	LadderLogHandlers.extraHandlers["PLAYER_GRIDPOS"].append(getPos)
+	SendCommand("GRID_POSITION_INTERVAL 0")
+	SendCommand("LADDERLOG_WRITE_PLAYER_GRIDPOS 1")
+	gotpos.wait()
+	SendCommand("LADDERLOG_WRITE_PLAYER_GRIDPOS 0")
+	LadderLogHandlers.extraHandlers["PLAYER_GRIDPOS"].remove(getPos)
+	global cur_pos
+	pos=cur_pos
+	del cur_pos
+	return pos

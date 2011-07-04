@@ -20,7 +20,7 @@ if "disabled" not in dir():
 	###################################### VARIABLES #########################################
 	## @brief Commands that couldn't be used in a given state.
 	 # @details List of commands that couldn't be used in the given state.
-	not_in_state={"normal":["normal"], "modeeditor":[]}
+	not_in_state={"normal":[], "modeeditor":[]}
 
 	## @brief Commands that can be only used in a given state.
 	 # @details List of commands that can be only used in the given state.
@@ -55,11 +55,13 @@ def getArgs(command):
 		arg=arg.strip()
 		arg=arg.replace(" ","")
 		if arg.find("=")==-1:
-			minargcount=minargcount+1
-			maxargcount=maxargcount+1
 			if arg.startswith("*"):
 				arg=arg[1:]
 				maxargcount=100000000000000000000 # Make the number as big as you want
+				names.append(arg)
+				break
+			minargcount=minargcount+1
+			maxargcount=maxargcount+1
 			names.append(arg)
 		else:
 			argname, unused, defaultvalue=arg.partition("=")
@@ -184,7 +186,7 @@ def getDescription(command):
 			desc=desc.replace("the player ","you")
 			if not desc.endswith("."):
 				desc=desc+"."
-			if param in optionalargs:
+			if param in optionalargs and len(defaultvalues)>optionalargs.index(param):
 				desc=desc+(" Defaults to \""+str(defaultvalues[optionalargs.index(param)])+"\".")
 			desc=textwrap.wrap(desc, 60)			
 			if len(param)<7: len_param=len(param)
@@ -295,7 +297,8 @@ def mode(acl, player, gmode, type="vote", when="now"):
 		Vote.Add(Mode.modes[mode].short_name, Mode.modes[mode].activate)
 		Vote.current_vote.SetPlayerVote(player, True)
 		if len(Player.players)-len(Player.getBots() ) == 1:
-			Vote.current_vote.aliveRounds=0
+			#Vote.current_vote.aliveRounds=0
+			pass
 		Armagetronad.PrintMessage(Messages.VoteAdded.format(target=smode, player=Player.players[player].name) )
 		return
 	elif type=="set":
@@ -428,6 +431,8 @@ def normal(acl, player):
 	Global.reloadPlayerList()
 	if Mode.current_mode:
 		Mode.current_mode.activate(True)
+	for player in Player.players.values():
+		player.kill()
 	Global.state="normal"
 	global data
 	data=None
@@ -473,7 +478,7 @@ def lessSpeed(acl, player):
 	if not data["stopped"]:
 		Armagetronad.SendCommand("CYCLE_SPEED "+str(data["speed"]) )
 
-## @brief Create a zone at the current cycle's position.
+## @brief Create a zone at the current position of the cycle.
  # @param name The name of the zone.
  # @param type The type of the zone (Win, death, deathTeam, fortress, ....)
  # @param size The radius of the zone.
@@ -489,26 +494,15 @@ def makeZone(acl, player, name,type,size, grow="0", team="-1",r=0,g=0,b=15, extr
 	if type not in Zone._ZONE_TYPES :
 		Armagetronad.PrintMessage("0xff0000Invalid zone type!")
 		return
-	gotpos=threading.Condition()
-	def getPos(player, x, y, xdir, ydir, *args):
-		global cur_pos
-		cur_pos=tuple([round(float(i),2) for i in (x,y)] )
-		gotpos.acquire()
-		gotpos.notify_all()
-		gotpos.release()
-	if "PLAYER_GRIDPOS" not in LadderLogHandlers.extraHandlers:
-		LadderLogHandlers.extraHandlers["PLAYER_GRIDPOS"]=[]	
-	gotpos.acquire()
-	LadderLogHandlers.extraHandlers["PLAYER_GRIDPOS"].append(getPos)
-	Armagetronad.SendCommand("GRID_POSITION_INTERVAL 0")
-	Armagetronad.SendCommand("LADDERLOG_WRITE_PLAYER_GRIDPOS 1")
-	gotpos.wait()
-	Armagetronad.SendCommand("LADDERLOG_WRITE_PLAYER_GRIDPOS 0")
-	LadderLogHandlers.extraHandlers["PLAYER_GRIDPOS"].remove(getPos)
-	global cur_pos, data
+	cur_pos=Armagetronad.GetPlayerPosition(player)[:2]
+	global data
 	z=Zone.Zone(name=name, radius=float(size), growth=float(grow), type=type, color=(int(r),int(g),int(b)), position=cur_pos)
 	z.settings=extrasettings.split(" ")
-	team=int(team)
+	try:
+		team=int(team)
+	except ValueError:
+		Armagetronad.PrintMessage("0xff0000Invalid value for argument team!")
+		return
 	if team==0:
 		team=None
 	data["mode"].addZone(team, z)
@@ -516,4 +510,46 @@ def makeZone(acl, player, name,type,size, grow="0", team="-1",r=0,g=0,b=15, extr
 		z.teamnames=[Player.players[player].getTeam()]
 	z.spawn()
 	Armagetronad.PrintMessage("0xffff00Added "+type+" zone at "+"|".join(map(str, cur_pos)))
-	del cur_pos
+
+## @brief Create a respoint at the current position of the cycle.
+ # @param team The number of the team for which the respoint should be used. -1 if the respoint should be used for all teams.
+def makeRes(acl, player, team=-1):
+	try:
+		team=int(team)
+	except ValueError:
+		Armagetronad.PrintMessage("0xff0000Invalid value for argument team!")
+		return
+	x,y,xdir,ydir=Armagetronad.GetPlayerPosition(player)
+	global data
+	data["mode"].addRespoint(x,y,xdir,ydir, team)
+	Armagetronad.PrintMessage("0xffff00Added respoint at "+str(x)+"|"+str(y)+" for the team with the number "+str(team))
+
+## @brief Set mode settings
+ # @param setting one of: name, short_name, settings_file, max_teams, max_team_members, lives.
+ # @param value The value to which the setting should be set. If not given, the current value of the settings is printed.
+def modeSetting(acl, player, setting, *value):
+	if len(value)!=0:
+		value=" ".join(value)
+	else:
+		value=None
+	global data
+	if setting in ["name", "short_name", "settings_file", "max_teams", "max_team_members","lives"]:
+		if value!=None:
+			if setting in ["max_teams","max_team_members","lives"]:
+				try:
+					value=int(value)
+				except ValueError:
+					Armagetronad.PrintMessage("0xff0000Invalid value!")
+					return
+			setattr(data["mode"], setting, value)
+			Armagetronad.PrintMessage("{0} was set to {1}".format(setting, str(value) ) )
+		else:
+			Armagetronad.PrintMessage("{0} is currently set to {1}".format(setting, str(getattr(data["mode"], setting) ) ) )
+
+## @brief Save the mode with its current settings.
+def saveMode(acl, player):
+	global data
+	Mode.modes[data["mode"].getEscapedName()]=data["mode"]
+	Global.updateHelpTopics()
+	Mode.saveModes(modename=data["mode"].getEscapedName())
+	Armagetronad.PrintMessage("0x00ff00Saved mode")	

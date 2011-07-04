@@ -66,18 +66,24 @@ def Remove(name):
 	log.info("Mode "+dname+" removed.")
 
 ## @brief Saves all modes
- # @details Saves the modes listened in Mode.modes.
+ # @details Saves the modes in Mode.modes.
  # @param dir Optional The directory where the mode files should be written.
  # @param ext Optional The file extension which the mode files should have, including the point.
-def saveModes(dir="Modes", ext=".aamode"):
+ # @param modename Optional Save only the mode with the escaped name modename. By default all modes are saved.
+def saveModes(dir="Modes", ext=".aamode", modename=None):
 	global modes
 	if not dir.endswith("/"):
 		dir=dir+"/"
 	if not os.path.exists(dir):
 		os.mkdir(dir)
-	for mode in modes.values():
-		f=open(dir+mode.getEscapedName()+ext,"w")
-		yaml.dump(mode, f)
+	if modename==None:
+		for mode in modes.values():
+			f=open(dir+mode.getEscapedName()+ext,"w")
+			yaml.dump(mode, f)
+	else:
+		if modename in modes:
+			f=open(dir+modename+ext,"w")
+			yaml.dump(modes[modename], f)
 
 ## @brief Loads modes
  # @details Loads the modes from a directory.

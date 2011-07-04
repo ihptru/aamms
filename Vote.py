@@ -117,13 +117,13 @@ class Vote:
 	 #                   accepted? Default 51.
 	 # @exception ValueError Raised if not_voted ot not_voted_spec aren't on of
 	 #                      "yes", "no" or "dont_count".
-	def CheckResult(self, not_voted="dont_count", not_voted_spec=None, min_needed=51):
+	def CheckResult(self, not_voted="dont_count", not_voted_spec=None, min_needed=51, only_sure=False):
 		if not_voted not in {"dont_count","yes","no"}:
 			raise ValueError("Invalid value of argument not_voted")
 		if not_voted_spec == None:
 			not_voted_spec=not_voted
 		elif not_voted_spec not in {"dont_count","yes","no"}:
-			raise ValueError("Invalid value of argument not_voted")
+			raise ValueError("Invalid value of argument not_voted_spec")
 		if min_needed>100:
 			min_needed=100
 		elif min_needed<0:
@@ -134,7 +134,7 @@ class Vote:
 		bots=Player.getBots()
 		cur_mode=None
 		for player in Player.players:
-			if player in bots or player in voted_players:
+			if player in bots or Player.players[player].ip in voted_players:
 				continue
 			if Player.players[player].getTeam()==None: # Player is spectating
 				cur_mode=not_voted_spec
@@ -146,18 +146,28 @@ class Vote:
 				no_count=no_count+1
 			else:
 				pass
-		precent_yes=yes_count/(yes_count+no_count)*100
-		if precent_yes >= min_needed:
+		if yes_count+no_count==0 or len(Player.players)==0:
+			percent_yes=0
+		elif only_sure==False:
+			percent_yes=yes_count/(yes_count+no_count)*100
+			percent_no=100-percent_yes
+		else:
+			percent_yes=yes_count/(len(Player.players)-len(Player.getBots() ))*100
+			percent_no=no_count/(len(Player.players)-len(Player.getBots() ))*100
+		if percent_yes >= min_needed:
 			events.triggerEvent("Vote successed")
 			log.info("Vote for {0} successed.".format(self.target) )
 			Armagetronad.PrintMessage(Messages.VoteSuccessed.format(target=self.target) )
 			self.action()
-		else:
+		elif percent_no>(100-min_needed):
 			events.triggerEvent("Vote failed")
 			log.info("Vote for {0} failed.".format(self.target) )
 			Armagetronad.PrintMessage(Messages.VoteFailed.format(target=self.target) )
+		else:
+			return False
 		global current_vote
 		current_vote=None
+		return True
 
 	## @brief Sets what a player voted.
 	 # @details Checks if the player is a spectator. If yes and
@@ -170,14 +180,14 @@ class Vote:
 	def SetPlayerVote(self, player, vote):
 		if player not in Player.players:
 			raise RuntimeError("Player doesn't exist", 2)
-		if player in (self.__players_voted_yes + self.__players_voted_no):
+		if Player.players[player].ip in (self.__players_voted_yes + self.__players_voted_no):
 			raise RuntimeError("Player already voted", 1)
 		if Player.players[player].getTeam()==None and not spec_allowed: #spec not allowed and player is spectator
 			return
 		if vote:
-			self.__players_voted_yes.append(player)
+			self.__players_voted_yes.append(Player.players[player].ip)
 		else:
-			self.__players_voted_no.appemd(player)
+			self.__players_voted_no.append(Player.players[player].ip)
 
 
 ## @brief Enables logging

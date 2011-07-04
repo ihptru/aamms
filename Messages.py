@@ -49,34 +49,34 @@ VoteInProgress=("0xff8844Vote for {target} in progress. Use /yes or /no to vote!
  # @details This message is displayed when a new vote was added.
  # @param target The target of the vote which was added
  # @param player The player who added the vote.
-VoteAdded=("0x00ff00Vote for {target} submitted by {player}")
+VoteAdded=("0x00ff00Vote for 0xffff00{target} 0x00ff00submitted by 0x00ff88{player}")
 
 ## @brief Vote cancelled message
  # @details This message is printed when an admin cancelled a vote.
  # @param target The target of the cancelled vote.
-VoteCancelled=("0xff2200The vote about {target} got cancelled by an administrator.")
+VoteCancelled=("0xff2200The vote about 0xffff00{target} 0xff2200got cancelled by an administrator.")
 
 ## @brief Vote successed message
  # @details This message is printed when a vote successed.
  # @param target The target of the vote which successed.
-VoteSuccessed=("0x00ffffThe vote about {target} successed!")
+VoteSuccessed=("0x00ffffThe vote about 0xffff00{target} 0x00ffffsuccessed!")
 
 ## @brief Vote failed message
  # @details This message is printed when a vote failed.
  # @param target The target of the vote which failed.
-VoteFailed=("0x00ffffThe vote about {target} failed!")
+VoteFailed=("0x00ffffThe vote about 0xffff00{target} 0x00fffffailed!")
 
 ## @brief Player voted for a vote message
  # @details This message is displayed when a player used the /yes command
  # @param player The name of the player who voted.
  # @param target The target of the vote for which the player voted.
-PlayerVotedYes=("0x99ff99{player} voted for {target}.")
+PlayerVotedYes=("0x00ff88{player} 0x99ff99voted for 0xffff00{target}0x99ff99.")
 
 ## @brief Player voted against a vote message
  # @details This message is displayed when a player used the /no command
  # @param player The name of the player who voted.
  # @param target The target of the vote for which the player voted.
-PlayerVotedNo=("0x99ff99{player} voted against {target}")
+PlayerVotedNo=("0x00ff88{player} 0x99ff99voted against 0xffff00{target}0x99ff99.")
 
 ## @brief Player has already voted message.
  # @details This message is printed when a player tries to use the /yes or /no commands

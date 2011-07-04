@@ -217,8 +217,9 @@ def NewRound(date, time, timezone):
 		if Vote.current_vote.aliveRounds==0:
 			Vote.current_vote.CheckResult()
 		else:
-			Armagetronad.PrintMessage(Messages.VoteInProgress.format(target=Vote.current_vote.target, expire=Vote.current_vote.aliveRounds) )
-			Vote.current_vote.aliveRounds=Vote.current_vote.aliveRounds-1
+			if not Vote.current_vote.CheckResult(only_sure=True):
+				Armagetronad.PrintMessage(Messages.VoteInProgress.format(target=Vote.current_vote.target, expire=Vote.current_vote.aliveRounds) )
+				Vote.current_vote.aliveRounds=Vote.current_vote.aliveRounds-1
 	
 	Armagetronad.SendCommand("LADDERLOG_WRITE_GAME_TIME 1")
 	roundStarted=True
