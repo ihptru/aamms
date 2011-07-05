@@ -16,7 +16,7 @@ class \hyperlink{class_zone_1_1_zone}{Zone}
 \begin{DoxyCompactItemize}
 \item 
 def \hyperlink{namespace_zone_aaa40a627f781a072131be03ac8e08328}{enableLogging}
-\begin{DoxyCompactList}\small\item\em Enabl es logging. \item\end{DoxyCompactList}\end{DoxyCompactItemize}
+\begin{DoxyCompactList}\small\item\em Enables logging. \item\end{DoxyCompactList}\end{DoxyCompactItemize}
 \subsection*{Variables}
 \begin{DoxyCompactItemize}
 \item 
@@ -24,6 +24,8 @@ tuple \hyperlink{namespace_zone_aad90704d2c88929bd92b7acf2b9a09d6}{log} = loggin
 \begin{DoxyCompactList}\small\item\em The logging object. \item\end{DoxyCompactList}\item 
 list \hyperlink{namespace_zone_a8dcf5d84aac63b42f1ce7684c3b4ea91}{\_\-ZONE\_\-TYPES}
 \begin{DoxyCompactList}\small\item\em All avaliable zone types. \item\end{DoxyCompactList}\item 
+list \hyperlink{namespace_zone_aad0e42e8c895a1cedce5321c83a677b8}{\_\-ZONE\_\-TYPES\_\-DEF} = \mbox{[}\char`\"{}fortress\char`\"{}, \char`\"{}flag\char`\"{}\mbox{]}
+\begin{DoxyCompactList}\small\item\em All zone types that are for def. \item\end{DoxyCompactList}\item 
 tuple \hyperlink{namespace_zone_a2cf3edd088ca6482872ba018b81ef52a}{events} = \hyperlink{class_event_1_1_event_group}{Event.EventGroup}(\char`\"{}ZoneEvents\char`\"{})
 \begin{DoxyCompactList}\small\item\em Eventgroup of this module. \item\end{DoxyCompactList}\end{DoxyCompactItemize}
 
@@ -45,14 +47,14 @@ Functions and classes for zone management. This file contains functions and clas
 \label{namespace_zone_aaa40a627f781a072131be03ac8e08328}
 
 
-Enabl es logging. 
+Enables logging. 
 
 This function enables logging for this module. 
 \begin{DoxyParams}{Parameters}
 \item[{\em h}]The handler used for logging \item[{\em f}]The formatter used for logging \item[{\em level}]The logging level \end{DoxyParams}
 
 
-Definition at line 283 of file Zone.py.
+Definition at line 300 of file Zone.py.
 
 
 
@@ -65,9 +67,9 @@ Definition at line 283 of file Zone.py.
 {\bfseries Initial value:}
 \begin{DoxyCode}
 1 ["win", "death", "ball", "ballTeam", "blast", "deathTeam", "koh", 
-2              "fortress", "flag","rubber", "sumo", "target", "teleport", "zombie",
-      
-3              "zombieOwner"]
+2                          "fortress", "flag","rubber", "sumo", "target", "teleport
+      ", "zombie",
+3                          "zombieOwner"]
 \end{DoxyCode}
 
 
@@ -75,7 +77,20 @@ All avaliable zone types.
 
 List of all avaliable zone types used to determine if a zone type is valid. 
 
-Definition at line 23 of file Zone.py.
+Definition at line 26 of file Zone.py.
+
+\hypertarget{namespace_zone_aad0e42e8c895a1cedce5321c83a677b8}{
+\index{Zone@{Zone}!\_\-ZONE\_\-TYPES\_\-DEF@{\_\-ZONE\_\-TYPES\_\-DEF}}
+\index{\_\-ZONE\_\-TYPES\_\-DEF@{\_\-ZONE\_\-TYPES\_\-DEF}!Zone@{Zone}}
+\subsubsection[{\_\-ZONE\_\-TYPES\_\-DEF}]{\setlength{\rightskip}{0pt plus 5cm}list {\bf Zone.\_\-ZONE\_\-TYPES\_\-DEF} = \mbox{[}\char`\"{}fortress\char`\"{}, \char`\"{}flag\char`\"{}\mbox{]}}}
+\label{namespace_zone_aad0e42e8c895a1cedce5321c83a677b8}
+
+
+All zone types that are for def. 
+
+List of zone types you don't need when you attack. 
+
+Definition at line 32 of file Zone.py.
 
 \hypertarget{namespace_zone_a2cf3edd088ca6482872ba018b81ef52a}{
 \index{Zone@{Zone}!events@{events}}
@@ -88,7 +103,7 @@ Eventgroup of this module.
 
 Events used by this module: \char`\"{}Zone spawned\char`\"{}: triggered when a zone is spawned. \char`\"{}Zone collapsed\char`\"{}: triggered when a zone collapsed. \char`\"{}Zone renamed\char`\"{}: triggered when the name of a zone changes 
 
-Definition at line 32 of file Zone.py.
+Definition at line 39 of file Zone.py.
 
 \hypertarget{namespace_zone_aad90704d2c88929bd92b7acf2b9a09d6}{
 \index{Zone@{Zone}!log@{log}}
@@ -104,5 +119,5 @@ To enable or disable logging of this module use \hyperlink{namespace_team_a391de
 \end{DoxyNote}
 
 
-Definition at line 18 of file Zone.py.
+Definition at line 21 of file Zone.py.
 

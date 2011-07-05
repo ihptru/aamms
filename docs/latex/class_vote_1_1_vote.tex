@@ -37,7 +37,7 @@ def \hyperlink{class_vote_1_1_vote_aaf3a60226df03a3f737c2e0f7ea37d4d}{SetPlayerV
 \subsection{Detailed Description}
 The vote class. This class is used to manage a vote. 
 
-Definition at line 70 of file Vote.py.
+Definition at line 73 of file Vote.py.
 
 
 
@@ -62,7 +62,7 @@ Inits a new vote.
 \item[{\em target}]Human readable target of the vote. \item[{\em action}]Action. None if no function should be called. \end{DoxyParams}
 
 
-Definition at line 95 of file Vote.py.
+Definition at line 98 of file Vote.py.
 
 \hypertarget{class_vote_1_1_vote_acda3525e83e91d9e4622218635f92d4b}{
 \index{Vote::Vote@{Vote::Vote}!CheckResult@{CheckResult}}
@@ -72,7 +72,8 @@ Definition at line 95 of file Vote.py.
 \item[{}]{ self, }
 \item[{}]{ not\_\-voted = {\ttfamily \char`\"{}dont\_\-count\char`\"{}}, }
 \item[{}]{ not\_\-voted\_\-spec = {\ttfamily None}, }
-\item[{}]{ min\_\-needed = {\ttfamily 51}}
+\item[{}]{ min\_\-needed = {\ttfamily 51}, }
+\item[{}]{ only\_\-sure = {\ttfamily False}}
 \end{DoxyParamCaption}
 )}}
 \label{class_vote_1_1_vote_acda3525e83e91d9e4622218635f92d4b}
@@ -88,7 +89,7 @@ Checks if the vote successed or failed and triggers \char`\"{}Vote successed\cha
 \item[{\em ValueError}]Raised if not\_\-voted ot not\_\-voted\_\-spec aren't on of \char`\"{}yes\char`\"{}, \char`\"{}no\char`\"{} or \char`\"{}dont\_\-count\char`\"{}. \end{DoxyExceptions}
 
 
-Definition at line 117 of file Vote.py.
+Definition at line 120 of file Vote.py.
 
 \hypertarget{class_vote_1_1_vote_aaf3a60226df03a3f737c2e0f7ea37d4d}{
 \index{Vote::Vote@{Vote::Vote}!SetPlayerVote@{SetPlayerVote}}
@@ -113,7 +114,7 @@ Checks if the player is a spectator. If yes and spec\_\-allowed is set to False,
 \item[{\em RuntimeError}]Raised if the player has already voted. \item[{\em ValueError}]Raised if the player doesn't exist.' \end{DoxyExceptions}
 
 
-Definition at line 167 of file Vote.py.
+Definition at line 180 of file Vote.py.
 
 
 
@@ -129,7 +130,7 @@ What players voted against the vote?
 
 Set of the players who voted against the vote. 
 
-Definition at line 100 of file Vote.py.
+Definition at line 103 of file Vote.py.
 
 \hypertarget{class_vote_1_1_vote_a6a3289f868e2d8898c27e6905fe68e19}{
 \index{Vote::Vote@{Vote::Vote}!\_\-\_\-players\_\-voted\_\-yes@{\_\-\_\-players\_\-voted\_\-yes}}
@@ -142,7 +143,7 @@ What players voted for the vote?
 
 Set of the players who voted for the vote. 
 
-Definition at line 101 of file Vote.py.
+Definition at line 104 of file Vote.py.
 
 \hypertarget{class_vote_1_1_vote_a7540d71a94e58d4a4877a8a949232fe3}{
 \index{Vote::Vote@{Vote::Vote}!action@{action}}
@@ -155,7 +156,7 @@ Function that is called when the vote success.
 
 Function could be every object that has a \_\-\_\-call\_\-\_\- method(is callable) 
 
-Definition at line 98 of file Vote.py.
+Definition at line 101 of file Vote.py.
 
 \hypertarget{class_vote_1_1_vote_af6004cd9228253e93b618b769dbc8855}{
 \index{Vote::Vote@{Vote::Vote}!aliveRounds@{aliveRounds}}
@@ -168,7 +169,7 @@ When does the vote expire?
 
 Number of round for which the vote stays \char`\"{}alive\char`\"{}. 
 
-Definition at line 99 of file Vote.py.
+Definition at line 102 of file Vote.py.
 
 \hypertarget{class_vote_1_1_vote_afe0be7a3c2d7d0439a478b1ef0b30ed6}{
 \index{Vote::Vote@{Vote::Vote}!target@{target}}
@@ -181,7 +182,7 @@ The human readable target of the vote.
 
 Target: What is the vote about? Used by the script to display to the user. 
 
-Definition at line 97 of file Vote.py.
+Definition at line 100 of file Vote.py.
 
 
 

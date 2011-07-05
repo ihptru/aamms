@@ -69,7 +69,7 @@ tuple \hyperlink{class_team_1_1_team_a84629474492f6b6807f1195935fbd617}{\_\-\_\-
 \subsection{Detailed Description}
 A team. This class represents a team. A team can has members, can be killed, renamed, ... 
 
-Definition at line 80 of file Team.py.
+Definition at line 83 of file Team.py.
 
 
 
@@ -92,7 +92,7 @@ Do not call this function directly. Use del $<$instance$>$ instead.
 \end{DoxyNote}
 
 
-Definition at line 145 of file Team.py.
+Definition at line 148 of file Team.py.
 
 \hypertarget{class_team_1_1_team_a6ff7995fb1950ca7246a09809982ea46}{
 \index{Team::Team@{Team::Team}!\_\-\_\-init\_\-\_\-@{\_\-\_\-init\_\-\_\-}}
@@ -117,7 +117,7 @@ Inits a new \hyperlink{class_team_1_1_team}{Team} and adds properties.
 \item[{\em RuntimeError}]Raised when the team is full (error code 2) or teams limit is reached (erro code 1). \end{DoxyExceptions}
 
 
-Definition at line 117 of file Team.py.
+Definition at line 120 of file Team.py.
 
 \hypertarget{class_team_1_1_team_ae9ec6714408a6ff12f5c68242e16732e}{
 \index{Team::Team@{Team::Team}!addPlayer@{addPlayer}}
@@ -141,7 +141,7 @@ This function adds the given player to the member list of the team.
 \item[{\em RuntimeError}]Raised if the team is full. \end{DoxyExceptions}
 
 
-Definition at line 174 of file Team.py.
+Definition at line 182 of file Team.py.
 
 \hypertarget{class_team_1_1_team_aaaf23ba740b24f1d5b136ff157dc8cf0}{
 \index{Team::Team@{Team::Team}!applyChanges@{applyChanges}}
@@ -162,7 +162,7 @@ You must call this function to apply changes on the name or the color of the tea
 \item[{\em force}]Force team name changes by setting TEAM\_\-NAME\_\-AFTER\_\-PLAYER\_\-teamid to 0? \end{DoxyParams}
 
 
-Definition at line 160 of file Team.py.
+Definition at line 168 of file Team.py.
 
 \hypertarget{class_team_1_1_team_adc372386d199ea4c5a3af9a2ab54501a}{
 \index{Team::Team@{Team::Team}!crash@{crash}}
@@ -185,7 +185,7 @@ Player.crash
 \end{DoxySeeAlso}
 
 
-Definition at line 206 of file Team.py.
+Definition at line 214 of file Team.py.
 
 \hypertarget{class_team_1_1_team_ad8d07f1b1cda805c9650e066bfce9a45}{
 \index{Team::Team@{Team::Team}!getEscapedName@{getEscapedName}}
@@ -205,7 +205,7 @@ The escaped team name
 \end{DoxyReturn}
 
 
-Definition at line 282 of file Team.py.
+Definition at line 290 of file Team.py.
 
 \hypertarget{class_team_1_1_team_ae6d70c611129f89288dd984db448f87c}{
 \index{Team::Team@{Team::Team}!getMembers@{getMembers}}
@@ -225,7 +225,7 @@ List of members of the team
 \end{DoxyReturn}
 
 
-Definition at line 292 of file Team.py.
+Definition at line 300 of file Team.py.
 
 \hypertarget{class_team_1_1_team_a06d36a2882160f497f1bc88e316980bb}{
 \index{Team::Team@{Team::Team}!getName@{getName}}
@@ -245,7 +245,7 @@ The name of the team.
 \end{DoxyReturn}
 
 
-Definition at line 287 of file Team.py.
+Definition at line 295 of file Team.py.
 
 \hypertarget{class_team_1_1_team_abc46169ec9af1703f524862128ab5fc7}{
 \index{Team::Team@{Team::Team}!getPlayerPosition@{getPlayerPosition}}
@@ -272,7 +272,7 @@ The position, where 0 is the 1st position.
 \item[{\em RuntimeError}]Raised if the player does not exist in the team. \end{DoxyExceptions}
 
 
-Definition at line 274 of file Team.py.
+Definition at line 282 of file Team.py.
 
 \hypertarget{class_team_1_1_team_af5fe65b108c2d90b9e885d52f043617e}{
 \index{Team::Team@{Team::Team}!kill@{kill}}
@@ -295,7 +295,7 @@ Player.kill
 \end{DoxySeeAlso}
 
 
-Definition at line 194 of file Team.py.
+Definition at line 202 of file Team.py.
 
 \hypertarget{class_team_1_1_team_ae6bc66a477beb86618bbab0929828c84}{
 \index{Team::Team@{Team::Team}!removePlayer@{removePlayer}}
@@ -319,7 +319,7 @@ This function removes the given player from the member list of the team.
 \item[{\em RuntimeError}]Raised if the player isn't a member of the team. \end{DoxyExceptions}
 
 
-Definition at line 185 of file Team.py.
+Definition at line 193 of file Team.py.
 
 \hypertarget{class_team_1_1_team_a021ed714ff5abe3b6d60e89ac0009ddb}{
 \index{Team::Team@{Team::Team}!respawn@{respawn}}
@@ -355,7 +355,7 @@ Player.respawn
 \end{DoxySeeAlso}
 
 
-Definition at line 227 of file Team.py.
+Definition at line 235 of file Team.py.
 
 \hypertarget{class_team_1_1_team_aa0bb9f9288f706bf004eb7d6f27dd8f3}{
 \index{Team::Team@{Team::Team}!setName@{setName}}
@@ -379,7 +379,7 @@ This triggers the event \char`\"{}Team renamed\char`\"{}
 \end{DoxyNote}
 
 
-Definition at line 152 of file Team.py.
+Definition at line 160 of file Team.py.
 
 \hypertarget{class_team_1_1_team_aabd4ec15a02677c903e5939707fc5ff8}{
 \index{Team::Team@{Team::Team}!shufflePlayer@{shufflePlayer}}
@@ -404,7 +404,7 @@ Moves the given player to the given position in the team.
 \item[{\em RuntimeError}]Raised if the player is not a meber of the team or does not exist. \end{DoxyExceptions}
 
 
-Definition at line 263 of file Team.py.
+Definition at line 271 of file Team.py.
 
 
 
@@ -420,7 +420,7 @@ Internal id of the team.
 
 This is the id of the team needed for TEAM\_\-NAME\_\-id and TEAM\_\-RED\_\-id command 
 
-Definition at line 139 of file Team.py.
+Definition at line 142 of file Team.py.
 
 \hypertarget{class_team_1_1_team_a262d61c33dc00a565e627421b95280e4}{
 \index{Team::Team@{Team::Team}!\_\-\_\-ids@{\_\-\_\-ids}}
@@ -433,7 +433,7 @@ Set of used ids.
 
 Set of currently used ids 
 
-Definition at line 97 of file Team.py.
+Definition at line 100 of file Team.py.
 
 \hypertarget{class_team_1_1_team_a5298a0b6a24b1c1245690a39b1b83d19}{
 \index{Team::Team@{Team::Team}!\_\-\_\-members@{\_\-\_\-members}}
@@ -446,7 +446,7 @@ The team members.
 
 The ladder names of the players belong to the team. 
 
-Definition at line 121 of file Team.py.
+Definition at line 124 of file Team.py.
 
 \hypertarget{class_team_1_1_team_aa840b5c614936ab0ceb8c9a041fd63d3}{
 \index{Team::Team@{Team::Team}!\_\-\_\-name@{\_\-\_\-name}}
@@ -459,7 +459,7 @@ Definition at line 121 of file Team.py.
 
 The name of the team how it's displayed in the game 
 
-Definition at line 124 of file Team.py.
+Definition at line 127 of file Team.py.
 
 \hypertarget{class_team_1_1_team_ac98394f815e38111f61f85d60a124459}{
 \index{Team::Team@{Team::Team}!color@{color}}
@@ -472,7 +472,7 @@ The color of the team.
 
 Tuple of the r,g,b value of the color of the team. 
 
-Definition at line 126 of file Team.py.
+Definition at line 129 of file Team.py.
 
 \hypertarget{class_team_1_1_team_a585395bf34a71843cffaf71626138ab4}{
 \index{Team::Team@{Team::Team}!zones@{zones}}
@@ -485,7 +485,7 @@ Definition at line 126 of file Team.py.
 
 The zones belong to the team 
 
-Definition at line 125 of file Team.py.
+Definition at line 128 of file Team.py.
 
 
 

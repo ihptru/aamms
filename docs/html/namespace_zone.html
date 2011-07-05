@@ -65,13 +65,15 @@ Classes</h2></td></tr>
 <tr><td colspan="2"><h2><a name="func-members"></a>
 Functions</h2></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">def&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespace_zone.html#aaa40a627f781a072131be03ac8e08328">enableLogging</a></td></tr>
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Enabl es logging.  <a href="#aaa40a627f781a072131be03ac8e08328"></a><br/></td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Enables logging.  <a href="#aaa40a627f781a072131be03ac8e08328"></a><br/></td></tr>
 <tr><td colspan="2"><h2><a name="var-members"></a>
 Variables</h2></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">tuple&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespace_zone.html#aad90704d2c88929bd92b7acf2b9a09d6">log</a> = logging.getLogger(&quot;TeamModule&quot;)</td></tr>
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">The logging object.  <a href="#aad90704d2c88929bd92b7acf2b9a09d6"></a><br/></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">list&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespace_zone.html#a8dcf5d84aac63b42f1ce7684c3b4ea91">_ZONE_TYPES</a></td></tr>
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">All avaliable zone types.  <a href="#a8dcf5d84aac63b42f1ce7684c3b4ea91"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">list&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespace_zone.html#aad0e42e8c895a1cedce5321c83a677b8">_ZONE_TYPES_DEF</a> = [&quot;fortress&quot;, &quot;flag&quot;]</td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">All zone types that are for def.  <a href="#aad0e42e8c895a1cedce5321c83a677b8"></a><br/></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">tuple&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespace_zone.html#a2cf3edd088ca6482872ba018b81ef52a">events</a> = <a class="el" href="class_event_1_1_event_group.html">Event.EventGroup</a>(&quot;ZoneEvents&quot;)</td></tr>
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Eventgroup of this module.  <a href="#a2cf3edd088ca6482872ba018b81ef52a"></a><br/></td></tr>
 </table>
@@ -110,7 +112,7 @@ Variables</h2></td></tr>
 </div>
 <div class="memdoc">
 
-<p>Enabl es logging. </p>
+<p>Enables logging. </p>
 <p>This function enables logging for this module. </p>
 <dl><dt><b>Parameters:</b></dt><dd>
   <table border="0" cellspacing="2" cellpadding="0">
@@ -121,7 +123,7 @@ Variables</h2></td></tr>
   </dd>
 </dl>
 
-<p>Definition at line <a class="el" href="_zone_8py_source.html#l00283">283</a> of file <a class="el" href="_zone_8py_source.html">Zone.py</a>.</p>
+<p>Definition at line <a class="el" href="_zone_8py_source.html#l00300">300</a> of file <a class="el" href="_zone_8py_source.html">Zone.py</a>.</p>
 
 </div>
 </div>
@@ -137,13 +139,31 @@ Variables</h2></td></tr>
 </div>
 <div class="memdoc">
 <b>Initial value:</b><div class="fragment"><pre class="fragment"><a name="l00001"></a><a class="code" href="namespace_zone.html">00001</a> [<span class="stringliteral">&quot;win&quot;</span>, <span class="stringliteral">&quot;death&quot;</span>, <span class="stringliteral">&quot;ball&quot;</span>, <span class="stringliteral">&quot;ballTeam&quot;</span>, <span class="stringliteral">&quot;blast&quot;</span>, <span class="stringliteral">&quot;deathTeam&quot;</span>, <span class="stringliteral">&quot;koh&quot;</span>, 
-<a name="l00002"></a>00002              <span class="stringliteral">&quot;fortress&quot;</span>, <span class="stringliteral">&quot;flag&quot;</span>,<span class="stringliteral">&quot;rubber&quot;</span>, <span class="stringliteral">&quot;sumo&quot;</span>, <span class="stringliteral">&quot;target&quot;</span>, <span class="stringliteral">&quot;teleport&quot;</span>, <span class="stringliteral">&quot;zombie&quot;</span>,
-<a name="l00003"></a>00003              <span class="stringliteral">&quot;zombieOwner&quot;</span>]
+<a name="l00002"></a>00002                          <span class="stringliteral">&quot;fortress&quot;</span>, <span class="stringliteral">&quot;flag&quot;</span>,<span class="stringliteral">&quot;rubber&quot;</span>, <span class="stringliteral">&quot;sumo&quot;</span>, <span class="stringliteral">&quot;target&quot;</span>, <span class="stringliteral">&quot;teleport&quot;</span>, <span class="stringliteral">&quot;zombie&quot;</span>,
+<a name="l00003"></a>00003                          <span class="stringliteral">&quot;zombieOwner&quot;</span>]
 </pre></div>
 <p>All avaliable zone types. </p>
 <p>List of all avaliable zone types used to determine if a zone type is valid. </p>
 
-<p>Definition at line <a class="el" href="_zone_8py_source.html#l00023">23</a> of file <a class="el" href="_zone_8py_source.html">Zone.py</a>.</p>
+<p>Definition at line <a class="el" href="_zone_8py_source.html#l00026">26</a> of file <a class="el" href="_zone_8py_source.html">Zone.py</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="aad0e42e8c895a1cedce5321c83a677b8"></a><!-- doxytag: member="Zone::_ZONE_TYPES_DEF" ref="aad0e42e8c895a1cedce5321c83a677b8" args="" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">list <a class="el" href="namespace_zone.html#aad0e42e8c895a1cedce5321c83a677b8">Zone._ZONE_TYPES_DEF</a> = [&quot;fortress&quot;, &quot;flag&quot;]</td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>All zone types that are for def. </p>
+<p>List of zone types you don't need when you attack. </p>
+
+<p>Definition at line <a class="el" href="_zone_8py_source.html#l00032">32</a> of file <a class="el" href="_zone_8py_source.html">Zone.py</a>.</p>
 
 </div>
 </div>
@@ -161,7 +181,7 @@ Variables</h2></td></tr>
 <p>Eventgroup of this module. </p>
 <p>Events used by this module: "Zone spawned": triggered when a zone is spawned. "Zone collapsed": triggered when a zone collapsed. "Zone renamed": triggered when the name of a zone changes </p>
 
-<p>Definition at line <a class="el" href="_zone_8py_source.html#l00032">32</a> of file <a class="el" href="_zone_8py_source.html">Zone.py</a>.</p>
+<p>Definition at line <a class="el" href="_zone_8py_source.html#l00039">39</a> of file <a class="el" href="_zone_8py_source.html">Zone.py</a>.</p>
 
 </div>
 </div>
@@ -180,7 +200,7 @@ Variables</h2></td></tr>
 <p>Used for logging by this module </p>
 <dl class="note"><dt><b>Note:</b></dt><dd>To enable or disable logging of this module use <a class="el" href="namespace_team.html#a391de1d02502546ec5d88de1632b3bc2">Team.enableLogging</a> </dd></dl>
 
-<p>Definition at line <a class="el" href="_zone_8py_source.html#l00018">18</a> of file <a class="el" href="_zone_8py_source.html">Zone.py</a>.</p>
+<p>Definition at line <a class="el" href="_zone_8py_source.html#l00021">21</a> of file <a class="el" href="_zone_8py_source.html">Zone.py</a>.</p>
 
 </div>
 </div>
@@ -199,7 +219,7 @@ Variables</h2></td></tr>
 </iframe>
 </div>
 
-<hr class="footer"/><address class="footer"><small>Generated on Mon Jun 20 2011 14:23:56 for Armagetron MultiModeScript by&nbsp;
+<hr class="footer"/><address class="footer"><small>Generated on Tue Jul 5 2011 16:01:26 for Armagetron MultiModeScript by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.7.1 </small></address>
 </body>

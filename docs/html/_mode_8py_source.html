@@ -68,394 +68,405 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <a name="l00018"></a>00018 <span class="keyword">import</span> os.path
 <a name="l00019"></a>00019 <span class="keyword">import</span> os
 <a name="l00020"></a>00020 
-<a name="l00021"></a>00021 <span class="comment">## @brief Global settings directory</span>
-<a name="l00022"></a>00022  <span class="comment"># @details This is used as default for settings_prefix by new modes.</span>
-<a name="l00023"></a>00023 settings_prefix=<span class="stringliteral">&quot;MultiModeServer/&quot;</span>
-<a name="l00024"></a>00024 
-<a name="l00025"></a>00025 <span class="comment">## @brief The logging object</span>
-<a name="l00026"></a>00026  <span class="comment"># @private</span>
-<a name="l00027"></a>00027  <span class="comment"># @details Used for logging by this module</span>
-<a name="l00028"></a>00028  <span class="comment"># @note To enable or disable logging of this module use \link Team.enableLogging\endlink</span>
-<a name="l00029"></a>00029 log=logging.getLogger(<span class="stringliteral">&quot;ModeModule&quot;</span>)
-<a name="l00030"></a>00030 log.addHandler(logging.NullHandler() )
-<a name="l00031"></a>00031 
-<a name="l00032"></a>00032 <span class="comment">## @brief Stores all modes</span>
-<a name="l00033"></a>00033  <span class="comment"># @details This is a dictionary of all avaliable modes, where the name of the mode is the key.</span>
-<a name="l00034"></a>00034 modes=dict()
-<a name="l00035"></a>00035 
-<a name="l00036"></a>00036 <span class="comment">## @brief The current mode</span>
-<a name="l00037"></a>00037  <span class="comment"># @details The escaped name of the currently active mode.</span>
-<a name="l00038"></a>00038 current_mode=<span class="keywordtype">None</span>
-<a name="l00039"></a>00039 
-<a name="l00040"></a>00040 <span class="comment">## @brief Adds a new mode</span>
-<a name="l00041"></a>00041  <span class="comment"># @details Adds a mode and stores it in the modes list</span>
-<a name="l00042"></a>00042  <span class="comment"># @param name The name of the mode which to use for the new mode.</span>
-<a name="l00043"></a>00043  <span class="comment"># @param settings_file The settings file which is include when the mode gets activated.</span>
-<a name="l00044"></a>00044  <span class="comment"># @param settings Optional The initial settings for the mode. This can also be changed later.</span>
-<a name="l00045"></a>00045  <span class="comment"># @see Mode.__init__</span>
-<a name="l00046"></a>00046  <span class="comment"># @note If the mode the first mode which is added, it is activated.</span>
-<a name="l00047"></a>00047 <span class="keyword">def </span>Add(name, settings_file=None, settings=dict() ):
-<a name="l00048"></a>00048         m=Mode(name, settings_file, **settings)
-<a name="l00049"></a>00049         modes[m.getEscapedName()]=m
-<a name="l00050"></a>00050         <span class="keywordflow">if</span> len(modes)==1:
-<a name="l00051"></a>00051                 m.activate()
-<a name="l00052"></a>00052         log.info(<span class="stringliteral">&quot;Mode &quot;</span>+ name + <span class="stringliteral">&quot; added.&quot;</span>)
-<a name="l00053"></a>00053 
-<a name="l00054"></a>00054 <span class="comment">## @brief Deletes the mode</span>
-<a name="l00055"></a>00055  <span class="comment"># @details Deletes the given mode. If the mode was activated, the first mode is activated.</span>
-<a name="l00056"></a>00056  <span class="comment"># @param name The escaped name of the mode to delete.</span>
-<a name="l00057"></a>00057  <span class="comment"># @exception RuntimeError Raised if the mode doesn&#39;t exit.</span>
-<a name="l00058"></a>00058 <span class="keyword">def </span>Remove(name):
-<a name="l00059"></a>00059         <span class="keywordflow">if</span> name <span class="keywordflow">not</span> <span class="keywordflow">in</span> modes:
-<a name="l00060"></a>00060                 <span class="keywordflow">raise</span> RuntimeError
-<a name="l00061"></a>00061         dname=modes[name].name
-<a name="l00062"></a>00062         del modes[name]
-<a name="l00063"></a>00063         <span class="keywordflow">if</span> current_mode == name <span class="keywordflow">and</span> len(modes)&gt;0:
-<a name="l00064"></a>00064                 modes.values()[0].activate()
-<a name="l00065"></a>00065         log.info(<span class="stringliteral">&quot;Mode &quot;</span>+dname+<span class="stringliteral">&quot; removed.&quot;</span>)
-<a name="l00066"></a>00066 
-<a name="l00067"></a>00067 <span class="comment">## @brief Saves all modes</span>
-<a name="l00068"></a>00068  <span class="comment"># @details Saves the modes listened in Mode.modes.</span>
-<a name="l00069"></a>00069  <span class="comment"># @param dir Optional The directory where the mode files should be written.</span>
-<a name="l00070"></a>00070  <span class="comment"># @param ext Optional The file extension which the mode files should have, including the point.</span>
-<a name="l00071"></a>00071 <span class="keyword">def </span>saveModes(dir=&quot;Modes&quot;, ext=&quot;.aamode&quot;):
-<a name="l00072"></a>00072         <span class="keyword">global</span> modes
-<a name="l00073"></a>00073         <span class="keywordflow">if</span> <span class="keywordflow">not</span> dir.endswith(<span class="stringliteral">&quot;/&quot;</span>):
-<a name="l00074"></a>00074                 dir=dir+<span class="stringliteral">&quot;/&quot;</span>
-<a name="l00075"></a>00075         <span class="keywordflow">if</span> <span class="keywordflow">not</span> os.path.exists(dir):
-<a name="l00076"></a>00076                 os.mkdir(dir)
-<a name="l00077"></a>00077         <span class="keywordflow">for</span> mode <span class="keywordflow">in</span> modes.values():
-<a name="l00078"></a>00078                 f=open(dir+mode.getEscapedName()+ext,<span class="stringliteral">&quot;w&quot;</span>)
-<a name="l00079"></a>00079                 yaml.dump(mode, f)
-<a name="l00080"></a>00080 
-<a name="l00081"></a>00081 <span class="comment">## @brief Loads modes</span>
-<a name="l00082"></a>00082  <span class="comment"># @details Loads the modes from a directory.</span>
-<a name="l00083"></a>00083  <span class="comment"># @param dir Optional The directory from which the modes should be loaded.</span>
-<a name="l00084"></a>00084  <span class="comment"># @param ext Optional The file extensions that mode files have, including the point.</span>
-<a name="l00085"></a>00085 <span class="keyword">def </span>loadModes(dir=&quot;Modes&quot;, ext=&quot;.aamode&quot;):
-<a name="l00086"></a>00086         <span class="keywordflow">if</span> <span class="keywordflow">not</span> os.path.exists(dir):
-<a name="l00087"></a>00087                 <span class="keywordflow">return</span>
-<a name="l00088"></a>00088         <span class="keyword">global</span> modes
-<a name="l00089"></a>00089         <span class="keywordflow">if</span> <span class="keywordflow">not</span> dir.endswith(<span class="stringliteral">&quot;/&quot;</span>):
-<a name="l00090"></a>00090                 dir=dir+<span class="stringliteral">&quot;/&quot;</span>
-<a name="l00091"></a>00091         modefiles=glob(dir+<span class="stringliteral">&quot;*&quot;</span>+ext)
-<a name="l00092"></a>00092         <span class="keywordflow">for</span> filename <span class="keywordflow">in</span> modefiles:
-<a name="l00093"></a>00093                 log.debug(<span class="stringliteral">&quot;Loading mode from &quot;</span>+filename+<span class="stringliteral">&quot; ...&quot;</span>)
-<a name="l00094"></a>00094                 f=open(filename, <span class="stringliteral">&quot;</span><span class="stringliteral">r&quot;)</span>
-<a name="l00095"></a>00095 <span class="stringliteral">                m=yaml.load(f)</span>
-<a name="l00096"></a>00096 <span class="stringliteral">                modes[m.getEscapedName()]=m</span>
-<a name="l00097"></a>00097 <span class="stringliteral">                log.debug(</span><span class="stringliteral">&quot;Loaded mode &quot;</span>+m.name)
-<a name="l00098"></a>00098         
-<a name="l00099"></a>00099 
-<a name="l00100"></a>00100 <span class="comment">## @class Mode.Mode</span>
-<a name="l00101"></a>00101  <span class="comment"># @brief A mode</span>
-<a name="l00102"></a>00102  <span class="comment"># @details This class represents a mode. It stores all information about the mode.</span>
-<a name="l00103"></a><a class="code" href="class_mode_1_1_mode.html">00103</a> <span class="keyword">class </span><a class="code" href="class_mode_1_1_mode.html" title="A mode.">Mode</a>(yaml.YAMLObject):
-<a name="l00104"></a>00104         <span class="comment">## @property name</span>
-<a name="l00105"></a>00105          <span class="comment"># @brief The name of the mode</span>
-<a name="l00106"></a>00106          <span class="comment"># @details A string which contains the name of the mode.</span>
-<a name="l00107"></a>00107 
-<a name="l00108"></a>00108         <span class="comment">## @property __zones</span>
-<a name="l00109"></a>00109          <span class="comment"># @brief The zones of the modes.</span>
-<a name="l00110"></a>00110          <span class="comment"># @details A list of zones. Each item is a tuple of team and the zone object.</span>
-<a name="l00111"></a>00111          <span class="comment">#          The team could be None if the zone should be spawned for all teams.</span>
-<a name="l00112"></a>00112          <span class="comment">#          Otherwise, set team to the number of the team for which the zone</span>
-<a name="l00113"></a>00113          <span class="comment">#          should be spawned, or -1 if the zone doesn&#39;t belong to any team and</span>
-<a name="l00114"></a>00114          <span class="comment">#          should allways be spawned.</span>
-<a name="l00115"></a>00115 
-<a name="l00116"></a>00116         <span class="comment">## @property max_teams</span>
-<a name="l00117"></a>00117          <span class="comment"># @brief Maximal teams that can be active in this mode.</span>
-<a name="l00118"></a>00118          <span class="comment"># @details The number of teams the could be active in this mode or 0 for unlimited.</span>
-<a name="l00119"></a>00119 
-<a name="l00120"></a>00120         <span class="comment">## @property max_team_members</span>
-<a name="l00121"></a>00121          <span class="comment"># @brief How much members a team can have maximaly.</span>
-<a name="l00122"></a>00122          <span class="comment"># @details Number of maximal members per team or 0 for unlimited.</span>
-<a name="l00123"></a>00123 
-<a name="l00124"></a>00124         <span class="comment">## @property settings_file</span>
-<a name="l00125"></a>00125          <span class="comment"># @brief The settings file which to include when the mode gets activated.</span>
-<a name="l00126"></a>00126          <span class="comment"># @details The path of the file which gets include when the mode is activated, relative</span>
-<a name="l00127"></a>00127          <span class="comment">#          to settings_prefix</span>
-<a name="l00128"></a>00128 
-<a name="l00129"></a>00129         <span class="comment">## @property settings_prefix</span>
-<a name="l00130"></a>00130          <span class="comment"># @brief The directory under which the settings files are stored.</span>
-<a name="l00131"></a>00131          <span class="comment"># @details Path to the directory which contains the setting files.</span>
-<a name="l00132"></a>00132          <span class="comment"># @see settings_file</span>
-<a name="l00133"></a>00133 
-<a name="l00134"></a>00134         <span class="comment">## @property __respoints</span>
-<a name="l00135"></a>00135          <span class="comment"># @brief Respoints of this mode.</span>
-<a name="l00136"></a>00136          <span class="comment"># @details List of respawn points. Each respawn point is a tuple of team,x,y,xdir and ydir.</span>
-<a name="l00137"></a>00137          <span class="comment">#          Where x,y are the coordinates, and xdir and ydir are the dirtion.</span>
-<a name="l00138"></a>00138          <span class="comment">#          If the respoint should be avaliable for all teams, set team to None.</span>
-<a name="l00139"></a>00139          <span class="comment">#          Else set team to the number of the team for which the respoint should be</span>
-<a name="l00140"></a>00140          <span class="comment">#          avaliable.</span>
-<a name="l00141"></a>00141 
-<a name="l00142"></a>00142         <span class="comment">## @property settings</span>
-<a name="l00143"></a>00143          <span class="comment"># @brief Additional settings.</span>
-<a name="l00144"></a>00144          <span class="comment"># @details Dictionary of settings where the key is the name of the setting and the</span>
-<a name="l00145"></a>00145          <span class="comment">#          value is the value of the setting.</span>
-<a name="l00146"></a>00146 
-<a name="l00147"></a>00147         <span class="comment">## @property __restype</span>
-<a name="l00148"></a>00148          <span class="comment"># @brief How should the respoints be used?</span>
-<a name="l00149"></a>00149          <span class="comment"># @details Could be random_roundstart, random_allways, toggle_roundstart,</span>
-<a name="l00150"></a>00150          <span class="comment">#          toggle_allways,toggle_whileround, random_whileround or first.</span>
-<a name="l00151"></a>00151 
-<a name="l00152"></a>00152         <span class="comment">## @property __last_respoint</span>
-<a name="l00153"></a>00153          <span class="comment"># @brief The last used respoint.</span>
-<a name="l00154"></a>00154          <span class="comment"># @details The number of the last-used respoint for each team.</span>
-<a name="l00155"></a>00155 
-<a name="l00156"></a>00156         <span class="comment">## @property lives</span>
-<a name="l00157"></a>00157          <span class="comment"># @brief How much lives does a player have?</span>
-<a name="l00158"></a>00158          <span class="comment"># @details Number of lives a player has in this mode.</span>
-<a name="l00159"></a>00159 
-<a name="l00160"></a>00160         <span class="comment">## @brief Slots</span>
-<a name="l00161"></a>00161          <span class="comment"># @details See http://docs.python.org OOP</span>
-<a name="l00162"></a>00162          <span class="comment"># @internal</span>
-<a name="l00163"></a><a class="code" href="class_mode_1_1_mode.html#a6f65d9a9362971bd8896a81a0d71c642">00163</a>         __slots__=(<span class="stringliteral">&quot;name&quot;</span>,<span class="stringliteral">&quot;__zones&quot;</span>,<span class="stringliteral">&quot;max_teams&quot;</span>,<span class="stringliteral">&quot;max_team_members&quot;</span>,<span class="stringliteral">&quot;settings_file&quot;</span>,
-<a name="l00164"></a>00164                    <span class="stringliteral">&quot;__respoints&quot;</span>,<span class="stringliteral">&quot;settings&quot;</span>,<span class="stringliteral">&quot;__restype&quot;</span>,<span class="stringliteral">&quot;__last_respoint&quot;</span>,<span class="stringliteral">&quot;short_name&quot;</span>,<span class="stringliteral">&quot;lives&quot;</span>)
-<a name="l00165"></a>00165         <span class="comment">## @brief Yaml tag</span>
-<a name="l00166"></a>00166          <span class="comment"># @details See http://pyyaml.org/wiki/PyYAMLDocumentation for details to the PyYaml library.</span>
-<a name="l00167"></a>00167          <span class="comment"># @internal</span>
-<a name="l00168"></a><a class="code" href="class_mode_1_1_mode.html#ae57cf492ec773e7116974023cfec575b">00168</a>         yaml_tag=<span class="stringliteral">&quot;!mode&quot;</span>
-<a name="l00169"></a>00169 
-<a name="l00170"></a>00170         <span class="comment">## @brief Which variables shouldn&#39;t be saved by object serialized?</span>
-<a name="l00171"></a>00171          <span class="comment"># @details Variables to exclude in __get_state__</span>
-<a name="l00172"></a>00172          <span class="comment"># @internal</span>
-<a name="l00173"></a><a class="code" href="class_mode_1_1_mode.html#af525bdda09b2a2c9c560be5062d7c55b">00173</a>         __not_persistent=(<span class="stringliteral">&quot;__last_respoint&quot;</span>)
-<a name="l00174"></a>00174  
-<a name="l00175"></a>00175         <span class="comment">## @brief Init function (Constructor)</span>
-<a name="l00176"></a>00176          <span class="comment"># @details Inits a new Mode object and adds properties to it.</span>
-<a name="l00177"></a>00177          <span class="comment"># @param name The name of the mode</span>
-<a name="l00178"></a>00178          <span class="comment"># @param settings_file The settings file which is include when the mode gets activated.</span>
-<a name="l00179"></a>00179          <span class="comment"># @param settings Additional settings.</span>
-<a name="l00180"></a><a class="code" href="class_mode_1_1_mode.html#add2325e8a6bf4ff3aacb7c1dd3299e5a">00180</a>         <span class="keyword">def </span><a class="code" href="class_mode_1_1_mode.html#add2325e8a6bf4ff3aacb7c1dd3299e5a" title="Init function (Constructor).">__init__</a>(self, name, settings_file=None, **settings):
-<a name="l00181"></a><a class="code" href="class_mode_1_1_mode.html#a38afa93ee0f4ad9e8258a510ccdbaa9c">00181</a>                 self.<a class="code" href="class_mode_1_1_mode.html#a38afa93ee0f4ad9e8258a510ccdbaa9c" title="The name of the mode.">name</a>=name
-<a name="l00182"></a><a class="code" href="class_mode_1_1_mode.html#a40402dcfd634686dcd9b2ce8b8f3d4eb">00182</a>                 self.<a class="code" href="class_mode_1_1_mode.html#a40402dcfd634686dcd9b2ce8b8f3d4eb" title="The settings file which to include when the mode gets activated.">settings_file</a>=settings_file
-<a name="l00183"></a><a class="code" href="class_mode_1_1_mode.html#af4bebfeddda24f7437fc086bc52ca711">00183</a>                 self.<a class="code" href="class_mode_1_1_mode.html#af4bebfeddda24f7437fc086bc52ca711" title="Additional settings.">settings</a>=settings
-<a name="l00184"></a><a class="code" href="class_mode_1_1_mode.html#a0672655c12a3e18e65d084c395d9378c">00184</a>                 self.<a class="code" href="class_mode_1_1_mode.html#a0672655c12a3e18e65d084c395d9378c" title="The zones of the modes.">__zones</a>=list()
-<a name="l00185"></a><a class="code" href="class_mode_1_1_mode.html#a2e07ed5d08d3ced387d24587f8a87967">00185</a>                 self.<a class="code" href="class_mode_1_1_mode.html#a2e07ed5d08d3ced387d24587f8a87967" title="Respoints of this mode.">__respoints</a>=list()
-<a name="l00186"></a><a class="code" href="class_mode_1_1_mode.html#ad4ba6cae17b92d4c8c85c35dc9418c8b">00186</a>                 self.<a class="code" href="class_mode_1_1_mode.html#ad4ba6cae17b92d4c8c85c35dc9418c8b" title="How much members a team can have maximaly.">max_team_members</a>=-1
-<a name="l00187"></a><a class="code" href="class_mode_1_1_mode.html#a55c4e205a8cb20550c0f3924471522ab">00187</a>                 self.<a class="code" href="class_mode_1_1_mode.html#a55c4e205a8cb20550c0f3924471522ab" title="Maximal teams that can be active in this mode.">max_teams</a>=-1
-<a name="l00188"></a><a class="code" href="class_mode_1_1_mode.html#a1fd32aea9872573e444d08b65ec28ef2">00188</a>                 self.<a class="code" href="class_mode_1_1_mode.html#a1fd32aea9872573e444d08b65ec28ef2" title="How should the respoints be used?">__restype</a>=<span class="stringliteral">&quot;toggle_roundstart&quot;</span>
-<a name="l00189"></a><a class="code" href="class_mode_1_1_mode.html#a93dd6d85da76655a5ca8f5a4873109f9">00189</a>                 self.<a class="code" href="class_mode_1_1_mode.html#a93dd6d85da76655a5ca8f5a4873109f9" title="The last used respoint.">__last_respoint</a>=dict()
-<a name="l00190"></a>00190                 self.<a class="code" href="class_mode_1_1_mode.html#acffe429e6af52f60fc386830811c33ed">short_name</a>=name.replace(<span class="stringliteral">&quot; &quot;</span>,<span class="stringliteral">&quot;_&quot;</span>).lower()
-<a name="l00191"></a><a class="code" href="class_mode_1_1_mode.html#a62c4256349100a948a336e4f41e73367">00191</a>                 self.<a class="code" href="class_mode_1_1_mode.html#a62c4256349100a948a336e4f41e73367" title="How much lives does a player have?">lives</a>=1
-<a name="l00192"></a>00192 
-<a name="l00193"></a>00193         <span class="comment">## @brief Adds a respoint</span>
-<a name="l00194"></a>00194          <span class="comment"># @details Adds the given respoint to the internal respoint list.</span>
-<a name="l00195"></a>00195          <span class="comment"># @param x The x-coordinate of the respoint.</span>
-<a name="l00196"></a>00196          <span class="comment"># @param y The y-coordinate of the respoint.</span>
-<a name="l00197"></a>00197          <span class="comment"># @param xdir The x-direction</span>
-<a name="l00198"></a>00198          <span class="comment"># @param ydir The y-direction</span>
-<a name="l00199"></a>00199          <span class="comment"># @param team Optional the number of the team for which the respoint should be used.</span>
-<a name="l00200"></a>00200          <span class="comment">#             If not given, the respoint is used for all teams.</span>
-<a name="l00201"></a><a class="code" href="class_mode_1_1_mode.html#a48c269456fe39631862a8be79627b0e5">00201</a>         <span class="keyword">def </span><a class="code" href="class_mode_1_1_mode.html#a48c269456fe39631862a8be79627b0e5" title="Adds a respoint.">addRespoint</a>(self, x, y, xdir, ydir, team=-1):
-<a name="l00202"></a>00202                 <span class="keywordflow">if</span> team <span class="keywordflow">not</span> <span class="keywordflow">in</span> self.<a class="code" href="class_mode_1_1_mode.html#a93dd6d85da76655a5ca8f5a4873109f9" title="The last used respoint.">__last_respoint</a>:
-<a name="l00203"></a>00203                         self.<a class="code" href="class_mode_1_1_mode.html#a93dd6d85da76655a5ca8f5a4873109f9" title="The last used respoint.">__last_respoint</a>[team]=0
-<a name="l00204"></a>00204                 self.<a class="code" href="class_mode_1_1_mode.html#a2e07ed5d08d3ced387d24587f8a87967" title="Respoints of this mode.">__respoints</a>.append( (team,x,y,xdir,ydir) )
-<a name="l00205"></a>00205 
-<a name="l00206"></a>00206         <span class="comment">## @brief Deletes all respoints</span>
-<a name="l00207"></a>00207          <span class="comment"># @details Cleans the intern respoint list.</span>
-<a name="l00208"></a><a class="code" href="class_mode_1_1_mode.html#a098cfc6ad819a1db17be57c9548bd199">00208</a>         <span class="keyword">def </span><a class="code" href="class_mode_1_1_mode.html#a098cfc6ad819a1db17be57c9548bd199" title="Deletes all respoints.">deleteRespoints</a>(self):
-<a name="l00209"></a>00209                 self.<a class="code" href="class_mode_1_1_mode.html#a2e07ed5d08d3ced387d24587f8a87967" title="Respoints of this mode.">__respoints</a>=list()
-<a name="l00210"></a>00210 
-<a name="l00211"></a>00211         <span class="comment">## @brief Gets respoints.</span>
-<a name="l00212"></a>00212          <span class="comment"># @details Returns a deepcopy of the intern respoint list.</span>
-<a name="l00213"></a>00213          <span class="comment"># @return A deepcopy of the repoints.</span>
-<a name="l00214"></a><a class="code" href="class_mode_1_1_mode.html#a1f3ca2f4e28ef874943310e4397f6ac2">00214</a>         <span class="keyword">def </span><a class="code" href="class_mode_1_1_mode.html#a1f3ca2f4e28ef874943310e4397f6ac2" title="Gets respoints.">getRespoints</a>(self):
-<a name="l00215"></a>00215                 <span class="keywordflow">return</span> copy.deepcopy(self.<a class="code" href="class_mode_1_1_mode.html#a2e07ed5d08d3ced387d24587f8a87967" title="Respoints of this mode.">__respoints</a>)
-<a name="l00216"></a>00216 
-<a name="l00217"></a>00217         <span class="comment">## @brief Call this when a player crashed.</span>
-<a name="l00218"></a>00218          <span class="comment"># @details This function will handle the crash and if the lives of the player arent&#39;t</span>
-<a name="l00219"></a>00219          <span class="comment">#          0, it will respawn the player.</span>
-<a name="l00220"></a>00220          <span class="comment"># @param player The ladder name of the player who crashed.</span>
-<a name="l00221"></a>00221          <span class="comment"># @param type The type of the crash(&quot;DEATH_FRAG&quot;,&quot;DEATH_TEAMKILL&quot;,...)</span>
-<a name="l00222"></a>00222          <span class="comment"># @return Has the player been respawned?</span>
-<a name="l00223"></a><a class="code" href="class_mode_1_1_mode.html#a68362e7b1cdd6ee60378f3cc1322a144">00223</a>         <span class="keyword">def </span><a class="code" href="class_mode_1_1_mode.html#a68362e7b1cdd6ee60378f3cc1322a144" title="Call this when a player crashed.">playerCrashed</a>(self, player, type=None):
-<a name="l00224"></a>00224                 Player.players[player].crashed()
-<a name="l00225"></a>00225                 <span class="keywordflow">if</span> Player.players[player].getLives()==0:
-<a name="l00226"></a>00226                         <span class="keywordflow">return</span>
-<a name="l00227"></a>00227                 <span class="keywordflow">if</span> len(self.<a class="code" href="class_mode_1_1_mode.html#a2e07ed5d08d3ced387d24587f8a87967" title="Respoints of this mode.">__respoints</a>)==0:
-<a name="l00228"></a>00228                         log.warning(<span class="stringliteral">&quot;No respoints for mode {0} registered.&quot;</span>.format(self.<a class="code" href="class_mode_1_1_mode.html#a38afa93ee0f4ad9e8258a510ccdbaa9c" title="The name of the mode.">name</a>) )
-<a name="l00229"></a>00229                         <span class="keywordflow">return</span> <span class="keyword">False</span>
-<a name="l00230"></a>00230                 <span class="comment"># get a repoint</span>
-<a name="l00231"></a>00231                 respoint=<span class="keywordtype">None</span>
-<a name="l00232"></a>00232                 i=0
-<a name="l00233"></a>00233                 <span class="keywordflow">for</span> team <span class="keywordflow">in</span> Team.teams.keys():
-<a name="l00234"></a>00234                         <span class="keywordflow">if</span> team==Player.players[player].getTeam():
-<a name="l00235"></a>00235                                 <span class="keywordflow">break</span>
-<a name="l00236"></a>00236                         i=i+1
-<a name="l00237"></a>00237                 <span class="keywordflow">if</span> i==len(Team.teams):
-<a name="l00238"></a>00238                         log.error(<span class="stringliteral">&quot;Player „{0}“ has an invalid team&quot;</span>.format(player) )
-<a name="l00239"></a>00239                         <span class="keywordflow">return</span>
-<a name="l00240"></a>00240                 respoint=self.getRespoint(<span class="stringliteral">&quot;normal&quot;</span>,i)
-<a name="l00241"></a>00241                 t,x,y,xdir,ydir=respoint
-<a name="l00242"></a>00242                 Player.players[player].respawn(x,y,xdir,ydir,<span class="keyword">False</span>)
-<a name="l00243"></a>00243 
-<a name="l00244"></a>00244         <span class="comment">## @brief Enables the mode</span>
-<a name="l00245"></a>00245          <span class="comment"># @details Includes the file given with settings_file and sets all the other settings.</span>
-<a name="l00246"></a>00246          <span class="comment"># @param kill Kill all players to activate the mode? Default True when round is already started, otherwise False.</span>
-<a name="l00247"></a><a class="code" href="class_mode_1_1_mode.html#a6cf2ccffddfb377d9abdb116ba74bd3b">00247</a>         <span class="keyword">def </span><a class="code" href="class_mode_1_1_mode.html#a6cf2ccffddfb377d9abdb116ba74bd3b" title="Enables the mode.">activate</a>(self, kill=None):
-<a name="l00248"></a>00248                 <span class="keyword">global</span> settings_prefix
-<a name="l00249"></a>00249                 <span class="keyword">global</span> current_mode
-<a name="l00250"></a>00250                 <span class="keywordflow">if</span> kill == <span class="keywordtype">None</span>:
-<a name="l00251"></a>00251                         <span class="keywordflow">if</span> LadderLogHandlers.roundStarted:
-<a name="l00252"></a>00252                                 kill=<span class="keyword">True</span>
-<a name="l00253"></a>00253                         <span class="keywordflow">else</span>:
-<a name="l00254"></a>00254                                 kill=<span class="keyword">False</span>
-<a name="l00255"></a>00255                 settings_prefix=settings_prefix.rstrip(<span class="stringliteral">&quot;/&quot;</span>)
-<a name="l00256"></a>00256                 <span class="keywordflow">if</span> self.<a class="code" href="class_mode_1_1_mode.html#a40402dcfd634686dcd9b2ce8b8f3d4eb" title="The settings file which to include when the mode gets activated.">settings_file</a> != <span class="keywordtype">None</span>:
-<a name="l00257"></a>00257                         Armagetronad.SendCommand(<span class="stringliteral">&quot;INCLUDE {0}/{1}&quot;</span>.format(settings_prefix, self.<a class="code" href="class_mode_1_1_mode.html#a40402dcfd634686dcd9b2ce8b8f3d4eb" title="The settings file which to include when the mode gets activated.">settings_file</a>) )
-<a name="l00258"></a>00258                 Armagetronad.SendCommand(<span class="stringliteral">&quot;TEAMS_MAX &quot;</span>+str(self.<a class="code" href="class_mode_1_1_mode.html#a55c4e205a8cb20550c0f3924471522ab" title="Maximal teams that can be active in this mode.">max_teams</a>) )
-<a name="l00259"></a>00259                 Armagetronad.SendCommand(<span class="stringliteral">&quot;TEAM_MAX_PLAYERS &quot;</span>+str(self.<a class="code" href="class_mode_1_1_mode.html#ad4ba6cae17b92d4c8c85c35dc9418c8b" title="How much members a team can have maximaly.">max_team_members</a>) )
-<a name="l00260"></a>00260                 <span class="keywordflow">for</span> setting, value <span class="keywordflow">in</span> self.<a class="code" href="class_mode_1_1_mode.html#af4bebfeddda24f7437fc086bc52ca711" title="Additional settings.">settings</a>.items():
-<a name="l00261"></a>00261                         Armagetronad.SendCommand(<span class="stringliteral">&quot;{0} {1}&quot;</span>.format(setting,value) )
-<a name="l00262"></a>00262                 Team.max_teams=self.<a class="code" href="class_mode_1_1_mode.html#a55c4e205a8cb20550c0f3924471522ab" title="Maximal teams that can be active in this mode.">max_teams</a>
-<a name="l00263"></a>00263                 Team.max_team_members=self.<a class="code" href="class_mode_1_1_mode.html#ad4ba6cae17b92d4c8c85c35dc9418c8b" title="How much members a team can have maximaly.">max_team_members</a>
-<a name="l00264"></a>00264                 <span class="keywordflow">if</span> kill == <span class="keyword">True</span>:
-<a name="l00265"></a>00265                         <span class="keywordflow">for</span> player <span class="keywordflow">in</span> Player.players.values():
-<a name="l00266"></a>00266                                 player.kill()
-<a name="l00267"></a>00267                 current_mode=self.<a class="code" href="class_mode_1_1_mode.html#ac1d907aa0ec93e0908aa3fa2cac0bde7" title="Returns an escaped name for the mode.">getEscapedName</a>()
-<a name="l00268"></a>00268                 log.info(<span class="stringliteral">&quot;Mode &quot;</span>+current_mode+<span class="stringliteral">&quot; activated.&quot;</span>)
-<a name="l00269"></a>00269 
-<a name="l00270"></a>00270         <span class="comment">## @brief Spawns all players (teams)</span>
-<a name="l00271"></a>00271          <span class="comment"># @details Spawns all teams by using the respoints.</span>
-<a name="l00272"></a><a class="code" href="class_mode_1_1_mode.html#a356d4927de4587c311227527e55eaada">00272</a>         <span class="keyword">def </span><a class="code" href="class_mode_1_1_mode.html#a356d4927de4587c311227527e55eaada" title="Spawns all players (teams).">spawnTeams</a>(self):
-<a name="l00273"></a>00273                 i=0
-<a name="l00274"></a>00274                 log.debug(<span class="stringliteral">&quot;Spawn teams ...&quot;</span>)
-<a name="l00275"></a>00275                 <span class="keywordflow">for</span> team <span class="keywordflow">in</span> Team.teams:
-<a name="l00276"></a>00276                         <span class="keywordflow">try</span>:
-<a name="l00277"></a>00277                                 respoint=self.<a class="code" href="class_mode_1_1_mode.html#af6ee8ed30365011c35b48d4c5696e05b" title="Gets a respoint.">__getRespoint</a>(<span class="stringliteral">&quot;roundstart&quot;</span>,i)
-<a name="l00278"></a>00278                                 t,x,y,xdir,ydir=respoint
-<a name="l00279"></a>00279                                 Team.teams[team].respawn(x,y,xdir,ydir,1,1,<span class="keyword">True</span>)
-<a name="l00280"></a>00280                         <span class="keywordflow">except</span> Exception <span class="keyword">as</span> e:
-<a name="l00281"></a>00281                                 log.error(<span class="stringliteral">&quot;Could not spawn team {0}: {1}&quot;</span>.format(str(team),str(e)) )
-<a name="l00282"></a>00282                         i=i+1
-<a name="l00283"></a>00283 
-<a name="l00284"></a>00284         <span class="comment">## @brief Spawns all zones</span>
-<a name="l00285"></a>00285          <span class="comment"># @details Spawns all zones related to the mode</span>
-<a name="l00286"></a><a class="code" href="class_mode_1_1_mode.html#a152e7d0cf7d765c82810d69662f8af40">00286</a>         <span class="keyword">def </span><a class="code" href="class_mode_1_1_mode.html#a152e7d0cf7d765c82810d69662f8af40" title="Spawns all zones.">spawnZones</a>(self):
-<a name="l00287"></a>00287                 log.debug(<span class="stringliteral">&quot;Spawn zones ...&quot;</span>)
-<a name="l00288"></a>00288                 <span class="keywordflow">for</span> team,zone <span class="keywordflow">in</span> self.<a class="code" href="class_mode_1_1_mode.html#a0672655c12a3e18e65d084c395d9378c" title="The zones of the modes.">__zones</a>:
-<a name="l00289"></a>00289                         <span class="keywordflow">if</span> team==<span class="keywordtype">None</span>:
-<a name="l00290"></a>00290                                 <span class="keywordflow">for</span> team <span class="keywordflow">in</span> Team.teams.values():
-<a name="l00291"></a>00291                                         zone.color=team.color
-<a name="l00292"></a>00292                                         zone.teamnames=[team.getEscapedName(),]
-<a name="l00293"></a>00293                                         zone.spawn()
-<a name="l00294"></a>00294                                 <span class="keywordflow">return</span>
-<a name="l00295"></a>00295                         <span class="keywordflow">elif</span> team == -1:
-<a name="l00296"></a>00296                                         zone.spawn()
-<a name="l00297"></a>00297                         <span class="keywordflow">else</span>:
-<a name="l00298"></a>00298                                 <span class="keywordflow">if</span> len(Team.teams)-1 &lt; team-1:
-<a name="l00299"></a>00299                                         <span class="keywordflow">continue</span>
-<a name="l00300"></a>00300                                 zone.teamnames=[list(Team.teams.keys())[team-1]]
-<a name="l00301"></a>00301                                 zone.spawn()
-<a name="l00302"></a>00302         <span class="comment">## @brief Gets a respoint</span>
-<a name="l00303"></a>00303          <span class="comment"># @details Gets a respoint for roundstart or normal for the given team</span>
-<a name="l00304"></a>00304          <span class="comment"># @param mode The mode which to use (roundstart, normal)</span>
-<a name="l00305"></a>00305          <span class="comment"># @param team_num the number of the team for which to get a respoint.</span>
-<a name="l00306"></a>00306          <span class="comment"># @exception RuntimeError Raised if no respoints for the given team exist.</span>
-<a name="l00307"></a>00307          <span class="comment"># @exception RuntimeError Raised if the type is  unknown</span>
-<a name="l00308"></a><a class="code" href="class_mode_1_1_mode.html#af6ee8ed30365011c35b48d4c5696e05b">00308</a>         <span class="keyword">def </span><a class="code" href="class_mode_1_1_mode.html#af6ee8ed30365011c35b48d4c5696e05b" title="Gets a respoint.">__getRespoint</a>(self, mode, team_num):
-<a name="l00309"></a>00309                 team_respoints=[]
-<a name="l00310"></a>00310                 <span class="keywordflow">for</span> respoint <span class="keywordflow">in</span> self.<a class="code" href="class_mode_1_1_mode.html#a2e07ed5d08d3ced387d24587f8a87967" title="Respoints of this mode.">__respoints</a>:
-<a name="l00311"></a>00311                         <span class="keywordflow">if</span> respoint[0]==team_num <span class="keywordflow">or</span> respoint[0]==-1:
-<a name="l00312"></a>00312                                 team_respoints.append(respoint)
-<a name="l00313"></a>00313                 <span class="keywordflow">if</span> len(team_respoints)==0:
-<a name="l00314"></a>00314                         log.error(<span class="stringliteral">&quot;No respoint for team with number &quot;</span>+str(team_num) )
-<a name="l00315"></a>00315                         <span class="keywordflow">raise</span> RuntimeError(<span class="stringliteral">&quot;Team with number &quot;</span>+str(team_num)+<span class="stringliteral">&quot; has no respoints.&quot;</span>,0)
-<a name="l00316"></a>00316                 <span class="keywordflow">if</span> team_num <span class="keywordflow">not</span> <span class="keywordflow">in</span> self.<a class="code" href="class_mode_1_1_mode.html#a93dd6d85da76655a5ca8f5a4873109f9" title="The last used respoint.">__last_respoint</a>:
-<a name="l00317"></a>00317                         self.<a class="code" href="class_mode_1_1_mode.html#a93dd6d85da76655a5ca8f5a4873109f9" title="The last used respoint.">__last_respoint</a>[team_num]=0
-<a name="l00318"></a>00318                 <span class="keywordflow">if</span> <span class="stringliteral">&quot;first&quot;</span> <span class="keywordflow">in</span> self.<a class="code" href="class_mode_1_1_mode.html#a1fd32aea9872573e444d08b65ec28ef2" title="How should the respoints be used?">__restype</a>:
-<a name="l00319"></a>00319                         self.<a class="code" href="class_mode_1_1_mode.html#a93dd6d85da76655a5ca8f5a4873109f9" title="The last used respoint.">__last_respoint</a>[team_num]=0
-<a name="l00320"></a>00320                         <span class="keywordflow">return</span> team_respoints[0]
-<a name="l00321"></a>00321                 <span class="keywordflow">if</span> <span class="stringliteral">&quot;whileround&quot;</span> <span class="keywordflow">in</span> self.<a class="code" href="class_mode_1_1_mode.html#a1fd32aea9872573e444d08b65ec28ef2" title="How should the respoints be used?">__restype</a> <span class="keywordflow">and</span> mode==<span class="stringliteral">&quot;roundstart&quot;</span>:
-<a name="l00322"></a>00322                         self.<a class="code" href="class_mode_1_1_mode.html#a93dd6d85da76655a5ca8f5a4873109f9" title="The last used respoint.">__last_respoint</a>[team_num]=0
-<a name="l00323"></a>00323                         <span class="keywordflow">return</span> team_respoints[0]
-<a name="l00324"></a>00324                 <span class="keywordflow">if</span> <span class="stringliteral">&quot;roundstart&quot;</span> <span class="keywordflow">in</span> self.<a class="code" href="class_mode_1_1_mode.html#a1fd32aea9872573e444d08b65ec28ef2" title="How should the respoints be used?">__restype</a> <span class="keywordflow">and</span> mode==<span class="stringliteral">&quot;normal&quot;</span>:
-<a name="l00325"></a>00325                         <span class="keywordflow">return</span> self.<a class="code" href="class_mode_1_1_mode.html#a2e07ed5d08d3ced387d24587f8a87967" title="Respoints of this mode.">__respoints</a>[self.<a class="code" href="class_mode_1_1_mode.html#a93dd6d85da76655a5ca8f5a4873109f9" title="The last used respoint.">__last_respoint</a>[team_num] ]
-<a name="l00326"></a>00326                 <span class="keywordflow">if</span> <span class="stringliteral">&quot;random&quot;</span> <span class="keywordflow">in</span> self.<a class="code" href="class_mode_1_1_mode.html#a1fd32aea9872573e444d08b65ec28ef2" title="How should the respoints be used?">__restype</a>:
-<a name="l00327"></a>00327                         respoint=random.Random().choice(team_respoints)
-<a name="l00328"></a>00328                         self.<a class="code" href="class_mode_1_1_mode.html#a93dd6d85da76655a5ca8f5a4873109f9" title="The last used respoint.">__last_respoint</a>[team_num]=team_respoints.index(respoint)
-<a name="l00329"></a>00329                         <span class="keywordflow">return</span> repoint
-<a name="l00330"></a>00330                 <span class="keywordflow">if</span> <span class="stringliteral">&quot;toggle&quot;</span> <span class="keywordflow">in</span> self.<a class="code" href="class_mode_1_1_mode.html#a1fd32aea9872573e444d08b65ec28ef2" title="How should the respoints be used?">__restype</a>:
-<a name="l00331"></a>00331                         self.<a class="code" href="class_mode_1_1_mode.html#a93dd6d85da76655a5ca8f5a4873109f9" title="The last used respoint.">__last_respoint</a>[team_num]=self.<a class="code" href="class_mode_1_1_mode.html#a93dd6d85da76655a5ca8f5a4873109f9" title="The last used respoint.">__last_respoint</a>[team_num]+1
-<a name="l00332"></a>00332                         <span class="keywordflow">if</span> self.<a class="code" href="class_mode_1_1_mode.html#a93dd6d85da76655a5ca8f5a4873109f9" title="The last used respoint.">__last_respoint</a>[team_num]&gt;=len(team_respoints):
-<a name="l00333"></a>00333                                 self.<a class="code" href="class_mode_1_1_mode.html#a93dd6d85da76655a5ca8f5a4873109f9" title="The last used respoint.">__last_respoint</a>[team_num]=0
-<a name="l00334"></a>00334                         <span class="keywordflow">return</span> team_respoints[self.<a class="code" href="class_mode_1_1_mode.html#a93dd6d85da76655a5ca8f5a4873109f9" title="The last used respoint.">__last_respoint</a>[team_num]]
-<a name="l00335"></a>00335                 <span class="keywordflow">raise</span> RuntimeError(<span class="stringliteral">&quot;Type not known.&quot;</span>,1)
-<a name="l00336"></a>00336 
-<a name="l00337"></a>00337         <span class="comment">## @brief Adds a zone</span>
-<a name="l00338"></a>00338          <span class="comment"># @details Adds the given zone to the internal zone list.</span>
-<a name="l00339"></a>00339          <span class="comment"># @param team The number of the team for which the zone should be spawned, or None</span>
-<a name="l00340"></a>00340          <span class="comment">#             if it should be spawned for all teams.</span>
-<a name="l00341"></a>00341          <span class="comment"># @param zone The zone to add</span>
-<a name="l00342"></a><a class="code" href="class_mode_1_1_mode.html#ae24a354b3b872ac4d0c12c43cec5f475">00342</a>         <span class="keyword">def </span><a class="code" href="class_mode_1_1_mode.html#ae24a354b3b872ac4d0c12c43cec5f475" title="Adds a zone.">addZone</a>(self, team, zone):
-<a name="l00343"></a>00343                 self.<a class="code" href="class_mode_1_1_mode.html#a0672655c12a3e18e65d084c395d9378c" title="The zones of the modes.">__zones</a>.append( (team,zone) )
+<a name="l00021"></a>00021 <span class="keywordflow">if</span> <span class="stringliteral">&quot;settings_prefix&quot;</span> <span class="keywordflow">not</span> <span class="keywordflow">in</span> dir():
+<a name="l00022"></a>00022         <span class="comment">## @brief Global settings directory</span>
+<a name="l00023"></a>00023          <span class="comment"># @details This is used as default for settings_prefix by new modes.</span>
+<a name="l00024"></a>00024         settings_prefix=<span class="stringliteral">&quot;MultiModeServer/&quot;</span>
+<a name="l00025"></a>00025 
+<a name="l00026"></a>00026         <span class="comment">## @brief The logging object</span>
+<a name="l00027"></a>00027          <span class="comment"># @private</span>
+<a name="l00028"></a>00028          <span class="comment"># @details Used for logging by this module</span>
+<a name="l00029"></a>00029          <span class="comment"># @note To enable or disable logging of this module use \link Team.enableLogging\endlink</span>
+<a name="l00030"></a>00030         log=logging.getLogger(<span class="stringliteral">&quot;ModeModule&quot;</span>)
+<a name="l00031"></a>00031         log.addHandler(logging.NullHandler() )
+<a name="l00032"></a>00032 
+<a name="l00033"></a>00033         <span class="comment">## @brief Stores all modes</span>
+<a name="l00034"></a>00034          <span class="comment"># @details This is a dictionary of all avaliable modes, where the name of the mode is the key.</span>
+<a name="l00035"></a>00035         modes=dict()
+<a name="l00036"></a>00036 
+<a name="l00037"></a>00037         <span class="comment">## @brief The current mode</span>
+<a name="l00038"></a>00038          <span class="comment"># @details The escaped name of the currently active mode.</span>
+<a name="l00039"></a>00039         current_mode=<span class="keywordtype">None</span>
+<a name="l00040"></a>00040 
+<a name="l00041"></a>00041 <span class="comment">## @brief Adds a new mode</span>
+<a name="l00042"></a>00042  <span class="comment"># @details Adds a mode and stores it in the modes list</span>
+<a name="l00043"></a>00043  <span class="comment"># @param name The name of the mode which to use for the new mode.</span>
+<a name="l00044"></a>00044  <span class="comment"># @param settings_file The settings file which is include when the mode gets activated.</span>
+<a name="l00045"></a>00045  <span class="comment"># @param settings Optional The initial settings for the mode. This can also be changed later.</span>
+<a name="l00046"></a>00046  <span class="comment"># @see Mode.__init__</span>
+<a name="l00047"></a>00047  <span class="comment"># @note If the mode the first mode which is added, it is activated.</span>
+<a name="l00048"></a>00048 <span class="keyword">def </span>Add(name, settings_file=None, settings=dict() ):
+<a name="l00049"></a>00049         m=Mode(name, settings_file, **settings)
+<a name="l00050"></a>00050         modes[m.getEscapedName()]=m
+<a name="l00051"></a>00051         <span class="keywordflow">if</span> len(modes)==1:
+<a name="l00052"></a>00052                 m.activate()
+<a name="l00053"></a>00053         log.info(<span class="stringliteral">&quot;Mode &quot;</span>+ name + <span class="stringliteral">&quot; added.&quot;</span>)
+<a name="l00054"></a>00054 
+<a name="l00055"></a>00055 <span class="comment">## @brief Deletes the mode</span>
+<a name="l00056"></a>00056  <span class="comment"># @details Deletes the given mode. If the mode was activated, the first mode is activated.</span>
+<a name="l00057"></a>00057  <span class="comment"># @param name The escaped name of the mode to delete.</span>
+<a name="l00058"></a>00058  <span class="comment"># @exception RuntimeError Raised if the mode doesn&#39;t exit.</span>
+<a name="l00059"></a>00059 <span class="keyword">def </span>Remove(name):
+<a name="l00060"></a>00060         <span class="keywordflow">if</span> name <span class="keywordflow">not</span> <span class="keywordflow">in</span> modes:
+<a name="l00061"></a>00061                 <span class="keywordflow">raise</span> RuntimeError
+<a name="l00062"></a>00062         dname=modes[name].name
+<a name="l00063"></a>00063         del modes[name]
+<a name="l00064"></a>00064         <span class="keywordflow">if</span> current_mode == name <span class="keywordflow">and</span> len(modes)&gt;0:
+<a name="l00065"></a>00065                 modes.values()[0].activate()
+<a name="l00066"></a>00066         log.info(<span class="stringliteral">&quot;Mode &quot;</span>+dname+<span class="stringliteral">&quot; removed.&quot;</span>)
+<a name="l00067"></a>00067 
+<a name="l00068"></a>00068 <span class="comment">## @brief Saves all modes</span>
+<a name="l00069"></a>00069  <span class="comment"># @details Saves the modes in Mode.modes.</span>
+<a name="l00070"></a>00070  <span class="comment"># @param dir Optional The directory where the mode files should be written.</span>
+<a name="l00071"></a>00071  <span class="comment"># @param ext Optional The file extension which the mode files should have, including the point.</span>
+<a name="l00072"></a>00072  <span class="comment"># @param modename Optional Save only the mode with the escaped name modename. By default all modes are saved.</span>
+<a name="l00073"></a>00073 <span class="keyword">def </span>saveModes(dir=&quot;Modes&quot;, ext=&quot;.aamode&quot;, modename=None):
+<a name="l00074"></a>00074         <span class="keyword">global</span> modes
+<a name="l00075"></a>00075         <span class="keywordflow">if</span> <span class="keywordflow">not</span> dir.endswith(<span class="stringliteral">&quot;/&quot;</span>):
+<a name="l00076"></a>00076                 dir=dir+<span class="stringliteral">&quot;/&quot;</span>
+<a name="l00077"></a>00077         <span class="keywordflow">if</span> <span class="keywordflow">not</span> os.path.exists(dir):
+<a name="l00078"></a>00078                 os.mkdir(dir)
+<a name="l00079"></a>00079         <span class="keywordflow">if</span> modename==<span class="keywordtype">None</span>:
+<a name="l00080"></a>00080                 <span class="keywordflow">for</span> mode <span class="keywordflow">in</span> modes.values():
+<a name="l00081"></a>00081                         f=open(dir+mode.getEscapedName()+ext,<span class="stringliteral">&quot;w&quot;</span>)
+<a name="l00082"></a>00082                         yaml.dump(mode, f)
+<a name="l00083"></a>00083         <span class="keywordflow">else</span>:
+<a name="l00084"></a>00084                 <span class="keywordflow">if</span> modename <span class="keywordflow">in</span> modes:
+<a name="l00085"></a>00085                         f=open(dir+modename+ext,<span class="stringliteral">&quot;w&quot;</span>)
+<a name="l00086"></a>00086                         yaml.dump(modes[modename], f)
+<a name="l00087"></a>00087 
+<a name="l00088"></a>00088 <span class="comment">## @brief Loads modes</span>
+<a name="l00089"></a>00089  <span class="comment"># @details Loads the modes from a directory.</span>
+<a name="l00090"></a>00090  <span class="comment"># @param dir Optional The directory from which the modes should be loaded.</span>
+<a name="l00091"></a>00091  <span class="comment"># @param ext Optional The file extensions that mode files have, including the point.</span>
+<a name="l00092"></a>00092 <span class="keyword">def </span>loadModes(dir=&quot;Modes&quot;, ext=&quot;.aamode&quot;):
+<a name="l00093"></a>00093         <span class="keywordflow">if</span> <span class="keywordflow">not</span> os.path.exists(dir):
+<a name="l00094"></a>00094                 <span class="keywordflow">return</span>
+<a name="l00095"></a>00095         <span class="keyword">global</span> modes
+<a name="l00096"></a>00096         <span class="keywordflow">if</span> <span class="keywordflow">not</span> dir.endswith(<span class="stringliteral">&quot;/&quot;</span>):
+<a name="l00097"></a>00097                 dir=dir+<span class="stringliteral">&quot;/&quot;</span>
+<a name="l00098"></a>00098         modefiles=glob(dir+<span class="stringliteral">&quot;*&quot;</span>+ext)
+<a name="l00099"></a>00099         <span class="keywordflow">for</span> filename <span class="keywordflow">in</span> modefiles:
+<a name="l00100"></a>00100                 f=open(filename, <span class="stringliteral">&quot;</span><span class="stringliteral">r&quot;)</span>
+<a name="l00101"></a>00101 <span class="stringliteral">                m=yaml.load(f)</span>
+<a name="l00102"></a>00102 <span class="stringliteral">                modes[m.getEscapedName()]=m</span>
+<a name="l00103"></a>00103 <span class="stringliteral">                log.info(</span><span class="stringliteral">&quot;Loaded mode &quot;</span>+m.name)
+<a name="l00104"></a>00104         
+<a name="l00105"></a>00105 
+<a name="l00106"></a>00106 <span class="comment">## @class Mode.Mode</span>
+<a name="l00107"></a>00107  <span class="comment"># @brief A mode</span>
+<a name="l00108"></a>00108  <span class="comment"># @details This class represents a mode. It stores all information about the mode.</span>
+<a name="l00109"></a><a class="code" href="class_mode_1_1_mode.html">00109</a> <span class="keyword">class </span><a class="code" href="class_mode_1_1_mode.html" title="A mode.">Mode</a>(yaml.YAMLObject):
+<a name="l00110"></a>00110         <span class="comment">## @property name</span>
+<a name="l00111"></a>00111          <span class="comment"># @brief The name of the mode</span>
+<a name="l00112"></a>00112          <span class="comment"># @details A string which contains the name of the mode.</span>
+<a name="l00113"></a>00113 
+<a name="l00114"></a>00114         <span class="comment">## @property __zones</span>
+<a name="l00115"></a>00115          <span class="comment"># @brief The zones of the modes.</span>
+<a name="l00116"></a>00116          <span class="comment"># @details A list of zones. Each item is a tuple of team and the zone object.</span>
+<a name="l00117"></a>00117          <span class="comment">#          The team could be None if the zone should be spawned for all teams.</span>
+<a name="l00118"></a>00118          <span class="comment">#          Otherwise, set team to the number of the team for which the zone</span>
+<a name="l00119"></a>00119          <span class="comment">#          should be spawned, or -1 if the zone doesn&#39;t belong to any team and</span>
+<a name="l00120"></a>00120          <span class="comment">#          should allways be spawned.</span>
+<a name="l00121"></a>00121 
+<a name="l00122"></a>00122         <span class="comment">## @property max_teams</span>
+<a name="l00123"></a>00123          <span class="comment"># @brief Maximal teams that can be active in this mode.</span>
+<a name="l00124"></a>00124          <span class="comment"># @details The number of teams the could be active in this mode or 0 for unlimited.</span>
+<a name="l00125"></a>00125 
+<a name="l00126"></a>00126         <span class="comment">## @property max_team_members</span>
+<a name="l00127"></a>00127          <span class="comment"># @brief How much members a team can have maximaly.</span>
+<a name="l00128"></a>00128          <span class="comment"># @details Number of maximal members per team or 0 for unlimited.</span>
+<a name="l00129"></a>00129 
+<a name="l00130"></a>00130         <span class="comment">## @property settings_file</span>
+<a name="l00131"></a>00131          <span class="comment"># @brief The settings file which to include when the mode gets activated.</span>
+<a name="l00132"></a>00132          <span class="comment"># @details The path of the file which gets include when the mode is activated, relative</span>
+<a name="l00133"></a>00133          <span class="comment">#          to settings_prefix</span>
+<a name="l00134"></a>00134 
+<a name="l00135"></a>00135         <span class="comment">## @property settings_prefix</span>
+<a name="l00136"></a>00136          <span class="comment"># @brief The directory under which the settings files are stored.</span>
+<a name="l00137"></a>00137          <span class="comment"># @details Path to the directory which contains the setting files.</span>
+<a name="l00138"></a>00138          <span class="comment"># @see settings_file</span>
+<a name="l00139"></a>00139 
+<a name="l00140"></a>00140         <span class="comment">## @property __respoints</span>
+<a name="l00141"></a>00141          <span class="comment"># @brief Respoints of this mode.</span>
+<a name="l00142"></a>00142          <span class="comment"># @details List of respawn points. Each respawn point is a tuple of team,x,y,xdir and ydir.</span>
+<a name="l00143"></a>00143          <span class="comment">#          Where x,y are the coordinates, and xdir and ydir are the dirtion.</span>
+<a name="l00144"></a>00144          <span class="comment">#          If the respoint should be avaliable for all teams, set team to None.</span>
+<a name="l00145"></a>00145          <span class="comment">#          Else set team to the number of the team for which the respoint should be</span>
+<a name="l00146"></a>00146          <span class="comment">#          avaliable.</span>
+<a name="l00147"></a>00147 
+<a name="l00148"></a>00148         <span class="comment">## @property settings</span>
+<a name="l00149"></a>00149          <span class="comment"># @brief Additional settings.</span>
+<a name="l00150"></a>00150          <span class="comment"># @details Dictionary of settings where the key is the name of the setting and the</span>
+<a name="l00151"></a>00151          <span class="comment">#          value is the value of the setting.</span>
+<a name="l00152"></a>00152 
+<a name="l00153"></a>00153         <span class="comment">## @property __restype</span>
+<a name="l00154"></a>00154          <span class="comment"># @brief How should the respoints be used?</span>
+<a name="l00155"></a>00155          <span class="comment"># @details Could be random_roundstart, random_allways, toggle_roundstart,</span>
+<a name="l00156"></a>00156          <span class="comment">#          toggle_allways,toggle_whileround, random_whileround or first.</span>
+<a name="l00157"></a>00157 
+<a name="l00158"></a>00158         <span class="comment">## @property __last_respoint</span>
+<a name="l00159"></a>00159          <span class="comment"># @brief The last used respoint.</span>
+<a name="l00160"></a>00160          <span class="comment"># @details The number of the last-used respoint for each team.</span>
+<a name="l00161"></a>00161 
+<a name="l00162"></a>00162         <span class="comment">## @property lives</span>
+<a name="l00163"></a>00163          <span class="comment"># @brief How much lives does a player have?</span>
+<a name="l00164"></a>00164          <span class="comment"># @details Number of lives a player has in this mode.</span>
+<a name="l00165"></a>00165 
+<a name="l00166"></a>00166         <span class="comment">## @brief Slots</span>
+<a name="l00167"></a>00167          <span class="comment"># @details See http://docs.python.org OOP</span>
+<a name="l00168"></a>00168          <span class="comment"># @internal</span>
+<a name="l00169"></a><a class="code" href="class_mode_1_1_mode.html#a6f65d9a9362971bd8896a81a0d71c642">00169</a>         __slots__=(<span class="stringliteral">&quot;name&quot;</span>,<span class="stringliteral">&quot;__zones&quot;</span>,<span class="stringliteral">&quot;max_teams&quot;</span>,<span class="stringliteral">&quot;max_team_members&quot;</span>,<span class="stringliteral">&quot;settings_file&quot;</span>,
+<a name="l00170"></a>00170                    <span class="stringliteral">&quot;__respoints&quot;</span>,<span class="stringliteral">&quot;settings&quot;</span>,<span class="stringliteral">&quot;__restype&quot;</span>,<span class="stringliteral">&quot;__last_respoint&quot;</span>,<span class="stringliteral">&quot;short_name&quot;</span>,<span class="stringliteral">&quot;lives&quot;</span>)
+<a name="l00171"></a>00171         <span class="comment">## @brief Yaml settings</span>
+<a name="l00172"></a>00172          <span class="comment"># @details See http://pyyaml.org/wiki/PyYAMLDocumentation for details to the PyYaml library.</span>
+<a name="l00173"></a>00173          <span class="comment"># @internal</span>
+<a name="l00174"></a>00174          <span class="comment"># @cond</span>
+<a name="l00175"></a>00175         yaml_tag=<span class="stringliteral">&quot;!mode&quot;</span>
+<a name="l00176"></a>00176         <span class="comment">## @endcond</span>
+<a name="l00177"></a>00177 
+<a name="l00178"></a>00178         <span class="comment">## @brief Which variables shouldn&#39;t be saved by object serialized?</span>
+<a name="l00179"></a>00179          <span class="comment"># @details Variables to exclude in __get_state__</span>
+<a name="l00180"></a>00180          <span class="comment"># @internal</span>
+<a name="l00181"></a><a class="code" href="class_mode_1_1_mode.html#af525bdda09b2a2c9c560be5062d7c55b">00181</a>         __not_persistent=(<span class="stringliteral">&quot;__last_respoint&quot;</span>)
+<a name="l00182"></a>00182  
+<a name="l00183"></a>00183         <span class="comment">## @brief Init function (Constructor)</span>
+<a name="l00184"></a>00184          <span class="comment"># @details Inits a new Mode object and adds properties to it.</span>
+<a name="l00185"></a>00185          <span class="comment"># @param name The name of the mode</span>
+<a name="l00186"></a>00186          <span class="comment"># @param settings_file The settings file which is include when the mode gets activated.</span>
+<a name="l00187"></a>00187          <span class="comment"># @param settings Additional settings.</span>
+<a name="l00188"></a><a class="code" href="class_mode_1_1_mode.html#add2325e8a6bf4ff3aacb7c1dd3299e5a">00188</a>         <span class="keyword">def </span><a class="code" href="class_mode_1_1_mode.html#add2325e8a6bf4ff3aacb7c1dd3299e5a" title="Init function (Constructor).">__init__</a>(self, name, settings_file=None, **settings):
+<a name="l00189"></a><a class="code" href="class_mode_1_1_mode.html#a38afa93ee0f4ad9e8258a510ccdbaa9c">00189</a>                 self.<a class="code" href="class_mode_1_1_mode.html#a38afa93ee0f4ad9e8258a510ccdbaa9c" title="The name of the mode.">name</a>=name
+<a name="l00190"></a><a class="code" href="class_mode_1_1_mode.html#a40402dcfd634686dcd9b2ce8b8f3d4eb">00190</a>                 self.<a class="code" href="class_mode_1_1_mode.html#a40402dcfd634686dcd9b2ce8b8f3d4eb" title="The settings file which to include when the mode gets activated.">settings_file</a>=settings_file
+<a name="l00191"></a><a class="code" href="class_mode_1_1_mode.html#af4bebfeddda24f7437fc086bc52ca711">00191</a>                 self.<a class="code" href="class_mode_1_1_mode.html#af4bebfeddda24f7437fc086bc52ca711" title="Additional settings.">settings</a>=settings
+<a name="l00192"></a><a class="code" href="class_mode_1_1_mode.html#a0672655c12a3e18e65d084c395d9378c">00192</a>                 self.<a class="code" href="class_mode_1_1_mode.html#a0672655c12a3e18e65d084c395d9378c" title="The zones of the modes.">__zones</a>=list()
+<a name="l00193"></a><a class="code" href="class_mode_1_1_mode.html#a2e07ed5d08d3ced387d24587f8a87967">00193</a>                 self.<a class="code" href="class_mode_1_1_mode.html#a2e07ed5d08d3ced387d24587f8a87967" title="Respoints of this mode.">__respoints</a>=list()
+<a name="l00194"></a><a class="code" href="class_mode_1_1_mode.html#ad4ba6cae17b92d4c8c85c35dc9418c8b">00194</a>                 self.<a class="code" href="class_mode_1_1_mode.html#ad4ba6cae17b92d4c8c85c35dc9418c8b" title="How much members a team can have maximaly.">max_team_members</a>=-1
+<a name="l00195"></a><a class="code" href="class_mode_1_1_mode.html#a55c4e205a8cb20550c0f3924471522ab">00195</a>                 self.<a class="code" href="class_mode_1_1_mode.html#a55c4e205a8cb20550c0f3924471522ab" title="Maximal teams that can be active in this mode.">max_teams</a>=-1
+<a name="l00196"></a><a class="code" href="class_mode_1_1_mode.html#a1fd32aea9872573e444d08b65ec28ef2">00196</a>                 self.<a class="code" href="class_mode_1_1_mode.html#a1fd32aea9872573e444d08b65ec28ef2" title="How should the respoints be used?">__restype</a>=<span class="stringliteral">&quot;toggle_roundstart&quot;</span>
+<a name="l00197"></a><a class="code" href="class_mode_1_1_mode.html#a93dd6d85da76655a5ca8f5a4873109f9">00197</a>                 self.<a class="code" href="class_mode_1_1_mode.html#a93dd6d85da76655a5ca8f5a4873109f9" title="The last used respoint.">__last_respoint</a>=dict()
+<a name="l00198"></a>00198                 self.<a class="code" href="class_mode_1_1_mode.html#acffe429e6af52f60fc386830811c33ed">short_name</a>=name.replace(<span class="stringliteral">&quot; &quot;</span>,<span class="stringliteral">&quot;_&quot;</span>).lower()
+<a name="l00199"></a><a class="code" href="class_mode_1_1_mode.html#a62c4256349100a948a336e4f41e73367">00199</a>                 self.<a class="code" href="class_mode_1_1_mode.html#a62c4256349100a948a336e4f41e73367" title="How much lives does a player have?">lives</a>=1
+<a name="l00200"></a>00200 
+<a name="l00201"></a>00201         <span class="comment">## @brief Adds a respoint</span>
+<a name="l00202"></a>00202          <span class="comment"># @details Adds the given respoint to the internal respoint list.</span>
+<a name="l00203"></a>00203          <span class="comment"># @param x The x-coordinate of the respoint.</span>
+<a name="l00204"></a>00204          <span class="comment"># @param y The y-coordinate of the respoint.</span>
+<a name="l00205"></a>00205          <span class="comment"># @param xdir The x-direction</span>
+<a name="l00206"></a>00206          <span class="comment"># @param ydir The y-direction</span>
+<a name="l00207"></a>00207          <span class="comment"># @param team Optional the number of the team for which the respoint should be used.</span>
+<a name="l00208"></a>00208          <span class="comment">#             If not given, the respoint is used for all teams.</span>
+<a name="l00209"></a><a class="code" href="class_mode_1_1_mode.html#a48c269456fe39631862a8be79627b0e5">00209</a>         <span class="keyword">def </span><a class="code" href="class_mode_1_1_mode.html#a48c269456fe39631862a8be79627b0e5" title="Adds a respoint.">addRespoint</a>(self, x, y, xdir, ydir, team=-1):
+<a name="l00210"></a>00210                 <span class="keywordflow">if</span> team <span class="keywordflow">not</span> <span class="keywordflow">in</span> self.<a class="code" href="class_mode_1_1_mode.html#a93dd6d85da76655a5ca8f5a4873109f9" title="The last used respoint.">__last_respoint</a>:
+<a name="l00211"></a>00211                         self.<a class="code" href="class_mode_1_1_mode.html#a93dd6d85da76655a5ca8f5a4873109f9" title="The last used respoint.">__last_respoint</a>[team]=0
+<a name="l00212"></a>00212                 self.<a class="code" href="class_mode_1_1_mode.html#a2e07ed5d08d3ced387d24587f8a87967" title="Respoints of this mode.">__respoints</a>.append( (team,x,y,xdir,ydir) )
+<a name="l00213"></a>00213 
+<a name="l00214"></a>00214         <span class="comment">## @brief Deletes all respoints</span>
+<a name="l00215"></a>00215          <span class="comment"># @details Cleans the intern respoint list.</span>
+<a name="l00216"></a><a class="code" href="class_mode_1_1_mode.html#a098cfc6ad819a1db17be57c9548bd199">00216</a>         <span class="keyword">def </span><a class="code" href="class_mode_1_1_mode.html#a098cfc6ad819a1db17be57c9548bd199" title="Deletes all respoints.">deleteRespoints</a>(self):
+<a name="l00217"></a>00217                 self.<a class="code" href="class_mode_1_1_mode.html#a2e07ed5d08d3ced387d24587f8a87967" title="Respoints of this mode.">__respoints</a>=list()
+<a name="l00218"></a>00218 
+<a name="l00219"></a>00219         <span class="comment">## @brief Gets respoints.</span>
+<a name="l00220"></a>00220          <span class="comment"># @details Returns a deepcopy of the intern respoint list.</span>
+<a name="l00221"></a>00221          <span class="comment"># @return A deepcopy of the repoints.</span>
+<a name="l00222"></a><a class="code" href="class_mode_1_1_mode.html#a1f3ca2f4e28ef874943310e4397f6ac2">00222</a>         <span class="keyword">def </span><a class="code" href="class_mode_1_1_mode.html#a1f3ca2f4e28ef874943310e4397f6ac2" title="Gets respoints.">getRespoints</a>(self):
+<a name="l00223"></a>00223                 <span class="keywordflow">return</span> copy.deepcopy(self.<a class="code" href="class_mode_1_1_mode.html#a2e07ed5d08d3ced387d24587f8a87967" title="Respoints of this mode.">__respoints</a>)
+<a name="l00224"></a>00224 
+<a name="l00225"></a>00225         <span class="comment">## @brief Call this when a player crashed.</span>
+<a name="l00226"></a>00226          <span class="comment"># @details This function will handle the crash and if the lives of the player arent&#39;t</span>
+<a name="l00227"></a>00227          <span class="comment">#          0, it will respawn the player.</span>
+<a name="l00228"></a>00228          <span class="comment"># @param player The ladder name of the player who crashed.</span>
+<a name="l00229"></a>00229          <span class="comment"># @param type The type of the crash(&quot;DEATH_FRAG&quot;,&quot;DEATH_TEAMKILL&quot;,...)</span>
+<a name="l00230"></a>00230          <span class="comment"># @return Has the player been respawned?</span>
+<a name="l00231"></a><a class="code" href="class_mode_1_1_mode.html#a68362e7b1cdd6ee60378f3cc1322a144">00231</a>         <span class="keyword">def </span><a class="code" href="class_mode_1_1_mode.html#a68362e7b1cdd6ee60378f3cc1322a144" title="Call this when a player crashed.">playerCrashed</a>(self, player, type=None):
+<a name="l00232"></a>00232                 Player.players[player].crashed()
+<a name="l00233"></a>00233                 <span class="keywordflow">if</span> Player.players[player].getLives()==0:
+<a name="l00234"></a>00234                         <span class="keywordflow">return</span>
+<a name="l00235"></a>00235                 <span class="keywordflow">if</span> len(self.<a class="code" href="class_mode_1_1_mode.html#a2e07ed5d08d3ced387d24587f8a87967" title="Respoints of this mode.">__respoints</a>)==0:
+<a name="l00236"></a>00236                         log.warning(<span class="stringliteral">&quot;No respoints for mode {0} registered.&quot;</span>.format(self.<a class="code" href="class_mode_1_1_mode.html#a38afa93ee0f4ad9e8258a510ccdbaa9c" title="The name of the mode.">name</a>) )
+<a name="l00237"></a>00237                         <span class="keywordflow">return</span> <span class="keyword">False</span>
+<a name="l00238"></a>00238                 <span class="comment"># get a repoint</span>
+<a name="l00239"></a>00239                 respoint=<span class="keywordtype">None</span>
+<a name="l00240"></a>00240                 i=0
+<a name="l00241"></a>00241                 <span class="keywordflow">for</span> team <span class="keywordflow">in</span> Team.teams.keys():
+<a name="l00242"></a>00242                         <span class="keywordflow">if</span> team==Player.players[player].getTeam():
+<a name="l00243"></a>00243                                 <span class="keywordflow">break</span>
+<a name="l00244"></a>00244                         i=i+1
+<a name="l00245"></a>00245                 <span class="keywordflow">if</span> i==len(Team.teams):
+<a name="l00246"></a>00246                         log.error(<span class="stringliteral">&quot;Player „{0}“ has an invalid team&quot;</span>.format(player) )
+<a name="l00247"></a>00247                         <span class="keywordflow">return</span>
+<a name="l00248"></a>00248                 respoint=self.getRespoint(<span class="stringliteral">&quot;normal&quot;</span>,i)
+<a name="l00249"></a>00249                 t,x,y,xdir,ydir=respoint
+<a name="l00250"></a>00250                 Player.players[player].respawn(x,y,xdir,ydir,<span class="keyword">False</span>)
+<a name="l00251"></a>00251 
+<a name="l00252"></a>00252         <span class="comment">## @brief Enables the mode</span>
+<a name="l00253"></a>00253          <span class="comment"># @details Includes the file given with settings_file and sets all the other settings.</span>
+<a name="l00254"></a>00254          <span class="comment"># @param kill Kill all players to activate the mode? Default True when round is already started, otherwise False.</span>
+<a name="l00255"></a><a class="code" href="class_mode_1_1_mode.html#a6cf2ccffddfb377d9abdb116ba74bd3b">00255</a>         <span class="keyword">def </span><a class="code" href="class_mode_1_1_mode.html#a6cf2ccffddfb377d9abdb116ba74bd3b" title="Enables the mode.">activate</a>(self, kill=None):
+<a name="l00256"></a>00256                 <span class="keyword">global</span> settings_prefix
+<a name="l00257"></a>00257                 <span class="keyword">global</span> current_mode
+<a name="l00258"></a>00258                 <span class="keywordflow">if</span> kill == <span class="keywordtype">None</span>:
+<a name="l00259"></a>00259                         <span class="keywordflow">if</span> LadderLogHandlers.roundStarted:
+<a name="l00260"></a>00260                                 kill=<span class="keyword">True</span>
+<a name="l00261"></a>00261                         <span class="keywordflow">else</span>:
+<a name="l00262"></a>00262                                 kill=<span class="keyword">False</span>
+<a name="l00263"></a>00263                 settings_prefix=settings_prefix.rstrip(<span class="stringliteral">&quot;/&quot;</span>)
+<a name="l00264"></a>00264                 Armagetronad.SendCommand(<span class="stringliteral">&quot;START_NEW_MATCH&quot;</span>)
+<a name="l00265"></a>00265                 <span class="keywordflow">if</span> self.<a class="code" href="class_mode_1_1_mode.html#a40402dcfd634686dcd9b2ce8b8f3d4eb" title="The settings file which to include when the mode gets activated.">settings_file</a> != <span class="keywordtype">None</span>:
+<a name="l00266"></a>00266                         Armagetronad.SendCommand(<span class="stringliteral">&quot;INCLUDE {0}/{1}&quot;</span>.format(settings_prefix, self.<a class="code" href="class_mode_1_1_mode.html#a40402dcfd634686dcd9b2ce8b8f3d4eb" title="The settings file which to include when the mode gets activated.">settings_file</a>) )
+<a name="l00267"></a>00267                 Armagetronad.SendCommand(<span class="stringliteral">&quot;TEAMS_MAX &quot;</span>+str(self.<a class="code" href="class_mode_1_1_mode.html#a55c4e205a8cb20550c0f3924471522ab" title="Maximal teams that can be active in this mode.">max_teams</a>) )
+<a name="l00268"></a>00268                 Armagetronad.SendCommand(<span class="stringliteral">&quot;TEAM_MAX_PLAYERS &quot;</span>+str(self.<a class="code" href="class_mode_1_1_mode.html#ad4ba6cae17b92d4c8c85c35dc9418c8b" title="How much members a team can have maximaly.">max_team_members</a>) )
+<a name="l00269"></a>00269                 <span class="keywordflow">for</span> setting, value <span class="keywordflow">in</span> self.<a class="code" href="class_mode_1_1_mode.html#af4bebfeddda24f7437fc086bc52ca711" title="Additional settings.">settings</a>.items():
+<a name="l00270"></a>00270                         Armagetronad.SendCommand(<span class="stringliteral">&quot;{0} {1}&quot;</span>.format(setting,value) )
+<a name="l00271"></a>00271                 Team.max_teams=self.<a class="code" href="class_mode_1_1_mode.html#a55c4e205a8cb20550c0f3924471522ab" title="Maximal teams that can be active in this mode.">max_teams</a>
+<a name="l00272"></a>00272                 Team.max_team_members=self.<a class="code" href="class_mode_1_1_mode.html#ad4ba6cae17b92d4c8c85c35dc9418c8b" title="How much members a team can have maximaly.">max_team_members</a>
+<a name="l00273"></a>00273                 <span class="keywordflow">if</span> kill == <span class="keyword">True</span>:
+<a name="l00274"></a>00274                         <span class="keywordflow">for</span> player <span class="keywordflow">in</span> Player.players.values():
+<a name="l00275"></a>00275                                 player.kill()
+<a name="l00276"></a>00276                 current_mode=self.<a class="code" href="class_mode_1_1_mode.html#ac1d907aa0ec93e0908aa3fa2cac0bde7" title="Returns an escaped name for the mode.">getEscapedName</a>()
+<a name="l00277"></a>00277                 log.info(<span class="stringliteral">&quot;Mode &quot;</span>+current_mode+<span class="stringliteral">&quot; activated.&quot;</span>)
+<a name="l00278"></a>00278 
+<a name="l00279"></a>00279         <span class="comment">## @brief Spawns all players (teams)</span>
+<a name="l00280"></a>00280          <span class="comment"># @details Spawns all teams by using the respoints.</span>
+<a name="l00281"></a><a class="code" href="class_mode_1_1_mode.html#a356d4927de4587c311227527e55eaada">00281</a>         <span class="keyword">def </span><a class="code" href="class_mode_1_1_mode.html#a356d4927de4587c311227527e55eaada" title="Spawns all players (teams).">spawnTeams</a>(self):
+<a name="l00282"></a>00282                 i=0
+<a name="l00283"></a>00283                 log.debug(<span class="stringliteral">&quot;Spawn teams ...&quot;</span>)
+<a name="l00284"></a>00284                 <span class="keywordflow">for</span> team <span class="keywordflow">in</span> Team.teams:
+<a name="l00285"></a>00285                         <span class="keywordflow">try</span>:
+<a name="l00286"></a>00286                                 respoint=self.<a class="code" href="class_mode_1_1_mode.html#af6ee8ed30365011c35b48d4c5696e05b" title="Gets a respoint.">__getRespoint</a>(<span class="stringliteral">&quot;roundstart&quot;</span>,i)
+<a name="l00287"></a>00287                                 t,x,y,xdir,ydir=respoint
+<a name="l00288"></a>00288                                 Team.teams[team].respawn(x,y,xdir,ydir,1,1,<span class="keyword">True</span>)
+<a name="l00289"></a>00289                         <span class="keywordflow">except</span> Exception <span class="keyword">as</span> e:
+<a name="l00290"></a>00290                                 log.error(<span class="stringliteral">&quot;Could not spawn team {0}: {1}&quot;</span>.format(str(team),str(e)) )
+<a name="l00291"></a>00291                         i=i+1
+<a name="l00292"></a>00292 
+<a name="l00293"></a>00293         <span class="comment">## @brief Spawns all zones</span>
+<a name="l00294"></a>00294          <span class="comment"># @details Spawns all zones related to the mode</span>
+<a name="l00295"></a><a class="code" href="class_mode_1_1_mode.html#a152e7d0cf7d765c82810d69662f8af40">00295</a>         <span class="keyword">def </span><a class="code" href="class_mode_1_1_mode.html#a152e7d0cf7d765c82810d69662f8af40" title="Spawns all zones.">spawnZones</a>(self):
+<a name="l00296"></a>00296                 log.debug(<span class="stringliteral">&quot;Spawn zones ...&quot;</span>)
+<a name="l00297"></a>00297                 <span class="keywordflow">for</span> team,zone <span class="keywordflow">in</span> self.<a class="code" href="class_mode_1_1_mode.html#a0672655c12a3e18e65d084c395d9378c" title="The zones of the modes.">__zones</a>:
+<a name="l00298"></a>00298                         <span class="keywordflow">if</span> team==<span class="keywordtype">None</span>:
+<a name="l00299"></a>00299                                 <span class="keywordflow">for</span> team <span class="keywordflow">in</span> Team.teams.values():
+<a name="l00300"></a>00300                                         zone.color=team.color
+<a name="l00301"></a>00301                                         zone.teamnames=[team.getEscapedName(),]
+<a name="l00302"></a>00302                                         zone.spawn()
+<a name="l00303"></a>00303                                 <span class="keywordflow">return</span>
+<a name="l00304"></a>00304                         <span class="keywordflow">elif</span> team == -1:
+<a name="l00305"></a>00305                                         zone.spawn()
+<a name="l00306"></a>00306                         <span class="keywordflow">else</span>:
+<a name="l00307"></a>00307                                 <span class="keywordflow">if</span> len(Team.teams)-1 &lt; team-1:
+<a name="l00308"></a>00308                                         <span class="keywordflow">continue</span>
+<a name="l00309"></a>00309                                 zone.teamnames=[list(Team.teams.keys())[team-1]]
+<a name="l00310"></a>00310                                 zone.spawn()
+<a name="l00311"></a>00311         <span class="comment">## @brief Gets a respoint</span>
+<a name="l00312"></a>00312          <span class="comment"># @details Gets a respoint for roundstart or normal for the given team</span>
+<a name="l00313"></a>00313          <span class="comment"># @param mode The mode which to use (roundstart, normal)</span>
+<a name="l00314"></a>00314          <span class="comment"># @param team_num the number of the team for which to get a respoint.</span>
+<a name="l00315"></a>00315          <span class="comment"># @exception RuntimeError Raised if no respoints for the given team exist.</span>
+<a name="l00316"></a>00316          <span class="comment"># @exception RuntimeError Raised if the type is  unknown</span>
+<a name="l00317"></a><a class="code" href="class_mode_1_1_mode.html#af6ee8ed30365011c35b48d4c5696e05b">00317</a>         <span class="keyword">def </span><a class="code" href="class_mode_1_1_mode.html#af6ee8ed30365011c35b48d4c5696e05b" title="Gets a respoint.">__getRespoint</a>(self, mode, team_num):
+<a name="l00318"></a>00318                 team_respoints=[]
+<a name="l00319"></a>00319                 <span class="keywordflow">for</span> respoint <span class="keywordflow">in</span> self.<a class="code" href="class_mode_1_1_mode.html#a2e07ed5d08d3ced387d24587f8a87967" title="Respoints of this mode.">__respoints</a>:
+<a name="l00320"></a>00320                         <span class="keywordflow">if</span> respoint[0]==team_num <span class="keywordflow">or</span> respoint[0]==-1:
+<a name="l00321"></a>00321                                 team_respoints.append(respoint)
+<a name="l00322"></a>00322                 <span class="keywordflow">if</span> len(team_respoints)==0:
+<a name="l00323"></a>00323                         <span class="keywordflow">raise</span> RuntimeError(<span class="stringliteral">&quot;Team with number &quot;</span>+str(team_num)+<span class="stringliteral">&quot; has no respoints.&quot;</span>,0)
+<a name="l00324"></a>00324                 <span class="keywordflow">if</span> team_num <span class="keywordflow">not</span> <span class="keywordflow">in</span> self.<a class="code" href="class_mode_1_1_mode.html#a93dd6d85da76655a5ca8f5a4873109f9" title="The last used respoint.">__last_respoint</a>:
+<a name="l00325"></a>00325                         self.<a class="code" href="class_mode_1_1_mode.html#a93dd6d85da76655a5ca8f5a4873109f9" title="The last used respoint.">__last_respoint</a>[team_num]=0
+<a name="l00326"></a>00326                 <span class="keywordflow">if</span> <span class="stringliteral">&quot;first&quot;</span> <span class="keywordflow">in</span> self.<a class="code" href="class_mode_1_1_mode.html#a1fd32aea9872573e444d08b65ec28ef2" title="How should the respoints be used?">__restype</a>:
+<a name="l00327"></a>00327                         self.<a class="code" href="class_mode_1_1_mode.html#a93dd6d85da76655a5ca8f5a4873109f9" title="The last used respoint.">__last_respoint</a>[team_num]=0
+<a name="l00328"></a>00328                         <span class="keywordflow">return</span> team_respoints[0]
+<a name="l00329"></a>00329                 <span class="keywordflow">if</span> <span class="stringliteral">&quot;whileround&quot;</span> <span class="keywordflow">in</span> self.<a class="code" href="class_mode_1_1_mode.html#a1fd32aea9872573e444d08b65ec28ef2" title="How should the respoints be used?">__restype</a> <span class="keywordflow">and</span> mode==<span class="stringliteral">&quot;roundstart&quot;</span>:
+<a name="l00330"></a>00330                         self.<a class="code" href="class_mode_1_1_mode.html#a93dd6d85da76655a5ca8f5a4873109f9" title="The last used respoint.">__last_respoint</a>[team_num]=0
+<a name="l00331"></a>00331                         <span class="keywordflow">return</span> team_respoints[0]
+<a name="l00332"></a>00332                 <span class="keywordflow">if</span> <span class="stringliteral">&quot;roundstart&quot;</span> <span class="keywordflow">in</span> self.<a class="code" href="class_mode_1_1_mode.html#a1fd32aea9872573e444d08b65ec28ef2" title="How should the respoints be used?">__restype</a> <span class="keywordflow">and</span> mode==<span class="stringliteral">&quot;normal&quot;</span>:
+<a name="l00333"></a>00333                         <span class="keywordflow">return</span> self.<a class="code" href="class_mode_1_1_mode.html#a2e07ed5d08d3ced387d24587f8a87967" title="Respoints of this mode.">__respoints</a>[self.<a class="code" href="class_mode_1_1_mode.html#a93dd6d85da76655a5ca8f5a4873109f9" title="The last used respoint.">__last_respoint</a>[team_num] ]
+<a name="l00334"></a>00334                 <span class="keywordflow">if</span> <span class="stringliteral">&quot;random&quot;</span> <span class="keywordflow">in</span> self.<a class="code" href="class_mode_1_1_mode.html#a1fd32aea9872573e444d08b65ec28ef2" title="How should the respoints be used?">__restype</a>:
+<a name="l00335"></a>00335                         respoint=random.Random().choice(team_respoints)
+<a name="l00336"></a>00336                         self.<a class="code" href="class_mode_1_1_mode.html#a93dd6d85da76655a5ca8f5a4873109f9" title="The last used respoint.">__last_respoint</a>[team_num]=team_respoints.index(respoint)
+<a name="l00337"></a>00337                         <span class="keywordflow">return</span> repoint
+<a name="l00338"></a>00338                 <span class="keywordflow">if</span> <span class="stringliteral">&quot;toggle&quot;</span> <span class="keywordflow">in</span> self.<a class="code" href="class_mode_1_1_mode.html#a1fd32aea9872573e444d08b65ec28ef2" title="How should the respoints be used?">__restype</a>:
+<a name="l00339"></a>00339                         self.<a class="code" href="class_mode_1_1_mode.html#a93dd6d85da76655a5ca8f5a4873109f9" title="The last used respoint.">__last_respoint</a>[team_num]=self.<a class="code" href="class_mode_1_1_mode.html#a93dd6d85da76655a5ca8f5a4873109f9" title="The last used respoint.">__last_respoint</a>[team_num]+1
+<a name="l00340"></a>00340                         <span class="keywordflow">if</span> self.<a class="code" href="class_mode_1_1_mode.html#a93dd6d85da76655a5ca8f5a4873109f9" title="The last used respoint.">__last_respoint</a>[team_num]&gt;=len(team_respoints):
+<a name="l00341"></a>00341                                 self.<a class="code" href="class_mode_1_1_mode.html#a93dd6d85da76655a5ca8f5a4873109f9" title="The last used respoint.">__last_respoint</a>[team_num]=0
+<a name="l00342"></a>00342                         <span class="keywordflow">return</span> team_respoints[self.<a class="code" href="class_mode_1_1_mode.html#a93dd6d85da76655a5ca8f5a4873109f9" title="The last used respoint.">__last_respoint</a>[team_num]]
+<a name="l00343"></a>00343                 <span class="keywordflow">raise</span> RuntimeError(<span class="stringliteral">&quot;Type not known.&quot;</span>,1)
 <a name="l00344"></a>00344 
-<a name="l00345"></a>00345         <span class="comment">## @brief Remove all zones</span>
-<a name="l00346"></a>00346          <span class="comment"># @details Remove all zone from the internal zone list.</span>
-<a name="l00347"></a><a class="code" href="class_mode_1_1_mode.html#ac957f54f8b2dae24ec1d72af3d53f0ef">00347</a>         <span class="keyword">def </span><a class="code" href="class_mode_1_1_mode.html#ac957f54f8b2dae24ec1d72af3d53f0ef" title="Remove all zones.">removeZones</a>(self):
-<a name="l00348"></a>00348                 self.<a class="code" href="class_mode_1_1_mode.html#a0672655c12a3e18e65d084c395d9378c" title="The zones of the modes.">__zones</a>=list()
-<a name="l00349"></a>00349 
-<a name="l00350"></a>00350         <span class="comment">## @brief Get zones</span>
-<a name="l00351"></a>00351          <span class="comment"># @details Get the internal zone list.</span>
-<a name="l00352"></a>00352          <span class="comment"># @return The internal zone list.</span>
-<a name="l00353"></a><a class="code" href="class_mode_1_1_mode.html#a2bf7c935b63449284449c845ad6b5321">00353</a>         <span class="keyword">def </span><a class="code" href="class_mode_1_1_mode.html#a2bf7c935b63449284449c845ad6b5321" title="Get zones.">getZones</a>(self):
-<a name="l00354"></a>00354                 <span class="keywordflow">return</span> self.<a class="code" href="class_mode_1_1_mode.html#a0672655c12a3e18e65d084c395d9378c" title="The zones of the modes.">__zones</a>
-<a name="l00355"></a>00355 
-<a name="l00356"></a>00356         <span class="comment">## @brief Returns an escaped name for the mode</span>
-<a name="l00357"></a>00357          <span class="comment"># @details Returns the mode name with all spaces replaced by underscores and all letters lowercased.</span>
-<a name="l00358"></a>00358          <span class="comment"># @return The escaped mode name.</span>
-<a name="l00359"></a><a class="code" href="class_mode_1_1_mode.html#ac1d907aa0ec93e0908aa3fa2cac0bde7">00359</a>         <span class="keyword">def </span><a class="code" href="class_mode_1_1_mode.html#ac1d907aa0ec93e0908aa3fa2cac0bde7" title="Returns an escaped name for the mode.">getEscapedName</a>(self):
-<a name="l00360"></a>00360                 <span class="keywordflow">return</span> self.<a class="code" href="class_mode_1_1_mode.html#a38afa93ee0f4ad9e8258a510ccdbaa9c" title="The name of the mode.">name</a>.replace(<span class="stringliteral">&quot; &quot;</span>,<span class="stringliteral">&quot;_&quot;</span>).lower()
-<a name="l00361"></a>00361 
-<a name="l00362"></a>00362         <span class="comment">## @brief Returns current object state.</span>
-<a name="l00363"></a>00363          <span class="comment"># @details Used by pickle and other serializing modules.</span>
-<a name="l00364"></a>00364          <span class="comment"># @return A dictionary of the current object state</span>
-<a name="l00365"></a><a class="code" href="class_mode_1_1_mode.html#afa8fd4a33bbaada7fe3a2a16a818c48f">00365</a>         <span class="keyword">def </span><a class="code" href="class_mode_1_1_mode.html#afa8fd4a33bbaada7fe3a2a16a818c48f" title="Returns current object state.">__getstate__</a>(self):
-<a name="l00366"></a>00366                 __state=dict()
-<a name="l00367"></a>00367                 <span class="keywordflow">for</span> var <span class="keywordflow">in</span> self.<a class="code" href="class_mode_1_1_mode.html#a6f65d9a9362971bd8896a81a0d71c642" title="Slots.">__slots__</a>:
-<a name="l00368"></a>00368                         <span class="keywordflow">if</span> var <span class="keywordflow">not</span> <span class="keywordflow">in</span> self.<a class="code" href="class_mode_1_1_mode.html#af525bdda09b2a2c9c560be5062d7c55b" title="Which variables shouldn&amp;#39;t be saved by object serialized?">__not_persistent</a>:
-<a name="l00369"></a>00369                                 varname=var
-<a name="l00370"></a>00370                                 settingsname=var
-<a name="l00371"></a>00371                                 <span class="keywordflow">if</span> var.startswith(<span class="stringliteral">&quot;__&quot;</span>):
-<a name="l00372"></a>00372                                         varname=var.replace(<span class="stringliteral">&quot;__&quot;</span>,<span class="stringliteral">&quot;_Mode__&quot;</span>,1)
-<a name="l00373"></a>00373                                         settingsname=var.replace(<span class="stringliteral">&quot;__&quot;</span>,<span class="stringliteral">&quot;&quot;</span>,1)
-<a name="l00374"></a>00374                                         <span class="keywordflow">if</span> hasattr(self, settingsname):
-<a name="l00375"></a>00375                                                 <span class="keywordflow">continue</span> <span class="comment"># Ignore private variables if a public one with the same name exists.</span>
-<a name="l00376"></a>00376                                 __state[settingsname]=getattr(self, varname)
-<a name="l00377"></a>00377                 <span class="keywordflow">return</span> __state
-<a name="l00378"></a>00378 
-<a name="l00379"></a>00379         <span class="comment">## @brief Sets the current object state</span>
-<a name="l00380"></a>00380          <span class="comment"># @details Used by pickle and other serializing modules.</span>
-<a name="l00381"></a>00381          <span class="comment"># @param state The state to which to set the current object state.</span>
-<a name="l00382"></a><a class="code" href="class_mode_1_1_mode.html#a0b54ab72ab5d8fbbcba81dc953b3368a">00382</a>         <span class="keyword">def </span><a class="code" href="class_mode_1_1_mode.html#a0b54ab72ab5d8fbbcba81dc953b3368a" title="Sets the current object state.">__setstate__</a>(self, state):
-<a name="l00383"></a>00383                 self.<a class="code" href="class_mode_1_1_mode.html#add2325e8a6bf4ff3aacb7c1dd3299e5a" title="Init function (Constructor).">__init__</a>(state[<span class="stringliteral">&#39;name&#39;</span>])
-<a name="l00384"></a>00384                 <span class="keywordflow">for</span> var, value <span class="keywordflow">in</span> state.items():
-<a name="l00385"></a>00385                         <span class="keywordflow">if</span> var <span class="keywordflow">not</span> <span class="keywordflow">in</span> self.<a class="code" href="class_mode_1_1_mode.html#af525bdda09b2a2c9c560be5062d7c55b" title="Which variables shouldn&amp;#39;t be saved by object serialized?">__not_persistent</a>:
-<a name="l00386"></a>00386                                 <span class="keywordflow">if</span> <span class="keywordflow">not</span> var <span class="keywordflow">in</span> self.<a class="code" href="class_mode_1_1_mode.html#a6f65d9a9362971bd8896a81a0d71c642" title="Slots.">__slots__</a>:
-<a name="l00387"></a>00387                                         var=<span class="stringliteral">&quot;__&quot;</span>+var
-<a name="l00388"></a>00388                                         <span class="keywordflow">if</span> <span class="keywordflow">not</span> var <span class="keywordflow">in</span> self.<a class="code" href="class_mode_1_1_mode.html#a6f65d9a9362971bd8896a81a0d71c642" title="Slots.">__slots__</a>:
-<a name="l00389"></a>00389                                                 <span class="keywordflow">raise</span> Exception(<span class="stringliteral">&quot;Error: Invalid state (var &quot;</span>+str(var)+<span class="stringliteral">&quot; doesn&#39;t exist.)&quot;</span>)
-<a name="l00390"></a>00390                                         <span class="keywordflow">else</span>:
-<a name="l00391"></a>00391                                                 var=<span class="stringliteral">&quot;_Mode&quot;</span>+var
-<a name="l00392"></a>00392                                 setattr(self, var, value)
-<a name="l00393"></a>00393 
-<a name="l00394"></a>00394 <span class="comment">## @brief Enables logging</span>
-<a name="l00395"></a>00395  <span class="comment"># @details This function enables logging for this module.</span>
-<a name="l00396"></a>00396  <span class="comment"># @param h The handler used for logging</span>
-<a name="l00397"></a>00397  <span class="comment"># @param f The formatter used for logging</span>
-<a name="l00398"></a>00398  <span class="comment"># @param level The logging level</span>
-<a name="l00399"></a>00399 <span class="keyword">def </span><a class="code" href="namespace_event.html#a71b46d5aba993db8bfdbc2af96bd1bf0" title="Enables Logging.">enableLogging</a>(level=logging.DEBUG, h=None,f=None):
-<a name="l00400"></a>00400         <span class="keyword">global</span> log
-<a name="l00401"></a>00401         log.setLevel(level)
-<a name="l00402"></a>00402         <span class="keywordflow">if</span> <span class="keywordflow">not</span> h:
-<a name="l00403"></a>00403                 h=logging.StreamHandler()
-<a name="l00404"></a>00404                 h.setLevel(level)
-<a name="l00405"></a>00405         <span class="keywordflow">if</span> <span class="keywordflow">not</span> f:
-<a name="l00406"></a>00406                 f=logging.Formatter(<span class="stringliteral">&quot;[%(name)s] (%(asctime)s) %(levelname)s: %(message)s&quot;</span>)
-<a name="l00407"></a>00407         h.setFormatter(f)
-<a name="l00408"></a>00408         log.addHandler(h)
+<a name="l00345"></a>00345         <span class="comment">## @brief Adds a zone</span>
+<a name="l00346"></a>00346          <span class="comment"># @details Adds the given zone to the internal zone list.</span>
+<a name="l00347"></a>00347          <span class="comment"># @param team The number of the team for which the zone should be spawned, or None</span>
+<a name="l00348"></a>00348          <span class="comment">#             if it should be spawned for all teams.</span>
+<a name="l00349"></a>00349          <span class="comment"># @param zone The zone to add</span>
+<a name="l00350"></a><a class="code" href="class_mode_1_1_mode.html#ae24a354b3b872ac4d0c12c43cec5f475">00350</a>         <span class="keyword">def </span><a class="code" href="class_mode_1_1_mode.html#ae24a354b3b872ac4d0c12c43cec5f475" title="Adds a zone.">addZone</a>(self, team, zone):
+<a name="l00351"></a>00351                 self.<a class="code" href="class_mode_1_1_mode.html#a0672655c12a3e18e65d084c395d9378c" title="The zones of the modes.">__zones</a>.append( (team,zone) )
+<a name="l00352"></a>00352 
+<a name="l00353"></a>00353         <span class="comment">## @brief Remove all zones</span>
+<a name="l00354"></a>00354          <span class="comment"># @details Remove all zone from the internal zone list.</span>
+<a name="l00355"></a><a class="code" href="class_mode_1_1_mode.html#ac957f54f8b2dae24ec1d72af3d53f0ef">00355</a>         <span class="keyword">def </span><a class="code" href="class_mode_1_1_mode.html#ac957f54f8b2dae24ec1d72af3d53f0ef" title="Remove all zones.">removeZones</a>(self):
+<a name="l00356"></a>00356                 self.<a class="code" href="class_mode_1_1_mode.html#a0672655c12a3e18e65d084c395d9378c" title="The zones of the modes.">__zones</a>=list()
+<a name="l00357"></a>00357 
+<a name="l00358"></a>00358         <span class="comment">## @brief Get zones</span>
+<a name="l00359"></a>00359          <span class="comment"># @details Get the internal zone list.</span>
+<a name="l00360"></a>00360          <span class="comment"># @return The internal zone list.</span>
+<a name="l00361"></a><a class="code" href="class_mode_1_1_mode.html#a2bf7c935b63449284449c845ad6b5321">00361</a>         <span class="keyword">def </span><a class="code" href="class_mode_1_1_mode.html#a2bf7c935b63449284449c845ad6b5321" title="Get zones.">getZones</a>(self):
+<a name="l00362"></a>00362                 <span class="keywordflow">return</span> self.<a class="code" href="class_mode_1_1_mode.html#a0672655c12a3e18e65d084c395d9378c" title="The zones of the modes.">__zones</a>
+<a name="l00363"></a>00363 
+<a name="l00364"></a>00364         <span class="comment">## @brief Returns an escaped name for the mode</span>
+<a name="l00365"></a>00365          <span class="comment"># @details Returns the mode name with all spaces replaced by underscores and all letters lowercased.</span>
+<a name="l00366"></a>00366          <span class="comment"># @return The escaped mode name.</span>
+<a name="l00367"></a><a class="code" href="class_mode_1_1_mode.html#ac1d907aa0ec93e0908aa3fa2cac0bde7">00367</a>         <span class="keyword">def </span><a class="code" href="class_mode_1_1_mode.html#ac1d907aa0ec93e0908aa3fa2cac0bde7" title="Returns an escaped name for the mode.">getEscapedName</a>(self):
+<a name="l00368"></a>00368                 <span class="keywordflow">return</span> self.<a class="code" href="class_mode_1_1_mode.html#a38afa93ee0f4ad9e8258a510ccdbaa9c" title="The name of the mode.">name</a>.replace(<span class="stringliteral">&quot; &quot;</span>,<span class="stringliteral">&quot;_&quot;</span>).lower()
+<a name="l00369"></a>00369 
+<a name="l00370"></a>00370         <span class="comment">## @brief Returns current object state.</span>
+<a name="l00371"></a>00371          <span class="comment"># @details Used by pickle and other serializing modules.</span>
+<a name="l00372"></a>00372          <span class="comment"># @return A dictionary of the current object state</span>
+<a name="l00373"></a><a class="code" href="class_mode_1_1_mode.html#afa8fd4a33bbaada7fe3a2a16a818c48f">00373</a>         <span class="keyword">def </span><a class="code" href="class_mode_1_1_mode.html#afa8fd4a33bbaada7fe3a2a16a818c48f" title="Returns current object state.">__getstate__</a>(self):
+<a name="l00374"></a>00374                 __state=dict()
+<a name="l00375"></a>00375                 <span class="keywordflow">for</span> var <span class="keywordflow">in</span> self.<a class="code" href="class_mode_1_1_mode.html#a6f65d9a9362971bd8896a81a0d71c642" title="Slots.">__slots__</a>:
+<a name="l00376"></a>00376                         <span class="keywordflow">if</span> var <span class="keywordflow">not</span> <span class="keywordflow">in</span> self.<a class="code" href="class_mode_1_1_mode.html#af525bdda09b2a2c9c560be5062d7c55b" title="Yaml settings.">__not_persistent</a>:
+<a name="l00377"></a>00377                                 varname=var
+<a name="l00378"></a>00378                                 settingsname=var
+<a name="l00379"></a>00379                                 <span class="keywordflow">if</span> var.startswith(<span class="stringliteral">&quot;__&quot;</span>):
+<a name="l00380"></a>00380                                         varname=var.replace(<span class="stringliteral">&quot;__&quot;</span>,<span class="stringliteral">&quot;_Mode__&quot;</span>,1)
+<a name="l00381"></a>00381                                         settingsname=var.replace(<span class="stringliteral">&quot;__&quot;</span>,<span class="stringliteral">&quot;&quot;</span>,1)
+<a name="l00382"></a>00382                                         <span class="keywordflow">if</span> hasattr(self, settingsname):
+<a name="l00383"></a>00383                                                 <span class="keywordflow">continue</span> <span class="comment"># Ignore private variables if a public one with the same name exists.</span>
+<a name="l00384"></a>00384                                 __state[settingsname]=getattr(self, varname)
+<a name="l00385"></a>00385                 <span class="keywordflow">return</span> __state
+<a name="l00386"></a>00386 
+<a name="l00387"></a>00387         <span class="comment">## @brief Sets the current object state</span>
+<a name="l00388"></a>00388          <span class="comment"># @details Used by pickle and other serializing modules.</span>
+<a name="l00389"></a>00389          <span class="comment"># @param state The state to which to set the current object state.</span>
+<a name="l00390"></a><a class="code" href="class_mode_1_1_mode.html#a0b54ab72ab5d8fbbcba81dc953b3368a">00390</a>         <span class="keyword">def </span><a class="code" href="class_mode_1_1_mode.html#a0b54ab72ab5d8fbbcba81dc953b3368a" title="Sets the current object state.">__setstate__</a>(self, state):
+<a name="l00391"></a>00391                 self.<a class="code" href="class_mode_1_1_mode.html#add2325e8a6bf4ff3aacb7c1dd3299e5a" title="Init function (Constructor).">__init__</a>(state[<span class="stringliteral">&#39;name&#39;</span>])
+<a name="l00392"></a>00392                 <span class="keywordflow">for</span> var, value <span class="keywordflow">in</span> state.items():
+<a name="l00393"></a>00393                         <span class="keywordflow">if</span> var <span class="keywordflow">not</span> <span class="keywordflow">in</span> self.<a class="code" href="class_mode_1_1_mode.html#af525bdda09b2a2c9c560be5062d7c55b" title="Yaml settings.">__not_persistent</a>:
+<a name="l00394"></a>00394                                 <span class="keywordflow">if</span> <span class="keywordflow">not</span> var <span class="keywordflow">in</span> self.<a class="code" href="class_mode_1_1_mode.html#a6f65d9a9362971bd8896a81a0d71c642" title="Slots.">__slots__</a>:
+<a name="l00395"></a>00395                                         var=<span class="stringliteral">&quot;__&quot;</span>+var
+<a name="l00396"></a>00396                                         <span class="keywordflow">if</span> <span class="keywordflow">not</span> var <span class="keywordflow">in</span> self.<a class="code" href="class_mode_1_1_mode.html#a6f65d9a9362971bd8896a81a0d71c642" title="Slots.">__slots__</a>:
+<a name="l00397"></a>00397                                                 <span class="keywordflow">raise</span> Exception(<span class="stringliteral">&quot;Error: Invalid state (var &quot;</span>+str(var)+<span class="stringliteral">&quot; doesn&#39;t exist.)&quot;</span>)
+<a name="l00398"></a>00398                                         <span class="keywordflow">else</span>:
+<a name="l00399"></a>00399                                                 var=<span class="stringliteral">&quot;_Mode&quot;</span>+var
+<a name="l00400"></a>00400                                 setattr(self, var, value)
+<a name="l00401"></a>00401 
+<a name="l00402"></a>00402 <span class="comment">## @brief Enables logging</span>
+<a name="l00403"></a>00403  <span class="comment"># @details This function enables logging for this module.</span>
+<a name="l00404"></a>00404  <span class="comment"># @param h The handler used for logging</span>
+<a name="l00405"></a>00405  <span class="comment"># @param f The formatter used for logging</span>
+<a name="l00406"></a>00406  <span class="comment"># @param level The logging level</span>
+<a name="l00407"></a>00407 <span class="keyword">def </span><a class="code" href="namespace_event.html#a71b46d5aba993db8bfdbc2af96bd1bf0" title="Enables Logging.">enableLogging</a>(level=logging.DEBUG, h=None,f=None):
+<a name="l00408"></a>00408         <span class="keyword">global</span> log
+<a name="l00409"></a>00409         log.setLevel(level)
+<a name="l00410"></a>00410         <span class="keywordflow">if</span> <span class="keywordflow">not</span> h:
+<a name="l00411"></a>00411                 h=logging.StreamHandler()
+<a name="l00412"></a>00412                 h.setLevel(level)
+<a name="l00413"></a>00413         <span class="keywordflow">if</span> <span class="keywordflow">not</span> f:
+<a name="l00414"></a>00414                 f=logging.Formatter(<span class="stringliteral">&quot;[%(name)s] (%(asctime)s) %(levelname)s: %(message)s&quot;</span>)
+<a name="l00415"></a>00415         h.setFormatter(f)
+<a name="l00416"></a>00416         <span class="keywordflow">for</span> handler <span class="keywordflow">in</span> log.handlers:
+<a name="l00417"></a>00417                 <span class="keywordflow">if</span> type(handler)==type(h):
+<a name="l00418"></a>00418                         log.removeHandler(handler)
+<a name="l00419"></a>00419         log.addHandler(h)
 </pre></div></div>
 </div>
 <!--- window showing the filter options -->
@@ -472,7 +483,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 </iframe>
 </div>
 
-<hr class="footer"/><address class="footer"><small>Generated on Mon Jun 20 2011 14:23:54 for Armagetron MultiModeScript by&nbsp;
+<hr class="footer"/><address class="footer"><small>Generated on Tue Jul 5 2011 16:01:24 for Armagetron MultiModeScript by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.7.1 </small></address>
 </body>

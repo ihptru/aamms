@@ -48,7 +48,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <h1>Player.py</h1>  </div>
 </div>
 <div class="contents">
-<a href="_player_8py.html">Go to the documentation of this file.</a><div class="fragment"><pre class="fragment"><a name="l00001"></a><a class="code" href="namespace_player.html">00001</a> <span class="comment">#!/usr/bin/python3</span>
+<a href="_player_8py.html">Go to the documentation of this file.</a><div class="fragment"><pre class="fragment"><a name="l00001"></a><a class="code" href="namespace_player.html">00001</a> <span class="comment">#!/usr/bin/env python3</span>
 <a name="l00002"></a>00002 <span class="comment">## @file Player.py</span>
 <a name="l00003"></a>00003  <span class="comment"># @package Player</span>
 <a name="l00004"></a>00004  <span class="comment"># @brief Functions and classes for player management.</span>
@@ -61,412 +61,449 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <a name="l00011"></a>00011 <span class="keyword">from</span> Armagetronad <span class="keyword">import</span> SendCommand
 <a name="l00012"></a>00012 <span class="keyword">import</span> copy
 <a name="l00013"></a>00013 
-<a name="l00014"></a>00014 <span class="comment">## @brief This variable is used to store the players.</span>
-<a name="l00015"></a>00015  <span class="comment"># @details This variable is a dictionary of players where the ladder name of the player</span>
-<a name="l00016"></a>00016  <span class="comment">#          is the key.</span>
-<a name="l00017"></a><a class="code" href="namespace_player.html#a1a4b55c172677536d879fb397d3ef15e">00017</a> players=dict()
-<a name="l00018"></a>00018 
-<a name="l00019"></a>00019 <span class="comment">## @brief Adds a new Player</span>
-<a name="l00020"></a>00020  <span class="comment"># @details Use this function to add a new player.</span>
-<a name="l00021"></a>00021  <span class="comment"># @param lname The name used on the ladder for the player</span>
-<a name="l00022"></a>00022  <span class="comment"># @param name The displayed name of the player</span>
-<a name="l00023"></a>00023  <span class="comment"># @param ip The ip of the player</span>
-<a name="l00024"></a>00024  <span class="comment"># @exception RuntimeError Raised if a player with the same ladder na,e already exists.</span>
-<a name="l00025"></a>00025  <span class="comment"># @note The player is stored in \link Player.players\endlink</span>
-<a name="l00026"></a>00026  <span class="comment"># @note This triggers the event &quot;Player added&quot;</span>
-<a name="l00027"></a><a class="code" href="namespace_player.html#a7afb4f3ed0dc5209e4e8d4a28fb2e5cb">00027</a> <span class="keyword">def </span><a class="code" href="namespace_player.html#a7afb4f3ed0dc5209e4e8d4a28fb2e5cb" title="Adds a new Player.">Add</a>(lname,name,ip):
-<a name="l00028"></a>00028         <span class="keywordflow">if</span> lname <span class="keywordflow">in</span> players:
-<a name="l00029"></a>00029                 <span class="keywordflow">print</span>(players[lname] )
-<a name="l00030"></a>00030                 <span class="keywordflow">raise</span> RuntimeError(<span class="stringliteral">&quot;Player „&quot;</span>+lname+<span class="stringliteral">&quot;“ already exists.&quot;</span>)
-<a name="l00031"></a>00031         players[lname]=Player(lname,name,ip)
-<a name="l00032"></a>00032         events.triggerEvent(<span class="stringliteral">&quot;Player added&quot;</span>,lname)
-<a name="l00033"></a>00033 
-<a name="l00034"></a>00034 <span class="comment">## @brief Gets a bots</span>
-<a name="l00035"></a>00035  <span class="comment"># @details Returns all players that has is_human set to false.</span>
-<a name="l00036"></a>00036  <span class="comment"># @return The list of bot names</span>
-<a name="l00037"></a><a class="code" href="namespace_player.html#aa5fb66d32493d33b1b64665e26b54aa5">00037</a> <span class="keyword">def </span><a class="code" href="namespace_player.html#aa5fb66d32493d33b1b64665e26b54aa5" title="Gets a bots.">getBots</a>():
-<a name="l00038"></a>00038         bots=[]
-<a name="l00039"></a>00039         <span class="keywordflow">for</span> k,p <span class="keywordflow">in</span> players.items():
-<a name="l00040"></a>00040                 <span class="keywordflow">if</span> p.is_human==<span class="keyword">False</span>:
-<a name="l00041"></a>00041                         bots.append(k)
-<a name="l00042"></a>00042         <span class="keywordflow">return</span> bots
-<a name="l00043"></a>00043 
-<a name="l00044"></a>00044 <span class="comment">## @brief Handles player rename event</span>
-<a name="l00045"></a>00045  <span class="comment"># @details This function updates the player list. It&#39;s called by player rename event.</span>
-<a name="l00046"></a>00046  <span class="comment"># @param oldname The old ladder name of the player</span>
-<a name="l00047"></a>00047  <span class="comment"># @param newname The new ladder name of the player</span>
-<a name="l00048"></a><a class="code" href="namespace_player.html#a61462686e6399e37ccd208d65b523de2">00048</a> <span class="keyword">def </span><a class="code" href="namespace_player.html#a61462686e6399e37ccd208d65b523de2" title="Handles player rename event.">UpdatePlayer</a>(oldname,newname):
-<a name="l00049"></a>00049         <span class="keywordflow">if</span> oldname <span class="keywordflow">not</span> <span class="keywordflow">in</span> players:
-<a name="l00050"></a>00050                 log.error(<span class="stringliteral">&quot;Player „&quot;</span>+oldname+<span class="stringliteral">&quot;“ should be renamed to „&quot;</span>+newname+<span class="stringliteral">&quot;“ , but it doesn&#39;t exist. Adding it.&quot;</span>)
-<a name="l00051"></a>00051                 Add(newname,newname,<span class="stringliteral">&quot;127.0.0.1&quot;</span>)
-<a name="l00052"></a>00052                 <span class="keywordflow">return</span>
-<a name="l00053"></a>00053         team=players[oldname].getTeam()
-<a name="l00054"></a>00054         <span class="keywordflow">if</span> team != <span class="keywordtype">None</span>:
-<a name="l00055"></a>00055                 pos=Team.teams[team].getPlayerPosition(oldname)
-<a name="l00056"></a>00056         team=players[oldname].getTeam()
-<a name="l00057"></a>00057         players[oldname].leaveTeam(<span class="keyword">True</span>)
-<a name="l00058"></a>00058         players[newname]=players[oldname]
-<a name="l00059"></a>00059         players[newname].joinTeam(team,quiet=<span class="keyword">True</span>)
-<a name="l00060"></a>00060         <span class="keywordflow">if</span> team != <span class="keywordtype">None</span>:
-<a name="l00061"></a>00061                 Team.teams[team].shufflePlayer(newname,pos)
-<a name="l00062"></a>00062         del players[oldname]
-<a name="l00063"></a>00063 
-<a name="l00064"></a>00064 <span class="comment">## @brief Removes a player</span>
-<a name="l00065"></a>00065  <span class="comment"># @details This function removes the given player from the \link Player.players\endlink list.</span>
-<a name="l00066"></a>00066  <span class="comment"># @param name The ladder name of the player to remove</span>
-<a name="l00067"></a>00067  <span class="comment"># @exception RuntimeError Raised if the player doesn&#39;t exist.&#39;</span>
-<a name="l00068"></a>00068  <span class="comment"># @note This triggers the event &quot;Player removed&quot;</span>
-<a name="l00069"></a><a class="code" href="namespace_player.html#a844c8f2121893f0c340b23ceedc4a6d2">00069</a> <span class="keyword">def </span><a class="code" href="namespace_player.html#a844c8f2121893f0c340b23ceedc4a6d2" title="Removes a player.">Remove</a>(name):
-<a name="l00070"></a>00070         <span class="keywordflow">if</span> name <span class="keywordflow">not</span> <span class="keywordflow">in</span> players:
-<a name="l00071"></a>00071                 <span class="keywordflow">raise</span> RuntimeError(<span class="stringliteral">&quot;Trying to remove player „&quot;</span>+name+<span class="stringliteral">&quot;“, but it doesn&#39;t exist.&quot;</span>)
-<a name="l00072"></a>00072         del players[name]
-<a name="l00073"></a>00073         events.triggerEvent(<span class="stringliteral">&quot;Player removed&quot;</span>)
-<a name="l00074"></a>00074 
-<a name="l00075"></a>00075 <span class="comment">## @cond</span>
-<a name="l00076"></a>00076 <span class="comment">#logging</span>
-<a name="l00077"></a>00077 logging.getLogger(<span class="stringliteral">&quot;PlayerModule&quot;</span>).addHandler(logging.NullHandler() )
-<a name="l00078"></a>00078 log=logging.getLogger(<span class="stringliteral">&quot;PlayerModule&quot;</span>)
-<a name="l00079"></a>00079 <span class="comment">#Events</span>
-<a name="l00080"></a>00080 events=Event.EventGroup(<span class="stringliteral">&quot;PlayerEvents&quot;</span>)
-<a name="l00081"></a>00081 events.addEvent(Event.Event(<span class="stringliteral">&quot;Player renamed&quot;</span>) )
-<a name="l00082"></a>00082 events.addEvent(Event.Event(<span class="stringliteral">&quot;Player joined team&quot;</span>) )
-<a name="l00083"></a>00083 events.addEvent(Event.Event(<span class="stringliteral">&quot;Player left team&quot;</span>) )
-<a name="l00084"></a>00084 events.addEvent(Event.Event(<span class="stringliteral">&quot;Player died&quot;</span>) )
-<a name="l00085"></a>00085 events.addEvent(Event.Event(<span class="stringliteral">&quot;Player killed&quot;</span>) )
-<a name="l00086"></a>00086 events.addEvent(Event.Event(<span class="stringliteral">&quot;Player crashed&quot;</span>) )
-<a name="l00087"></a>00087 events.addEvent(Event.Event(<span class="stringliteral">&quot;Player logged in&quot;</span>) )
-<a name="l00088"></a>00088 events.addEvent(Event.Event(<span class="stringliteral">&quot;Player logged out&quot;</span>) )
-<a name="l00089"></a>00089 events.addEvent(Event.Event(<span class="stringliteral">&quot;Player respawned&quot;</span>) )
-<a name="l00090"></a>00090 events.addEvent(Event.Event(<span class="stringliteral">&quot;Player added&quot;</span>) )
-<a name="l00091"></a>00091 events.addEvent(Event.Event(<span class="stringliteral">&quot;Player removed&quot;</span>) )
-<a name="l00092"></a>00092 events.getEvent(<span class="stringliteral">&quot;Player renamed&quot;</span>).addAction(UpdatePlayer)
-<a name="l00093"></a>00093 <span class="comment">## @endcond</span>
-<a name="l00094"></a>00094 
-<a name="l00095"></a>00095 
-<a name="l00096"></a>00096 
-<a name="l00097"></a>00097 <span class="comment">## @class Player.Player</span>
-<a name="l00098"></a>00098  <span class="comment"># @brief Class for a player</span>
-<a name="l00099"></a>00099  <span class="comment"># @details This class represents an player.</span>
-<a name="l00100"></a><a class="code" href="class_player_1_1_player.html">00100</a> <span class="keyword">class </span><a class="code" href="class_player_1_1_player.html" title="Class for a player.">Player</a>:
-<a name="l00101"></a>00101         <span class="comment">## @property __ladder_name</span>
-<a name="l00102"></a>00102          <span class="comment"># @brief The name of the player on the ladder</span>
-<a name="l00103"></a>00103          <span class="comment"># @details This variable is set to the escaped name or login of the player. It&#39;s</span>
-<a name="l00104"></a>00104          <span class="comment">#          used to indentify the player.</span>
-<a name="l00105"></a>00105          <span class="comment"># @private</span>
-<a name="l00106"></a>00106 
-<a name="l00107"></a>00107         <span class="comment">## @property name</span>
-<a name="l00108"></a>00108          <span class="comment"># @brief The name of the player</span>
-<a name="l00109"></a>00109          <span class="comment"># @details The full name of the player as it&#39;s used in the game</span>
-<a name="l00110"></a>00110 
-<a name="l00111"></a>00111         <span class="comment">## @property ip</span>
-<a name="l00112"></a>00112          <span class="comment"># @brief The player&#39;s ip</span>
-<a name="l00113"></a>00113          <span class="comment"># @details The ip of the player. Used for votes.</span>
-<a name="l00114"></a>00114 
-<a name="l00115"></a>00115         <span class="comment">## @property __lives</span>
-<a name="l00116"></a>00116          <span class="comment"># @brief Remaining lives</span>
-<a name="l00117"></a>00117          <span class="comment"># @details The remaining lives of the player. 0 if the player is death.</span>
-<a name="l00118"></a>00118 
-<a name="l00119"></a>00119         <span class="comment">## @property __old_ladder_name</span>
-<a name="l00120"></a>00120          <span class="comment"># @brief The old ladder name</span>
-<a name="l00121"></a>00121          <span class="comment"># @details This variable is set to the in game ladder name.</span>
-<a name="l00122"></a>00122 
-<a name="l00123"></a>00123         <span class="comment">## @property __team</span>
-<a name="l00124"></a>00124          <span class="comment"># @brief The name of the team in which the player is in.</span>
-<a name="l00125"></a>00125          <span class="comment"># @details The name of the player&#39;s team. None if the player is spectating, or</span>
-<a name="l00126"></a>00126          <span class="comment">#          AI if the player is in the AI team.</span>
-<a name="l00127"></a>00127 
-<a name="l00128"></a>00128         <span class="comment">## @property __logged_in</span>
-<a name="l00129"></a>00129          <span class="comment"># @brief If the player is logged in?</span>
-<a name="l00130"></a>00130          <span class="comment"># @details True if the player is logged in, False if not.</span>
-<a name="l00131"></a>00131 
-<a name="l00132"></a>00132         <span class="comment">## @property ping</span>
-<a name="l00133"></a>00133          <span class="comment"># @brief The ping of the player</span>
-<a name="l00134"></a>00134          <span class="comment"># @details The current ping of the player.</span>
-<a name="l00135"></a>00135          <span class="comment"># @note Currently there&#39;s no use for the ping of the player, but it may be used</span>
-<a name="l00136"></a>00136          <span class="comment">#       in future.</span>
+<a name="l00014"></a>00014 <span class="keywordflow">if</span> <span class="stringliteral">&quot;players&quot;</span> <span class="keywordflow">not</span> <span class="keywordflow">in</span> dir():
+<a name="l00015"></a>00015         <span class="comment">## @brief This variable is used to store the players.</span>
+<a name="l00016"></a>00016          <span class="comment"># @details This variable is a dictionary of players where the ladder name of the player</span>
+<a name="l00017"></a>00017          <span class="comment">#          is the key.</span>
+<a name="l00018"></a><a class="code" href="namespace_player.html#a1a4b55c172677536d879fb397d3ef15e">00018</a>         players=dict()
+<a name="l00019"></a>00019 
+<a name="l00020"></a>00020 <span class="comment">## @brief Adds a new Player</span>
+<a name="l00021"></a>00021  <span class="comment"># @details Use this function to add a new player.</span>
+<a name="l00022"></a>00022  <span class="comment"># @param lname The name used on the ladder for the player</span>
+<a name="l00023"></a>00023  <span class="comment"># @param name The displayed name of the player</span>
+<a name="l00024"></a>00024  <span class="comment"># @param ip The ip of the player</span>
+<a name="l00025"></a>00025  <span class="comment"># @exception RuntimeError Raised if a player with the same ladder na,e already exists.</span>
+<a name="l00026"></a>00026  <span class="comment"># @note The player is stored in \link Player.players\endlink</span>
+<a name="l00027"></a>00027  <span class="comment"># @note This triggers the event &quot;Player added&quot;</span>
+<a name="l00028"></a><a class="code" href="namespace_player.html#a7afb4f3ed0dc5209e4e8d4a28fb2e5cb">00028</a> <span class="keyword">def </span><a class="code" href="namespace_player.html#a7afb4f3ed0dc5209e4e8d4a28fb2e5cb" title="Adds a new Player.">Add</a>(lname,name,ip):
+<a name="l00029"></a>00029         <span class="keywordflow">if</span> lname <span class="keywordflow">in</span> players:
+<a name="l00030"></a>00030                 <span class="keywordflow">print</span>(players[lname] )
+<a name="l00031"></a>00031                 <span class="keywordflow">raise</span> RuntimeError(<span class="stringliteral">&quot;Player „&quot;</span>+lname+<span class="stringliteral">&quot;“ already exists.&quot;</span>)
+<a name="l00032"></a>00032         players[lname]=Player(lname,name,ip)
+<a name="l00033"></a>00033         events.triggerEvent(<span class="stringliteral">&quot;Player added&quot;</span>,lname)
+<a name="l00034"></a>00034 
+<a name="l00035"></a>00035 <span class="comment">## @brief Gets a bots</span>
+<a name="l00036"></a>00036  <span class="comment"># @details Returns all players that has is_human set to false.</span>
+<a name="l00037"></a>00037  <span class="comment"># @return The list of bot names</span>
+<a name="l00038"></a><a class="code" href="namespace_player.html#aa5fb66d32493d33b1b64665e26b54aa5">00038</a> <span class="keyword">def </span><a class="code" href="namespace_player.html#aa5fb66d32493d33b1b64665e26b54aa5" title="Gets a bots.">getBots</a>():
+<a name="l00039"></a>00039         bots=[]
+<a name="l00040"></a>00040         <span class="keywordflow">for</span> k,p <span class="keywordflow">in</span> players.items():
+<a name="l00041"></a>00041                 <span class="keywordflow">if</span> p.is_human==<span class="keyword">False</span>:
+<a name="l00042"></a>00042                         bots.append(k)
+<a name="l00043"></a>00043         <span class="keywordflow">return</span> bots
+<a name="l00044"></a>00044 
+<a name="l00045"></a>00045 <span class="comment">## @brief Handles player rename event</span>
+<a name="l00046"></a>00046  <span class="comment"># @details This function updates the player list. It&#39;s called by player rename event.</span>
+<a name="l00047"></a>00047  <span class="comment"># @param oldname The old ladder name of the player</span>
+<a name="l00048"></a>00048  <span class="comment"># @param newname The new ladder name of the player</span>
+<a name="l00049"></a><a class="code" href="namespace_player.html#a61462686e6399e37ccd208d65b523de2">00049</a> <span class="keyword">def </span><a class="code" href="namespace_player.html#a61462686e6399e37ccd208d65b523de2" title="Handles player rename event.">UpdatePlayer</a>(oldname,newname):
+<a name="l00050"></a>00050         <span class="keywordflow">if</span> oldname <span class="keywordflow">not</span> <span class="keywordflow">in</span> players:
+<a name="l00051"></a>00051                 log.error(<span class="stringliteral">&quot;Player „&quot;</span>+oldname+<span class="stringliteral">&quot;“ should be renamed to „&quot;</span>+newname+<span class="stringliteral">&quot;“ , but it doesn&#39;t exist. Adding it.&quot;</span>)
+<a name="l00052"></a>00052                 Add(newname,newname,<span class="stringliteral">&quot;127.0.0.1&quot;</span>)
+<a name="l00053"></a>00053                 <span class="keywordflow">return</span>
+<a name="l00054"></a>00054         <span class="comment">#team=players[oldname].getTeam() #### The team code is buggy. In case players</span>
+<a name="l00055"></a>00055         <span class="comment">#if team != None:                #### rename only at roundend when ONLINE_PLAYER</span>
+<a name="l00056"></a>00056         <span class="comment">#                                #### is written to ladderlog too we could just skip it</span>
+<a name="l00057"></a>00057         <span class="comment">#                                #### and set the team to None (leave the current team.)</span>
+<a name="l00058"></a>00058         <span class="comment">#       pos=Team.teams[team].getPlayerPosition(oldname)</span>
+<a name="l00059"></a>00059         <span class="comment">#team=players[oldname].getTeam()</span>
+<a name="l00060"></a>00060         players[oldname].leaveTeam(<span class="keyword">True</span>)
+<a name="l00061"></a>00061         players[newname]=players[oldname]
+<a name="l00062"></a>00062         <span class="comment">#try:</span>
+<a name="l00063"></a>00063         <span class="comment">#       players[newname].joinTeam(team,quiet=True) ### </span>
+<a name="l00064"></a>00064         <span class="comment">#       if team != None:</span>
+<a name="l00065"></a>00065         <span class="comment">#               Team.teams[team].shufflePlayer(newname,pos)</span>
+<a name="l00066"></a>00066         <span class="comment">#except:</span>
+<a name="l00067"></a>00067         <span class="comment">#               pass</span>
+<a name="l00068"></a>00068         del players[oldname]
+<a name="l00069"></a>00069 
+<a name="l00070"></a>00070 <span class="comment">## @brief Removes a player</span>
+<a name="l00071"></a>00071  <span class="comment"># @details This function removes the given player from the \link Player.players\endlink list.</span>
+<a name="l00072"></a>00072  <span class="comment"># @param name The ladder name of the player to remove</span>
+<a name="l00073"></a>00073  <span class="comment"># @exception RuntimeError Raised if the player doesn&#39;t exist.&#39;</span>
+<a name="l00074"></a>00074  <span class="comment"># @note This triggers the event &quot;Player removed&quot;</span>
+<a name="l00075"></a><a class="code" href="namespace_player.html#a844c8f2121893f0c340b23ceedc4a6d2">00075</a> <span class="keyword">def </span><a class="code" href="namespace_player.html#a844c8f2121893f0c340b23ceedc4a6d2" title="Removes a player.">Remove</a>(name):
+<a name="l00076"></a>00076         <span class="keywordflow">if</span> name <span class="keywordflow">not</span> <span class="keywordflow">in</span> players:
+<a name="l00077"></a>00077                 <span class="keywordflow">raise</span> RuntimeError(<span class="stringliteral">&quot;Trying to remove player „&quot;</span>+name+<span class="stringliteral">&quot;“, but it doesn&#39;t exist.&quot;</span>)
+<a name="l00078"></a>00078         del players[name]
+<a name="l00079"></a>00079         events.triggerEvent(<span class="stringliteral">&quot;Player removed&quot;</span>)
+<a name="l00080"></a>00080 
+<a name="l00081"></a>00081 <span class="comment">## @cond</span>
+<a name="l00082"></a>00082 <span class="comment">#logging</span>
+<a name="l00083"></a>00083 logging.getLogger(<span class="stringliteral">&quot;PlayerModule&quot;</span>).addHandler(logging.NullHandler() )
+<a name="l00084"></a>00084 log=logging.getLogger(<span class="stringliteral">&quot;PlayerModule&quot;</span>)
+<a name="l00085"></a>00085 <span class="comment">#Events</span>
+<a name="l00086"></a>00086 events=Event.EventGroup(<span class="stringliteral">&quot;PlayerEvents&quot;</span>)
+<a name="l00087"></a>00087 events.addEvent(Event.Event(<span class="stringliteral">&quot;Player renamed&quot;</span>) )
+<a name="l00088"></a>00088 events.addEvent(Event.Event(<span class="stringliteral">&quot;Player joined team&quot;</span>) )
+<a name="l00089"></a>00089 events.addEvent(Event.Event(<span class="stringliteral">&quot;Player left team&quot;</span>) )
+<a name="l00090"></a>00090 events.addEvent(Event.Event(<span class="stringliteral">&quot;Player died&quot;</span>) )
+<a name="l00091"></a>00091 events.addEvent(Event.Event(<span class="stringliteral">&quot;Player killed&quot;</span>) )
+<a name="l00092"></a>00092 events.addEvent(Event.Event(<span class="stringliteral">&quot;Player crashed&quot;</span>) )
+<a name="l00093"></a>00093 events.addEvent(Event.Event(<span class="stringliteral">&quot;Player logged in&quot;</span>) )
+<a name="l00094"></a>00094 events.addEvent(Event.Event(<span class="stringliteral">&quot;Player logged out&quot;</span>) )
+<a name="l00095"></a>00095 events.addEvent(Event.Event(<span class="stringliteral">&quot;Player respawned&quot;</span>) )
+<a name="l00096"></a>00096 events.addEvent(Event.Event(<span class="stringliteral">&quot;Player added&quot;</span>) )
+<a name="l00097"></a>00097 events.addEvent(Event.Event(<span class="stringliteral">&quot;Player removed&quot;</span>) )
+<a name="l00098"></a>00098 events.getEvent(<span class="stringliteral">&quot;Player renamed&quot;</span>).addAction(UpdatePlayer)
+<a name="l00099"></a>00099 <span class="comment">## @endcond</span>
+<a name="l00100"></a>00100 
+<a name="l00101"></a>00101 
+<a name="l00102"></a>00102 
+<a name="l00103"></a>00103 <span class="comment">## @class Player.Player</span>
+<a name="l00104"></a>00104  <span class="comment"># @brief Class for a player</span>
+<a name="l00105"></a>00105  <span class="comment"># @details This class represents an player.</span>
+<a name="l00106"></a><a class="code" href="class_player_1_1_player.html">00106</a> <span class="keyword">class </span><a class="code" href="class_player_1_1_player.html" title="Class for a player.">Player</a>:
+<a name="l00107"></a>00107         <span class="comment">## @property __ladder_name</span>
+<a name="l00108"></a>00108          <span class="comment"># @brief The name of the player on the ladder</span>
+<a name="l00109"></a>00109          <span class="comment"># @details This variable is set to the escaped name or login of the player. It&#39;s</span>
+<a name="l00110"></a>00110          <span class="comment">#          used to indentify the player.</span>
+<a name="l00111"></a>00111          <span class="comment"># @private</span>
+<a name="l00112"></a>00112 
+<a name="l00113"></a>00113         <span class="comment">## @property name</span>
+<a name="l00114"></a>00114          <span class="comment"># @brief The name of the player</span>
+<a name="l00115"></a>00115          <span class="comment"># @details The full name of the player as it&#39;s used in the game</span>
+<a name="l00116"></a>00116 
+<a name="l00117"></a>00117         <span class="comment">## @property ip</span>
+<a name="l00118"></a>00118          <span class="comment"># @brief The player&#39;s ip</span>
+<a name="l00119"></a>00119          <span class="comment"># @details The ip of the player. Used for votes.</span>
+<a name="l00120"></a>00120 
+<a name="l00121"></a>00121         <span class="comment">## @property __lives</span>
+<a name="l00122"></a>00122          <span class="comment"># @brief Remaining lives</span>
+<a name="l00123"></a>00123          <span class="comment"># @details The remaining lives of the player. 0 if the player is death.</span>
+<a name="l00124"></a>00124 
+<a name="l00125"></a>00125         <span class="comment">## @property __old_ladder_name</span>
+<a name="l00126"></a>00126          <span class="comment"># @brief The old ladder name</span>
+<a name="l00127"></a>00127          <span class="comment"># @details This variable is set to the in game ladder name.</span>
+<a name="l00128"></a>00128 
+<a name="l00129"></a>00129         <span class="comment">## @property __team</span>
+<a name="l00130"></a>00130          <span class="comment"># @brief The name of the team in which the player is in.</span>
+<a name="l00131"></a>00131          <span class="comment"># @details The name of the player&#39;s team. None if the player is spectating, or</span>
+<a name="l00132"></a>00132          <span class="comment">#          AI if the player is in the AI team.</span>
+<a name="l00133"></a>00133 
+<a name="l00134"></a>00134         <span class="comment">## @property __logged_in</span>
+<a name="l00135"></a>00135          <span class="comment"># @brief If the player is logged in?</span>
+<a name="l00136"></a>00136          <span class="comment"># @details True if the player is logged in, False if not.</span>
 <a name="l00137"></a>00137 
-<a name="l00138"></a>00138         <span class="comment">## @property __old_name</span>
-<a name="l00139"></a>00139          <span class="comment"># @brief The old name</span>
-<a name="l00140"></a>00140          <span class="comment"># @details This variable is set to the currently in the game used name.</span>
-<a name="l00141"></a>00141 
-<a name="l00142"></a>00142         <span class="comment">## @property color</span>
-<a name="l00143"></a>00143          <span class="comment"># @brief The color of the player</span>
-<a name="l00144"></a>00144          <span class="comment"># @details A tuple of the color of the player(r, g, b). Each value is between 0 and 15</span>
-<a name="l00145"></a>00145 
-<a name="l00146"></a>00146         <span class="comment">## @property is_human</span>
-<a name="l00147"></a>00147          <span class="comment"># @brief Is the player human?</span>
-<a name="l00148"></a>00148          <span class="comment"># @details True is yes, otherwise False.</span>
-<a name="l00149"></a>00149 
-<a name="l00150"></a>00150         <span class="comment">## @property data</span>
-<a name="l00151"></a>00151          <span class="comment"># @brief Store data assigned with the player</span>
-<a name="l00152"></a>00152          <span class="comment"># @details Used to store additional data assigned with the player.</span>
-<a name="l00153"></a>00153 
-<a name="l00154"></a>00154         <span class="comment">## @cond</span>
-<a name="l00155"></a>00155         __slots__=(<span class="stringliteral">&quot;__ladder_name&quot;</span>,<span class="stringliteral">&quot;__old_ladder_name&quot;</span>,<span class="stringliteral">&quot;name&quot;</span>,<span class="stringliteral">&quot;ip&quot;</span>,<span class="stringliteral">&quot;__lives&quot;</span>,<span class="stringliteral">&quot;__team&quot;</span>,
-<a name="l00156"></a>00156                    <span class="stringliteral">&quot;__logged_in&quot;</span>,<span class="stringliteral">&quot;ping&quot;</span>,<span class="stringliteral">&quot;__old_name&quot;</span>,<span class="stringliteral">&quot;color&quot;</span>,<span class="stringliteral">&quot;is_human&quot;</span>,<span class="stringliteral">&quot;data&quot;</span>)
-<a name="l00157"></a>00157         <span class="comment">## @endcond</span>
-<a name="l00158"></a>00158 
-<a name="l00159"></a>00159         <span class="comment">## @brief Init function</span>
-<a name="l00160"></a>00160          <span class="comment"># @details Inits a new Player and adds the properties to it.</span>
-<a name="l00161"></a>00161          <span class="comment"># @param ladder_name \copybrief __ladder_name</span>
-<a name="l00162"></a>00162          <span class="comment"># @param name \copybrief name</span>
-<a name="l00163"></a>00163          <span class="comment"># @param ip \copybrief ip</span>
-<a name="l00164"></a><a class="code" href="class_player_1_1_player.html#a24b6d9aadd8f9a4d57ad531a7172209b">00164</a>         <span class="keyword">def </span><a class="code" href="class_player_1_1_player.html#a24b6d9aadd8f9a4d57ad531a7172209b" title="Init function.">__init__</a>(self, ladder_name, name, ip):
-<a name="l00165"></a><a class="code" href="class_player_1_1_player.html#ab4e7b3e5188ae4bd044ffaa563098973">00165</a>                 self.<a class="code" href="class_player_1_1_player.html#ab4e7b3e5188ae4bd044ffaa563098973" title="The name of the player on the ladder.">__ladder_name</a>=ladder_name
-<a name="l00166"></a><a class="code" href="class_player_1_1_player.html#a6cea7416f6b4ce563211f3194033f671">00166</a>                 self.<a class="code" href="class_player_1_1_player.html#a6cea7416f6b4ce563211f3194033f671" title="The name of the player.">name</a>=name
-<a name="l00167"></a><a class="code" href="class_player_1_1_player.html#a48ed10bfc12677f9c41e2cae6daafa49">00167</a>                 self.<a class="code" href="class_player_1_1_player.html#a48ed10bfc12677f9c41e2cae6daafa49" title="The player&amp;#39;s ip.">ip</a>=ip
-<a name="l00168"></a><a class="code" href="class_player_1_1_player.html#ade041c5e2ed4966a35e6d548746ee6da">00168</a>                 self.<a class="code" href="class_player_1_1_player.html#ade041c5e2ed4966a35e6d548746ee6da" title="Remaining lives.">__lives</a>=1
-<a name="l00169"></a><a class="code" href="class_player_1_1_player.html#ae01a2cfd1449c211cc6b6ca6d6fce853">00169</a>                 self.<a class="code" href="class_player_1_1_player.html#ae01a2cfd1449c211cc6b6ca6d6fce853" title="The name of the team in which the player is in.">__team</a>=<span class="keywordtype">None</span>
-<a name="l00170"></a><a class="code" href="class_player_1_1_player.html#a11f44d16220129d7efca52828dc13d4f">00170</a>                 self.<a class="code" href="class_player_1_1_player.html#a11f44d16220129d7efca52828dc13d4f" title="The old ladder name.">__old_ladder_name</a>=ladder_name
-<a name="l00171"></a><a class="code" href="class_player_1_1_player.html#a040c3c6e90a7655064aa65adbb4387b6">00171</a>                 self.<a class="code" href="class_player_1_1_player.html#a040c3c6e90a7655064aa65adbb4387b6" title="If the player is logged in?">__logged_in</a>=<span class="keyword">False</span>
-<a name="l00172"></a><a class="code" href="class_player_1_1_player.html#ab675ec89c8e17a56d85f0304f46465ea">00172</a>                 self.<a class="code" href="class_player_1_1_player.html#ab675ec89c8e17a56d85f0304f46465ea" title="The ping of the player.">ping</a>=0
-<a name="l00173"></a><a class="code" href="class_player_1_1_player.html#a43d105f816af7ba2c6dbe816ffaf4eba">00173</a>                 self.<a class="code" href="class_player_1_1_player.html#a43d105f816af7ba2c6dbe816ffaf4eba" title="The old name.">__old_name</a>=self.<a class="code" href="class_player_1_1_player.html#a6cea7416f6b4ce563211f3194033f671" title="The name of the player.">name</a>
-<a name="l00174"></a><a class="code" href="class_player_1_1_player.html#a323d688193f511184787b2e598222e74">00174</a>                 self.<a class="code" href="class_player_1_1_player.html#a323d688193f511184787b2e598222e74" title="The color of the player.">color</a>=15,0,0
-<a name="l00175"></a><a class="code" href="class_player_1_1_player.html#a01b505c0fe5ff3d20d75327800b1552e">00175</a>                 self.<a class="code" href="class_player_1_1_player.html#a01b505c0fe5ff3d20d75327800b1552e" title="Is the player human?">is_human</a>=<span class="keyword">True</span>
-<a name="l00176"></a><a class="code" href="class_player_1_1_player.html#a1a50d6ee0682ff86b83ea314dfa58ce6">00176</a>                 self.<a class="code" href="class_player_1_1_player.html#a1a50d6ee0682ff86b83ea314dfa58ce6" title="Store data assigned with the player.">data</a>=dict()
-<a name="l00177"></a>00177 
-<a name="l00178"></a>00178         <span class="comment">## @brief Del function</span>
-<a name="l00179"></a>00179          <span class="comment"># @details Removes the player from his team</span>
-<a name="l00180"></a><a class="code" href="class_player_1_1_player.html#a1cc8f0385a8b8ae30062f1475f08de3b">00180</a>         <span class="keyword">def </span><a class="code" href="class_player_1_1_player.html#a1cc8f0385a8b8ae30062f1475f08de3b" title="Del function.">__del__</a>(self):
-<a name="l00181"></a>00181                 <span class="keywordflow">try</span>:
-<a name="l00182"></a>00182                         self.<a class="code" href="class_player_1_1_player.html#a7fb849bfe1c9df24fcc166b16c48f4de" title="Lets the player leave the team.">leaveTeam</a>()
-<a name="l00183"></a>00183                 <span class="keywordflow">except</span>:
-<a name="l00184"></a>00184                         <span class="keywordflow">pass</span>    
-<a name="l00185"></a>00185 
-<a name="l00186"></a>00186         <span class="comment">## @brief Sets the team of the player</span>
-<a name="l00187"></a>00187          <span class="comment"># @details This function lets the player join the given team</span>
-<a name="l00188"></a>00188          <span class="comment"># @param teamname The escaped name of the team to which to add the player.</span>
-<a name="l00189"></a>00189          <span class="comment">#                 None if the player is specating. AI if the player is in the AI team.</span>
-<a name="l00190"></a>00190          <span class="comment"># @param force Create the team if it doesn&#39;t exist?</span>
-<a name="l00191"></a>00191          <span class="comment"># @param quiet If True, don&#39;t print info log messages</span>
-<a name="l00192"></a>00192          <span class="comment"># @exception RuntimeError Raised if the team doesn&#39;t exist and force isn&#39;t set</span>
-<a name="l00193"></a>00193          <span class="comment"># @note This also calls Team::addPlayer (adds the player to the team)</span>
-<a name="l00194"></a>00194          <span class="comment"># @note This triggers the event &quot;Player joined team&quot;</span>
-<a name="l00195"></a>00195          <span class="comment"># @note If the team name is AI, is_human is set to False</span>
-<a name="l00196"></a><a class="code" href="class_player_1_1_player.html#aa169627ae36dac4ce2c29dab48184801">00196</a>         <span class="keyword">def </span><a class="code" href="class_player_1_1_player.html#aa169627ae36dac4ce2c29dab48184801" title="Sets the team of the player.">joinTeam</a>(self, teamname, force=False, quiet=False):
-<a name="l00197"></a>00197                 <span class="keywordflow">if</span> self.<a class="code" href="class_player_1_1_player.html#ae01a2cfd1449c211cc6b6ca6d6fce853" title="The name of the team in which the player is in.">__team</a> == teamname:
-<a name="l00198"></a>00198                         <span class="keywordflow">return</span>
-<a name="l00199"></a>00199                 self.<a class="code" href="class_player_1_1_player.html#a7fb849bfe1c9df24fcc166b16c48f4de" title="Lets the player leave the team.">leaveTeam</a>()
-<a name="l00200"></a>00200                 <span class="keywordflow">if</span> teamname == <span class="keywordtype">None</span>:
-<a name="l00201"></a>00201                         self.<a class="code" href="class_player_1_1_player.html#ae01a2cfd1449c211cc6b6ca6d6fce853" title="The name of the team in which the player is in.">__team</a>=<span class="keywordtype">None</span>
-<a name="l00202"></a>00202                         <span class="keywordflow">return</span>
-<a name="l00203"></a>00203                 <span class="keywordflow">if</span> teamname == <span class="stringliteral">&quot;ai&quot;</span>:
-<a name="l00204"></a>00204                         self.<a class="code" href="class_player_1_1_player.html#ae01a2cfd1449c211cc6b6ca6d6fce853" title="The name of the team in which the player is in.">__team</a>=<span class="stringliteral">&quot;ai&quot;</span>
-<a name="l00205"></a>00205                         self.<a class="code" href="class_player_1_1_player.html#a01b505c0fe5ff3d20d75327800b1552e" title="Is the player human?">is_human</a>=<span class="keyword">False</span>
-<a name="l00206"></a>00206                 <span class="keywordflow">else</span>:
-<a name="l00207"></a>00207                         self.<a class="code" href="class_player_1_1_player.html#a01b505c0fe5ff3d20d75327800b1552e" title="Is the player human?">is_human</a>=<span class="keyword">True</span>
-<a name="l00208"></a>00208                 <span class="keywordflow">if</span> teamname <span class="keywordflow">not</span> <span class="keywordflow">in</span> Team.teams:
-<a name="l00209"></a>00209                         <span class="keywordflow">if</span> force:
-<a name="l00210"></a>00210                                 log.debug(<span class="stringliteral">&quot;Team „&quot;</span>+teamname+<span class="stringliteral">&quot;“ doesn&#39;t exist. Creating it.&quot;</span>)
-<a name="l00211"></a>00211                                 Team.add(teamname)
-<a name="l00212"></a>00212                         <span class="keywordflow">else</span>:
-<a name="l00213"></a>00213                                 <span class="keywordflow">raise</span> RuntimeError(<span class="stringliteral">&quot;Team „&quot;</span> + teamname + <span class="stringliteral">&quot;“ doesn&#39;t exist.&quot;</span>)
-<a name="l00214"></a>00214                 Team.teams[teamname].addPlayer(self.<a class="code" href="class_player_1_1_player.html#ab4e7b3e5188ae4bd044ffaa563098973" title="The name of the player on the ladder.">__ladder_name</a>)
-<a name="l00215"></a>00215                 events.triggerEvent(<span class="stringliteral">&quot;Player joined team&quot;</span>,self.<a class="code" href="class_player_1_1_player.html#ab4e7b3e5188ae4bd044ffaa563098973" title="The name of the player on the ladder.">__ladder_name</a>,teamname)
-<a name="l00216"></a>00216                 <span class="keywordflow">if</span> <span class="keywordflow">not</span> quiet:
-<a name="l00217"></a>00217                         log.info(<span class="stringliteral">&quot;Player „&quot;</span> + self.<a class="code" href="class_player_1_1_player.html#a6cea7416f6b4ce563211f3194033f671" title="The name of the player.">name</a> + <span class="stringliteral">&quot;“ joined team „&quot;</span> + Team.teams[teamname].getName()
-<a name="l00218"></a>00218                                  + <span class="stringliteral">&quot;“.&quot;</span>)
-<a name="l00219"></a>00219                 self.<a class="code" href="class_player_1_1_player.html#ae01a2cfd1449c211cc6b6ca6d6fce853" title="The name of the team in which the player is in.">__team</a>=teamname
-<a name="l00220"></a>00220                 <span class="keywordflow">if</span> len(Team.teams[teamname].getMembers() ) == 1:
-<a name="l00221"></a>00221                         Team.teams[teamname].color=self.<a class="code" href="class_player_1_1_player.html#a323d688193f511184787b2e598222e74" title="The color of the player.">color</a>
-<a name="l00222"></a>00222 
-<a name="l00223"></a>00223         <span class="comment">## @brief Lets the player leave the team</span>
-<a name="l00224"></a>00224          <span class="comment"># @details This function lets the player leave the team.</span>
-<a name="l00225"></a>00225          <span class="comment"># @param quiet If True, don&#39;t print info log messages</span>
-<a name="l00226"></a>00226          <span class="comment"># @note This also calls Team::removePlayer (removes the player from the team)</span>
-<a name="l00227"></a>00227          <span class="comment"># @note This triggers the event &quot;Player left team&quot;.</span>
-<a name="l00228"></a><a class="code" href="class_player_1_1_player.html#a7fb849bfe1c9df24fcc166b16c48f4de">00228</a>         <span class="keyword">def </span><a class="code" href="class_player_1_1_player.html#a7fb849bfe1c9df24fcc166b16c48f4de" title="Lets the player leave the team.">leaveTeam</a>(self,quiet=False):
-<a name="l00229"></a>00229                 <span class="keywordflow">if</span> self.<a class="code" href="class_player_1_1_player.html#ae01a2cfd1449c211cc6b6ca6d6fce853" title="The name of the team in which the player is in.">__team</a> == <span class="keywordtype">None</span>:
-<a name="l00230"></a>00230                         <span class="keywordflow">return</span>
-<a name="l00231"></a>00231                 <span class="keywordflow">try</span>:
-<a name="l00232"></a>00232                         Team.teams[self.<a class="code" href="class_player_1_1_player.html#ae01a2cfd1449c211cc6b6ca6d6fce853" title="The name of the team in which the player is in.">__team</a>].removePlayer(self.<a class="code" href="class_player_1_1_player.html#ab4e7b3e5188ae4bd044ffaa563098973" title="The name of the player on the ladder.">__ladder_name</a>)
-<a name="l00233"></a>00233                 <span class="keywordflow">except</span>:
-<a name="l00234"></a>00234                         Team.teams[self.<a class="code" href="class_player_1_1_player.html#ae01a2cfd1449c211cc6b6ca6d6fce853" title="The name of the team in which the player is in.">__team</a>].removePlayer(self.<a class="code" href="class_player_1_1_player.html#a11f44d16220129d7efca52828dc13d4f" title="The old ladder name.">__old_ladder_name</a>)
-<a name="l00235"></a>00235                 events.triggerEvent(<span class="stringliteral">&quot;Player left team&quot;</span>,self.<a class="code" href="class_player_1_1_player.html#ab4e7b3e5188ae4bd044ffaa563098973" title="The name of the player on the ladder.">__ladder_name</a>, self.<a class="code" href="class_player_1_1_player.html#ae01a2cfd1449c211cc6b6ca6d6fce853" title="The name of the team in which the player is in.">__team</a>)
-<a name="l00236"></a>00236                 <span class="keywordflow">if</span> <span class="keywordflow">not</span> quiet:
-<a name="l00237"></a>00237                         log.info(<span class="stringliteral">&quot;Player „&quot;</span>+self.<a class="code" href="class_player_1_1_player.html#a6cea7416f6b4ce563211f3194033f671" title="The name of the player.">name</a>+<span class="stringliteral">&quot;” left team „&quot;</span>+Team.teams[self.<a class="code" href="class_player_1_1_player.html#ae01a2cfd1449c211cc6b6ca6d6fce853" title="The name of the team in which the player is in.">__team</a>].getName()+<span class="stringliteral">&quot;“.&quot;</span>)
-<a name="l00238"></a>00238                 self.<a class="code" href="class_player_1_1_player.html#ae01a2cfd1449c211cc6b6ca6d6fce853" title="The name of the team in which the player is in.">__team</a>=<span class="keywordtype">None</span>
-<a name="l00239"></a>00239 
-<a name="l00240"></a>00240         <span class="comment">## @brief Set player&#39;s lives</span>
-<a name="l00241"></a>00241          <span class="comment"># @details This sets the player&#39;s lives to the given number. A value less or equal</span>
-<a name="l00242"></a>00242          <span class="comment">#          0 means the player is death.</span>
-<a name="l00243"></a>00243          <span class="comment"># @param lives The lives</span>
-<a name="l00244"></a>00244          <span class="comment"># @note If the number of lives is less than 0, 0 is used for lives.</span>
-<a name="l00245"></a>00245          <span class="comment"># @note Setting the lives to 0 does NOT immenediately kill the player. For that,</span>
-<a name="l00246"></a>00246          <span class="comment">#       use Player::kill.</span>
-<a name="l00247"></a><a class="code" href="class_player_1_1_player.html#af3a510565e600d099419503da9a40f8a">00247</a>         <span class="keyword">def </span><a class="code" href="class_player_1_1_player.html#af3a510565e600d099419503da9a40f8a" title="Set player&amp;#39;s lives.">setLives</a>(self, lives):
-<a name="l00248"></a>00248                 <span class="keywordflow">if</span> lives &lt; 0:
-<a name="l00249"></a>00249                         lives=0
-<a name="l00250"></a>00250                 self.<a class="code" href="class_player_1_1_player.html#ade041c5e2ed4966a35e6d548746ee6da" title="Remaining lives.">__lives</a>=lives
-<a name="l00251"></a>00251 
-<a name="l00252"></a>00252         <span class="comment">## @brief This decreases the player&#39;s lives counter by 1</span>
-<a name="l00253"></a>00253          <span class="comment"># @details Call this function when the player crashed.</span>
-<a name="l00254"></a>00254          <span class="comment"># @return Remaining lives. 0 is the player is death.</span>
-<a name="l00255"></a>00255          <span class="comment"># @note This triggers the event &quot;Player crashed&quot;. If the lives are less or equal 0</span>
-<a name="l00256"></a>00256          <span class="comment">#       after decreasing them, &quot;Player died&quot; is also triggered.</span>
-<a name="l00257"></a><a class="code" href="class_player_1_1_player.html#aa3399eb13837ea4756060474fdf81e19">00257</a>         <span class="keyword">def </span><a class="code" href="class_player_1_1_player.html#aa3399eb13837ea4756060474fdf81e19" title="This decreases the player&amp;#39;s lives counter by 1.">crashed</a>(self):
-<a name="l00258"></a>00258                 self.<a class="code" href="class_player_1_1_player.html#ade041c5e2ed4966a35e6d548746ee6da" title="Remaining lives.">__lives</a>=self.<a class="code" href="class_player_1_1_player.html#ade041c5e2ed4966a35e6d548746ee6da" title="Remaining lives.">__lives</a>-1
-<a name="l00259"></a>00259                 <span class="keywordflow">if</span> self.<a class="code" href="class_player_1_1_player.html#ade041c5e2ed4966a35e6d548746ee6da" title="Remaining lives.">__lives</a>&lt;0:
-<a name="l00260"></a>00260                         log.debug(<span class="stringliteral">&quot;A player is crashed but shouldn&#39;t have been alive. Setting lives to 0.&quot;</span>)
-<a name="l00261"></a>00261                         self.<a class="code" href="class_player_1_1_player.html#ade041c5e2ed4966a35e6d548746ee6da" title="Remaining lives.">__lives</a>=0
-<a name="l00262"></a>00262                 events.triggerEvent(<span class="stringliteral">&quot;Player crashed&quot;</span>,self.<a class="code" href="class_player_1_1_player.html#ab4e7b3e5188ae4bd044ffaa563098973" title="The name of the player on the ladder.">__ladder_name</a>)
-<a name="l00263"></a>00263                 <span class="keywordflow">if</span> self.<a class="code" href="class_player_1_1_player.html#ade041c5e2ed4966a35e6d548746ee6da" title="Remaining lives.">__lives</a>==0:
-<a name="l00264"></a>00264                         events.triggerEvent(<span class="stringliteral">&quot;Player died&quot;</span>,self.<a class="code" href="class_player_1_1_player.html#ab4e7b3e5188ae4bd044ffaa563098973" title="The name of the player on the ladder.">__ladder_name</a>)
-<a name="l00265"></a>00265                 <span class="keywordflow">return</span> self.<a class="code" href="class_player_1_1_player.html#ade041c5e2ed4966a35e6d548746ee6da" title="Remaining lives.">__lives</a>
-<a name="l00266"></a>00266 
-<a name="l00267"></a>00267         <span class="comment">## @brief Kills the player.</span>
-<a name="l00268"></a>00268          <span class="comment"># @details This function kills the player.</span>
-<a name="l00269"></a>00269          <span class="comment"># @note The lives of the player are set to 0.</span>
-<a name="l00270"></a>00270          <span class="comment"># @note This triggers the event &quot;Player killed&quot; and &quot;Player died&quot;.</span>
-<a name="l00271"></a><a class="code" href="class_player_1_1_player.html#a4513fc3191aa1b2da9ebac05acb67642">00271</a>         <span class="keyword">def </span><a class="code" href="class_player_1_1_player.html#a4513fc3191aa1b2da9ebac05acb67642" title="Kills the player.">kill</a>(self):
-<a name="l00272"></a>00272                 SendCommand(<span class="stringliteral">&quot;KILL &quot;</span>+self.<a class="code" href="class_player_1_1_player.html#a11f44d16220129d7efca52828dc13d4f" title="The old ladder name.">__old_ladder_name</a>)
-<a name="l00273"></a>00273                 events.triggerEvent(<span class="stringliteral">&quot;Player killed&quot;</span>,self.<a class="code" href="class_player_1_1_player.html#ab4e7b3e5188ae4bd044ffaa563098973" title="The name of the player on the ladder.">__ladder_name</a>)
-<a name="l00274"></a>00274                 events.triggerEvent(<span class="stringliteral">&quot;Player died&quot;</span>,self.<a class="code" href="class_player_1_1_player.html#ab4e7b3e5188ae4bd044ffaa563098973" title="The name of the player on the ladder.">__ladder_name</a>)
-<a name="l00275"></a>00275                 self.<a class="code" href="class_player_1_1_player.html#ade041c5e2ed4966a35e6d548746ee6da" title="Remaining lives.">__lives</a>=0
-<a name="l00276"></a>00276                 log.info(<span class="stringliteral">&quot;Player &quot;</span> + self.<a class="code" href="class_player_1_1_player.html#a11f44d16220129d7efca52828dc13d4f" title="The old ladder name.">__old_ladder_name</a> + <span class="stringliteral">&quot; got killed by the script.&quot;</span>)
-<a name="l00277"></a>00277 
-<a name="l00278"></a>00278         <span class="comment">## @brief Sets the ladder name</span>
-<a name="l00279"></a>00279          <span class="comment"># @details This function sets the ladder name.</span>
-<a name="l00280"></a>00280          <span class="comment"># @param name The new ladder name</span>
-<a name="l00281"></a>00281          <span class="comment"># @note This triggers the event &quot;Player renamed&quot;</span>
-<a name="l00282"></a><a class="code" href="class_player_1_1_player.html#add4b61d7f63f7361bdaa2e797cc00567">00282</a>         <span class="keyword">def </span><a class="code" href="class_player_1_1_player.html#add4b61d7f63f7361bdaa2e797cc00567" title="Sets the ladder name.">setLadderName</a>(self, name):
-<a name="l00283"></a>00283                 oldname=self.<a class="code" href="class_player_1_1_player.html#ab4e7b3e5188ae4bd044ffaa563098973" title="The name of the player on the ladder.">__ladder_name</a>
-<a name="l00284"></a>00284                 self.<a class="code" href="class_player_1_1_player.html#ab4e7b3e5188ae4bd044ffaa563098973" title="The name of the player on the ladder.">__ladder_name</a>=name
-<a name="l00285"></a>00285                 events.triggerEvent(<span class="stringliteral">&quot;Player renamed&quot;</span>,oldname,self.<a class="code" href="class_player_1_1_player.html#ab4e7b3e5188ae4bd044ffaa563098973" title="The name of the player on the ladder.">__ladder_name</a>)
-<a name="l00286"></a>00286 
-<a name="l00287"></a>00287         <span class="comment">## @brief Respawns the player</span>
-<a name="l00288"></a>00288          <span class="comment"># @details This function respawns the player at the given position.</span>
-<a name="l00289"></a>00289          <span class="comment"># @param x The x-coordinate of the position where to respawn</span>
-<a name="l00290"></a>00290          <span class="comment"># @param y The y-coordinate of the position where to respawn</span>
-<a name="l00291"></a>00291          <span class="comment"># @param xdir The x direction</span>
-<a name="l00292"></a>00292          <span class="comment"># @param ydir The y direction</span>
-<a name="l00293"></a>00293          <span class="comment"># @param force Force position changing(teleporting) ?</span>
-<a name="l00294"></a>00294          <span class="comment"># @note This sets Player&#39;s lives to 1 if they are less or equal 0</span>
-<a name="l00295"></a>00295          <span class="comment"># @note This triggers the event &quot;Player respawned&quot;</span>
-<a name="l00296"></a><a class="code" href="class_player_1_1_player.html#ad32410beb56cd2b6d3ab69568a5a3f7d">00296</a>         <span class="keyword">def </span><a class="code" href="class_player_1_1_player.html#ad32410beb56cd2b6d3ab69568a5a3f7d" title="Respawns the player.">respawn</a>(self, x ,y, xdir, ydir, force):
-<a name="l00297"></a>00297                 <span class="keywordflow">if</span> self.<a class="code" href="class_player_1_1_player.html#ade041c5e2ed4966a35e6d548746ee6da" title="Remaining lives.">__lives</a> &lt;= 0:
-<a name="l00298"></a>00298                         self.<a class="code" href="class_player_1_1_player.html#ade041c5e2ed4966a35e6d548746ee6da" title="Remaining lives.">__lives</a>=1
-<a name="l00299"></a>00299                 <span class="keywordflow">if</span> force:
-<a name="l00300"></a>00300                         SendCommand(<span class="stringliteral">&quot;KILL &quot;</span>+self.<a class="code" href="class_player_1_1_player.html#ab4e7b3e5188ae4bd044ffaa563098973" title="The name of the player on the ladder.">__ladder_name</a>)
-<a name="l00301"></a>00301                 SendCommand(<span class="stringliteral">&quot;RESPAWN_PLAYER &quot;</span>+str(self.<a class="code" href="class_player_1_1_player.html#ab4e7b3e5188ae4bd044ffaa563098973" title="The name of the player on the ladder.">__ladder_name</a>) + <span class="stringliteral">&quot; 0 &quot;</span>+str(x)+
-<a name="l00302"></a>00302                             <span class="stringliteral">&quot; &quot;</span>+str(y)+<span class="stringliteral">&quot; &quot;</span>+str(xdir)+<span class="stringliteral">&quot; &quot;</span>+str(ydir) )
-<a name="l00303"></a>00303                 <span class="keywordflow">if</span> force:
-<a name="l00304"></a>00304                         <span class="comment">#SendCommand(&quot;TELEPORT_PLAYER {0} {1} {2} {3} {4}&quot;.format(self.__old_ladder_name,</span>
-<a name="l00305"></a>00305                         <span class="comment">#            y,x,xdir,ydir) )</span>
-<a name="l00306"></a>00306                         <span class="keywordflow">pass</span>
-<a name="l00307"></a>00307                 events.triggerEvent(<span class="stringliteral">&quot;Player respawned&quot;</span>,self.<a class="code" href="class_player_1_1_player.html#ab4e7b3e5188ae4bd044ffaa563098973" title="The name of the player on the ladder.">__ladder_name</a>)
-<a name="l00308"></a>00308 
-<a name="l00309"></a>00309         <span class="comment">## @brief Gets ladder name</span>
-<a name="l00310"></a>00310          <span class="comment"># @details This function gets the ladder name</span>
-<a name="l00311"></a>00311          <span class="comment"># @return The ladder name</span>
-<a name="l00312"></a><a class="code" href="class_player_1_1_player.html#a9dfc04a9bc137d223ea2bf2eea0b04d3">00312</a>         <span class="keyword">def </span><a class="code" href="class_player_1_1_player.html#a9dfc04a9bc137d223ea2bf2eea0b04d3" title="Gets ladder name.">getLadderName</a>(self):
-<a name="l00313"></a>00313                 <span class="keywordflow">return</span> self.ladderName()
-<a name="l00314"></a>00314 
-<a name="l00315"></a>00315         <span class="comment">## @brief Applies all changes</span>
-<a name="l00316"></a>00316          <span class="comment"># @details Should be only called at the end of the round, when the player can rename.</span>
-<a name="l00317"></a>00317          <span class="comment"># @param force Force renaming?</span>
-<a name="l00318"></a><a class="code" href="class_player_1_1_player.html#aff01af86018e0aff6fe8c5ff01d46d0a">00318</a>         <span class="keyword">def </span><a class="code" href="class_player_1_1_player.html#aff01af86018e0aff6fe8c5ff01d46d0a" title="Applies all changes.">applyChanges</a>(self, force=True):
-<a name="l00319"></a>00319                 <span class="keywordflow">if</span> self.<a class="code" href="class_player_1_1_player.html#a43d105f816af7ba2c6dbe816ffaf4eba" title="The old name.">__old_name</a> != self.<a class="code" href="class_player_1_1_player.html#a6cea7416f6b4ce563211f3194033f671" title="The name of the player.">name</a>:
-<a name="l00320"></a>00320                         SendCommand(<span class="stringliteral">&quot;RENAME &quot;</span>+self.<a class="code" href="class_player_1_1_player.html#a11f44d16220129d7efca52828dc13d4f" title="The old ladder name.">__old_ladder_name</a>+<span class="stringliteral">&quot; &quot;</span>+self.<a class="code" href="class_player_1_1_player.html#a6cea7416f6b4ce563211f3194033f671" title="The name of the player.">name</a>)
-<a name="l00321"></a>00321                         self.<a class="code" href="class_player_1_1_player.html#a43d105f816af7ba2c6dbe816ffaf4eba" title="The old name.">__old_name</a>=self.<a class="code" href="class_player_1_1_player.html#a6cea7416f6b4ce563211f3194033f671" title="The name of the player.">name</a>
-<a name="l00322"></a>00322                         <span class="keywordflow">if</span> force:
-<a name="l00323"></a>00323                                 SendCommand(<span class="stringliteral">&quot;DISALLOW_RENAME_PLAYER &quot;</span>+self.<a class="code" href="class_player_1_1_player.html#ab4e7b3e5188ae4bd044ffaa563098973" title="The name of the player on the ladder.">__ladder_name</a>)
-<a name="l00324"></a>00324                         <span class="keywordflow">else</span>:
-<a name="l00325"></a>00325                                 SendCommand(<span class="stringliteral">&quot;ALLOW_RENAME_PLAYER &quot;</span>+self.<a class="code" href="class_player_1_1_player.html#ab4e7b3e5188ae4bd044ffaa563098973" title="The name of the player on the ladder.">__ladder_name</a>)
-<a name="l00326"></a>00326                 self.<a class="code" href="class_player_1_1_player.html#a11f44d16220129d7efca52828dc13d4f" title="The old ladder name.">__old_ladder_name</a>=self.<a class="code" href="class_player_1_1_player.html#ab4e7b3e5188ae4bd044ffaa563098973" title="The name of the player on the ladder.">__ladder_name</a>
+<a name="l00138"></a>00138         <span class="comment">## @property ping</span>
+<a name="l00139"></a>00139          <span class="comment"># @brief The ping of the player</span>
+<a name="l00140"></a>00140          <span class="comment"># @details The current ping of the player.</span>
+<a name="l00141"></a>00141          <span class="comment"># @note Currently there&#39;s no use for the ping of the player, but it may be used</span>
+<a name="l00142"></a>00142          <span class="comment">#       in future.</span>
+<a name="l00143"></a>00143 
+<a name="l00144"></a>00144         <span class="comment">## @property __old_name</span>
+<a name="l00145"></a>00145          <span class="comment"># @brief The old name</span>
+<a name="l00146"></a>00146          <span class="comment"># @details This variable is set to the currently in the game used name.</span>
+<a name="l00147"></a>00147 
+<a name="l00148"></a>00148         <span class="comment">## @property color</span>
+<a name="l00149"></a>00149          <span class="comment"># @brief The color of the player</span>
+<a name="l00150"></a>00150          <span class="comment"># @details A tuple of the color of the player(r, g, b). Each value is between 0 and 15</span>
+<a name="l00151"></a>00151 
+<a name="l00152"></a>00152         <span class="comment">## @property is_human</span>
+<a name="l00153"></a>00153          <span class="comment"># @brief Is the player human?</span>
+<a name="l00154"></a>00154          <span class="comment"># @details True is yes, otherwise False.</span>
+<a name="l00155"></a>00155 
+<a name="l00156"></a>00156         <span class="comment">## @property data</span>
+<a name="l00157"></a>00157          <span class="comment"># @brief Store data assigned with the player</span>
+<a name="l00158"></a>00158          <span class="comment"># @details Used to store additional data assigned with the player.</span>
+<a name="l00159"></a>00159 
+<a name="l00160"></a>00160         <span class="comment">## @cond</span>
+<a name="l00161"></a>00161         __slots__=(<span class="stringliteral">&quot;__ladder_name&quot;</span>,<span class="stringliteral">&quot;__old_ladder_name&quot;</span>,<span class="stringliteral">&quot;name&quot;</span>,<span class="stringliteral">&quot;ip&quot;</span>,<span class="stringliteral">&quot;__lives&quot;</span>,<span class="stringliteral">&quot;__team&quot;</span>,
+<a name="l00162"></a>00162                    <span class="stringliteral">&quot;__logged_in&quot;</span>,<span class="stringliteral">&quot;ping&quot;</span>,<span class="stringliteral">&quot;__old_name&quot;</span>,<span class="stringliteral">&quot;color&quot;</span>,<span class="stringliteral">&quot;is_human&quot;</span>,<span class="stringliteral">&quot;data&quot;</span>)
+<a name="l00163"></a>00163         <span class="comment">## @endcond</span>
+<a name="l00164"></a>00164 
+<a name="l00165"></a>00165         <span class="comment">## @brief Init function</span>
+<a name="l00166"></a>00166          <span class="comment"># @details Inits a new Player and adds the properties to it.</span>
+<a name="l00167"></a>00167          <span class="comment"># @param ladder_name \copybrief __ladder_name</span>
+<a name="l00168"></a>00168          <span class="comment"># @param name \copybrief name</span>
+<a name="l00169"></a>00169          <span class="comment"># @param ip \copybrief ip</span>
+<a name="l00170"></a><a class="code" href="class_player_1_1_player.html#a24b6d9aadd8f9a4d57ad531a7172209b">00170</a>         <span class="keyword">def </span><a class="code" href="class_player_1_1_player.html#a24b6d9aadd8f9a4d57ad531a7172209b" title="Init function.">__init__</a>(self, ladder_name, name, ip):
+<a name="l00171"></a><a class="code" href="class_player_1_1_player.html#ab4e7b3e5188ae4bd044ffaa563098973">00171</a>                 self.<a class="code" href="class_player_1_1_player.html#ab4e7b3e5188ae4bd044ffaa563098973" title="The name of the player on the ladder.">__ladder_name</a>=ladder_name
+<a name="l00172"></a><a class="code" href="class_player_1_1_player.html#a6cea7416f6b4ce563211f3194033f671">00172</a>                 self.<a class="code" href="class_player_1_1_player.html#a6cea7416f6b4ce563211f3194033f671" title="The name of the player.">name</a>=name
+<a name="l00173"></a><a class="code" href="class_player_1_1_player.html#a48ed10bfc12677f9c41e2cae6daafa49">00173</a>                 self.<a class="code" href="class_player_1_1_player.html#a48ed10bfc12677f9c41e2cae6daafa49" title="The player&amp;#39;s ip.">ip</a>=ip
+<a name="l00174"></a><a class="code" href="class_player_1_1_player.html#ade041c5e2ed4966a35e6d548746ee6da">00174</a>                 self.<a class="code" href="class_player_1_1_player.html#ade041c5e2ed4966a35e6d548746ee6da" title="Remaining lives.">__lives</a>=1
+<a name="l00175"></a><a class="code" href="class_player_1_1_player.html#ae01a2cfd1449c211cc6b6ca6d6fce853">00175</a>                 self.<a class="code" href="class_player_1_1_player.html#ae01a2cfd1449c211cc6b6ca6d6fce853" title="The name of the team in which the player is in.">__team</a>=<span class="keywordtype">None</span>
+<a name="l00176"></a><a class="code" href="class_player_1_1_player.html#a11f44d16220129d7efca52828dc13d4f">00176</a>                 self.<a class="code" href="class_player_1_1_player.html#a11f44d16220129d7efca52828dc13d4f" title="The old ladder name.">__old_ladder_name</a>=ladder_name
+<a name="l00177"></a><a class="code" href="class_player_1_1_player.html#a040c3c6e90a7655064aa65adbb4387b6">00177</a>                 self.<a class="code" href="class_player_1_1_player.html#a040c3c6e90a7655064aa65adbb4387b6" title="If the player is logged in?">__logged_in</a>=<span class="keyword">False</span>
+<a name="l00178"></a><a class="code" href="class_player_1_1_player.html#ab675ec89c8e17a56d85f0304f46465ea">00178</a>                 self.<a class="code" href="class_player_1_1_player.html#ab675ec89c8e17a56d85f0304f46465ea" title="The ping of the player.">ping</a>=0
+<a name="l00179"></a><a class="code" href="class_player_1_1_player.html#a43d105f816af7ba2c6dbe816ffaf4eba">00179</a>                 self.<a class="code" href="class_player_1_1_player.html#a43d105f816af7ba2c6dbe816ffaf4eba" title="The old name.">__old_name</a>=self.<a class="code" href="class_player_1_1_player.html#a6cea7416f6b4ce563211f3194033f671" title="The name of the player.">name</a>
+<a name="l00180"></a><a class="code" href="class_player_1_1_player.html#a323d688193f511184787b2e598222e74">00180</a>                 self.<a class="code" href="class_player_1_1_player.html#a323d688193f511184787b2e598222e74" title="The color of the player.">color</a>=15,0,0
+<a name="l00181"></a><a class="code" href="class_player_1_1_player.html#a01b505c0fe5ff3d20d75327800b1552e">00181</a>                 self.<a class="code" href="class_player_1_1_player.html#a01b505c0fe5ff3d20d75327800b1552e" title="Is the player human?">is_human</a>=<span class="keyword">True</span>
+<a name="l00182"></a><a class="code" href="class_player_1_1_player.html#a1a50d6ee0682ff86b83ea314dfa58ce6">00182</a>                 self.<a class="code" href="class_player_1_1_player.html#a1a50d6ee0682ff86b83ea314dfa58ce6" title="Store data assigned with the player.">data</a>=dict()
+<a name="l00183"></a>00183 
+<a name="l00184"></a>00184         <span class="comment">## @brief Del function</span>
+<a name="l00185"></a>00185          <span class="comment"># @details Removes the player from his team</span>
+<a name="l00186"></a><a class="code" href="class_player_1_1_player.html#a1cc8f0385a8b8ae30062f1475f08de3b">00186</a>         <span class="keyword">def </span><a class="code" href="class_player_1_1_player.html#a1cc8f0385a8b8ae30062f1475f08de3b" title="Del function.">__del__</a>(self):
+<a name="l00187"></a>00187                 <span class="keywordflow">try</span>:
+<a name="l00188"></a>00188                         self.<a class="code" href="class_player_1_1_player.html#a7fb849bfe1c9df24fcc166b16c48f4de" title="Lets the player leave the team.">leaveTeam</a>(quiet=<span class="keyword">True</span>)
+<a name="l00189"></a>00189                 <span class="keywordflow">except</span>:
+<a name="l00190"></a>00190                         <span class="keywordflow">pass</span>    
+<a name="l00191"></a>00191 
+<a name="l00192"></a>00192         <span class="comment">## @brief Sets the team of the player</span>
+<a name="l00193"></a>00193          <span class="comment"># @details This function lets the player join the given team</span>
+<a name="l00194"></a>00194          <span class="comment"># @param teamname The escaped name of the team to which to add the player.</span>
+<a name="l00195"></a>00195          <span class="comment">#                 None if the player is specating. AI if the player is in the AI team.</span>
+<a name="l00196"></a>00196          <span class="comment"># @param force Create the team if it doesn&#39;t exist?</span>
+<a name="l00197"></a>00197          <span class="comment"># @param quiet If True, don&#39;t print info log messages</span>
+<a name="l00198"></a>00198          <span class="comment"># @exception RuntimeError Raised if the team doesn&#39;t exist and force isn&#39;t set</span>
+<a name="l00199"></a>00199          <span class="comment"># @note This also calls Team::addPlayer (adds the player to the team)</span>
+<a name="l00200"></a>00200          <span class="comment"># @note This triggers the event &quot;Player joined team&quot;</span>
+<a name="l00201"></a>00201          <span class="comment"># @note If the team name is AI, is_human is set to False</span>
+<a name="l00202"></a><a class="code" href="class_player_1_1_player.html#aa169627ae36dac4ce2c29dab48184801">00202</a>         <span class="keyword">def </span><a class="code" href="class_player_1_1_player.html#aa169627ae36dac4ce2c29dab48184801" title="Sets the team of the player.">joinTeam</a>(self, teamname, force=False, quiet=False):
+<a name="l00203"></a>00203                 <span class="keywordflow">if</span> self.<a class="code" href="class_player_1_1_player.html#ae01a2cfd1449c211cc6b6ca6d6fce853" title="The name of the team in which the player is in.">__team</a> == teamname <span class="keywordflow">and</span> teamname!=<span class="keywordtype">None</span> <span class="keywordflow">and</span> teamname <span class="keywordflow">in</span> Team.teams:
+<a name="l00204"></a>00204                         <span class="keywordflow">if</span> self.<a class="code" href="class_player_1_1_player.html#a9dfc04a9bc137d223ea2bf2eea0b04d3" title="Gets ladder name.">getLadderName</a>() <span class="keywordflow">in</span> Team.teams[teamname].getMembers():
+<a name="l00205"></a>00205                                         <span class="keywordflow">return</span>
+<a name="l00206"></a>00206                 self.<a class="code" href="class_player_1_1_player.html#a7fb849bfe1c9df24fcc166b16c48f4de" title="Lets the player leave the team.">leaveTeam</a>()
+<a name="l00207"></a>00207                 <span class="keywordflow">if</span> teamname == <span class="keywordtype">None</span>:
+<a name="l00208"></a>00208                         self.<a class="code" href="class_player_1_1_player.html#ae01a2cfd1449c211cc6b6ca6d6fce853" title="The name of the team in which the player is in.">__team</a>=<span class="keywordtype">None</span>
+<a name="l00209"></a>00209                         <span class="keywordflow">return</span>
+<a name="l00210"></a>00210                 <span class="keywordflow">if</span> teamname == <span class="stringliteral">&quot;ai&quot;</span>:
+<a name="l00211"></a>00211                         self.<a class="code" href="class_player_1_1_player.html#ae01a2cfd1449c211cc6b6ca6d6fce853" title="The name of the team in which the player is in.">__team</a>=<span class="stringliteral">&quot;ai&quot;</span>
+<a name="l00212"></a>00212                         self.<a class="code" href="class_player_1_1_player.html#a01b505c0fe5ff3d20d75327800b1552e" title="Is the player human?">is_human</a>=<span class="keyword">False</span>
+<a name="l00213"></a>00213                 <span class="keywordflow">else</span>:
+<a name="l00214"></a>00214                         self.<a class="code" href="class_player_1_1_player.html#a01b505c0fe5ff3d20d75327800b1552e" title="Is the player human?">is_human</a>=<span class="keyword">True</span>
+<a name="l00215"></a>00215                 <span class="keywordflow">if</span> teamname <span class="keywordflow">not</span> <span class="keywordflow">in</span> Team.teams:
+<a name="l00216"></a>00216                         <span class="keywordflow">if</span> force:
+<a name="l00217"></a>00217                                 log.debug(<span class="stringliteral">&quot;Team „&quot;</span>+teamname+<span class="stringliteral">&quot;“ doesn&#39;t exist. Creating it.&quot;</span>)
+<a name="l00218"></a>00218                                 Team.Add(teamname)
+<a name="l00219"></a>00219                         <span class="keywordflow">else</span>:
+<a name="l00220"></a>00220                                 <span class="keywordflow">raise</span> RuntimeError(<span class="stringliteral">&quot;Team „&quot;</span> + teamname + <span class="stringliteral">&quot;“ doesn&#39;t exist.&quot;</span>)
+<a name="l00221"></a>00221                 Team.teams[teamname].addPlayer(self.<a class="code" href="class_player_1_1_player.html#ab4e7b3e5188ae4bd044ffaa563098973" title="The name of the player on the ladder.">__ladder_name</a>)
+<a name="l00222"></a>00222                 events.triggerEvent(<span class="stringliteral">&quot;Player joined team&quot;</span>,self.<a class="code" href="class_player_1_1_player.html#ab4e7b3e5188ae4bd044ffaa563098973" title="The name of the player on the ladder.">__ladder_name</a>,teamname)
+<a name="l00223"></a>00223                 <span class="keywordflow">if</span> <span class="keywordflow">not</span> quiet:
+<a name="l00224"></a>00224                         log.info(<span class="stringliteral">&quot;Player „&quot;</span> + self.<a class="code" href="class_player_1_1_player.html#a6cea7416f6b4ce563211f3194033f671" title="The name of the player.">name</a> + <span class="stringliteral">&quot;“ joined team „&quot;</span> + Team.teams[teamname].getName()
+<a name="l00225"></a>00225                                  + <span class="stringliteral">&quot;“.&quot;</span>)
+<a name="l00226"></a>00226                 self.<a class="code" href="class_player_1_1_player.html#ae01a2cfd1449c211cc6b6ca6d6fce853" title="The name of the team in which the player is in.">__team</a>=teamname
+<a name="l00227"></a>00227                 <span class="keywordflow">if</span> len(Team.teams[teamname].getMembers() ) == 1:
+<a name="l00228"></a>00228                         Team.teams[teamname].color=self.<a class="code" href="class_player_1_1_player.html#a323d688193f511184787b2e598222e74" title="The color of the player.">color</a>
+<a name="l00229"></a>00229 
+<a name="l00230"></a>00230         <span class="comment">## @brief Lets the player leave the team</span>
+<a name="l00231"></a>00231          <span class="comment"># @details This function lets the player leave the team.</span>
+<a name="l00232"></a>00232          <span class="comment"># @param quiet If True, don&#39;t print info log messages</span>
+<a name="l00233"></a>00233          <span class="comment"># @note This also calls Team::removePlayer (removes the player from the team)</span>
+<a name="l00234"></a>00234          <span class="comment"># @note This triggers the event &quot;Player left team&quot;.</span>
+<a name="l00235"></a><a class="code" href="class_player_1_1_player.html#a7fb849bfe1c9df24fcc166b16c48f4de">00235</a>         <span class="keyword">def </span><a class="code" href="class_player_1_1_player.html#a7fb849bfe1c9df24fcc166b16c48f4de" title="Lets the player leave the team.">leaveTeam</a>(self,quiet=False):
+<a name="l00236"></a>00236                 <span class="keywordflow">if</span> self.<a class="code" href="class_player_1_1_player.html#ae01a2cfd1449c211cc6b6ca6d6fce853" title="The name of the team in which the player is in.">__team</a> == <span class="keywordtype">None</span>:
+<a name="l00237"></a>00237                         <span class="keywordflow">return</span>
+<a name="l00238"></a>00238                 teamname=Team.teams[self.<a class="code" href="class_player_1_1_player.html#ae01a2cfd1449c211cc6b6ca6d6fce853" title="The name of the team in which the player is in.">__team</a>].getName()
+<a name="l00239"></a>00239                 <span class="keywordflow">try</span>:
+<a name="l00240"></a>00240                         Team.teams[self.<a class="code" href="class_player_1_1_player.html#ae01a2cfd1449c211cc6b6ca6d6fce853" title="The name of the team in which the player is in.">__team</a>].removePlayer(self.<a class="code" href="class_player_1_1_player.html#ab4e7b3e5188ae4bd044ffaa563098973" title="The name of the player on the ladder.">__ladder_name</a>)
+<a name="l00241"></a>00241                 <span class="keywordflow">except</span>:
+<a name="l00242"></a>00242                         <span class="keywordflow">try</span>:
+<a name="l00243"></a>00243                                 Team.teams[self.<a class="code" href="class_player_1_1_player.html#ae01a2cfd1449c211cc6b6ca6d6fce853" title="The name of the team in which the player is in.">__team</a>].removePlayer(self.<a class="code" href="class_player_1_1_player.html#a11f44d16220129d7efca52828dc13d4f" title="The old ladder name.">__old_ladder_name</a>)
+<a name="l00244"></a>00244                         <span class="keywordflow">except</span>:
+<a name="l00245"></a>00245                                 <span class="keywordflow">pass</span>
+<a name="l00246"></a>00246                 <span class="keywordflow">if</span> len(Team.teams[self.<a class="code" href="class_player_1_1_player.html#ae01a2cfd1449c211cc6b6ca6d6fce853" title="The name of the team in which the player is in.">__team</a>].getMembers())==0:
+<a name="l00247"></a>00247                         Team.Remove(self.<a class="code" href="class_player_1_1_player.html#ae01a2cfd1449c211cc6b6ca6d6fce853" title="The name of the team in which the player is in.">__team</a>)
+<a name="l00248"></a>00248                 events.triggerEvent(<span class="stringliteral">&quot;Player left team&quot;</span>,self.<a class="code" href="class_player_1_1_player.html#ab4e7b3e5188ae4bd044ffaa563098973" title="The name of the player on the ladder.">__ladder_name</a>, self.<a class="code" href="class_player_1_1_player.html#ae01a2cfd1449c211cc6b6ca6d6fce853" title="The name of the team in which the player is in.">__team</a>)
+<a name="l00249"></a>00249                 <span class="keywordflow">if</span> <span class="keywordflow">not</span> quiet:
+<a name="l00250"></a>00250                         log.info(<span class="stringliteral">&quot;Player „&quot;</span>+self.<a class="code" href="class_player_1_1_player.html#a6cea7416f6b4ce563211f3194033f671" title="The name of the player.">name</a>+<span class="stringliteral">&quot;” left team „&quot;</span>+teamname+<span class="stringliteral">&quot;“.&quot;</span>)
+<a name="l00251"></a>00251                 self.<a class="code" href="class_player_1_1_player.html#ae01a2cfd1449c211cc6b6ca6d6fce853" title="The name of the team in which the player is in.">__team</a>=<span class="keywordtype">None</span>
+<a name="l00252"></a>00252 
+<a name="l00253"></a>00253         <span class="comment">## @brief Set player&#39;s lives</span>
+<a name="l00254"></a>00254          <span class="comment"># @details This sets the player&#39;s lives to the given number. A value less or equal</span>
+<a name="l00255"></a>00255          <span class="comment">#          0 means the player is death.</span>
+<a name="l00256"></a>00256          <span class="comment"># @param lives The lives</span>
+<a name="l00257"></a>00257          <span class="comment"># @note If the number of lives is less than 0, 0 is used for lives.</span>
+<a name="l00258"></a>00258          <span class="comment"># @note Setting the lives to 0 does NOT immenediately kill the player. For that,</span>
+<a name="l00259"></a>00259          <span class="comment">#       use Player::kill.</span>
+<a name="l00260"></a><a class="code" href="class_player_1_1_player.html#af3a510565e600d099419503da9a40f8a">00260</a>         <span class="keyword">def </span><a class="code" href="class_player_1_1_player.html#af3a510565e600d099419503da9a40f8a" title="Set player&amp;#39;s lives.">setLives</a>(self, lives):
+<a name="l00261"></a>00261                 <span class="keywordflow">if</span> lives &lt; 0:
+<a name="l00262"></a>00262                         lives=0
+<a name="l00263"></a>00263                 self.<a class="code" href="class_player_1_1_player.html#ade041c5e2ed4966a35e6d548746ee6da" title="Remaining lives.">__lives</a>=lives
+<a name="l00264"></a>00264 
+<a name="l00265"></a>00265         <span class="comment">## @brief This decreases the player&#39;s lives counter by 1</span>
+<a name="l00266"></a>00266          <span class="comment"># @details Call this function when the player crashed.</span>
+<a name="l00267"></a>00267          <span class="comment"># @return Remaining lives. 0 is the player is death.</span>
+<a name="l00268"></a>00268          <span class="comment"># @note This triggers the event &quot;Player crashed&quot;. If the lives are less or equal 0</span>
+<a name="l00269"></a>00269          <span class="comment">#       after decreasing them, &quot;Player died&quot; is also triggered.</span>
+<a name="l00270"></a><a class="code" href="class_player_1_1_player.html#aa3399eb13837ea4756060474fdf81e19">00270</a>         <span class="keyword">def </span><a class="code" href="class_player_1_1_player.html#aa3399eb13837ea4756060474fdf81e19" title="This decreases the player&amp;#39;s lives counter by 1.">crashed</a>(self):
+<a name="l00271"></a>00271                 self.<a class="code" href="class_player_1_1_player.html#ade041c5e2ed4966a35e6d548746ee6da" title="Remaining lives.">__lives</a>=self.<a class="code" href="class_player_1_1_player.html#ade041c5e2ed4966a35e6d548746ee6da" title="Remaining lives.">__lives</a>-1
+<a name="l00272"></a>00272                 <span class="keywordflow">if</span> self.<a class="code" href="class_player_1_1_player.html#ade041c5e2ed4966a35e6d548746ee6da" title="Remaining lives.">__lives</a>&lt;0:
+<a name="l00273"></a>00273                         log.debug(<span class="stringliteral">&quot;A player is crashed but shouldn&#39;t have been alive. Setting lives to 0.&quot;</span>)
+<a name="l00274"></a>00274                         self.<a class="code" href="class_player_1_1_player.html#ade041c5e2ed4966a35e6d548746ee6da" title="Remaining lives.">__lives</a>=0
+<a name="l00275"></a>00275                 events.triggerEvent(<span class="stringliteral">&quot;Player crashed&quot;</span>,self.<a class="code" href="class_player_1_1_player.html#ab4e7b3e5188ae4bd044ffaa563098973" title="The name of the player on the ladder.">__ladder_name</a>)
+<a name="l00276"></a>00276                 <span class="keywordflow">if</span> self.<a class="code" href="class_player_1_1_player.html#ade041c5e2ed4966a35e6d548746ee6da" title="Remaining lives.">__lives</a>==0:
+<a name="l00277"></a>00277                         events.triggerEvent(<span class="stringliteral">&quot;Player died&quot;</span>,self.<a class="code" href="class_player_1_1_player.html#ab4e7b3e5188ae4bd044ffaa563098973" title="The name of the player on the ladder.">__ladder_name</a>)
+<a name="l00278"></a>00278                 <span class="keywordflow">return</span> self.<a class="code" href="class_player_1_1_player.html#ade041c5e2ed4966a35e6d548746ee6da" title="Remaining lives.">__lives</a>
+<a name="l00279"></a>00279 
+<a name="l00280"></a>00280         <span class="comment">## @brief Kills the player.</span>
+<a name="l00281"></a>00281          <span class="comment"># @details This function kills the player.</span>
+<a name="l00282"></a>00282          <span class="comment"># @note The lives of the player are set to 0.</span>
+<a name="l00283"></a>00283          <span class="comment"># @note This triggers the event &quot;Player killed&quot; and &quot;Player died&quot;.</span>
+<a name="l00284"></a><a class="code" href="class_player_1_1_player.html#a4513fc3191aa1b2da9ebac05acb67642">00284</a>         <span class="keyword">def </span><a class="code" href="class_player_1_1_player.html#a4513fc3191aa1b2da9ebac05acb67642" title="Kills the player.">kill</a>(self):
+<a name="l00285"></a>00285                 SendCommand(<span class="stringliteral">&quot;KILL &quot;</span>+self.<a class="code" href="class_player_1_1_player.html#a11f44d16220129d7efca52828dc13d4f" title="The old ladder name.">__old_ladder_name</a>)
+<a name="l00286"></a>00286                 events.triggerEvent(<span class="stringliteral">&quot;Player killed&quot;</span>,self.<a class="code" href="class_player_1_1_player.html#ab4e7b3e5188ae4bd044ffaa563098973" title="The name of the player on the ladder.">__ladder_name</a>)
+<a name="l00287"></a>00287                 events.triggerEvent(<span class="stringliteral">&quot;Player died&quot;</span>,self.<a class="code" href="class_player_1_1_player.html#ab4e7b3e5188ae4bd044ffaa563098973" title="The name of the player on the ladder.">__ladder_name</a>)
+<a name="l00288"></a>00288                 self.<a class="code" href="class_player_1_1_player.html#ade041c5e2ed4966a35e6d548746ee6da" title="Remaining lives.">__lives</a>=0
+<a name="l00289"></a>00289                 log.info(<span class="stringliteral">&quot;Player &quot;</span> + self.<a class="code" href="class_player_1_1_player.html#a11f44d16220129d7efca52828dc13d4f" title="The old ladder name.">__old_ladder_name</a> + <span class="stringliteral">&quot; got killed by the script.&quot;</span>)
+<a name="l00290"></a>00290 
+<a name="l00291"></a>00291         <span class="comment">## @brief Sets the ladder name</span>
+<a name="l00292"></a>00292          <span class="comment"># @details This function sets the ladder name.</span>
+<a name="l00293"></a>00293          <span class="comment"># @param name The new ladder name</span>
+<a name="l00294"></a>00294          <span class="comment"># @note This triggers the event &quot;Player renamed&quot;</span>
+<a name="l00295"></a><a class="code" href="class_player_1_1_player.html#add4b61d7f63f7361bdaa2e797cc00567">00295</a>         <span class="keyword">def </span><a class="code" href="class_player_1_1_player.html#add4b61d7f63f7361bdaa2e797cc00567" title="Sets the ladder name.">setLadderName</a>(self, name):
+<a name="l00296"></a>00296                 oldname=self.<a class="code" href="class_player_1_1_player.html#ab4e7b3e5188ae4bd044ffaa563098973" title="The name of the player on the ladder.">__ladder_name</a>
+<a name="l00297"></a>00297                 self.<a class="code" href="class_player_1_1_player.html#ab4e7b3e5188ae4bd044ffaa563098973" title="The name of the player on the ladder.">__ladder_name</a>=name
+<a name="l00298"></a>00298                 events.triggerEvent(<span class="stringliteral">&quot;Player renamed&quot;</span>,oldname,self.<a class="code" href="class_player_1_1_player.html#ab4e7b3e5188ae4bd044ffaa563098973" title="The name of the player on the ladder.">__ladder_name</a>)
+<a name="l00299"></a>00299 
+<a name="l00300"></a>00300         <span class="comment">## @brief Respawns the player</span>
+<a name="l00301"></a>00301          <span class="comment"># @details This function respawns the player at the given position.</span>
+<a name="l00302"></a>00302          <span class="comment"># @param x The x-coordinate of the position where to respawn</span>
+<a name="l00303"></a>00303          <span class="comment"># @param y The y-coordinate of the position where to respawn</span>
+<a name="l00304"></a>00304          <span class="comment"># @param xdir The x direction</span>
+<a name="l00305"></a>00305          <span class="comment"># @param ydir The y direction</span>
+<a name="l00306"></a>00306          <span class="comment"># @param force Force position changing(teleporting) ?</span>
+<a name="l00307"></a>00307          <span class="comment"># @note This sets Player&#39;s lives to 1 if they are less or equal 0</span>
+<a name="l00308"></a>00308          <span class="comment"># @note This triggers the event &quot;Player respawned&quot;</span>
+<a name="l00309"></a><a class="code" href="class_player_1_1_player.html#ad32410beb56cd2b6d3ab69568a5a3f7d">00309</a>         <span class="keyword">def </span><a class="code" href="class_player_1_1_player.html#ad32410beb56cd2b6d3ab69568a5a3f7d" title="Respawns the player.">respawn</a>(self, x ,y, xdir, ydir, force):
+<a name="l00310"></a>00310                 <span class="keywordflow">if</span> self.<a class="code" href="class_player_1_1_player.html#ade041c5e2ed4966a35e6d548746ee6da" title="Remaining lives.">__lives</a> &lt;= 0:
+<a name="l00311"></a>00311                         self.<a class="code" href="class_player_1_1_player.html#ade041c5e2ed4966a35e6d548746ee6da" title="Remaining lives.">__lives</a>=1
+<a name="l00312"></a>00312                 <span class="keywordflow">if</span> force:
+<a name="l00313"></a>00313                         SendCommand(<span class="stringliteral">&quot;KILL &quot;</span>+self.<a class="code" href="class_player_1_1_player.html#ab4e7b3e5188ae4bd044ffaa563098973" title="The name of the player on the ladder.">__ladder_name</a>)
+<a name="l00314"></a>00314                 SendCommand(<span class="stringliteral">&quot;RESPAWN_PLAYER &quot;</span>+str(self.<a class="code" href="class_player_1_1_player.html#ab4e7b3e5188ae4bd044ffaa563098973" title="The name of the player on the ladder.">__ladder_name</a>) + <span class="stringliteral">&quot; 0 &quot;</span>+str(x)+
+<a name="l00315"></a>00315                             <span class="stringliteral">&quot; &quot;</span>+str(y)+<span class="stringliteral">&quot; &quot;</span>+str(xdir)+<span class="stringliteral">&quot; &quot;</span>+str(ydir) )
+<a name="l00316"></a>00316                 <span class="keywordflow">if</span> force:
+<a name="l00317"></a>00317                         <span class="comment">#SendCommand(&quot;TELEPORT_PLAYER {0} {1} {2} {3} {4}&quot;.format(self.__old_ladder_name,</span>
+<a name="l00318"></a>00318                         <span class="comment">#            y,x,xdir,ydir) )</span>
+<a name="l00319"></a>00319                         <span class="keywordflow">pass</span>
+<a name="l00320"></a>00320                 events.triggerEvent(<span class="stringliteral">&quot;Player respawned&quot;</span>,self.<a class="code" href="class_player_1_1_player.html#ab4e7b3e5188ae4bd044ffaa563098973" title="The name of the player on the ladder.">__ladder_name</a>)
+<a name="l00321"></a>00321 
+<a name="l00322"></a>00322         <span class="comment">## @brief Gets ladder name</span>
+<a name="l00323"></a>00323          <span class="comment"># @details This function gets the ladder name</span>
+<a name="l00324"></a>00324          <span class="comment"># @return The ladder name</span>
+<a name="l00325"></a><a class="code" href="class_player_1_1_player.html#a9dfc04a9bc137d223ea2bf2eea0b04d3">00325</a>         <span class="keyword">def </span><a class="code" href="class_player_1_1_player.html#a9dfc04a9bc137d223ea2bf2eea0b04d3" title="Gets ladder name.">getLadderName</a>(self):
+<a name="l00326"></a>00326                 <span class="keywordflow">return</span> self.<a class="code" href="class_player_1_1_player.html#ab4e7b3e5188ae4bd044ffaa563098973" title="The name of the player on the ladder.">__ladder_name</a>
 <a name="l00327"></a>00327 
-<a name="l00328"></a>00328         <span class="comment">## @brief Player logged in</span>
-<a name="l00329"></a>00329          <span class="comment"># @details Sets logged_in to True and ladder_name to the login</span>
-<a name="l00330"></a>00330          <span class="comment"># @param global_id The login</span>
-<a name="l00331"></a>00331          <span class="comment"># @note This triggers the event &quot;Player logged in&quot;</span>
-<a name="l00332"></a><a class="code" href="class_player_1_1_player.html#a191891bb93599c4edc1bae029966d6cd">00332</a>         <span class="keyword">def </span><a class="code" href="class_player_1_1_player.html#a191891bb93599c4edc1bae029966d6cd" title="Player logged in.">login</a>(self,global_id):
-<a name="l00333"></a>00333                 self.<a class="code" href="class_player_1_1_player.html#a040c3c6e90a7655064aa65adbb4387b6" title="If the player is logged in?">__logged_in</a>=<span class="keyword">True</span>
-<a name="l00334"></a>00334                 self.<a class="code" href="class_player_1_1_player.html#add4b61d7f63f7361bdaa2e797cc00567" title="Sets the ladder name.">setLadderName</a>(global_id)
-<a name="l00335"></a>00335                 events.triggerEvent(<span class="stringliteral">&quot;Player logged in&quot;</span>,self.<a class="code" href="class_player_1_1_player.html#ab4e7b3e5188ae4bd044ffaa563098973" title="The name of the player on the ladder.">__ladder_name</a>)
-<a name="l00336"></a>00336 
-<a name="l00337"></a>00337         <span class="comment">## @brief Player logged out</span>
-<a name="l00338"></a>00338          <span class="comment"># @details Sets logged in to False and ladder_name to the given ladder_name</span>
-<a name="l00339"></a>00339          <span class="comment"># @param ladder_name The ladder name to use for the player</span>
-<a name="l00340"></a>00340          <span class="comment"># @note This triggers the event &quot;Player logged out&quot;</span>
-<a name="l00341"></a><a class="code" href="class_player_1_1_player.html#a1f91a0f380efed515111952b96f6a90e">00341</a>         <span class="keyword">def </span><a class="code" href="class_player_1_1_player.html#a1f91a0f380efed515111952b96f6a90e" title="Player logged out.">logout</a>(self,ladder_name):
-<a name="l00342"></a>00342                 self.<a class="code" href="class_player_1_1_player.html#a040c3c6e90a7655064aa65adbb4387b6" title="If the player is logged in?">__logged_in</a>=<span class="keyword">False</span>
-<a name="l00343"></a>00343                 self.<a class="code" href="class_player_1_1_player.html#add4b61d7f63f7361bdaa2e797cc00567" title="Sets the ladder name.">setLadderName</a>(ladder_name)
-<a name="l00344"></a>00344                 events.triggerEvent(<span class="stringliteral">&quot;Player logged out&quot;</span>, self.<a class="code" href="class_player_1_1_player.html#ab4e7b3e5188ae4bd044ffaa563098973" title="The name of the player on the ladder.">__ladder_name</a>)
-<a name="l00345"></a>00345 
-<a name="l00346"></a>00346         <span class="comment">## @brief Returns the lives of the player</span>
-<a name="l00347"></a>00347          <span class="comment"># @details Returns the remaining lives of the player</span>
-<a name="l00348"></a><a class="code" href="class_player_1_1_player.html#a293131894621a14d2f6741e2be29451d">00348</a>         <span class="keyword">def </span><a class="code" href="class_player_1_1_player.html#a293131894621a14d2f6741e2be29451d" title="Returns the lives of the player.">getLives</a>(self):
-<a name="l00349"></a>00349                 <span class="keywordflow">return</span> self.<a class="code" href="class_player_1_1_player.html#ade041c5e2ed4966a35e6d548746ee6da" title="Remaining lives.">__lives</a>
-<a name="l00350"></a>00350 
-<a name="l00351"></a>00351         <span class="comment">## @brief Returns in-game ladder name</span>
-<a name="l00352"></a>00352          <span class="comment"># @details This function return the ladder name of the player that is currently used</span>
-<a name="l00353"></a>00353          <span class="comment">#          in the game.</span>
-<a name="l00354"></a>00354          <span class="comment"># @return The in-game ladder name</span>
-<a name="l00355"></a><a class="code" href="class_player_1_1_player.html#ab810708370e380e49f9e4885f42df037">00355</a>         <span class="keyword">def </span><a class="code" href="class_player_1_1_player.html#ab810708370e380e49f9e4885f42df037" title="Returns in-game ladder name.">getInGameLadderName</a>(self):
-<a name="l00356"></a>00356                 <span class="keywordflow">return</span> self.<a class="code" href="class_player_1_1_player.html#a11f44d16220129d7efca52828dc13d4f" title="The old ladder name.">__old_ladder_name</a>
-<a name="l00357"></a>00357 
-<a name="l00358"></a>00358         <span class="comment">## @brief Returns in-game name</span>
-<a name="l00359"></a>00359          <span class="comment"># @details This function returns the name of the player that is currently used</span>
-<a name="l00360"></a>00360          <span class="comment">#          in the game</span>
-<a name="l00361"></a>00361          <span class="comment"># @return The in-game name</span>
-<a name="l00362"></a><a class="code" href="class_player_1_1_player.html#a80f2beaf026556ed4b4e432ebec249d4">00362</a>         <span class="keyword">def </span><a class="code" href="class_player_1_1_player.html#a80f2beaf026556ed4b4e432ebec249d4" title="Returns in-game name.">getInGameName</a>(self):
-<a name="l00363"></a>00363                 <span class="keywordflow">return</span> self.<a class="code" href="class_player_1_1_player.html#a43d105f816af7ba2c6dbe816ffaf4eba" title="The old name.">__old_name</a>
-<a name="l00364"></a>00364 
-<a name="l00365"></a>00365         <span class="comment">## @brief Gets the team name</span>
-<a name="l00366"></a>00366          <span class="comment"># @details Returns the name of the team the player is in.</span>
-<a name="l00367"></a>00367          <span class="comment"># @return The escaped name of the team or None of the player is spectating.</span>
-<a name="l00368"></a><a class="code" href="class_player_1_1_player.html#abc21f488a31729c70d7fd3dea220c599">00368</a>         <span class="keyword">def </span><a class="code" href="class_player_1_1_player.html#abc21f488a31729c70d7fd3dea220c599" title="Gets the team name.">getTeam</a>(self):
-<a name="l00369"></a>00369                 <span class="keywordflow">return</span> self.<a class="code" href="class_player_1_1_player.html#ae01a2cfd1449c211cc6b6ca6d6fce853" title="The name of the team in which the player is in.">__team</a>
+<a name="l00328"></a>00328         <span class="comment">## @brief Applies all changes</span>
+<a name="l00329"></a>00329          <span class="comment"># @details Should be only called at the end of the round, when the player can rename.</span>
+<a name="l00330"></a>00330          <span class="comment"># @param force Force renaming?</span>
+<a name="l00331"></a><a class="code" href="class_player_1_1_player.html#aff01af86018e0aff6fe8c5ff01d46d0a">00331</a>         <span class="keyword">def </span><a class="code" href="class_player_1_1_player.html#aff01af86018e0aff6fe8c5ff01d46d0a" title="Applies all changes.">applyChanges</a>(self, force=True):
+<a name="l00332"></a>00332                 <span class="keywordflow">if</span> self.<a class="code" href="class_player_1_1_player.html#a43d105f816af7ba2c6dbe816ffaf4eba" title="The old name.">__old_name</a> != self.<a class="code" href="class_player_1_1_player.html#a6cea7416f6b4ce563211f3194033f671" title="The name of the player.">name</a>:
+<a name="l00333"></a>00333                         SendCommand(<span class="stringliteral">&quot;RENAME &quot;</span>+self.<a class="code" href="class_player_1_1_player.html#a11f44d16220129d7efca52828dc13d4f" title="The old ladder name.">__old_ladder_name</a>+<span class="stringliteral">&quot; &quot;</span>+self.<a class="code" href="class_player_1_1_player.html#a6cea7416f6b4ce563211f3194033f671" title="The name of the player.">name</a>)
+<a name="l00334"></a>00334                         self.<a class="code" href="class_player_1_1_player.html#a43d105f816af7ba2c6dbe816ffaf4eba" title="The old name.">__old_name</a>=self.<a class="code" href="class_player_1_1_player.html#a6cea7416f6b4ce563211f3194033f671" title="The name of the player.">name</a>
+<a name="l00335"></a>00335                         <span class="keywordflow">if</span> force:
+<a name="l00336"></a>00336                                 SendCommand(<span class="stringliteral">&quot;DISALLOW_RENAME_PLAYER &quot;</span>+self.<a class="code" href="class_player_1_1_player.html#ab4e7b3e5188ae4bd044ffaa563098973" title="The name of the player on the ladder.">__ladder_name</a>)
+<a name="l00337"></a>00337                         <span class="keywordflow">else</span>:
+<a name="l00338"></a>00338                                 SendCommand(<span class="stringliteral">&quot;ALLOW_RENAME_PLAYER &quot;</span>+self.<a class="code" href="class_player_1_1_player.html#ab4e7b3e5188ae4bd044ffaa563098973" title="The name of the player on the ladder.">__ladder_name</a>)
+<a name="l00339"></a>00339                 self.<a class="code" href="class_player_1_1_player.html#a11f44d16220129d7efca52828dc13d4f" title="The old ladder name.">__old_ladder_name</a>=self.<a class="code" href="class_player_1_1_player.html#ab4e7b3e5188ae4bd044ffaa563098973" title="The name of the player on the ladder.">__ladder_name</a>
+<a name="l00340"></a>00340 
+<a name="l00341"></a>00341         <span class="comment">## @brief Player logged in</span>
+<a name="l00342"></a>00342          <span class="comment"># @details Sets logged_in to True and ladder_name to the login</span>
+<a name="l00343"></a>00343          <span class="comment"># @param global_id The login</span>
+<a name="l00344"></a>00344          <span class="comment"># @note This triggers the event &quot;Player logged in&quot;</span>
+<a name="l00345"></a><a class="code" href="class_player_1_1_player.html#a191891bb93599c4edc1bae029966d6cd">00345</a>         <span class="keyword">def </span><a class="code" href="class_player_1_1_player.html#a191891bb93599c4edc1bae029966d6cd" title="Player logged in.">login</a>(self,global_id):
+<a name="l00346"></a>00346                 self.<a class="code" href="class_player_1_1_player.html#a040c3c6e90a7655064aa65adbb4387b6" title="If the player is logged in?">__logged_in</a>=<span class="keyword">True</span>
+<a name="l00347"></a>00347                 self.<a class="code" href="class_player_1_1_player.html#add4b61d7f63f7361bdaa2e797cc00567" title="Sets the ladder name.">setLadderName</a>(global_id)
+<a name="l00348"></a>00348                 events.triggerEvent(<span class="stringliteral">&quot;Player logged in&quot;</span>,self.<a class="code" href="class_player_1_1_player.html#ab4e7b3e5188ae4bd044ffaa563098973" title="The name of the player on the ladder.">__ladder_name</a>)
+<a name="l00349"></a>00349 
+<a name="l00350"></a>00350         <span class="comment">## @brief Player logged out</span>
+<a name="l00351"></a>00351          <span class="comment"># @details Sets logged in to False and ladder_name to the given ladder_name</span>
+<a name="l00352"></a>00352          <span class="comment"># @param ladder_name The ladder name to use for the player</span>
+<a name="l00353"></a>00353          <span class="comment"># @note This triggers the event &quot;Player logged out&quot;</span>
+<a name="l00354"></a><a class="code" href="class_player_1_1_player.html#a1f91a0f380efed515111952b96f6a90e">00354</a>         <span class="keyword">def </span><a class="code" href="class_player_1_1_player.html#a1f91a0f380efed515111952b96f6a90e" title="Player logged out.">logout</a>(self,ladder_name):
+<a name="l00355"></a>00355                 self.<a class="code" href="class_player_1_1_player.html#a040c3c6e90a7655064aa65adbb4387b6" title="If the player is logged in?">__logged_in</a>=<span class="keyword">False</span>
+<a name="l00356"></a>00356                 self.<a class="code" href="class_player_1_1_player.html#add4b61d7f63f7361bdaa2e797cc00567" title="Sets the ladder name.">setLadderName</a>(ladder_name)
+<a name="l00357"></a>00357                 events.triggerEvent(<span class="stringliteral">&quot;Player logged out&quot;</span>, self.<a class="code" href="class_player_1_1_player.html#ab4e7b3e5188ae4bd044ffaa563098973" title="The name of the player on the ladder.">__ladder_name</a>)
+<a name="l00358"></a>00358 
+<a name="l00359"></a>00359         <span class="comment">## @brief Returns the lives of the player</span>
+<a name="l00360"></a>00360          <span class="comment"># @details Returns the remaining lives of the player</span>
+<a name="l00361"></a><a class="code" href="class_player_1_1_player.html#a293131894621a14d2f6741e2be29451d">00361</a>         <span class="keyword">def </span><a class="code" href="class_player_1_1_player.html#a293131894621a14d2f6741e2be29451d" title="Returns the lives of the player.">getLives</a>(self):
+<a name="l00362"></a>00362                 <span class="keywordflow">return</span> self.<a class="code" href="class_player_1_1_player.html#ade041c5e2ed4966a35e6d548746ee6da" title="Remaining lives.">__lives</a>
+<a name="l00363"></a>00363 
+<a name="l00364"></a>00364         <span class="comment">## @brief Returns in-game ladder name</span>
+<a name="l00365"></a>00365          <span class="comment"># @details This function return the ladder name of the player that is currently used</span>
+<a name="l00366"></a>00366          <span class="comment">#          in the game.</span>
+<a name="l00367"></a>00367          <span class="comment"># @return The in-game ladder name</span>
+<a name="l00368"></a><a class="code" href="class_player_1_1_player.html#ab810708370e380e49f9e4885f42df037">00368</a>         <span class="keyword">def </span><a class="code" href="class_player_1_1_player.html#ab810708370e380e49f9e4885f42df037" title="Returns in-game ladder name.">getInGameLadderName</a>(self):
+<a name="l00369"></a>00369                 <span class="keywordflow">return</span> self.<a class="code" href="class_player_1_1_player.html#a11f44d16220129d7efca52828dc13d4f" title="The old ladder name.">__old_ladder_name</a>
 <a name="l00370"></a>00370 
-<a name="l00371"></a>00371 <span class="comment">## @brief Enables Logging</span>
-<a name="l00372"></a>00372  <span class="comment"># @details This function enables logging for all Player classes. For more information see</span>
-<a name="l00373"></a>00373  <span class="comment">#          the logging module.</span>
-<a name="l00374"></a>00374  <span class="comment"># @param h The handler used for logging</span>
-<a name="l00375"></a>00375  <span class="comment"># @param f The formatter used for logging</span>
-<a name="l00376"></a>00376  <span class="comment"># @param level The logging level</span>
-<a name="l00377"></a><a class="code" href="namespace_player.html#a83914537581346383eaeded9e3cc688d">00377</a> <span class="keyword">def </span><a class="code" href="namespace_player.html#a83914537581346383eaeded9e3cc688d" title="Enables Logging.">enableLogging</a>(level=logging.DEBUG, h=None,f=None):
-<a name="l00378"></a>00378         logging.getLogger(<span class="stringliteral">&quot;PlayerModule&quot;</span>).setLevel(level)
-<a name="l00379"></a>00379         <span class="keywordflow">if</span> <span class="keywordflow">not</span> h:
-<a name="l00380"></a>00380                 h=logging.StreamHandler()
-<a name="l00381"></a>00381                 h.setLevel(level)
-<a name="l00382"></a>00382         <span class="keywordflow">if</span> <span class="keywordflow">not</span> f:
-<a name="l00383"></a>00383                 f=logging.Formatter(<span class="stringliteral">&quot;[%(name)s] (%(asctime)s) %(levelname)s: %(message)s&quot;</span>)
-<a name="l00384"></a>00384         h.setFormatter(f)
-<a name="l00385"></a>00385         logging.getLogger(<span class="stringliteral">&quot;PlayerModule&quot;</span>).addHandler(h)
-<a name="l00386"></a>00386 
-<a name="l00387"></a>00387 <span class="comment">## @brief Saves the result of the tests</span>
-<a name="l00388"></a>00388  <span class="comment"># @details Saves True or False for each test</span>
-<a name="l00389"></a><a class="code" href="namespace_player.html#a977b33b1d2c2e558d3d5160ee25ee788">00389</a> __tests=list()
-<a name="l00390"></a>00390 
-<a name="l00391"></a>00391 <span class="comment">## @brief runs tests</span>
-<a name="l00392"></a><a class="code" href="namespace_player.html#a96afd3d64eb4fc36aac14a3fc6abaa59">00392</a> <span class="keyword">def </span><a class="code" href="namespace_player.html#a96afd3d64eb4fc36aac14a3fc6abaa59" title="runs tests">__runTest</a>(param=None,i=None):
-<a name="l00393"></a>00393         p=Player(<span class="stringliteral">&quot;Ladder_name&quot;</span>,<span class="stringliteral">&quot;Real name&quot;</span>,<span class="stringliteral">&quot;127.0.0.1&quot;</span>)
-<a name="l00394"></a>00394         p.setLives(10)
-<a name="l00395"></a>00395         p.setLadderName(<span class="stringliteral">&quot;Ladder_name2&quot;</span>)
-<a name="l00396"></a>00396         <span class="keywordflow">if</span> p.getInGameLadderName() == <span class="stringliteral">&quot;Ladder_name&quot;</span>:
-<a name="l00397"></a>00397                 __tests.append(<span class="keyword">True</span>)
-<a name="l00398"></a>00398         <span class="keywordflow">else</span>:
-<a name="l00399"></a>00399                 __tests.append(<span class="keyword">False</span>)
-<a name="l00400"></a>00400         p.applyChanges()
-<a name="l00401"></a>00401         p.crashed()
-<a name="l00402"></a>00402         p.kill()
-<a name="l00403"></a>00403         <span class="keywordflow">if</span> p.getLives()==0:
-<a name="l00404"></a>00404                 __tests.append(<span class="keyword">True</span>)
-<a name="l00405"></a>00405         <span class="keywordflow">else</span>:
-<a name="l00406"></a>00406                 __tests.append(<span class="keyword">False</span>)
-<a name="l00407"></a>00407         i=1
-<a name="l00408"></a>00408         <span class="keywordflow">print</span>(<span class="stringliteral">&quot;TEST RESULTS --------------------------------&quot;</span>)
-<a name="l00409"></a>00409         <span class="keywordflow">for</span> testres <span class="keywordflow">in</span> __tests:
-<a name="l00410"></a>00410                 state=<span class="stringliteral">&quot;failed&quot;</span>
-<a name="l00411"></a>00411                 <span class="keywordflow">if</span> testres:
-<a name="l00412"></a>00412                         state=<span class="stringliteral">&quot;succeed&quot;</span>
-<a name="l00413"></a>00413                 <span class="keywordflow">print</span>(<span class="stringliteral">&quot;Test &quot;</span>+str(i)+<span class="stringliteral">&quot; &quot;</span>+state)
-<a name="l00414"></a>00414                 i=i+1
-<a name="l00415"></a>00415 
-<a name="l00416"></a>00416 <span class="keywordflow">if</span> __name__ == <span class="stringliteral">&#39;__main__&#39;</span>:
-<a name="l00417"></a>00417         Event.enableLogging()
-<a name="l00418"></a>00418         enableLogging()
-<a name="l00419"></a>00419         __runTest()
+<a name="l00371"></a>00371         <span class="comment">## @brief Returns in-game name</span>
+<a name="l00372"></a>00372          <span class="comment"># @details This function returns the name of the player that is currently used</span>
+<a name="l00373"></a>00373          <span class="comment">#          in the game</span>
+<a name="l00374"></a>00374          <span class="comment"># @return The in-game name</span>
+<a name="l00375"></a><a class="code" href="class_player_1_1_player.html#a80f2beaf026556ed4b4e432ebec249d4">00375</a>         <span class="keyword">def </span><a class="code" href="class_player_1_1_player.html#a80f2beaf026556ed4b4e432ebec249d4" title="Returns in-game name.">getInGameName</a>(self):
+<a name="l00376"></a>00376                 <span class="keywordflow">return</span> self.<a class="code" href="class_player_1_1_player.html#a43d105f816af7ba2c6dbe816ffaf4eba" title="The old name.">__old_name</a>
+<a name="l00377"></a>00377 
+<a name="l00378"></a>00378         <span class="comment">## @brief Gets the team name</span>
+<a name="l00379"></a>00379          <span class="comment"># @details Returns the name of the team the player is in.</span>
+<a name="l00380"></a>00380          <span class="comment"># @return The escaped name of the team or None of the player is spectating.</span>
+<a name="l00381"></a><a class="code" href="class_player_1_1_player.html#abc21f488a31729c70d7fd3dea220c599">00381</a>         <span class="keyword">def </span><a class="code" href="class_player_1_1_player.html#abc21f488a31729c70d7fd3dea220c599" title="Gets the team name.">getTeam</a>(self):
+<a name="l00382"></a>00382                 <span class="keywordflow">return</span> self.<a class="code" href="class_player_1_1_player.html#ae01a2cfd1449c211cc6b6ca6d6fce853" title="The name of the team in which the player is in.">__team</a>
+<a name="l00383"></a>00383 
+<a name="l00384"></a>00384         <span class="comment">## @brief Get the login state.</span>
+<a name="l00385"></a>00385          <span class="comment"># @details Get if the player is logged in or not.</span>
+<a name="l00386"></a>00386          <span class="comment"># @return True if the player is logged in, False otherwise.</span>
+<a name="l00387"></a><a class="code" href="class_player_1_1_player.html#ab885654a8f7f9992029930623bbce7cf">00387</a>         <span class="keyword">def </span><a class="code" href="class_player_1_1_player.html#ab885654a8f7f9992029930623bbce7cf" title="Get the login state.">isLoggedIn</a>(self):
+<a name="l00388"></a>00388                 <span class="keywordflow">return</span> self.<a class="code" href="class_player_1_1_player.html#a040c3c6e90a7655064aa65adbb4387b6" title="If the player is logged in?">__logged_in</a>
+<a name="l00389"></a>00389 
+<a name="l00390"></a>00390 <span class="comment">## @brief Enables Logging</span>
+<a name="l00391"></a>00391  <span class="comment"># @details This function enables logging for all Player classes. For more information see</span>
+<a name="l00392"></a>00392  <span class="comment">#          the logging module.</span>
+<a name="l00393"></a>00393  <span class="comment"># @param h The handler used for logging</span>
+<a name="l00394"></a>00394  <span class="comment"># @param f The formatter used for logging</span>
+<a name="l00395"></a>00395  <span class="comment"># @param level The logging level</span>
+<a name="l00396"></a><a class="code" href="namespace_player.html#a83914537581346383eaeded9e3cc688d">00396</a> <span class="keyword">def </span><a class="code" href="namespace_player.html#a83914537581346383eaeded9e3cc688d" title="Enables Logging.">enableLogging</a>(level=logging.DEBUG, h=None,f=None):
+<a name="l00397"></a>00397         <span class="keyword">global</span> log
+<a name="l00398"></a>00398         log.setLevel(level)
+<a name="l00399"></a>00399         <span class="keywordflow">if</span> <span class="keywordflow">not</span> h:
+<a name="l00400"></a>00400                 h=logging.StreamHandler()
+<a name="l00401"></a>00401                 h.setLevel(level)
+<a name="l00402"></a>00402         <span class="keywordflow">if</span> <span class="keywordflow">not</span> f:
+<a name="l00403"></a>00403                 f=logging.Formatter(<span class="stringliteral">&quot;[%(name)s] (%(asctime)s) %(levelname)s: %(message)s&quot;</span>)
+<a name="l00404"></a>00404         h.setFormatter(f)
+<a name="l00405"></a>00405         <span class="keywordflow">for</span> handler <span class="keywordflow">in</span> log.handlers:
+<a name="l00406"></a>00406                 <span class="keywordflow">if</span> type(handler)==type(h):
+<a name="l00407"></a>00407                         log.removeHandler(handler)
+<a name="l00408"></a>00408         log.addHandler(h)
+<a name="l00409"></a>00409 
+<a name="l00410"></a>00410 <span class="comment">##################### TESTS ###################################################</span>
+<a name="l00411"></a>00411 <span class="keyword">import</span> unittest
+<a name="l00412"></a>00412 
+<a name="l00413"></a>00413 <span class="comment">## @brief Test the player module</span>
+<a name="l00414"></a><a class="code" href="class_player_1_1_player_module_test.html">00414</a> <span class="keyword">class </span><a class="code" href="class_player_1_1_player_module_test.html" title="Test the player module.">PlayerModuleTest</a>(unittest.TestCase):
+<a name="l00415"></a>00415         <span class="keyword">def </span>setUp(self):
+<a name="l00416"></a>00416                 self.<a class="code" href="class_player_1_1_player_module_test.html#a68d54703cca9d4207212b84170066bcb">saved_players</a>=players
+<a name="l00417"></a>00417 
+<a name="l00418"></a>00418         <span class="keyword">def </span>test_adding(self):
+<a name="l00419"></a>00419                 Add(<span class="stringliteral">&quot;test_adding_laddername&quot;</span>,<span class="stringliteral">&quot;Test Real name&quot;</span>, <span class="stringliteral">&quot;127.0.0.1&quot;</span>)
+<a name="l00420"></a>00420                 self.assertIn(<span class="stringliteral">&quot;test_adding_laddername&quot;</span>, players.keys(), <span class="stringliteral">&quot;Adding of a player failed&quot;</span>)
+<a name="l00421"></a>00421 
+<a name="l00422"></a>00422         <span class="keyword">def </span>test_renaming(self):
+<a name="l00423"></a>00423                 Add(<span class="stringliteral">&quot;test_rename_player&quot;</span>,<span class="stringliteral">&quot;Test rename player&quot;</span>, <span class="stringliteral">&quot;127.0.0.1&quot;</span>)     
+<a name="l00424"></a>00424                 old_player=players[<span class="stringliteral">&quot;test_rename_player&quot;</span>]
+<a name="l00425"></a>00425                 players[<span class="stringliteral">&quot;test_rename_player&quot;</span>].setLadderName(<span class="stringliteral">&quot;renamed_player&quot;</span>)
+<a name="l00426"></a>00426                 self.assertNotIn(<span class="stringliteral">&quot;test_rename_player&quot;</span>, players.keys(), <span class="stringliteral">&quot;Renaming of a player failed: Old player got not removed from player list&quot;</span>)
+<a name="l00427"></a>00427                 self.assertIn(<span class="stringliteral">&quot;renamed_player&quot;</span>, players.keys(), <span class="stringliteral">&quot;Renaming of a player failed: Player isn&#39;t moved to the new position in the player list&quot;</span>)
+<a name="l00428"></a>00428                 self.assertEqual(players[<span class="stringliteral">&quot;renamed_player&quot;</span>].getLadderName(), <span class="stringliteral">&quot;renamed_player&quot;</span>, <span class="stringliteral">&quot;Renaming of a player failed: Laddername isn&#39;t changed&quot;</span>)
+<a name="l00429"></a>00429         
+<a name="l00430"></a>00430         <span class="keyword">def </span>test_removing(self):
+<a name="l00431"></a>00431                 Add(<span class="stringliteral">&quot;test_remove_player&quot;</span>,<span class="stringliteral">&quot;Test remove player&quot;</span>, <span class="stringliteral">&quot;127.0.0.1&quot;</span>)
+<a name="l00432"></a>00432                 Remove(<span class="stringliteral">&quot;test_remove_player&quot;</span>)
+<a name="l00433"></a>00433                 self.assertNotIn(<span class="stringliteral">&quot;test_remove_player&quot;</span>, players.keys(), <span class="stringliteral">&quot;Removing of a player failed&quot;</span>)
+<a name="l00434"></a>00434 
+<a name="l00435"></a>00435         <span class="keyword">def </span>test_killing(self):
+<a name="l00436"></a>00436                 testPlayer=Player(<span class="stringliteral">&quot;test_player&quot;</span>, <span class="stringliteral">&quot;Test player&quot;</span>, <span class="stringliteral">&quot;127.0.0.1&quot;</span>)
+<a name="l00437"></a>00437                 testPlayer.kill()
+<a name="l00438"></a>00438                 self.assertEqual(testPlayer.getLives(), 0, <span class="stringliteral">&quot;Killing failed: Player&#39;s lives wasn&#39;t set to 0&quot;</span>)
+<a name="l00439"></a>00439 
+<a name="l00440"></a>00440         <span class="keyword">def </span>test_crashing(self):
+<a name="l00441"></a>00441                 testPlayer=Player(<span class="stringliteral">&quot;test_player&quot;</span>, <span class="stringliteral">&quot;Test player&quot;</span>, <span class="stringliteral">&quot;127.0.0.1&quot;</span>)
+<a name="l00442"></a>00442                 testPlayer.setLives(1)
+<a name="l00443"></a>00443                 testPlayer.crashed()
+<a name="l00444"></a>00444                 self.assertEqual(testPlayer.getLives(), 0, <span class="stringliteral">&quot;Crashing failed: Lives wasn&#39;t counted down&quot;</span>)
+<a name="l00445"></a>00445 
+<a name="l00446"></a>00446         <span class="keyword">def </span>tearDown(self):
+<a name="l00447"></a>00447                 players=self.<a class="code" href="class_player_1_1_player_module_test.html#a68d54703cca9d4207212b84170066bcb">saved_players</a>
+<a name="l00448"></a>00448 
+<a name="l00449"></a>00449 <span class="comment">## @brief Get a test suite</span>
+<a name="l00450"></a><a class="code" href="namespace_player.html#a209d226501da7dd7d3cc3989187af48a">00450</a> <span class="keyword">def </span><a class="code" href="namespace_player.html#a209d226501da7dd7d3cc3989187af48a" title="Get a test suite.">suite</a>():
+<a name="l00451"></a>00451         <span class="keywordflow">return</span> unittest.defaultTestLoader.loadTestsFromTestCase(PlayerModuleTest)
+<a name="l00452"></a>00452 
+<a name="l00453"></a>00453 <span class="keywordflow">if</span> __name__==<span class="stringliteral">&quot;__main__&quot;</span>:
+<a name="l00454"></a>00454         nullFunction=<span class="keyword">lambda</span> *args: <span class="keywordtype">None</span>
+<a name="l00455"></a>00455         SendCommand=nullFunction
+<a name="l00456"></a>00456         unittest.TextTestRunner(verbosity=2).run(suite() )
 </pre></div></div>
 </div>
 <!--- window showing the filter options -->
@@ -483,7 +520,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 </iframe>
 </div>
 
-<hr class="footer"/><address class="footer"><small>Generated on Mon Jun 20 2011 14:23:54 for Armagetron MultiModeScript by&nbsp;
+<hr class="footer"/><address class="footer"><small>Generated on Tue Jul 5 2011 16:01:24 for Armagetron MultiModeScript by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.7.1 </small></address>
 </body>

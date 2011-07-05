@@ -59,72 +59,101 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <a name="l00009"></a>00009 <span class="keyword">import</span> Zone
 <a name="l00010"></a>00010 <span class="keyword">import</span> Mode
 <a name="l00011"></a>00011 <span class="keyword">import</span> Global
-<a name="l00012"></a>00012 <span class="keyword">import</span> atexit
-<a name="l00013"></a>00013 
-<a name="l00014"></a>00014 <span class="keyword">def </span>exit(normal=False):
-<a name="l00015"></a>00015         <span class="keywordflow">if</span> normal:
-<a name="l00016"></a>00016                 Mode.saveModes()
-<a name="l00017"></a>00017         Armagetronad.PrintMessage(<span class="stringliteral">&quot;0xff0000Script exited.&quot;</span>)
-<a name="l00018"></a>00018 
-<a name="l00019"></a>00019 log=logging.getLogger(<span class="stringliteral">&quot;MainModule&quot;</span>)
-<a name="l00020"></a>00020 h=logging.StreamHandler()
-<a name="l00021"></a>00021 h.setLevel(logging.DEBUG)
-<a name="l00022"></a>00022 f=logging.Formatter(<span class="stringliteral">&quot;[%(name)s] (%(asctime)s) %(levelname)s: %(message)s&quot;</span>)
-<a name="l00023"></a>00023 h.setFormatter(f)
-<a name="l00024"></a>00024 log.addHandler(h)
-<a name="l00025"></a>00025 log.setLevel(logging.INFO)
-<a name="l00026"></a>00026 Player.enableLogging()
-<a name="l00027"></a>00027 Team.enableLogging()
-<a name="l00028"></a>00028 LadderLogHandlers.enableLogging()
-<a name="l00029"></a>00029 Mode.enableLogging()
-<a name="l00030"></a>00030 <span class="comment">#We need some special settings. Set it</span>
-<a name="l00031"></a>00031 Armagetronad.SendCommand(<span class="stringliteral">&quot;LADDERLOG_WRITE_ONLINE_PLAYER 1&quot;</span>)
-<a name="l00032"></a>00032 Armagetronad.SendCommand(<span class="stringliteral">&quot;LADDERLOG_WRITE_CYCLE_CREATED 1&quot;</span>)
-<a name="l00033"></a>00033 Armagetronad.SendCommand(<span class="stringliteral">&quot;LADDERLOG_WRITE_INVALID_COMMAND 1&quot;</span>)
-<a name="l00034"></a>00034 Armagetronad.SendCommand(<span class="stringliteral">&quot;INTERCEPT_UNKNOWN_COMMANDS 1&quot;</span>)
-<a name="l00035"></a>00035 Armagetronad.SendCommand(<span class="stringliteral">&quot;LADDERLOG_GAME_TIME_INTERVAL 1&quot;</span>)
-<a name="l00036"></a>00036 Armagetronad.SendCommand(<span class="stringliteral">&quot;EXTRA_ROUND_TIME 1&quot;</span>)
-<a name="l00037"></a>00037 Armagetronad.PrintMessage(<span class="stringliteral">&quot;0xff0000Script started&quot;</span>)
-<a name="l00038"></a>00038 <span class="comment">#Init</span>
-<a name="l00039"></a>00039 Team.Add(<span class="stringliteral">&quot;AI&quot;</span>)
-<a name="l00040"></a>00040 Mode.loadModes()
-<a name="l00041"></a>00041 Global.updateHelpTopics()
-<a name="l00042"></a>00042 log.info(<span class="stringliteral">&quot;Script started&quot;</span>)
-<a name="l00043"></a>00043 <span class="comment">#We need to refresh player list</span>
-<a name="l00044"></a>00044 Global.reloadPlayerList()
-<a name="l00045"></a>00045 atexit.register(exit)
-<a name="l00046"></a>00046 <span class="keywordflow">while</span>(<span class="keyword">True</span>):
-<a name="l00047"></a>00047         line=<span class="stringliteral">&quot;&quot;</span>
-<a name="l00048"></a>00048         <span class="keywordflow">try</span>:
-<a name="l00049"></a>00049                 line=input()
-<a name="l00050"></a>00050         <span class="keywordflow">except</span> KeyboardInterrupt:
-<a name="l00051"></a>00051                 log.info(<span class="stringliteral">&quot;Exiting&quot;</span>)
-<a name="l00052"></a>00052                 Armagetronad.PrintMessage(<span class="stringliteral">&quot;Script exited.&quot;</span>)
-<a name="l00053"></a>00053                 <span class="keywordflow">break</span>
-<a name="l00054"></a>00054         line=line.strip()
-<a name="l00055"></a>00055         keywords=line.split(<span class="stringliteral">&quot; &quot;</span>)
-<a name="l00056"></a>00056         command=keywords[0]
-<a name="l00057"></a>00057         args=keywords[1:]
-<a name="l00058"></a>00058         del keywords
-<a name="l00059"></a>00059         <span class="comment">#beautify command name</span>
-<a name="l00060"></a>00060         command=command.lower()
-<a name="l00061"></a>00061         command=command.replace(<span class="stringliteral">&quot;_&quot;</span>,<span class="stringliteral">&quot; &quot;</span>)
-<a name="l00062"></a>00062         command=command.title()
-<a name="l00063"></a>00063         command=command.replace(<span class="stringliteral">&quot; &quot;</span>,<span class="stringliteral">&quot;&quot;</span>)
-<a name="l00064"></a>00064         <span class="comment">#call handler</span>
-<a name="l00065"></a>00065         <span class="keywordflow">if</span>(hasattr(LadderLogHandlers,command) ):
-<a name="l00066"></a>00066                 <span class="keywordflow">try</span>:
-<a name="l00067"></a>00067                         getattr(LadderLogHandlers,command)(*args)
-<a name="l00068"></a>00068                 <span class="keywordflow">except</span> TypeError <span class="keyword">as</span> e:
-<a name="l00069"></a>00069                         log.warning(<span class="stringliteral">&quot;Wrong arguments for ladder log handler for &quot;</span>+command+<span class="stringliteral">&quot;. This might be a bug.&quot;</span>)
-<a name="l00070"></a>00070                         <span class="keywordflow">raise</span> e
-<a name="l00071"></a>00071                 <span class="keywordflow">except</span> Exception <span class="keyword">as</span> e:
-<a name="l00072"></a>00072                         log.error(<span class="stringliteral">&quot;Exception &quot;</span> +e.__class__.__name__
-<a name="l00073"></a>00073                                     + <span class="stringliteral">&quot; raised in Ladder log handler. This might be a bug.&quot;</span>)
-<a name="l00074"></a>00074                         <span class="keywordflow">raise</span>(e)
-<a name="l00075"></a>00075         <span class="keywordflow">else</span>:
-<a name="l00076"></a>00076                 log.debug(<span class="stringliteral">&quot;No ladder log handler for ladder event „&quot;</span> + command + <span class="stringliteral">&quot;“.&quot;</span>)
-<a name="l00077"></a>00077 exit(<span class="keyword">True</span>)
+<a name="l00012"></a>00012 <span class="keyword">import</span> Commands
+<a name="l00013"></a>00013 <span class="keyword">import</span> Vote
+<a name="l00014"></a>00014 <span class="keywordflow">if</span> <span class="stringliteral">&quot;h&quot;</span> <span class="keywordflow">in</span> dir() <span class="keywordflow">and</span> <span class="stringliteral">&quot;log&quot;</span> <span class="keywordflow">in</span> dir():
+<a name="l00015"></a>00015         log.removeHandler(h)
+<a name="l00016"></a>00016 log=logging.getLogger(<span class="stringliteral">&quot;MainModule&quot;</span>)
+<a name="l00017"></a>00017 h=logging.StreamHandler()
+<a name="l00018"></a>00018 h.setLevel(logging.DEBUG)
+<a name="l00019"></a>00019 f=logging.Formatter(<span class="stringliteral">&quot;[%(name)s] (%(asctime)s) %(levelname)s: %(message)s&quot;</span>)
+<a name="l00020"></a>00020 h.setFormatter(f)
+<a name="l00021"></a>00021 log.addHandler(h)
+<a name="l00022"></a>00022 log.setLevel(logging.INFO)
+<a name="l00023"></a>00023 
+<a name="l00024"></a>00024 <span class="keyword">def </span>exit(normal=False, quiet=False):
+<a name="l00025"></a>00025         <span class="keywordflow">if</span> normal:
+<a name="l00026"></a>00026                 Mode.saveModes()
+<a name="l00027"></a>00027         <span class="keywordflow">if</span> <span class="keywordflow">not</span> quiet:
+<a name="l00028"></a>00028                 log.info(<span class="stringliteral">&quot;Exit&quot;</span>)
+<a name="l00029"></a>00029         <span class="keywordflow">if</span> normal:
+<a name="l00030"></a>00030                 Armagetronad.PrintMessage(<span class="stringliteral">&quot;0xff0000Script exited.&quot;</span>)
+<a name="l00031"></a>00031         <span class="keywordflow">else</span>:
+<a name="l00032"></a>00032                 Armagetronad.PrintMessage(<span class="stringliteral">&quot;0xff0000Script crashed.&quot;</span>)
+<a name="l00033"></a>00033 
+<a name="l00034"></a>00034 <span class="keyword">def </span>main(debug=False, disabledCommands=[]):
+<a name="l00035"></a>00035         <span class="comment">#We need some special settings. Set it</span>
+<a name="l00036"></a>00036         Armagetronad.SendCommand(<span class="stringliteral">&quot;LADDERLOG_WRITE_ONLINE_PLAYER 1&quot;</span>)
+<a name="l00037"></a>00037         Armagetronad.SendCommand(<span class="stringliteral">&quot;LADDERLOG_WRITE_CYCLE_CREATED 1&quot;</span>)
+<a name="l00038"></a>00038         Armagetronad.SendCommand(<span class="stringliteral">&quot;LADDERLOG_WRITE_INVALID_COMMAND 1&quot;</span>)
+<a name="l00039"></a>00039         Armagetronad.SendCommand(<span class="stringliteral">&quot;INTERCEPT_UNKNOWN_COMMANDS 1&quot;</span>)
+<a name="l00040"></a>00040         Armagetronad.SendCommand(<span class="stringliteral">&quot;LADDERLOG_GAME_TIME_INTERVAL 1&quot;</span>)
+<a name="l00041"></a>00041         Armagetronad.SendCommand(<span class="stringliteral">&quot;EXTRA_ROUND_TIME 1&quot;</span>)
+<a name="l00042"></a>00042         <span class="keywordflow">if</span> debug:
+<a name="l00043"></a>00043                 log.info(<span class="stringliteral">&quot;Starting in debug mode.&quot;</span>)
+<a name="l00044"></a>00044                 log.warning(<span class="stringliteral">&quot;In debug mode commands like /script and /reload are enabled.&quot;</span>)
+<a name="l00045"></a>00045                 Player.enableLogging(logging.DEBUG)
+<a name="l00046"></a>00046                 Team.enableLogging(logging.DEBUG)
+<a name="l00047"></a>00047                 LadderLogHandlers.enableLogging(logging.DEBUG)
+<a name="l00048"></a>00048                 Mode.enableLogging(logging.DEBUG)
+<a name="l00049"></a>00049                 Vote.enableLogging(logging.DEBUG)
+<a name="l00050"></a>00050                 Zone.enableLogging(logging.DEBUG)
+<a name="l00051"></a>00051         <span class="keywordflow">else</span>:
+<a name="l00052"></a>00052                 Commands.disabled=Commands.disabled+[<span class="stringliteral">&quot;script&quot;</span>,<span class="stringliteral">&quot;reload&quot;</span>,<span class="stringliteral">&quot;execbuffer&quot;</span>]
+<a name="l00053"></a>00053                 Player.enableLogging(logging.WARNING)
+<a name="l00054"></a>00054                 Team.enableLogging(logging.WARNING)
+<a name="l00055"></a>00055                 LadderLogHandlers.enableLogging(logging.WARNING)
+<a name="l00056"></a>00056                 Mode.enableLogging(logging.INFO)
+<a name="l00057"></a>00057                 Vote.enableLogging(logging.WARNING)
+<a name="l00058"></a>00058                 Zone.enableLogging(logging.WARNING)
+<a name="l00059"></a>00059 
+<a name="l00060"></a>00060         Commands.disabled=Commands.disabled+disabledCommands    
+<a name="l00061"></a>00061         <span class="comment">#Init</span>
+<a name="l00062"></a>00062         Mode.loadModes()
+<a name="l00063"></a>00063         Global.updateHelpTopics()
+<a name="l00064"></a>00064         log.info(<span class="stringliteral">&quot;Script started&quot;</span>)      
+<a name="l00065"></a>00065         Armagetronad.PrintMessage(<span class="stringliteral">&quot;0xff0000Script started&quot;</span>)
+<a name="l00066"></a>00066         <span class="comment">#We need to refresh player list</span>
+<a name="l00067"></a>00067         Global.reloadPlayerList()
+<a name="l00068"></a>00068         <span class="keywordflow">while</span>(<span class="keyword">True</span>):
+<a name="l00069"></a>00069                 line=<span class="stringliteral">&quot;&quot;</span>
+<a name="l00070"></a>00070                 <span class="keywordflow">try</span>:
+<a name="l00071"></a>00071                         line=input()
+<a name="l00072"></a>00072                 <span class="keywordflow">except</span> KeyboardInterrupt:
+<a name="l00073"></a>00073                         log.info(<span class="stringliteral">&quot;Exiting&quot;</span>)
+<a name="l00074"></a>00074                         <span class="keywordflow">break</span>
+<a name="l00075"></a>00075                 line=line.strip()
+<a name="l00076"></a>00076                 keywords=line.split(<span class="stringliteral">&quot; &quot;</span>)
+<a name="l00077"></a>00077                 command=keywords[0]
+<a name="l00078"></a>00078                 args=keywords[1:]
+<a name="l00079"></a>00079                 del keywords
+<a name="l00080"></a>00080                 <span class="comment">#make command name CamelCase</span>
+<a name="l00081"></a>00081                 real_commandname=command.upper()
+<a name="l00082"></a>00082                 command=command.lower()
+<a name="l00083"></a>00083                 command=command.replace(<span class="stringliteral">&quot;_&quot;</span>,<span class="stringliteral">&quot; &quot;</span>)
+<a name="l00084"></a>00084                 command=command.title()
+<a name="l00085"></a>00085                 command=command.replace(<span class="stringliteral">&quot; &quot;</span>,<span class="stringliteral">&quot;&quot;</span>)
+<a name="l00086"></a>00086                 <span class="comment">#call handler</span>
+<a name="l00087"></a>00087                 <span class="keywordflow">if</span>(hasattr(LadderLogHandlers,command) ):
+<a name="l00088"></a>00088                         <span class="keywordflow">try</span>:
+<a name="l00089"></a>00089                                 getattr(LadderLogHandlers,command)(*args)
+<a name="l00090"></a>00090                         <span class="keywordflow">except</span> TypeError <span class="keyword">as</span> e:
+<a name="l00091"></a>00091                                 log.warning(<span class="stringliteral">&quot;Wrong arguments for ladder log handler for &quot;</span>+command+<span class="stringliteral">&quot;. This might be a bug.&quot;</span>)
+<a name="l00092"></a>00092                                 <span class="keywordflow">raise</span> e
+<a name="l00093"></a>00093                         <span class="keywordflow">except</span> Exception <span class="keyword">as</span> e:
+<a name="l00094"></a>00094                                 <span class="comment">#log.error(&quot;Exception &quot; +e.__class__.__name__</span>
+<a name="l00095"></a>00095                                 <span class="comment">#               + &quot; raised in Ladder log handler. This might be a bug.&quot;)</span>
+<a name="l00096"></a>00096                                 <span class="keywordflow">raise</span>(e)
+<a name="l00097"></a>00097                 <span class="keywordflow">if</span> real_commandname <span class="keywordflow">in</span> LadderLogHandlers.extraHandlers:
+<a name="l00098"></a>00098                         <span class="keywordflow">for</span> extraHandler <span class="keywordflow">in</span> LadderLogHandlers.extraHandlers[real_commandname]:
+<a name="l00099"></a>00099                                 <span class="keywordflow">try</span>: extraHandler(*args)
+<a name="l00100"></a>00100                                 <span class="keywordflow">except</span> TypeError <span class="keyword">as</span> e: 
+<a name="l00101"></a>00101                                         log.error(<span class="stringliteral">&quot;Wrong arguments for extra ladderlog handler &quot;</span>+extraHandler.__name__)
+<a name="l00102"></a>00102                                         <span class="keywordflow">raise</span> e
+<a name="l00103"></a>00103                                 <span class="keywordflow">except</span>: log.error(<span class="stringliteral">&quot;Extra Ladderlog handler &quot;</span>+extraHandler.__name__+<span class="stringliteral">&quot; raised an exception.&quot;</span>)
+<a name="l00104"></a>00104 <span class="keywordflow">if</span> __name__==<span class="stringliteral">&quot;__main__&quot;</span>:
+<a name="l00105"></a>00105         main()
+<a name="l00106"></a>00106         exit(<span class="keyword">True</span>)
 </pre></div></div>
 </div>
 <!--- window showing the filter options -->
@@ -141,7 +170,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 </iframe>
 </div>
 
-<hr class="footer"/><address class="footer"><small>Generated on Mon Jun 20 2011 14:23:54 for Armagetron MultiModeScript by&nbsp;
+<hr class="footer"/><address class="footer"><small>Generated on Tue Jul 5 2011 16:01:24 for Armagetron MultiModeScript by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.7.1 </small></address>
 </body>

@@ -58,11 +58,6 @@ def \hyperlink{class_mode_1_1_mode_a0b54ab72ab5d8fbbcba81dc953b3368a}{\_\-\_\-se
 \item 
 \hyperlink{class_mode_1_1_mode_a62c4256349100a948a336e4f41e73367}{lives}
 \begin{DoxyCompactList}\small\item\em How much lives does a player have? \item\end{DoxyCompactList}\end{DoxyCompactItemize}
-\subsection*{Static Public Attributes}
-\begin{DoxyCompactItemize}
-\item 
-string \hyperlink{class_mode_1_1_mode_ae57cf492ec773e7116974023cfec575b}{yaml\_\-tag} = \char`\"{}!mode\char`\"{}
-\begin{DoxyCompactList}\small\item\em Yaml tag. \item\end{DoxyCompactList}\end{DoxyCompactItemize}
 \subsection*{Private Member Functions}
 \begin{DoxyCompactItemize}
 \item 
@@ -85,13 +80,13 @@ def \hyperlink{class_mode_1_1_mode_af6ee8ed30365011c35b48d4c5696e05b}{\_\-\_\-ge
 tuple \hyperlink{class_mode_1_1_mode_a6f65d9a9362971bd8896a81a0d71c642}{\_\-\_\-slots\_\-\_\-}
 \begin{DoxyCompactList}\small\item\em Slots. \item\end{DoxyCompactList}\item 
 tuple \hyperlink{class_mode_1_1_mode_af525bdda09b2a2c9c560be5062d7c55b}{\_\-\_\-not\_\-persistent} = (\char`\"{}\_\-\_\-last\_\-respoint\char`\"{})
-\begin{DoxyCompactList}\small\item\em Which variables shouldn't be saved by object serialized? \item\end{DoxyCompactList}\end{DoxyCompactItemize}
+\begin{DoxyCompactList}\small\item\em Yaml settings. \item\end{DoxyCompactList}\end{DoxyCompactItemize}
 
 
 \subsection{Detailed Description}
 A mode. This class represents a mode. It stores all information about the mode. 
 
-Definition at line 103 of file Mode.py.
+Definition at line 109 of file Mode.py.
 
 
 
@@ -119,7 +114,7 @@ Gets a respoint for roundstart or normal for the given team
 \item[{\em RuntimeError}]Raised if no respoints for the given team exist. \item[{\em RuntimeError}]Raised if the type is unknown \end{DoxyExceptions}
 
 
-Definition at line 308 of file Mode.py.
+Definition at line 317 of file Mode.py.
 
 \hypertarget{class_mode_1_1_mode_afa8fd4a33bbaada7fe3a2a16a818c48f}{
 \index{Mode::Mode@{Mode::Mode}!\_\-\_\-getstate\_\-\_\-@{\_\-\_\-getstate\_\-\_\-}}
@@ -139,7 +134,7 @@ A dictionary of the current object state
 \end{DoxyReturn}
 
 
-Definition at line 365 of file Mode.py.
+Definition at line 373 of file Mode.py.
 
 \hypertarget{class_mode_1_1_mode_add2325e8a6bf4ff3aacb7c1dd3299e5a}{
 \index{Mode::Mode@{Mode::Mode}!\_\-\_\-init\_\-\_\-@{\_\-\_\-init\_\-\_\-}}
@@ -162,7 +157,7 @@ Inits a new \hyperlink{class_mode_1_1_mode}{Mode} object and adds properties to 
 \item[{\em name}]The name of the mode \item[{\em settings\_\-file}]The settings file which is include when the mode gets activated. \item[{\em settings}]Additional settings. \end{DoxyParams}
 
 
-Definition at line 180 of file Mode.py.
+Definition at line 188 of file Mode.py.
 
 \hypertarget{class_mode_1_1_mode_a0b54ab72ab5d8fbbcba81dc953b3368a}{
 \index{Mode::Mode@{Mode::Mode}!\_\-\_\-setstate\_\-\_\-@{\_\-\_\-setstate\_\-\_\-}}
@@ -183,7 +178,7 @@ Used by pickle and other serializing modules.
 \item[{\em state}]The state to which to set the current object state. \end{DoxyParams}
 
 
-Definition at line 382 of file Mode.py.
+Definition at line 390 of file Mode.py.
 
 \hypertarget{class_mode_1_1_mode_a6cf2ccffddfb377d9abdb116ba74bd3b}{
 \index{Mode::Mode@{Mode::Mode}!activate@{activate}}
@@ -204,7 +199,7 @@ Includes the file given with settings\_\-file and sets all the other settings.
 \item[{\em kill}]Kill all players to activate the mode? Default True when round is already started, otherwise False. \end{DoxyParams}
 
 
-Definition at line 247 of file Mode.py.
+Definition at line 255 of file Mode.py.
 
 \hypertarget{class_mode_1_1_mode_a48c269456fe39631862a8be79627b0e5}{
 \index{Mode::Mode@{Mode::Mode}!addRespoint@{addRespoint}}
@@ -229,7 +224,7 @@ Adds the given respoint to the internal respoint list.
 \item[{\em x}]The x-\/coordinate of the respoint. \item[{\em y}]The y-\/coordinate of the respoint. \item[{\em xdir}]The x-\/direction \item[{\em ydir}]The y-\/direction \item[{\em team}]Optional the number of the team for which the respoint should be used. If not given, the respoint is used for all teams. \end{DoxyParams}
 
 
-Definition at line 201 of file Mode.py.
+Definition at line 209 of file Mode.py.
 
 \hypertarget{class_mode_1_1_mode_ae24a354b3b872ac4d0c12c43cec5f475}{
 \index{Mode::Mode@{Mode::Mode}!addZone@{addZone}}
@@ -251,7 +246,7 @@ Adds the given zone to the internal zone list.
 \item[{\em team}]The number of the team for which the zone should be spawned, or None if it should be spawned for all teams. \item[{\em zone}]The zone to add \end{DoxyParams}
 
 
-Definition at line 342 of file Mode.py.
+Definition at line 350 of file Mode.py.
 
 \hypertarget{class_mode_1_1_mode_a098cfc6ad819a1db17be57c9548bd199}{
 \index{Mode::Mode@{Mode::Mode}!deleteRespoints@{deleteRespoints}}
@@ -268,7 +263,7 @@ Deletes all respoints.
 
 Cleans the intern respoint list. 
 
-Definition at line 208 of file Mode.py.
+Definition at line 216 of file Mode.py.
 
 \hypertarget{class_mode_1_1_mode_ac1d907aa0ec93e0908aa3fa2cac0bde7}{
 \index{Mode::Mode@{Mode::Mode}!getEscapedName@{getEscapedName}}
@@ -288,7 +283,7 @@ The escaped mode name.
 \end{DoxyReturn}
 
 
-Definition at line 359 of file Mode.py.
+Definition at line 367 of file Mode.py.
 
 \hypertarget{class_mode_1_1_mode_a1f3ca2f4e28ef874943310e4397f6ac2}{
 \index{Mode::Mode@{Mode::Mode}!getRespoints@{getRespoints}}
@@ -308,7 +303,7 @@ A deepcopy of the repoints.
 \end{DoxyReturn}
 
 
-Definition at line 214 of file Mode.py.
+Definition at line 222 of file Mode.py.
 
 \hypertarget{class_mode_1_1_mode_a2bf7c935b63449284449c845ad6b5321}{
 \index{Mode::Mode@{Mode::Mode}!getZones@{getZones}}
@@ -328,7 +323,7 @@ The internal zone list.
 \end{DoxyReturn}
 
 
-Definition at line 353 of file Mode.py.
+Definition at line 361 of file Mode.py.
 
 \hypertarget{class_mode_1_1_mode_a68362e7b1cdd6ee60378f3cc1322a144}{
 \index{Mode::Mode@{Mode::Mode}!playerCrashed@{playerCrashed}}
@@ -353,7 +348,7 @@ Has the player been respawned?
 \end{DoxyReturn}
 
 
-Definition at line 223 of file Mode.py.
+Definition at line 231 of file Mode.py.
 
 \hypertarget{class_mode_1_1_mode_ac957f54f8b2dae24ec1d72af3d53f0ef}{
 \index{Mode::Mode@{Mode::Mode}!removeZones@{removeZones}}
@@ -370,7 +365,7 @@ Remove all zones.
 
 Remove all zone from the internal zone list. 
 
-Definition at line 347 of file Mode.py.
+Definition at line 355 of file Mode.py.
 
 \hypertarget{class_mode_1_1_mode_a356d4927de4587c311227527e55eaada}{
 \index{Mode::Mode@{Mode::Mode}!spawnTeams@{spawnTeams}}
@@ -387,7 +382,7 @@ Spawns all players (teams).
 
 Spawns all teams by using the respoints. 
 
-Definition at line 272 of file Mode.py.
+Definition at line 281 of file Mode.py.
 
 \hypertarget{class_mode_1_1_mode_a152e7d0cf7d765c82810d69662f8af40}{
 \index{Mode::Mode@{Mode::Mode}!spawnZones@{spawnZones}}
@@ -404,7 +399,7 @@ Spawns all zones.
 
 Spawns all zones related to the mode 
 
-Definition at line 286 of file Mode.py.
+Definition at line 295 of file Mode.py.
 
 
 
@@ -420,7 +415,7 @@ The last used respoint.
 
 The number of the last-\/used respoint for each team. 
 
-Definition at line 189 of file Mode.py.
+Definition at line 197 of file Mode.py.
 
 \hypertarget{class_mode_1_1_mode_af525bdda09b2a2c9c560be5062d7c55b}{
 \index{Mode::Mode@{Mode::Mode}!\_\-\_\-not\_\-persistent@{\_\-\_\-not\_\-persistent}}
@@ -429,11 +424,13 @@ Definition at line 189 of file Mode.py.
 \label{class_mode_1_1_mode_af525bdda09b2a2c9c560be5062d7c55b}
 
 
-Which variables shouldn't be saved by object serialized? 
+Yaml settings. 
+
+See \href{http://pyyaml.org/wiki/PyYAMLDocumentation}{\tt http://pyyaml.org/wiki/PyYAMLDocumentation} for details to the PyYaml library.Which variables shouldn't be saved by object serialized?
 
 Variables to exclude in \_\-\_\-get\_\-state\_\-\_\- 
 
-Definition at line 173 of file Mode.py.
+Definition at line 181 of file Mode.py.
 
 \hypertarget{class_mode_1_1_mode_a2e07ed5d08d3ced387d24587f8a87967}{
 \index{Mode::Mode@{Mode::Mode}!\_\-\_\-respoints@{\_\-\_\-respoints}}
@@ -446,7 +443,7 @@ Respoints of this mode.
 
 List of respawn points. Each respawn point is a tuple of team,x,y,xdir and ydir. Where x,y are the coordinates, and xdir and ydir are the dirtion. If the respoint should be avaliable for all teams, set team to None. Else set team to the number of the team for which the respoint should be avaliable. 
 
-Definition at line 185 of file Mode.py.
+Definition at line 193 of file Mode.py.
 
 \hypertarget{class_mode_1_1_mode_a1fd32aea9872573e444d08b65ec28ef2}{
 \index{Mode::Mode@{Mode::Mode}!\_\-\_\-restype@{\_\-\_\-restype}}
@@ -459,7 +456,7 @@ How should the respoints be used?
 
 Could be random\_\-roundstart, random\_\-allways, toggle\_\-roundstart, toggle\_\-allways,toggle\_\-whileround, random\_\-whileround or first. 
 
-Definition at line 188 of file Mode.py.
+Definition at line 196 of file Mode.py.
 
 \hypertarget{class_mode_1_1_mode_a6f65d9a9362971bd8896a81a0d71c642}{
 \index{Mode::Mode@{Mode::Mode}!\_\-\_\-slots\_\-\_\-@{\_\-\_\-slots\_\-\_\-}}
@@ -478,7 +475,7 @@ Slots.
 
 See \href{http://docs.python.org}{\tt http://docs.python.org} OOP 
 
-Definition at line 163 of file Mode.py.
+Definition at line 169 of file Mode.py.
 
 \hypertarget{class_mode_1_1_mode_a0672655c12a3e18e65d084c395d9378c}{
 \index{Mode::Mode@{Mode::Mode}!\_\-\_\-zones@{\_\-\_\-zones}}
@@ -491,7 +488,7 @@ The zones of the modes.
 
 A list of zones. Each item is a tuple of team and the zone object. The team could be None if the zone should be spawned for all teams. Otherwise, set team to the number of the team for which the zone should be spawned, or -\/1 if the zone doesn't belong to any team and should allways be spawned. 
 
-Definition at line 184 of file Mode.py.
+Definition at line 192 of file Mode.py.
 
 \hypertarget{class_mode_1_1_mode_a62c4256349100a948a336e4f41e73367}{
 \index{Mode::Mode@{Mode::Mode}!lives@{lives}}
@@ -504,7 +501,7 @@ How much lives does a player have?
 
 Number of lives a player has in this mode. 
 
-Definition at line 191 of file Mode.py.
+Definition at line 199 of file Mode.py.
 
 \hypertarget{class_mode_1_1_mode_ad4ba6cae17b92d4c8c85c35dc9418c8b}{
 \index{Mode::Mode@{Mode::Mode}!max\_\-team\_\-members@{max\_\-team\_\-members}}
@@ -517,7 +514,7 @@ How much members a team can have maximaly.
 
 Number of maximal members per team or 0 for unlimited. 
 
-Definition at line 186 of file Mode.py.
+Definition at line 194 of file Mode.py.
 
 \hypertarget{class_mode_1_1_mode_a55c4e205a8cb20550c0f3924471522ab}{
 \index{Mode::Mode@{Mode::Mode}!max\_\-teams@{max\_\-teams}}
@@ -530,7 +527,7 @@ Maximal teams that can be active in this mode.
 
 The number of teams the could be active in this mode or 0 for unlimited. 
 
-Definition at line 187 of file Mode.py.
+Definition at line 195 of file Mode.py.
 
 \hypertarget{class_mode_1_1_mode_a38afa93ee0f4ad9e8258a510ccdbaa9c}{
 \index{Mode::Mode@{Mode::Mode}!name@{name}}
@@ -543,7 +540,7 @@ The name of the mode.
 
 A string which contains the name of the mode. 
 
-Definition at line 181 of file Mode.py.
+Definition at line 189 of file Mode.py.
 
 \hypertarget{class_mode_1_1_mode_af4bebfeddda24f7437fc086bc52ca711}{
 \index{Mode::Mode@{Mode::Mode}!settings@{settings}}
@@ -556,7 +553,7 @@ Additional settings.
 
 Dictionary of settings where the key is the name of the setting and the value is the value of the setting. 
 
-Definition at line 183 of file Mode.py.
+Definition at line 191 of file Mode.py.
 
 \hypertarget{class_mode_1_1_mode_a40402dcfd634686dcd9b2ce8b8f3d4eb}{
 \index{Mode::Mode@{Mode::Mode}!settings\_\-file@{settings\_\-file}}
@@ -569,20 +566,7 @@ The settings file which to include when the mode gets activated.
 
 The path of the file which gets include when the mode is activated, relative to settings\_\-prefix 
 
-Definition at line 182 of file Mode.py.
-
-\hypertarget{class_mode_1_1_mode_ae57cf492ec773e7116974023cfec575b}{
-\index{Mode::Mode@{Mode::Mode}!yaml\_\-tag@{yaml\_\-tag}}
-\index{yaml\_\-tag@{yaml\_\-tag}!Mode::Mode@{Mode::Mode}}
-\subsubsection[{yaml\_\-tag}]{\setlength{\rightskip}{0pt plus 5cm}string {\bf Mode.Mode.yaml\_\-tag} = \char`\"{}!mode\char`\"{}\hspace{0.3cm}{\ttfamily  \mbox{[}static\mbox{]}}}}
-\label{class_mode_1_1_mode_ae57cf492ec773e7116974023cfec575b}
-
-
-Yaml tag. 
-
-See \href{http://pyyaml.org/wiki/PyYAMLDocumentation}{\tt http://pyyaml.org/wiki/PyYAMLDocumentation} for details to the PyYaml library. 
-
-Definition at line 168 of file Mode.py.
+Definition at line 190 of file Mode.py.
 
 
 

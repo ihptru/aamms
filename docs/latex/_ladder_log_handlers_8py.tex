@@ -29,6 +29,16 @@ def {\bfseries LadderLogHandlers.GameTime}}
 \label{namespace_ladder_log_handlers_afda3a49545af73a4ebd1fc88525d76c3}
 
 \item 
+\hypertarget{namespace_ladder_log_handlers_a847dd364b44c30c9bbacef9307be8a43}{
+def {\bfseries LadderLogHandlers.NewMatch}}
+\label{namespace_ladder_log_handlers_a847dd364b44c30c9bbacef9307be8a43}
+
+\item 
+\hypertarget{namespace_ladder_log_handlers_a362b2e49f1418daaba39879528f6635f}{
+def {\bfseries LadderLogHandlers.Positions}}
+\label{namespace_ladder_log_handlers_a362b2e49f1418daaba39879528f6635f}
+
+\item 
 def \hyperlink{namespace_ladder_log_handlers_ab5dfad1096daca35ad2fbf5f52d1a5ea}{LadderLogHandlers.enableLogging}
 \begin{DoxyCompactList}\small\item\em Enables logging. \item\end{DoxyCompactList}\end{DoxyCompactItemize}
 \subsection*{Variables}
@@ -37,9 +47,26 @@ def \hyperlink{namespace_ladder_log_handlers_ab5dfad1096daca35ad2fbf5f52d1a5ea}{
 tuple \hyperlink{namespace_ladder_log_handlers_ace71443066c91943173a2e1b1911a0fc}{LadderLogHandlers.log} = logging.getLogger(\char`\"{}LadderModule\char`\"{})
 \begin{DoxyCompactList}\small\item\em The logging object. \item\end{DoxyCompactList}\item 
 list \hyperlink{namespace_ladder_log_handlers_a1100b7b4f7b21e886f5564668f4cac22}{LadderLogHandlers.atRoundend} = \mbox{[}$\,$\mbox{]}
-\begin{DoxyCompactList}\small\item\em Round end handlers. \item\end{DoxyCompactList}\item 
+\begin{DoxyCompactList}\small\item\em Round$|$match end handlers. \item\end{DoxyCompactList}\item 
+\hypertarget{namespace_ladder_log_handlers_adb1f5464608936cd0d934f1a8e37edf2}{
+list {\bfseries LadderLogHandlers.atMatchend} = \mbox{[}$\,$\mbox{]}}
+\label{namespace_ladder_log_handlers_adb1f5464608936cd0d934f1a8e37edf2}
+
+\item 
+\hypertarget{namespace_ladder_log_handlers_a06fd3942d070d993b48162de2e18127b}{
+tuple {\bfseries LadderLogHandlers.extraHandlers} = dict()}
+\label{namespace_ladder_log_handlers_a06fd3942d070d993b48162de2e18127b}
+
+\item 
 \hyperlink{namespace_ladder_log_handlers_a4f95a31b010a4a6a5974382d8b228264}{LadderLogHandlers.roundStarted} = False
-\begin{DoxyCompactList}\small\item\em Is the round started? \item\end{DoxyCompactList}\end{DoxyCompactItemize}
+\begin{DoxyCompactList}\small\item\em Is the round started? \item\end{DoxyCompactList}\item 
+int \hyperlink{namespace_ladder_log_handlers_a319be1c0e2868075b611bf236f925cf5}{LadderLogHandlers.roundNumber} = 1
+\begin{DoxyCompactList}\small\item\em Round number. \item\end{DoxyCompactList}\item 
+\hypertarget{namespace_ladder_log_handlers_ac83c9a61e03c617414d71d3f6eca8ff6}{
+list {\bfseries LadderLogHandlers.runningCommands} = \mbox{[}$\,$\mbox{]}}
+\label{namespace_ladder_log_handlers_ac83c9a61e03c617414d71d3f6eca8ff6}
+
+\end{DoxyCompactItemize}
 
 
 \subsection{Detailed Description}

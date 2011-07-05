@@ -55,33 +55,101 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <a name="l00005"></a>00005 
 <a name="l00006"></a>00006 <span class="keyword">import</span> Messages
 <a name="l00007"></a>00007 <span class="keyword">import</span> sys
-<a name="l00008"></a>00008 
-<a name="l00009"></a>00009 <span class="comment">## @brief Executes a command</span>
-<a name="l00010"></a>00010  <span class="comment"># @details Send a command to the server. You only have to replace this function if you</span>
-<a name="l00011"></a>00011  <span class="comment">#          don&#39;t want to print commands to stdout.</span>
-<a name="l00012"></a>00012  <span class="comment"># @param command The command to send</span>
-<a name="l00013"></a>00013 <span class="keyword">def </span>SendCommand(command):
-<a name="l00014"></a>00014         <span class="keywordflow">print</span>(command)
-<a name="l00015"></a>00015         sys.stdout.flush()
-<a name="l00016"></a>00016 
-<a name="l00017"></a>00017 <span class="comment">## @brief Prints a message</span>
-<a name="l00018"></a>00018  <span class="comment"># @details Writes a message to the game</span>
-<a name="l00019"></a>00019  <span class="comment"># @param msg The message to print</span>
-<a name="l00020"></a>00020 <span class="keyword">def </span>PrintMessage(msg):
-<a name="l00021"></a>00021         SendCommand(<span class="stringliteral">&quot;CONSOLE_MESSAGE &quot;</span>+str(msg) )
+<a name="l00008"></a>00008 <span class="keyword">import</span> threading
+<a name="l00009"></a>00009 <span class="keyword">from</span> datetime <span class="keyword">import</span> datetime
+<a name="l00010"></a>00010 <span class="keyword">import</span> re
+<a name="l00011"></a>00011 <span class="keyword">import</span> LadderLogHandlers
+<a name="l00012"></a>00012 <span class="keyword">import</span> Global
+<a name="l00013"></a>00013 <span class="keyword">import</span> time
+<a name="l00014"></a>00014 
+<a name="l00015"></a>00015 <span class="comment">## @brief Executes a command</span>
+<a name="l00016"></a>00016  <span class="comment"># @details Send a command to the server. You only have to replace this function if you</span>
+<a name="l00017"></a>00017  <span class="comment">#          don&#39;t want to print commands to stdout.</span>
+<a name="l00018"></a>00018  <span class="comment"># @param command The command to send</span>
+<a name="l00019"></a>00019 <span class="keyword">def </span>SendCommand(command):
+<a name="l00020"></a>00020         command=command.replace(<span class="stringliteral">&quot;\n&quot;</span>,<span class="stringliteral">&quot;\\n&quot;</span>) <span class="comment"># Never allow to execute more than one command.</span>
+<a name="l00021"></a>00021         <span class="keywordflow">print</span>(command)
 <a name="l00022"></a>00022         sys.stdout.flush()
 <a name="l00023"></a>00023 
-<a name="l00024"></a>00024 <span class="comment">## @brief Prints a message to a player</span>
-<a name="l00025"></a>00025  <span class="comment"># @param msg The message to print</span>
-<a name="l00026"></a>00026  <span class="comment"># @param player The player to who to print the message</span>
-<a name="l00027"></a>00027  <span class="comment"># @param color The color which to use for the message. Defaults to Messages.PlayerColorCode</span>
-<a name="l00028"></a>00028 <span class="keyword">def </span>PrintPlayerMessage(player,msg, color=None):
-<a name="l00029"></a>00029         <span class="keywordflow">if</span> color == <span class="keywordtype">None</span>:
-<a name="l00030"></a>00030                 color=Messages.PlayerColorCode
-<a name="l00031"></a>00031         msg=str(msg)
-<a name="l00032"></a>00032         msgs=msg.split(<span class="stringliteral">&quot;\n&quot;</span>)
-<a name="l00033"></a>00033         <span class="keywordflow">for</span> msg <span class="keywordflow">in</span> msgs:
-<a name="l00034"></a>00034                 SendCommand(<span class="stringliteral">&quot;PLAYER_MESSAGE &quot;</span>+player+<span class="stringliteral">&quot; &quot;</span>+color+msg.replace(<span class="stringliteral">&quot; &quot;</span>,<span class="stringliteral">&quot;\\ &quot;</span>).strip() )
+<a name="l00024"></a>00024 <span class="comment">## @brief Prints a message</span>
+<a name="l00025"></a>00025  <span class="comment"># @details Writes a message to the game</span>
+<a name="l00026"></a>00026  <span class="comment"># @param msg The message to print</span>
+<a name="l00027"></a>00027 <span class="keyword">def </span>PrintMessage(msg):
+<a name="l00028"></a>00028         msgs=msg.split(<span class="stringliteral">&quot;\n&quot;</span>)
+<a name="l00029"></a>00029         <span class="keywordflow">for</span> msg <span class="keywordflow">in</span> msgs:
+<a name="l00030"></a>00030                 SendCommand(<span class="stringliteral">&quot;CONSOLE_MESSAGE 0xffffff&quot;</span>+str(msg) )
+<a name="l00031"></a>00031         sys.stdout.flush()
+<a name="l00032"></a>00032 
+<a name="l00033"></a>00033 <span class="comment">## @brief Prints a message to a player</span>
+<a name="l00034"></a>00034  <span class="comment"># @param msg The message to print</span>
+<a name="l00035"></a>00035  <span class="comment"># @param player The player to who to print the message</span>
+<a name="l00036"></a>00036  <span class="comment"># @param color The color which to use for the message. Defaults to Messages.PlayerColorCode</span>
+<a name="l00037"></a>00037 <span class="keyword">def </span>PrintPlayerMessage(player,msg, color=None):
+<a name="l00038"></a>00038         <span class="keywordflow">if</span> color == <span class="keywordtype">None</span>:
+<a name="l00039"></a>00039                 color=Messages.PlayerColorCode
+<a name="l00040"></a>00040         msg=str(msg)
+<a name="l00041"></a>00041         msgs=msg.split(<span class="stringliteral">&quot;\n&quot;</span>)
+<a name="l00042"></a>00042         <span class="keywordflow">for</span> msg <span class="keywordflow">in</span> msgs:
+<a name="l00043"></a>00043                 SendCommand(<span class="stringliteral">&quot;PLAYER_MESSAGE &quot;</span>+player+<span class="stringliteral">&quot; &quot;</span>+color+msg.replace(<span class="stringliteral">&quot; &quot;</span>,<span class="stringliteral">&quot;\\ &quot;</span>).strip() )
+<a name="l00044"></a>00044 
+<a name="l00045"></a>00045 <span class="comment">## @brief Gets the position and direction of a player&#39;s cycle</span>
+<a name="l00046"></a>00046  <span class="comment"># @details Returns the x,y coordinates and xdir and ydir of a specific player&#39;s cycle.</span>
+<a name="l00047"></a>00047  <span class="comment"># @param player The player for which to get the position.</span>
+<a name="l00048"></a>00048  <span class="comment"># @return A tuple x,y, xdir, ydir.</span>
+<a name="l00049"></a>00049 <span class="keyword">def </span>GetPlayerPosition(player):
+<a name="l00050"></a>00050         gotpos=threading.Condition()
+<a name="l00051"></a>00051         <span class="keyword">def </span>getPos(playername, x, y, xdir, ydir, *args):
+<a name="l00052"></a>00052                 <span class="keywordflow">if</span> playername!=player:
+<a name="l00053"></a>00053                         <span class="keywordflow">return</span>
+<a name="l00054"></a>00054                 <span class="keyword">global</span> cur_pos
+<a name="l00055"></a>00055                 cur_pos=tuple([round(float(i),2) <span class="keywordflow">for</span> i <span class="keywordflow">in</span> (x,y,xdir, ydir)] )
+<a name="l00056"></a>00056                 gotpos.acquire()
+<a name="l00057"></a>00057                 gotpos.notify_all()
+<a name="l00058"></a>00058                 gotpos.release()
+<a name="l00059"></a>00059         <span class="keywordflow">if</span> <span class="stringliteral">&quot;PLAYER_GRIDPOS&quot;</span> <span class="keywordflow">not</span> <span class="keywordflow">in</span> LadderLogHandlers.extraHandlers:
+<a name="l00060"></a>00060                 LadderLogHandlers.extraHandlers[<span class="stringliteral">&quot;PLAYER_GRIDPOS&quot;</span>]=[]    
+<a name="l00061"></a>00061         gotpos.acquire()
+<a name="l00062"></a>00062         LadderLogHandlers.extraHandlers[<span class="stringliteral">&quot;PLAYER_GRIDPOS&quot;</span>].append(getPos)
+<a name="l00063"></a>00063         SendCommand(<span class="stringliteral">&quot;GRID_POSITION_INTERVAL 0&quot;</span>)
+<a name="l00064"></a>00064         SendCommand(<span class="stringliteral">&quot;LADDERLOG_WRITE_PLAYER_GRIDPOS 1&quot;</span>)
+<a name="l00065"></a>00065         gotpos.wait()
+<a name="l00066"></a>00066         SendCommand(<span class="stringliteral">&quot;LADDERLOG_WRITE_PLAYER_GRIDPOS 0&quot;</span>)
+<a name="l00067"></a>00067         LadderLogHandlers.extraHandlers[<span class="stringliteral">&quot;PLAYER_GRIDPOS&quot;</span>].remove(getPos)
+<a name="l00068"></a>00068         <span class="keyword">global</span> cur_pos
+<a name="l00069"></a>00069         pos=cur_pos
+<a name="l00070"></a>00070         del cur_pos
+<a name="l00071"></a>00071         <span class="keywordflow">return</span> pos
+<a name="l00072"></a>00072 
+<a name="l00073"></a>00073 <span class="comment">## @brief Get the value of a game setting.</span>
+<a name="l00074"></a>00074  <span class="comment"># @details Reads the serverlog and looks for a line &quot;SETTING is currently set to X&quot;</span>
+<a name="l00075"></a>00075  <span class="comment"># @param setting The name of the setting.</span>
+<a name="l00076"></a>00076  <span class="comment"># @return The value to which the setting is currently set.</span>
+<a name="l00077"></a>00077  <span class="comment"># @note This requires that the script was started with run.py. Otherwise RuntimeError is raised.</span>
+<a name="l00078"></a>00078 <span class="keyword">def </span>GetSetting(setting):
+<a name="l00079"></a>00079         <span class="keywordflow">if</span> <span class="keywordflow">not</span> Global.serverlog:
+<a name="l00080"></a>00080                 <span class="keywordflow">raise</span> RuntimeError(<span class="stringliteral">&quot;Script wasn&#39;t started with run.py or Global.serverlog wasn&#39;t set.&quot;</span>)
+<a name="l00081"></a>00081         serverlog=open(Global.serverlog)
+<a name="l00082"></a>00082         serverlog.seek(0,2)
+<a name="l00083"></a>00083         timeformat=<span class="stringliteral">&quot;%Y/%m/%d-%H:%M:%S&quot;</span>
+<a name="l00084"></a>00084         now=datetime.now()
+<a name="l00085"></a>00085         SendCommand(setting.upper())
+<a name="l00086"></a>00086         startpattern=<span class="stringliteral">r&quot;\[0[^\]]*] &quot;</span>
+<a name="l00087"></a>00087         pattern1=re.compile(startpattern+setting.upper()+<span class="stringliteral">r&quot; is currently set to (?P&lt;value&gt;[^.]*)\.&quot;</span>)
+<a name="l00088"></a>00088         pattern2=re.compile(startpattern+setting.upper()+<span class="stringliteral">r&quot; changed from (?P&lt;value&gt;((([^t]|t+[^o])*)(to)*)*)to \.&quot;</span>)
+<a name="l00089"></a>00089         <span class="keywordflow">for</span> i <span class="keywordflow">in</span> range(10):
+<a name="l00090"></a>00090                 lines=<span class="stringliteral">&quot;&quot;</span>.join(serverlog.readlines() )
+<a name="l00091"></a>00091                 match=pattern1.search(lines)
+<a name="l00092"></a>00092                 <span class="keywordflow">if</span> match==<span class="keywordtype">None</span>:
+<a name="l00093"></a>00093                         match=pattern2.search(lines)
+<a name="l00094"></a>00094                 <span class="keywordflow">if</span> match==<span class="keywordtype">None</span>:
+<a name="l00095"></a>00095                         time.sleep(1)
+<a name="l00096"></a>00096                         <span class="keywordflow">continue</span>
+<a name="l00097"></a>00097                 <span class="keywordflow">break</span>
+<a name="l00098"></a>00098         <span class="keywordflow">else</span>:
+<a name="l00099"></a>00099                 <span class="keywordflow">return</span> <span class="stringliteral">&quot;&quot;</span>
+<a name="l00100"></a>00100         value=match.group(<span class="stringliteral">&quot;value&quot;</span>)
+<a name="l00101"></a>00101         SendCommand(setting.upper()+<span class="stringliteral">&quot; &quot;</span>+value)
+<a name="l00102"></a>00102         <span class="keywordflow">return</span> value
 </pre></div></div>
 </div>
 <!--- window showing the filter options -->
@@ -98,7 +166,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 </iframe>
 </div>
 
-<hr class="footer"/><address class="footer"><small>Generated on Mon Jun 20 2011 14:23:54 for Armagetron MultiModeScript by&nbsp;
+<hr class="footer"/><address class="footer"><small>Generated on Tue Jul 5 2011 16:01:24 for Armagetron MultiModeScript by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.7.1 </small></address>
 </body>

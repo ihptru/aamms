@@ -76,6 +76,10 @@ Functions</h2></td></tr>
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Handles cycle created.  <a href="#a7948ad82c9748a3271da6dd322c07cda"></a><br/></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="afda3a49545af73a4ebd1fc88525d76c3"></a><!-- doxytag: member="LadderLogHandlers.py::GameTime" ref="afda3a49545af73a4ebd1fc88525d76c3" args="" -->
 def&nbsp;</td><td class="memItemRight" valign="bottom"><b>LadderLogHandlers.GameTime</b></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a847dd364b44c30c9bbacef9307be8a43"></a><!-- doxytag: member="LadderLogHandlers.py::NewMatch" ref="a847dd364b44c30c9bbacef9307be8a43" args="" -->
+def&nbsp;</td><td class="memItemRight" valign="bottom"><b>LadderLogHandlers.NewMatch</b></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a362b2e49f1418daaba39879528f6635f"></a><!-- doxytag: member="LadderLogHandlers.py::Positions" ref="a362b2e49f1418daaba39879528f6635f" args="" -->
+def&nbsp;</td><td class="memItemRight" valign="bottom"><b>LadderLogHandlers.Positions</b></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">def&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespace_ladder_log_handlers.html#ab5dfad1096daca35ad2fbf5f52d1a5ea">LadderLogHandlers.enableLogging</a></td></tr>
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Enables logging.  <a href="#ab5dfad1096daca35ad2fbf5f52d1a5ea"></a><br/></td></tr>
 <tr><td colspan="2"><h2><a name="var-members"></a>
@@ -83,9 +87,17 @@ Variables</h2></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">tuple&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespace_ladder_log_handlers.html#ace71443066c91943173a2e1b1911a0fc">LadderLogHandlers.log</a> = logging.getLogger(&quot;LadderModule&quot;)</td></tr>
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">The logging object.  <a href="#ace71443066c91943173a2e1b1911a0fc"></a><br/></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">list&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespace_ladder_log_handlers.html#a1100b7b4f7b21e886f5564668f4cac22">LadderLogHandlers.atRoundend</a> = []</td></tr>
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Round end handlers.  <a href="#a1100b7b4f7b21e886f5564668f4cac22"></a><br/></td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Round|match end handlers.  <a href="#a1100b7b4f7b21e886f5564668f4cac22"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="adb1f5464608936cd0d934f1a8e37edf2"></a><!-- doxytag: member="LadderLogHandlers.py::atMatchend" ref="adb1f5464608936cd0d934f1a8e37edf2" args="" -->
+list&nbsp;</td><td class="memItemRight" valign="bottom"><b>LadderLogHandlers.atMatchend</b> = []</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a06fd3942d070d993b48162de2e18127b"></a><!-- doxytag: member="LadderLogHandlers.py::extraHandlers" ref="a06fd3942d070d993b48162de2e18127b" args="" -->
+tuple&nbsp;</td><td class="memItemRight" valign="bottom"><b>LadderLogHandlers.extraHandlers</b> = dict()</td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespace_ladder_log_handlers.html#a4f95a31b010a4a6a5974382d8b228264">LadderLogHandlers.roundStarted</a> = False</td></tr>
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Is the round started?  <a href="#a4f95a31b010a4a6a5974382d8b228264"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">int&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespace_ladder_log_handlers.html#a319be1c0e2868075b611bf236f925cf5">LadderLogHandlers.roundNumber</a> = 1</td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Round number.  <a href="#a319be1c0e2868075b611bf236f925cf5"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ac83c9a61e03c617414d71d3f6eca8ff6"></a><!-- doxytag: member="LadderLogHandlers.py::runningCommands" ref="ac83c9a61e03c617414d71d3f6eca8ff6" args="" -->
+list&nbsp;</td><td class="memItemRight" valign="bottom"><b>LadderLogHandlers.runningCommands</b> = []</td></tr>
 </table>
 <hr/><a name="_details"></a><h2>Detailed Description</h2>
 <p>Handles ladder log commands. </p>
@@ -107,7 +119,7 @@ Variables</h2></td></tr>
 </iframe>
 </div>
 
-<hr class="footer"/><address class="footer"><small>Generated on Mon Jun 20 2011 14:23:55 for Armagetron MultiModeScript by&nbsp;
+<hr class="footer"/><address class="footer"><small>Generated on Tue Jul 5 2011 16:01:24 for Armagetron MultiModeScript by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.7.1 </small></address>
 </body>

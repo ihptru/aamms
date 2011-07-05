@@ -63,7 +63,7 @@ Adds a vote with the given name and set it as current\_\-vote.
 \item[{\em target\_\-human}]The human readable target of the vote (What is the vote about? ). Used for displaying. \item[{\em action}]Function that is executed when the vote successed. \item[{\em force}]Cancel current vote if a vote is already active? \end{DoxyParams}
 
 
-Definition at line 51 of file Vote.py.
+Definition at line 52 of file Vote.py.
 
 \hypertarget{namespace_vote_a5d75127361161b29f9a36a7f8d3cc1ed}{
 \index{Vote@{Vote}!Cancel@{Cancel}}
@@ -80,7 +80,7 @@ Cancels the current vote.
 
 Sets current\_\-vote to None and prints a message. 
 
-Definition at line 63 of file Vote.py.
+Definition at line 65 of file Vote.py.
 
 \hypertarget{namespace_vote_acfb2109b9dab2995578ab19517868aa3}{
 \index{Vote@{Vote}!enableLogging@{enableLogging}}
@@ -102,7 +102,7 @@ This function enables logging for this module.
 \item[{\em h}]The handler used for logging \item[{\em f}]The formatter used for logging \item[{\em level}]The logging level \end{DoxyParams}
 
 
-Definition at line 185 of file Vote.py.
+Definition at line 198 of file Vote.py.
 
 
 
@@ -118,7 +118,7 @@ The current vote.
 
 None or an instance of the current vote. 
 
-Definition at line 34 of file Vote.py.
+Definition at line 35 of file Vote.py.
 
 \hypertarget{namespace_vote_a3ed2d759405d2be1e6f53c128aef371a}{
 \index{Vote@{Vote}!defaultStayAlive@{defaultStayAlive}}
@@ -131,7 +131,7 @@ When should a vote expire? (Default value).
 
 Default number of rounds for which a vote stays alive. 
 
-Definition at line 42 of file Vote.py.
+Definition at line 43 of file Vote.py.
 
 \hypertarget{namespace_vote_a611c4a69371fcbdcc7683a654b737a14}{
 \index{Vote@{Vote}!events@{events}}
@@ -144,7 +144,7 @@ The EventGroup.
 
 EventGroup used by this module. Events definied by this module: \hyperlink{namespace_vote}{Vote} created: triggered when a new vote was created. \hyperlink{namespace_vote}{Vote} successed: triggered when a vote successed. (After a call to \hyperlink{class_vote_1_1_vote_acda3525e83e91d9e4622218635f92d4b}{Vote.Vote.CheckResult()} ) \hyperlink{namespace_vote}{Vote} failed: triggered when a vote failed. (After a call to \hyperlink{class_vote_1_1_vote_acda3525e83e91d9e4622218635f92d4b}{Vote.Vote.CheckResult()} ) \hyperlink{namespace_vote}{Vote} cancelled: triggered by \hyperlink{namespace_vote_a5d75127361161b29f9a36a7f8d3cc1ed}{Vote.Cancel()} . Handlers for Events triggered by this module don't have any arguments.' 
 
-Definition at line 26 of file Vote.py.
+Definition at line 27 of file Vote.py.
 
 \hypertarget{namespace_vote_a081b01b11b311cef57a1bd37c864d363}{
 \index{Vote@{Vote}!log@{log}}
@@ -160,7 +160,7 @@ To enable or disable logging for this module use \hyperlink{namespace_vote_acfb2
 \end{DoxyNote}
 
 
-Definition at line 15 of file Vote.py.
+Definition at line 16 of file Vote.py.
 
 \hypertarget{namespace_vote_ae0bddda424d524ab6f934decff807faa}{
 \index{Vote@{Vote}!spec\_\-allowed@{spec\_\-allowed}}
@@ -173,5 +173,5 @@ Can spectators vote?
 
 If set to True, votes of spectators are ignored. 
 
-Definition at line 38 of file Vote.py.
+Definition at line 39 of file Vote.py.
 
