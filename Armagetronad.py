@@ -6,7 +6,11 @@
 import Messages
 import sys
 import threading
+from datetime import datetime
+import re
 import LadderLogHandlers
+import Global
+import time
 
 ## @brief Executes a command
  # @details Send a command to the server. You only have to replace this function if you
@@ -23,7 +27,7 @@ def SendCommand(command):
 def PrintMessage(msg):
 	msgs=msg.split("\n")
 	for msg in msgs:
-		SendCommand("CONSOLE_MESSAGE "+str(msg) )
+		SendCommand("CONSOLE_MESSAGE 0xffffff"+str(msg) )
 	sys.stdout.flush()
 
 ## @brief Prints a message to a player
@@ -65,3 +69,34 @@ def GetPlayerPosition(player):
 	pos=cur_pos
 	del cur_pos
 	return pos
+
+## @brief Get the value of a game setting.
+ # @details Reads the serverlog and looks for a line "SETTING is currently set to X"
+ # @param setting The name of the setting.
+ # @return The value to which the setting is currently set.
+ # @note This requires that the script was started with run.py. Otherwise RuntimeError is raised.
+def GetSetting(setting):
+	if not Global.serverlog:
+		raise RuntimeError("Script wasn't started with run.py or Global.serverlog wasn't set.")
+	serverlog=open(Global.serverlog)
+	serverlog.seek(0,2)
+	timeformat="%Y/%m/%d-%H:%M:%S"
+	now=datetime.now()
+	SendCommand(setting.upper())
+	startpattern=r"\[0[^\]]*] "
+	pattern1=re.compile(startpattern+setting.upper()+r" is currently set to (?P<value>[^.]*)\.")
+	pattern2=re.compile(startpattern+setting.upper()+r" changed from (?P<value>((([^t]|t+[^o])*)(to)*)*)to \.")
+	for i in range(10):
+		lines="".join(serverlog.readlines() )
+		match=pattern1.search(lines)
+		if match==None:
+			match=pattern2.search(lines)
+		if match==None:
+			time.sleep(1)
+			continue
+		break
+	else:
+		return ""
+	value=match.group("value")
+	SendCommand(setting.upper()+" "+value)
+	return value

@@ -3,7 +3,7 @@
  # @brief Functions and classes for zone management
  # @details This file contains functions and classes that are used for zone management.
 
-from Armagetronad import SendCommand
+from Armagetronad import *
 import Armagetronad
 import Event
 import logging

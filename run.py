@@ -16,6 +16,7 @@ import yaml
 import atexit
 import imp
 from threading import Thread
+import Global
 
 # GLOBAL VARIABLES ######################################
 p=None
@@ -61,8 +62,10 @@ def exit():
 	sys.stderr.write("Done\n")
 def runServerForever(args):	
 	global p
+	f=open("server.log","w")
+	Global.serverlog=os.path.abspath("server.log")
 	while(True):
-		p=subprocess.Popen(args, stdin=subprocess.PIPE, stdout=open("server.log","w"), stderr=subprocess.STDOUT )
+		p=subprocess.Popen(args, stdin=subprocess.PIPE, stdout=f, stderr=subprocess.STDOUT )
 		while(True):
 			p.poll()
 			if p.returncode==0:

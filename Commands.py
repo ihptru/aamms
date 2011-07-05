@@ -24,7 +24,10 @@ if "disabled" not in dir():
 
 	## @brief Commands that can be only used in a given state.
 	 # @details List of commands that can be only used in the given state.
-	only_in_state={"normal":["yes","no","mode"], "modeeditor":["save","makeZone","makeRes", "go","stop", "moreSpeed", "lessSpeed"]}
+	only_in_state={
+	          "normal":["yes","no","mode"], 
+	          "modeeditor":["saveMode","makeZone","makeRes", "go","stop", "moreSpeed", "lessSpeed", "modeSetting"]
+	              }
 
 	## @brief Disabled commands.
 	 # @details List of commands that are disabled (means they cannot be used).
@@ -296,9 +299,6 @@ def mode(acl, player, gmode, type="vote", when="now"):
 			return
 		Vote.Add(Mode.modes[mode].short_name, Mode.modes[mode].activate)
 		Vote.current_vote.SetPlayerVote(player, True)
-		if len(Player.players)-len(Player.getBots() ) == 1:
-			#Vote.current_vote.aliveRounds=0
-			pass
 		Armagetronad.PrintMessage(Messages.VoteAdded.format(target=smode, player=Player.players[player].name) )
 		return
 	elif type=="set":
@@ -409,6 +409,7 @@ def modeEditor(acl, player):
 	Vote.Cancel()
 	Mode.current_mode=None
 	Armagetronad.SendCommand("NETWORK_AUTOBAN_FACTOR 0")
+	Armagetronad.PrintPlayerMessage("\n"*4)
 	Armagetronad.PrintPlayerMessage(player, "0xff0000Kicking other players ...")
 	for playero in Player.players.values():
 		if playero.ip!=Player.players[player].ip:
@@ -422,6 +423,16 @@ def modeEditor(acl, player):
 	data["speed"]=5
 	data["mode"]=Mode.Mode("Unsaved")
 	data["stopped"]=False
+	message="""0x00ffffWelcome to ModeEditor!
+ModeEditor was made to help you creating new modes.
+Use the /stop, /go, /lessSpeed and /moreSpeed commands to controll the speed of the cycle.
+To add a zone or a respawn point at the current position use /makeZone and /makeRes.
+If you want to add a zone or respawn point at a specific position, use /stop and then use /tele.
+You can use /modeSetting to change settings like name and lives.
+At the end use /saveMode to save the mode.
+For more informations see /info modeEditor."""
+	Armagetronad.PrintMessage(message)
+	            
 
 ## @brief Go back to normal state.
  # @details Changes the state to normal.
@@ -533,18 +544,23 @@ def modeSetting(acl, player, setting, *value):
 	else:
 		value=None
 	global data
+	if setting in ["max_teams","max_team_members","lives", "arena_size"] and value!=None:
+		try:
+			value=int(value)
+		except ValueError:
+			Armagetronad.PrintMessage("0xff0000Invalid value!")
+			return
 	if setting in ["name", "short_name", "settings_file", "max_teams", "max_team_members","lives"]:
 		if value!=None:
-			if setting in ["max_teams","max_team_members","lives"]:
-				try:
-					value=int(value)
-				except ValueError:
-					Armagetronad.PrintMessage("0xff0000Invalid value!")
-					return
 			setattr(data["mode"], setting, value)
 			Armagetronad.PrintMessage("{0} was set to {1}".format(setting, str(value) ) )
 		else:
 			Armagetronad.PrintMessage("{0} is currently set to {1}".format(setting, str(getattr(data["mode"], setting) ) ) )
+	elif setting in ["arena_size"]:
+		data["mode"].settings["ARENA_SIZE"]=value
+	else:
+		Armagetronad.PrintMessage("0xff0000Invalid setting!")
+	return
 
 ## @brief Save the mode with its current settings.
 def saveMode(acl, player):
