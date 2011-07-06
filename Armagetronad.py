@@ -76,6 +76,8 @@ def GetPlayerPosition(player):
  # @return The value to which the setting is currently set.
  # @note This requires that the script was started with run.py. Otherwise RuntimeError is raised.
 def GetSetting(setting):
+	if setting in Global.not_a_setting:	
+		raise ValueError("Not a setting.")
 	if not Global.serverlog:
 		raise RuntimeError("Script wasn't started with run.py or Global.serverlog wasn't set.")
 	serverlog=open(Global.serverlog)

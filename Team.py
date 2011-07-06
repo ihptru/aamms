@@ -158,7 +158,10 @@ class Team:
 	 # @param name The new team name.
 	 # @note This triggers the event "Team renamed"
 	def setName(self, name):
+		oldname=self.__name
 		self.__name=name
+		teams[self.getEscapedName()]=self
+		del teams[oldname]
 		events.triggerEvent("Team renamed",self.getEscapedName() )
 
 	## @brief Applies all changes

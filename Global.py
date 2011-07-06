@@ -64,3 +64,4 @@ if "state" not in dir():
 	## @brief Current state.
 	 # @details Possible values are "normal" or "modeeditor".
 	state="normal"
+not_a_setting=("CONSOLE_MESSAGE", "CENTER_MESSAGE", "SAY", "QUIT", "EXIT", "SPAWN_ZONE", "COLLAPSE_ZONE", "TELEPORT_PLAYER", "RESPAWN_PLAYER")

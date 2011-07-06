@@ -168,12 +168,10 @@ def OnlinePlayer(lname, red, green, blue, ping, teamname=None):
 	if not lname in Player.players:
 		log.warning("Player „"+lname+"“ doesn't exist in OnlinePlayer. Ignoring.")
 		return
-	if Team.max_teams<9 and Team.max_teams>0 and Team.max_team_members!=1 and teamname!=None:
+	if int(Armagetronad.GetSetting("ALLOW_TEAM_NAME_PLAYER") ) == 0:
 		teamname=teamname.replace("_", " ").capitalize()
-		Armagetronad.SendCommand("ALLOW_TEAM_NAME_PLAYER 0")
 	else:
 		teamname=Player.players[lname].name
-		Armagetronad.SendCommand("ALLOW_TEAM_NAME_PLAYER 0")
 	if teamname!=None:
 		if Player.players[lname].getTeam()==None or Player.players[lname].getTeam().replace(" ","").replace("_","").lower()!=teamname.replace("_","").replace(" ","").lower():
 			Player.players[lname].leaveTeam()
