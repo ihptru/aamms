@@ -304,11 +304,11 @@ class Player:
 	 # @param xdir The x direction
 	 # @param ydir The y direction
 	 # @param force Force position changing(teleporting) ?
-	 # @note This sets Player's lives to 1 if they are less or equal 0
+	 # @note This sets Player's lives to 0 if they are less 0
 	 # @note This triggers the event "Player respawned"
 	def respawn(self, x ,y, xdir, ydir, force):
-		if self.__lives <= 0:
-			self.__lives=1
+		if self.__lives < 0:
+			self.__lives=0
 		if force:
 			SendCommand("KILL "+self.__ladder_name)
 		SendCommand("RESPAWN_PLAYER "+str(self.__ladder_name) + " 0 "+str(x)+

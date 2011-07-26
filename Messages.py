@@ -106,3 +106,9 @@ WrongState=("0xff0000/{command} cannot be used in this state.")
 ## @brief Disabled command message.
  # @param This message is printed when a player tries to use a disabled command.
 DisabledCommand=("0xff0000This command has been disabled by an administrator.")
+
+PlayerRespawned=("0x0066ff{player}0x00ff44 got respawned. {msg}")
+
+LastLifeMsg=("0xff0000Last life!")
+OneLifeMsg=("One life left!")
+LivesMsg=("{lives} lives left!")

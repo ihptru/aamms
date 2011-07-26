@@ -26,7 +26,7 @@ if "disabled" not in dir():
 	 # @details List of commands that can be only used in the given state.
 	only_in_state={
 	          "normal":["yes","no","mode"], 
-	          "modeeditor":["saveMode","makeZone","makeRes", "go","stop", "moreSpeed", "lessSpeed", "modeSetting"]
+	          "modeeditor":["saveMode","makeZone","makeRes", "go","stop", "moreSpeed", "lessSpeed", "modeSetting", "loadMode"]
 	              }
 
 	## @brief Disabled commands.
@@ -409,7 +409,7 @@ def modeEditor(acl, player):
 	Vote.Cancel()
 	Mode.current_mode=None
 	Armagetronad.SendCommand("NETWORK_AUTOBAN_FACTOR 0")
-	Armagetronad.PrintPlayerMessage("\n"*4)
+	Armagetronad.PrintPlayerMessage(player, "\n"*4)
 	Armagetronad.PrintPlayerMessage(player, "0xff0000Kicking other players ...")
 	for playero in Player.players.values():
 		if playero.ip!=Player.players[player].ip:
@@ -569,3 +569,17 @@ def saveMode(acl, player):
 	Global.updateHelpTopics()
 	Mode.saveModes(modename=data["mode"].getEscapedName())
 	Armagetronad.PrintMessage("0x00ff00Saved mode")	
+
+## @brief Load a mode to edit.
+ # @param mode The mode to load. For a list of available modes see /info modes.
+def loadMode(acl, player, mode):
+	global data
+	for k,m in Mode.modes.items():
+		if k==mode or m.short_name==mode:
+			mode=m
+			break
+	else:
+		Armagetronad.PrintMessage(Messages.ModeNotExist.format(mode=mode) )
+	data["mode"]=mode
+	mode.activate(False)
+	Mode.current_mode=None

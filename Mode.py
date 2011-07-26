@@ -17,6 +17,7 @@ import yaml
 from glob import glob
 import os.path
 import os
+import Messages
 
 if "settings_prefix" not in dir():
 	## @brief Global settings directory
@@ -229,9 +230,9 @@ class Mode(yaml.YAMLObject):
 	 # @param type The type of the crash("DEATH_FRAG","DEATH_TEAMKILL",...)
 	 # @return Has the player been respawned?
 	def playerCrashed(self, player, type=None):
-		Player.players[player].crashed()
 		if Player.players[player].getLives()==0:
 			return
+		Player.players[player].crashed()
 		if len(self.__respoints)==0:
 			log.warning("No respoints for mode {0} registered.".format(self.name) )
 			return False
@@ -245,9 +246,20 @@ class Mode(yaml.YAMLObject):
 		if i==len(Team.teams):
 			log.error("Player „{0}“ has an invalid team".format(player) )
 			return
-		respoint=self.getRespoint("normal",i)
+		respoint=self.__getRespoint("normal",i)
 		t,x,y,xdir,ydir=respoint
 		Player.players[player].respawn(x,y,xdir,ydir,False)
+		name=Player.players[player].name
+		msg=""
+		if Player.players[player].getLives()>1:
+			msg=Messages.LivesMsg.format(lives=Player.players[player].getLives())
+		elif Player.players[player].getLives()==1:
+			msg=Messages.OneLifeMsg
+		elif Player.players[player].getLives()==0:
+			msg=Messages.LastLifeMsg
+		else:
+			raise Exception("BUG!!!!!!!") # This should never get executed
+		Armagetronad.PrintMessage(Messages.PlayerRespawned.format(player=name, msg=msg))
 
 	## @brief Enables the mode
 	 # @details Includes the file given with settings_file and sets all the other settings.
@@ -273,8 +285,8 @@ class Mode(yaml.YAMLObject):
 		if kill == True:
 			for player in Player.players.values():
 				player.kill()
-		current_mode=self.getEscapedName()
-		log.info("Mode "+current_mode+" activated.")
+		current_mode=self
+		log.info("Mode "+current_mode.name+" activated.")
 
 	## @brief Spawns all players (teams)
 	 # @details Spawns all teams by using the respoints.

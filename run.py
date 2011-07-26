@@ -75,6 +75,11 @@ def runServerForever(args):
 				sys.stderr.write(str(returncode)+"\n" )
 				break
 			time.sleep(2)
+def read_stdin():
+	import Armagetronad
+	while(True):
+		Armagetronad.SendCommand(sys.__stdin__.readline().strip())
+		sys.stderr.write("Command sent to server.\n")
 # SETTINGS ##############################################
 userdatadir="./server/data"
 userconfigdir="./server/config"
@@ -133,6 +138,10 @@ sys.stdout=OutputToProcess()
 sys.stdin=WatchFile(open(os.path.join(options.vardir,"ladderlog.txt") ) )
 sys.stdin.skipUnreadLines()
 sys.stderr=sys.__stdout__
+t2=Thread(None, read_stdin)
+t2.daemon=True
+t2.start()
+sys.stderr.write("Reading commands from stdin.\n")
 import parser
 while True:
 	try:
@@ -153,7 +162,7 @@ while True:
 		sys.stderr.flush()
 		parser.exit(False, quiet=True)		
 		try:
-			sys.stderr.write("Restarting in 3 secounds ... \n")		
+			sys.stderr.write("Restarting in 3 seconds ... \n")		
 			sys.stderr.write("\n")
 			time.sleep(3)
 			import Global

@@ -150,6 +150,10 @@ class Team:
 			Team.__ids.remove(self.__id)
 		except AttributeError:
 			return
+		except KeyError:
+			return
+		except ValueError:
+			return
 		log.debug("Removed id " + str(self.__id) + " from team id's list")
 			
 

@@ -99,10 +99,11 @@ def InvalidCommand(command, player, ip, access, *args):
 		try:
 			getattr(Commands,command)(*args)
 		except Exception as e:
-			#log.error("The command handler for the command /{0} raised an exception.".format(command) )
-			#runningCommands.remove(threading.current_thread() )
 			raise e
-		runningCommands.remove(threading.current_thread() )
+		try:
+			runningCommands.remove(threading.current_thread() )	
+		except:
+			pass
 	t=Thread(target=ProcessCommand, args=(command, args), name="HandleCommand"+command.capitalize() )
 	t.daemon=True
 	t.start()
@@ -130,8 +131,8 @@ def PlayerEntered(lname,ip,*name):
 def PlayerRenamed(oldlname,newlname, ip, logged_in, *name):
 	name=" ".join(name)
 	if not oldlname in Player.players:
-		log.warning("„{0}“ renamed but script doesn't know him. Adding him.".format(name) )
-		Player.Add(oldlname,name,ip)
+		log.warning("„{0}“ renamed but script doesn't know him. Ignoring.".format(name) )
+#		Player.Add(oldlname,name,ip)
 	Player.players[oldlname].name=name
 	Player.players[oldlname].ip=ip
 	if logged_in=="1":
@@ -218,7 +219,10 @@ def NewRound(date, time, timezone):
 			if not Vote.current_vote.CheckResult(only_sure=True):
 				Armagetronad.PrintMessage(Messages.VoteInProgress.format(target=Vote.current_vote.target, expire=Vote.current_vote.aliveRounds) )
 				Vote.current_vote.aliveRounds=Vote.current_vote.aliveRounds-1
-	
+	# Lives
+	if Mode.current_mode:
+		for player in Player.players.values():
+			player.setLives(Mode.current_mode.lives)
 	Armagetronad.SendCommand("LADDERLOG_WRITE_GAME_TIME 1")
 	roundStarted=True
 	roundNumber=roundNumber+1
@@ -239,12 +243,12 @@ def CycleCreated(lname, x, y, xdir, ydir):
 	Player.players[lname].joinTeam("ai", quiet=True)
 
 def GameTime(time):
-	if time=="-4" and (Mode.current_mode in Mode.modes):
-		Mode.modes[Mode.current_mode].spawnTeams()
+	if time=="-4" and Mode.current_mode:
+		Mode.current_mode.spawnTeams()
 		Team
-	if time=="-2" and (Mode.current_mode in Mode.modes):
+	if time=="-2" and Mode.current_mode:
 		Armagetronad.SendCommand("LADDERLOG_WRITE_GAME_TIME 0")
-		Mode.modes[Mode.current_mode].spawnZones()
+		Mode.current_mode.spawnZones()
 	if int(time)>0:
 		Armagetronad.SendCommand("LADDERLOG_WRITE_GAME_TIME 0")
 
@@ -269,6 +273,22 @@ def Positions(team, *members):
 		Team.teams[team].shufflePlayer(member, pos)
 	teamstr=" ".join(Team.teams[team].getMembers() )
 	log.info("Team "+team+": "+teamstr)
+
+# Generate handlers for lives
+respawn_events=("DEATH_SUICIDE","DEATH_TEAMKILL", "DEATH_DEATHZONE", "DEATH_FRAG", "DEATH_SHOT_FRAG", "DEATH_SHOT_SUICIDE", "DEATH_SHOT_TEAMKILL")
+def HandlePlayerDied(event, player, *args): 
+	if Mode.current_mode: 
+		Mode.current_mode.playerCrashed(player, event)
+for event in respawn_events:
+	f=lambda *args: HandlePlayerDied(event, *args) 
+	if event in extraHandlers:
+		for handler in extraHandlers[event]:
+			if f.__code__ == handler.__code__:
+				break
+		else:
+			extraHandlers[event].append(f)
+	else:
+		extraHandlers[event]=[f]
 
 ## @brief Enables logging
  # @details This function enables logging for this module.
