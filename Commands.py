@@ -46,7 +46,7 @@ if "disabled" not in dir():
 def getArgs(command):
 	commandf=globals()[command]
 	defline=""
-	with open(__file__) as f:
+	with open(commandf.__code__.co_filename) as f:
 		defline=f.readlines()[commandf.__code__.co_firstlineno-1]
 	defline=defline[defline.find("(")+1:defline.rfind(")")]
 	args=defline.split(",")
@@ -95,20 +95,27 @@ def checkUsage(command, *args):
  # @return The command names.
 def getCommands():
 	lines=list()
-	with open(__file__) as f:
-		lines=f.readlines()
-	start=lines.index("#START COMMANDS\n")
-	lines=lines[start:]
-	lines="".join(lines)
-	match_func_def=re.compile("def [^(]+\([^)]*\)\s*:")
-	func_defs=match_func_def.findall(lines)
 	func_names=list()
-	for func_def in func_defs:
-		func_name=func_def[3:func_def.find("(")].strip()
-		if func_name in globals():
-			func_names.append(func_name)
-	return func_names
-		
+	for mod in Global.loadedExtensions + [None]:
+		if mod==None:
+			filename=__file__
+		else:
+			filename=mod.__file__
+		with open(filename) as f:
+			lines=f.readlines()
+		try:
+			start=lines.index("#START COMMANDS\n")
+		except ValueError:
+			start=0
+		lines=lines[start:]
+		lines="".join(lines)
+		match_func_def=re.compile("def [^(]+\([^)]*\)\s*:")
+		func_defs=match_func_def.findall(lines)
+		for func_def in func_defs:
+			func_name=func_def[3:func_def.find("(")].strip()
+			if func_name in globals():
+				func_names.append(func_name)
+	return list(func_names)
 
 ## @brief Gets the command line ( /command neededparams [optionalparams]
  # @details Retuns the command line for the given command.
@@ -146,7 +153,7 @@ def getDescription(command):
 	lines=""
 	commentars=list()
 	currentlineno=0
-	with open(__file__) as f:
+	with open(commandf.__code__.co_filename) as f:
 		lines=f.readlines()
 		currentlineno=commandf.__code__.co_firstlineno - 2
 	comstart=-1
@@ -214,6 +221,12 @@ def getHelp(command):
 	usagestr="0xff0000Usage: "+"0x00ff00"+commandstr+"\n"+"0xff0000Description: "+"0x00ffee"+commanddesc+"\n0xff0000Parameters: "+Messages.PlayerColorCode+paramstr
 	return usagestr
 
+## @brief Register new commands
+ # @details Register new functions to be used as commands.
+ # @param *functions Functions to register.
+def register_commands(*functions):
+	for func in functions:
+		globals()[func.__name__]=func
 
 
 ###################################### COMMANDS ##########################################
@@ -266,16 +279,6 @@ def printBuffer(acl, player):
 		Armagetronad.PrintPlayerMessage(player,"Buffer: \n" + "\n".join(Player.players[player].data["buffer"]) )
 	else:
 		Armagetronad.PrintPlayerMessage(player,"Buffer: Empty")
-
-## @brief Teleports a player to the given position
- # @details Teleports the given player to the given position.
- # @param x The x coordinate to which to teleport
- # @param y The y coordinate to which to teleport
- # @param xdir The x direction
- # @param ydir The y direction
-def tele(acl, player, x, y, xdir=0, ydir=1):
-	Player.players[player].respawn(x,y,xdir,ydir,True)
-	Armagetronad.PrintMessage(Messages.PlayerTeleport.format(player=player,x=x,y=y,xdir=xdir, ydir=ydir) )
 
 ## @brief Activates a mode.
  # @details This is the /mode command

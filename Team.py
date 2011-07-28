@@ -7,7 +7,7 @@
 import logging
 import logging.handlers
 import Event
-from Armagetronad import SendCommand
+from Armagetronad import *
 import Player
 import math
 

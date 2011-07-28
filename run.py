@@ -17,6 +17,7 @@ import atexit
 import imp
 from threading import Thread
 import Global
+import glob
 
 # GLOBAL VARIABLES ######################################
 p=None
@@ -93,12 +94,18 @@ parser.add_option("-e", "--executable", dest="server", default=None, help="Path 
 parser.add_option("--debug",dest="debug", default=False, action="store_true", help="Run in debug mode")
 parser.add_option("--disable", dest="disabledCommands", action="append", help="Disable COMMAND.", metavar="COMMAND", default=[])
 parser.add_option("--default", dest="save", action="store_true", default=False, help="Set this configuration as default")
+parser.add_option("-l","--load", dest="extensions", action="append", help="Load the extension with the name EXTENSION.", metavar="EXTENSION")
+parser.add_option("--list-extensions", dest="list_extensions", default=False, action="store_true", help="List all available extensions.")
 options, args=parser.parse_args()
 options.vardir="server/var"
 optionsdict=dict()
-save_options=["vardir","configdir","server","datadir", "disabledCommands"]
+save_options=["vardir","configdir","server","datadir", "disabledCommands", "extensions"]
 
 # START #################################################
+if(options.list_extensions):
+	for file in glob.glob("extensions/*.py"):
+		print("Found extension: "+os.path.basename(file)[:-3]+" ("+os.path.abspath(file)+")")
+	sys.exit(0)
 os.chdir(os.path.dirname(sys.argv[0]) )
 if not os.path.exists("run"):
 	os.mkdir("run")
@@ -142,11 +149,22 @@ t2=Thread(None, read_stdin)
 t2.daemon=True
 t2.start()
 sys.stderr.write("Reading commands from stdin.\n")
+sys.path.append("../extensions/")
 import parser
 while True:
 	try:
 		sys.stderr.write("[START] Starting script.\n")
 		sys.stderr.write("[START] Press ctrl+c to exit.\n")
+		for mod in options.extensions:
+			sys.stderr.write("[START] Loading extension "+mod+" ... ")
+			try:
+				exec("import "+mod+"\nGlobal.loadedExtensions.append("+mod+")")
+			except ImportError as e:
+				sys.stderr.write("NOT FOUND")
+			except Exception as e:
+				sys.stderr.write("FAILED\n")
+				continue
+			sys.stderr.write("OK\n")
 		sys.stderr.write("\n")
 		sys.stderr.flush()	
 		imp.reload(parser)

@@ -8,7 +8,7 @@ import logging
 import logging.handlers
 import Team
 import Event
-from Armagetronad import SendCommand
+from Armagetronad import *
 import copy
 
 if "players" not in dir():

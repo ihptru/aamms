@@ -65,6 +65,8 @@ def InvalidCommand(command, player, ip, access, *args):
 		Armagetronad.PrintPlayerMessage(player," ".join(args) )
 		return
 	imp.reload(Commands)
+	for mod in Global.loadedExtensions:
+		imp.reload(mod)
 	saved_command=command
 	command=[realcommand for realcommand in Commands.getCommands() if realcommand.lower()==command]
 	if len(command)>1:
@@ -103,12 +105,13 @@ def InvalidCommand(command, player, ip, access, *args):
 		try:
 			runningCommands.remove(threading.current_thread() )	
 		except:
+			log.debug("Command thread already removed. Command:"+command)
 			pass
 	t=Thread(target=ProcessCommand, args=(command, args), name="HandleCommand"+command.capitalize() )
 	t.daemon=True
-	t.start()
 	global runningCommands
 	runningCommands.append(t)
+	t.start()
 
 ## @brief Handles player joined
  # @details Every time when a player joins the game this function is called.
