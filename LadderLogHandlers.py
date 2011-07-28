@@ -203,6 +203,10 @@ def NewRound(date, time, timezone):
 	global roundNumber
 	roundStarted=False
 	log.info("New round started -----------------------------")
+	# Lives
+	if Mode.current_mode:
+		for player in Player.players.values():
+			player.setLives(Mode.current_mode.lives)
 	# Flush bot list (NEEDED because no PlayerLeft is called for bots)
 	bots=Player.getBots()
 	for bot in bots:
@@ -222,10 +226,6 @@ def NewRound(date, time, timezone):
 			if not Vote.current_vote.CheckResult(only_sure=True):
 				Armagetronad.PrintMessage(Messages.VoteInProgress.format(target=Vote.current_vote.target, expire=Vote.current_vote.aliveRounds) )
 				Vote.current_vote.aliveRounds=Vote.current_vote.aliveRounds-1
-	# Lives
-	if Mode.current_mode:
-		for player in Player.players.values():
-			player.setLives(Mode.current_mode.lives)
 	Armagetronad.SendCommand("LADDERLOG_WRITE_GAME_TIME 1")
 	roundStarted=True
 	roundNumber=roundNumber+1
@@ -244,6 +244,8 @@ def CycleCreated(lname, x, y, xdir, ydir):
 	if "ai" not in Team.teams:
 		Team.Add("AI")
 	Player.players[lname].joinTeam("ai", quiet=True)
+	if(Mode.current_mode):
+		Player.players[lname].setLives(Mode.current_mode.lives)
 
 def GameTime(time):
 	if time=="-4" and Mode.current_mode:
