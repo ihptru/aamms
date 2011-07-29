@@ -28,7 +28,7 @@ def PrintMessage(msg):
 	msgs=msg.split("\n")
 	for msg in msgs:
 		SendCommand("CONSOLE_MESSAGE 0xffffff"+str(msg) )
-	sys.stdout.flush()
+		time.sleep(0.01)
 
 ## @brief Prints a message to a player
  # @param msg The message to print
@@ -70,13 +70,21 @@ def GetPlayerPosition(player):
 	del cur_pos
 	return pos
 
+## @brief Check if the given command is a setting.
+ # @return True if yes, False if no.
+def IsSetting(command):
+	if command in Global.not_a_setting or len([i for i in Global.not_a_setting_prefixes if command.startswith(i)])>0:
+		return False
+	else:
+		return True
+
 ## @brief Get the value of a game setting.
  # @details Reads the serverlog and looks for a line "SETTING is currently set to X"
  # @param setting The name of the setting.
  # @return The value to which the setting is currently set.
  # @note This requires that the script was started with run.py. Otherwise RuntimeError is raised.
 def GetSetting(setting):
-	if setting in Global.not_a_setting:	
+	if not IsSetting(setting):	
 		raise ValueError("Not a setting.")
 	if not Global.serverlog:
 		raise RuntimeError("Script wasn't started with run.py or Global.serverlog wasn't set.")

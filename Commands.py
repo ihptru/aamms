@@ -16,6 +16,7 @@ import AccessLevel
 import re
 import Global
 import threading
+import time
 if "disabled" not in dir():
 	###################################### VARIABLES #########################################
 	## @brief Commands that couldn't be used in a given state.
@@ -388,53 +389,68 @@ def modeEditor(acl, player):
 	Armagetronad.SendCommand("INCLUDE settings.cfg")
 	Armagetronad.SendCommand("SINCLUDE settings_custom.cfg")
 	Armagetronad.SendCommand("DEFAULT_KICK_REASON Server\ under\ maintenance.")
-	Armagetronad.SendCommand("ALLOW_TEAM_NAME_PLAYER 1")
-	Armagetronad.SendCommand("FORTRESS_CONQUEST_TIMEOUT -1")
-	Armagetronad.SendCommand("MAX_CLIENTS 1")
-	Armagetronad.SendCommand("SP_TEAMS_MAX 1")
-	Armagetronad.SendCommand("TEAMS_MAX 1")
-	Armagetronad.SendCommand("SP_AUTO_AIS 0")
-	Armagetronad.SendCommand("AUTO_AIS 0")
-	Armagetronad.SendCommand("SP_NUM_AIS 0")
-	Armagetronad.SendCommand("NUM_AIS 0")
-	Armagetronad.SendCommand("CYCLE_SPEED_MIN 0")
-	Armagetronad.SendCommand("CYCLE_RUBBER 10000000")
-	Armagetronad.SendCommand("SP_WALLS_LENGTH 0.000001")
-	Armagetronad.SendCommand("CYCLE_SPEED 5")
-	Armagetronad.SendCommand("CYCLE_BRAKE -100")
-	Armagetronad.SendCommand("CYCLE_BRAKE_DEPLETE 0")
-	Armagetronad.SendCommand("CYCLE_SPEED_DECAY_ABOVE 1.5")
-	Armagetronad.SendCommand("CYCLE_ACCEL 0")
-	Armagetronad.SendCommand("SP_MIN_PLAYERS 0")
-	Armagetronad.SendCommand("CYCLE_TURN_SPEED_FACTOR 1")
-	Armagetronad.SendCommand("CYCLE_SPEED_DECAY_BELOW 2")
-	Armagetronad.SendCommand("FORTRESS_SURVIVE_WIN 0")
+	def setSettings():
+		Armagetronad.SendCommand("ALLOW_TEAM_NAME_PLAYER 1")
+		Armagetronad.SendCommand("FORTRESS_CONQUEST_TIMEOUT -1")
+		Armagetronad.SendCommand("MAX_CLIENTS 1")
+		Armagetronad.SendCommand("SP_TEAMS_MAX 1")
+		Armagetronad.SendCommand("TEAMS_MAX 1")
+		Armagetronad.SendCommand("SP_AUTO_AIS 0")
+		Armagetronad.SendCommand("AUTO_AIS 0")
+		Armagetronad.SendCommand("SP_NUM_AIS 0")
+		Armagetronad.SendCommand("NUM_AIS 0")
+		Armagetronad.SendCommand("CYCLE_SPEED_MIN 0")
+		Armagetronad.SendCommand("CYCLE_RUBBER 10000000")
+		Armagetronad.SendCommand("SP_WALLS_LENGTH 0.000001")
+		Armagetronad.SendCommand("CYCLE_SPEED 5")
+		Armagetronad.SendCommand("CYCLE_BRAKE -100")
+		Armagetronad.SendCommand("CYCLE_BRAKE_DEPLETE 0")
+		Armagetronad.SendCommand("CYCLE_SPEED_DECAY_ABOVE 1.5")
+		Armagetronad.SendCommand("CYCLE_ACCEL 0")
+		Armagetronad.SendCommand("SP_MIN_PLAYERS 0")
+		Armagetronad.SendCommand("CYCLE_TURN_SPEED_FACTOR 1")
+		Armagetronad.SendCommand("CYCLE_SPEED_DECAY_BELOW 2")
+		Armagetronad.SendCommand("FORTRESS_SURVIVE_WIN 0")
+	setSettings()
 	Vote.Cancel()
 	Mode.current_mode=None
 	Armagetronad.SendCommand("NETWORK_AUTOBAN_FACTOR 0")
-	Armagetronad.PrintPlayerMessage(player, "\n"*4)
 	Armagetronad.PrintPlayerMessage(player, "0xff0000Kicking other players ...")
+	Armagetronad.PrintPlayerMessage(player, "\n"*4)
 	for playero in Player.players.values():
 		if playero.ip!=Player.players[player].ip:
 			Armagetronad.SendCommand("KICK "+playero.getLadderName() )
 		else:
 			playero.kill()	
 	Armagetronad.SendCommand("NETWORK_AUTOBAN_FACTOR 10")
+	Armagetronad.SendCommand("LADDERLOG_WRITE_ADMIN_COMMAND 1")
+	def HandleAdminCommand(player, ip, acl, *command):
+		global data
+		if(Armagetronad.IsSetting(command[0]) and len(command)>1):
+			data["mode"].settings[command[0]]=" ".join(command[1:])
+			Armagetronad.PrintMessage("0xff0000"+command[0]+" changed to "+" ".join(command[1:]))
+			setSettings()
+	LadderLogHandlers.register_handler("ADMIN_COMMAND", HandleAdminCommand)
 	Global.state="modeeditor"
 	global data
 	data=dict()
 	data["speed"]=5
 	data["mode"]=Mode.Mode("Unsaved")
 	data["stopped"]=False
-	message="""0x00ffffWelcome to ModeEditor!
+	def PrintMessage():
+		message="""0x00ffffWelcome to ModeEditor! 0xffffff
 ModeEditor was made to help you creating new modes.
-Use the /stop, /go, /lessSpeed and /moreSpeed commands to controll the speed of the cycle.
-To add a zone or a respawn point at the current position use /makeZone and /makeRes.
-If you want to add a zone or respawn point at a specific position, use /stop and then use /tele.
+Use the /stop, /go, /lessSpeed, /moreSpeed and brake commands to controll the speed of the cycle.
+To add a zone or a respawn point at the current position of your cycle use /makeZone and /makeRes.
+If you want to go to a specific position, use /stop and then use /tele.
 You can use /modeSetting to change settings like name and lives.
-At the end use /saveMode to save the mode.
-For more informations see /info modeEditor."""
-	Armagetronad.PrintMessage(message)
+To change game settings like rubber you can use /admin (i.e. /admin CYCLE_RUBBER 5). Your changes will get recorded.
+To save the mode use /saveMode to save the mode. 
+If you want to go back to normal mode, use /normal."""
+		for msg in message.split("\n"):
+			Armagetronad.PrintMessage(msg)
+			time.sleep(3)
+	LadderLogHandlers.atRoundend.append(PrintMessage)
 	            
 
 ## @brief Go back to normal state.
@@ -560,7 +576,9 @@ def modeSetting(acl, player, setting, *value):
 		else:
 			Armagetronad.PrintMessage("{0} is currently set to {1}".format(setting, str(getattr(data["mode"], setting) ) ) )
 	elif setting in ["arena_size"]:
-		data["mode"].settings["ARENA_SIZE"]=value
+		if value:
+			data["mode"].settings[setting]=value
+			Armagetronad.SendCommand(setting+str(value));
 	else:
 		Armagetronad.PrintMessage("0xff0000Invalid setting!")
 	return

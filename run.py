@@ -65,6 +65,16 @@ def runServerForever(args):
 	global p
 	f=open("server.log","w")
 	Global.serverlog=os.path.abspath("server.log")
+	c=subprocess.Popen([args[0]]+["--doc"], stderr=subprocess.PIPE, stdout=subprocess.PIPE)
+	doctext=c.communicate()[0].decode()
+	c.wait()
+	doctext=doctext[doctext.find("Available console commands/config file settings")+len("Available console commands/config file settings"):]
+	for line in doctext.split("\n"):
+		line=line.strip()
+		if len(line)==0 or line[0] not in "QWERTZUIOPASDFGHJKLYXCVBNM":	
+			continue
+		command=line[:line.find(" ")]
+		Global.supportedCommands.append(command)
 	while(True):
 		p=subprocess.Popen(args, stdin=subprocess.PIPE, stdout=f, stderr=subprocess.STDOUT )
 		while(True):
@@ -94,7 +104,7 @@ parser.add_option("-e", "--executable", dest="server", default=None, help="Path 
 parser.add_option("--debug",dest="debug", default=False, action="store_true", help="Run in debug mode")
 parser.add_option("--disable", dest="disabledCommands", action="append", help="Disable COMMAND.", metavar="COMMAND", default=[])
 parser.add_option("--default", dest="save", action="store_true", default=False, help="Set this configuration as default")
-parser.add_option("-l","--load", dest="extensions", action="append", help="Load the extension with the name EXTENSION.", metavar="EXTENSION")
+parser.add_option("-l","--load", dest="extensions", default=[], action="append", help="Load the extension with the name EXTENSION.", metavar="EXTENSION")
 parser.add_option("--list-extensions", dest="list_extensions", default=False, action="store_true", help="List all available extensions.")
 options, args=parser.parse_args()
 options.vardir="server/var"

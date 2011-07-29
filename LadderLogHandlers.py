@@ -43,6 +43,20 @@ if "log" not in dir(): # Don't overwrite variables
 	roundNumber=1
 
 	runningCommands=[]
+## @brief Adds a handler for a ladderlog event.
+ # @details Adds a custom functions as a handler for a ladderlog event.
+ # @param event The name of the ladderlog event, in uppercase. Example: INVALID_COMMAND
+ # @param *functions Function(s) to add as a handler.
+def register_handler(event, *functions):
+	if event in extraHandlers:
+		funcnames=dict()
+		for func in extraHandlers[event]:
+			funcnames[func.__name__]=func.__module__
+		for func in functions:
+			if func.__name__ not in funcnames or func.__module != funcnames[func.__name]:
+				extraHandlers[event]+=[func]
+	else:
+		extraHandlers[event]=list(functions)
 ## @brief Handles commands
  # @details Every time when a command that isn't handled by the server is entered, this
  #          function will be called.
@@ -270,7 +284,7 @@ def NewMatch(data, time, timezone):
 
 def Positions(team, *members):
 	team=members[0].getTeam()
-	teams=set([p.getTeam() for p in members])
+	teams=set([Player.players[p].getTeam() for p in members])
 	if len(teams)!=1:
 		raise Exception("Got players that are in a different team.")
 		return

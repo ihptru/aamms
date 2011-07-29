@@ -88,19 +88,23 @@ def main(debug=False, disabledCommands=[]):
 			try:
 				getattr(LadderLogHandlers,command)(*args)
 			except TypeError as e:
-				log.warning("Wrong arguments for ladder log handler for "+command+". This might be a bug.")
-				raise e
+				if not debug:
+					log.error("Wrong arguments for ladder log handler for "+command+". This might be a bug.")
+				else:
+					raise e
 			except Exception as e:
-				#log.error("Exception " +e.__class__.__name__
-				#	        + " raised in Ladder log handler. This might be a bug.")
-				raise(e)
+				if debug: raise(e)
+				else:
+					log.error("Exception " +e.__class__.__name__ + " raised in Ladder log handler. This might be a bug.")
 		if real_commandname in LadderLogHandlers.extraHandlers:
 			for extraHandler in LadderLogHandlers.extraHandlers[real_commandname]:
 				try: extraHandler(*args)
 				except TypeError as e: 
 					log.error("Wrong arguments for extra ladderlog handler "+extraHandler.__name__)
-					raise e
-				except: log.error("Extra Ladderlog handler "+extraHandler.__name__+" raised an exception.")
+					if debug: raise e
+				except Exception as e: 
+					log.error("Extra Ladderlog handler "+extraHandler.__name__+" raised an exception.")
+					if debug: raise e
 if __name__=="__main__":
 	main()
 	exit(True)
