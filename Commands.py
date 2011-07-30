@@ -27,7 +27,7 @@ if "disabled" not in dir():
 	 # @details List of commands that can be only used in the given state.
 	only_in_state={
 	          "normal":["yes","no","mode"], 
-	          "modeeditor":["saveMode","makeZone","makeRes", "go","stop", "moreSpeed", "lessSpeed", "modeSetting", "loadMode"]
+	          "modeeditor":["saveMode","makeZone","makeRes", "go","stop", "moreSpeed", "lessSpeed", "modeSetting", "loadMode", "testMode"]
 	              }
 
 	## @brief Disabled commands.
@@ -37,6 +37,17 @@ if "disabled" not in dir():
 	## @brief State specific data
 	 # @details Data that is only need for a specific state.
 	data=None
+
+	## @brief Help topics
+	helpTopics= {
+	              "about": Messages.About,
+                  "commands":
+	                {
+	                  "voting":["mode", "yes", "no"], 
+	                  "modeEditor":only_in_state["modeeditor"], 
+                      "misc": ["script", "execBuffer", "clearBuffer", "printBuffer", "reload"]
+	                }
+	            }
 
 ###################################### COMMAND HELPERS ###################################
 
@@ -590,6 +601,17 @@ def saveMode(acl, player):
 	Global.updateHelpTopics()
 	Mode.saveModes(modename=data["mode"].getEscapedName())
 	Armagetronad.PrintMessage("0x00ff00Saved mode")	
+
+## @brief Test the mode.
+def testMode():
+	global data
+	m=Mode.current_mode
+	data["mode"].activate()
+	Mode.current_mode=m
+
+## @brief Get help about commands and more.
+def info(acl, player, *args):
+	Armagetronad.PrintMessage(Messages.About)
 
 ## @brief Load a mode to edit.
  # @param mode The mode to load. For a list of available modes see /info modes.

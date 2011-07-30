@@ -148,13 +148,14 @@ class Team:
 	def __del__(self):
 		try:
 			Team.__ids.remove(self.__id)
+			if(self.__name.lower()!="ai"):
+				log.debug("Removed id " + str(self.__id) + " from team id's list")
 		except AttributeError:
 			return
 		except KeyError:
 			return
 		except ValueError:
 			return
-		log.debug("Removed id " + str(self.__id) + " from team id's list")
 			
 
 	## @brief Sets the team name

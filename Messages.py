@@ -112,3 +112,12 @@ PlayerRespawned=("0x0066ff{player}0x00ff44 got respawned. {msg}")
 LastLifeMsg=("0xff0000Last life!")
 OneLifeMsg=("One life left!")
 LivesMsg=("{lives} lives left!")
+
+## @brief About message displayed by /info about
+About="""0x00ffff                  About
+
+0x00ff00The name of the script that runs on this server is AAMMS.
+0x0000ffIt was written just for fun and can still have bugs.
+0xff0000You can find the code on 0xffff00github.com/buntu/aamms.
+0xff0000H0x00ff00a0x0000ffv0xffff00e 0xff0000f0x00ff00u0x0000ffn0xff0088 !!!!
+"""
