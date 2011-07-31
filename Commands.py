@@ -38,15 +38,18 @@ if "disabled" not in dir():
 	 # @details Data that is only need for a specific state.
 	data=None
 
+	## @brief A simple helper class for named info topics.
+	class InfoTopic:
+		def __init__(self, name, data)
 	## @brief Help topics
 	helpTopics= {
-	              "about": Messages.About,
-                  "commands":
+	              "about": ("About this script",Messages.About)
+                  "commands":("Help about commands", 
 	                {
 	                  "voting":["mode", "yes", "no"], 
 	                  "modeEditor":only_in_state["modeeditor"], 
                       "misc": ["script", "execBuffer", "clearBuffer", "printBuffer", "reload"]
-	                }
+	                } )
 	            }
 
 ###################################### COMMAND HELPERS ###################################
@@ -610,8 +613,37 @@ def testMode():
 	Mode.current_mode=m
 
 ## @brief Get help about commands and more.
-def info(acl, player, *args):
-	Armagetronad.PrintMessage(Messages.About)
+def info(acl, player, *topics):
+	topic=helpTopics
+	leftTopics=[]
+	for num, topic_name in enumerate(topics):
+		topic_name=topic.strip()
+		if type(topic)!=tuple:
+			topic=("",topic)
+		if topic_name not in topic[1] or ( type(topic[1])!=dict and type(topic[1])!=list ):
+			Armagetronad.PrintPlayerMessage(player, Message.InfoTopicInvalid.format(topic=" ".join(topics)) )
+			return
+		if type(topic[1])==dict:
+			topic=topic[1][topic_name]
+		if type(topic[1])==list:
+			leftTopics=topics[num-1:]
+			if len(leftTopics)>1 and acl<=0:
+				Armagetronad.PrintPlayerMessage("Bug detected: Invalid structure of helpTopics in Commands.py")
+			break
+
+	if type(topic[1])==dict:
+		Armagetronad.PrintPlayerMessage(player, "The topic "+" ".join(topics)+" has the following subtopics: ")
+		for subtopic_name, next_subtopic in topic[1].items():
+			Armagetronad.PrintPlayerMessage(player, "0x88ff00"+subtopic_name+": 0x8888ff"+next_subtopic[0])
+	elif type(topic[1])==list:
+	elif type(topic[1])==str:
+		Armagetronad.PrintPlayerMessage(player, topic)
+		return
+	if acl<=0:
+		Armagetronad.PrintPlayerMessage(player, "Bug detected!")
+			
+		
+		
 
 ## @brief Load a mode to edit.
  # @param mode The mode to load. For a list of available modes see /info modes.
