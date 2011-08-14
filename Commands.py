@@ -38,17 +38,14 @@ if "disabled" not in dir():
 	 # @details Data that is only need for a specific state.
 	data=None
 
-	## @brief A simple helper class for named info topics.
-	class InfoTopic:
-		def __init__(self, name, data)
 	## @brief Help topics
 	helpTopics= {
-	              "about": ("About this script",Messages.About)
+	              "about": ("About this script",Messages.About),
                   "commands":("Help about commands", 
 	                {
-	                  "voting":["mode", "yes", "no"], 
-	                  "modeEditor":only_in_state["modeeditor"], 
-                      "misc": ["script", "execBuffer", "clearBuffer", "printBuffer", "reload"]
+	                  "voting":("Commands for voting",["mode", "yes", "no"]),
+	                  "modeEditor":("Commands used in the ModeEditor",only_in_state["modeeditor"]), 
+                      "misc": ("Other Commands", ["script", "execBuffer", "clearBuffer", "printBuffer", "reload"])
 	                } )
 	            }
 
@@ -589,10 +586,10 @@ def modeSetting(acl, player, setting, *value):
 			Armagetronad.PrintMessage("{0} was set to {1}".format(setting, str(value) ) )
 		else:
 			Armagetronad.PrintMessage("{0} is currently set to {1}".format(setting, str(getattr(data["mode"], setting) ) ) )
-	elif setting in ["arena_size"]:
-		if value:
-			data["mode"].settings[setting]=value
-			Armagetronad.SendCommand(setting+str(value));
+	#elif setting in ["arena_size"]:
+	#	if value:
+	#		data["mode"].settings[setting]=value
+	#		Armagetronad.SendCommand(setting+str(value));
 	else:
 		Armagetronad.PrintMessage("0xff0000Invalid setting!")
 	return
@@ -614,35 +611,68 @@ def testMode():
 
 ## @brief Get help about commands and more.
 def info(acl, player, *topics):
-	topic=helpTopics
-	leftTopics=[]
-	for num, topic_name in enumerate(topics):
-		topic_name=topic.strip()
-		if type(topic)!=tuple:
-			topic=("",topic)
-		if topic_name not in topic[1] or ( type(topic[1])!=dict and type(topic[1])!=list ):
-			Armagetronad.PrintPlayerMessage(player, Message.InfoTopicInvalid.format(topic=" ".join(topics)) )
-			return
-		if type(topic[1])==dict:
-			topic=topic[1][topic_name]
-		if type(topic[1])==list:
-			leftTopics=topics[num-1:]
-			if len(leftTopics)>1 and acl<=0:
-				Armagetronad.PrintPlayerMessage("Bug detected: Invalid structure of helpTopics in Commands.py")
-			break
-
-	if type(topic[1])==dict:
-		Armagetronad.PrintPlayerMessage(player, "The topic "+" ".join(topics)+" has the following subtopics: ")
-		for subtopic_name, next_subtopic in topic[1].items():
-			Armagetronad.PrintPlayerMessage(player, "0x88ff00"+subtopic_name+": 0x8888ff"+next_subtopic[0])
-	elif type(topic[1])==list:
-	elif type(topic[1])==str:
-		Armagetronad.PrintPlayerMessage(player, topic)
+	if " ".join(topics) in getCommands():
+		Armagetronad.PrintPlayerMessage(player, getHelp(" ".join(topics) ) )
 		return
-	if acl<=0:
-		Armagetronad.PrintPlayerMessage(player, "Bug detected!")
-			
-		
+	def checkAclTopic(topic):
+		if hasattr(topic,"__call__"):
+			topic=topic()
+		if type(topic)==tuple:
+			if len(topic)>2:
+				acl_needed=topic[3]
+			topic=topic[1]
+		if type(topic)==dict:
+			ret=dict()
+			for subtopic in topic:
+				newtopic=checkAclTopic(topic[subtopic])
+				if newtopic!=None:
+					ret[subtopic]=newtopic
+				else:
+					pass
+			if len(ret): return ret
+			else:        return None
+		elif type(topic)==list:
+			ret=[]
+			for command in topic:
+				if AccessLevel.isAllowed(acl, command):
+					ret+=[command]
+			if len(ret)>0: return ret
+			else:          return None
+		elif type(topic)==str:
+			if acl<=acl_needed: return topic
+			else:               return None
+
+	curtopic=checkAclTopic(helpTopics)
+	for topicname in topics:
+		if topicname in curtopic:
+			if type(curtopic)==tuple:
+				curtopic=curtopic[1]
+			if hasattr(curtopic,"__call__"):
+				curtopic=curtopic()
+			if type(curtopic)==dict:
+				curtopic=curtopic[topicname]
+			elif type(curtopic)==list:
+				curtopic=getHelp(topicname)
+			else:
+				Armagetronad.PrintPlayerMessage(player, Messages.InfoTopicInvalid.format(topic=" ".join(topics)) )
+	if type(curtopic)==tuple:
+		topic_desc=curtopic[0]
+		curtopic=curtopic[1]
+	if hasattr(curtopic, "__call__"):
+		curtopic=curtopic()
+	if type(curtopic)==dict:
+		Armagetronad.PrintPlayerMessage(player, "0x8888ffThis topic has the following subtopics: ")
+		for subtopic in curtopic:
+			if type(subtopic)==tuple:
+				desc=subtopic[0]
+			else:
+				desc=""
+			Armagetronad.PrintPlayerMessage(player, "0x00ff88"+" ".join(topics)+" "+subtopic+": 0xffffff"+desc)
+	elif type(curtopic)==str:
+		Armagetronad.PrintPlayerMessage(player, curtopic)
+	elif type(curtopic)==list:
+		for command in curtopic:
+			Armagetronad.PrintPlayerMessage(player, "0x00ff88"+command+": 0xffffff"+getDescription(command)[0])
 		
 
 ## @brief Load a mode to edit.

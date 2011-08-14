@@ -82,15 +82,18 @@ def runServerForever(args):
 			if p.returncode==0:
 				return
 			elif p.returncode!=None:
-				sys.stderr.write("------- SERVER CRASHED. Restarting.")
-				sys.stderr.write(str(returncode)+"\n" )
+				sys.stderr.write("------- SERVER CRASHED. Restarting. Exit code: ")
+				sys.stderr.write(str(p.returncode)+"\n" )
 				break
 			time.sleep(2)
 def read_stdin():
 	import Armagetronad
 	while(True):
-		Armagetronad.SendCommand(sys.__stdin__.readline().strip())
-		sys.stderr.write("Command sent to server.\n")
+		try:
+			Armagetronad.SendCommand(sys.__stdin__.readline().strip())
+			sys.stderr.write("Command sent to server.\n")
+		except:
+			pass
 # SETTINGS ##############################################
 userdatadir="./server/data"
 userconfigdir="./server/config"
@@ -145,6 +148,7 @@ open(os.path.join(options.vardir,"ladderlog.txt"),"w" ).close()
 print("[START] Starting server. Serverlog can be found in run/server.log")
 args=["--vardir",options.vardir, "--datadir",options.datadir, "--configdir",options.configdir,
       "--userdatadir",userdatadir, "--userconfigdir",userconfigdir]
+print("[START] Server executable: "+options.server)
 t=Thread(None, target=runServerForever,args=([options.server]+args,) )
 t.daemon=True
 t.start()
@@ -152,7 +156,7 @@ while(p==None):
 	time.sleep(2) # Give the the server some time to start up
 atexit.register(exit)
 sys.stdout=OutputToProcess()
-sys.stdin=WatchFile(open(os.path.join(options.vardir,"ladderlog.txt") ) )
+sys.stdin=WatchFile(open(os.path.join(options.vardir,"ladderlog.txt"), encoding="latin-1" ) )
 sys.stdin.skipUnreadLines()
 sys.stderr=sys.__stdout__
 t2=Thread(None, read_stdin)
