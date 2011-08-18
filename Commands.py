@@ -41,7 +41,7 @@ if "disabled" not in dir():
 	## @brief Help topics
 	helpTopics= {
 	              "about": ("About this script",Messages.About),
-                  "commands":("Help about commands", 
+	              "commands":("Help about commands", 
 	                {
 	                  "voting":("Commands for voting",["mode", "yes", "no"]),
 	                  "modeEditor":("Commands used in the ModeEditor",only_in_state["modeeditor"]), 
@@ -213,9 +213,9 @@ def getDescription(command):
 			desc=textwrap.wrap(desc, 60)			
 			if len(param)<7: len_param=len(param)
 			if len(param)>=7: len_param=6 
-			params.append(param+" "*(7-len_param)+desc[0])		
+			params.append("0xffcc00"+param+":"+" "*(7-len_param)+Messages.PlayerColorCode+desc[0])		
 			for curdescl in desc[1:]:
-				params.append(" "*7+curdescl)
+				params.append(" "*8+curdescl)
 	return commanddesc, params
 	
 
@@ -610,17 +610,25 @@ def testMode():
 	Mode.current_mode=m
 
 ## @brief Get help about commands and more.
+ # @param topics The name of the topic (topic subtopic1 subtopic2 ...) or of a chat command.
 def info(acl, player, *topics):
 	if " ".join(topics) in getCommands():
 		Armagetronad.PrintPlayerMessage(player, getHelp(" ".join(topics) ) )
 		return
-	def checkAclTopic(topic):
-		if hasattr(topic,"__call__"):
-			topic=topic()
-		if type(topic)==tuple:
-			if len(topic)>2:
+	acl=int(acl)
+	def checkAclTopic(topic2):
+		if hasattr(topic2,"__call__"):
+			topic2=topic2()
+		if type(topic2)==tuple:
+			if len(topic2)>2:
 				acl_needed=topic[3]
-			topic=topic[1]
+				if acl_needed<acl:
+					return None
+			else:
+				acl_needed=0
+			topic=topic2[1]
+		else:
+			topic=topic2
 		if type(topic)==dict:
 			ret=dict()
 			for subtopic in topic:
@@ -629,50 +637,59 @@ def info(acl, player, *topics):
 					ret[subtopic]=newtopic
 				else:
 					pass
-			if len(ret): return ret
-			else:        return None
 		elif type(topic)==list:
 			ret=[]
 			for command in topic:
-				if AccessLevel.isAllowed(acl, command):
+				if AccessLevel.isAllowed(command,acl):
 					ret+=[command]
-			if len(ret)>0: return ret
-			else:          return None
 		elif type(topic)==str:
-			if acl<=acl_needed: return topic
-			else:               return None
+			if acl<=acl_needed: ret=topic
+			else:               ret=""
+		if len(ret): 
+			if type(topic2)==tuple:
+				ret=topic2[0:1]+(ret,)+topic2[2:]
+			return ret
+		else:        
+			return None
 
 	curtopic=checkAclTopic(helpTopics)
 	for topicname in topics:
+		if type(curtopic)==tuple:
+			curtopic=curtopic[1]
+		if hasattr(curtopic,"__call__"):
+			curtopic=curtopic()
 		if topicname in curtopic:
-			if type(curtopic)==tuple:
-				curtopic=curtopic[1]
-			if hasattr(curtopic,"__call__"):
-				curtopic=curtopic()
 			if type(curtopic)==dict:
 				curtopic=curtopic[topicname]
 			elif type(curtopic)==list:
 				curtopic=getHelp(topicname)
-			else:
-				Armagetronad.PrintPlayerMessage(player, Messages.InfoTopicInvalid.format(topic=" ".join(topics)) )
+		else:
+			Armagetronad.PrintPlayerMessage(player, Messages.InfoTopicInvalid.format(topic=" ".join(topics)) )
+			return
 	if type(curtopic)==tuple:
 		topic_desc=curtopic[0]
 		curtopic=curtopic[1]
+	else:
+		topic_desc=""
 	if hasattr(curtopic, "__call__"):
 		curtopic=curtopic()
 	if type(curtopic)==dict:
 		Armagetronad.PrintPlayerMessage(player, "0x8888ffThis topic has the following subtopics: ")
-		for subtopic in curtopic:
-			if type(subtopic)==tuple:
-				desc=subtopic[0]
+		for topicname, value in curtopic.items() :
+			if type(value)==tuple:
+				import sys
+				sys.stderr.write("test\n")
+				desc=value[0]
 			else:
+				import sys
+				sys.stderr.write(type(value).__name__+"\n")
 				desc=""
-			Armagetronad.PrintPlayerMessage(player, "0x00ff88"+" ".join(topics)+" "+subtopic+": 0xffffff"+desc)
+			Armagetronad.PrintPlayerMessage(player, "0x00ff88"+" ".join(topics)+" "+topicname+": 0xffffff"+desc)
 	elif type(curtopic)==str:
 		Armagetronad.PrintPlayerMessage(player, curtopic)
 	elif type(curtopic)==list:
 		for command in curtopic:
-			Armagetronad.PrintPlayerMessage(player, "0x00ff88"+command+": 0xffffff"+getDescription(command)[0])
+			Armagetronad.PrintPlayerMessage(player, "0x00ff88/"+command+": 0xffffff"+getDescription(command)[0])
 		
 
 ## @brief Load a mode to edit.
@@ -688,3 +705,8 @@ def loadMode(acl, player, mode):
 	data["mode"]=mode
 	mode.activate(False)
 	Mode.current_mode=None
+
+def clearScreen(acl, player):
+	for i in range(30):
+		Armagetronad.PrintPlayerMessage(player, "")
+	Armagetronad.PrintPlayerMessage(player, "Test")
