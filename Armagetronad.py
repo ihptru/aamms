@@ -88,7 +88,7 @@ def GetSetting(setting):
 		raise ValueError("Not a setting.")
 	if not Global.serverlog:
 		raise RuntimeError("Script wasn't started with run.py or Global.serverlog wasn't set.")
-	serverlog=open(Global.serverlog)
+	serverlog=open(Global.serverlog, encoding="latin-1")
 	serverlog.seek(0,2)
 	timeformat="%Y/%m/%d-%H:%M:%S"
 	now=datetime.now()
