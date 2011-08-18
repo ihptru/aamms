@@ -621,7 +621,7 @@ def info(acl, player, *topics):
 			topic2=topic2()
 		if type(topic2)==tuple:
 			if len(topic2)>2:
-				acl_needed=topic[3]
+				acl_needed=topic2[2]
 				if acl_needed<acl:
 					return None
 			else:
