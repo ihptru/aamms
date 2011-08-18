@@ -40,12 +40,12 @@ if "disabled" not in dir():
 
 	## @brief Help topics
 	helpTopics= {
-	              "about": ("About this script",Messages.About),
+	              "about": ("About this script",Messages.About, 20),
 	              "commands":("Help about commands", 
 	                {
 	                  "voting":("Commands for voting",["mode", "yes", "no"]),
 	                  "modeEditor":("Commands used in the ModeEditor",only_in_state["modeeditor"]), 
-                      "misc": ("Other Commands", ["script", "execBuffer", "clearBuffer", "printBuffer", "reload"])
+                      "misc": ("Other Commands", ["script", "execBuffer", "clearBuffer", "printBuffer", "reload", "info"	])
 	                } )
 	            }
 
@@ -690,6 +690,8 @@ def info(acl, player, *topics):
 	elif type(curtopic)==list:
 		for command in curtopic:
 			Armagetronad.PrintPlayerMessage(player, "0x00ff88/"+command+": 0xffffff"+getDescription(command)[0])
+	else:
+		Armagetronad.PrintPlayerMessage(player, "0xff0000ERROR No topics available.")
 		
 
 ## @brief Load a mode to edit.
