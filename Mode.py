@@ -114,7 +114,7 @@ class Mode(yaml.YAMLObject):
 
 	## @property __zones
 	 # @brief The zones of the modes.
-	 # @details A list of zones. Each item is a tuple of team and the zone object.
+	 # @details A list of zones. Each item is a tuple of team and the zone object and optionaly the delay after which the zone gets spawned.
 	 #          The team could be None if the zone should be spawned for all teams.
 	 #          Otherwise, set team to the number of the team for which the zone
 	 #          should be spawned, or -1 if the zone doesn't belong to any team and
@@ -359,8 +359,9 @@ class Mode(yaml.YAMLObject):
 	 # @param team The number of the team for which the zone should be spawned, or None
 	 #             if it should be spawned for all teams.
 	 # @param zone The zone to add
-	def addZone(self, team, zone):
-		self.__zones.append( (team,zone) )
+	 # @param delay The delay after which the zone gets spawned. 
+	def addZone(self, team, zone, delay=0):
+		self.__zones.append( (team,zone, delay) )
 
 	## @brief Remove all zones
 	 # @details Remove all zone from the internal zone list.
