@@ -70,3 +70,4 @@ not_a_setting=("CONSOLE_MESSAGE", "CENTER_MESSAGE", "SAY", "QUIT", "EXIT", "SPAW
 not_a_setting_prefixes=("SPAWN_","REMOVE")
 loadedExtensions=[]
 supportedCommands=[]
+availableExtensions=[]

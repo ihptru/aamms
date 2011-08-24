@@ -15,9 +15,11 @@ import traceback
 import yaml
 import atexit
 import imp
-from threading import Thread
-import Global
+from threading import Thread, Event
 import glob
+import parser
+import Global
+exitEvent=Event()
 
 # GLOBAL VARIABLES ######################################
 p=None
@@ -56,11 +58,17 @@ class OutputToProcess(io.TextIOWrapper):
 
 # FUNCTIONS #############################################
 def exit():
-	sys.stderr.write("Exiting.\n")
+	sys.stderr.write("Exiting ... ")
+	parser.exit(True, True)
+	sys.stderr.write("Ok \n")
 	sys.stderr.write("Killing server ... ")
 	p.terminate()
 	p.wait()
+	atexit.unregister(exit)
+	global exitEvent
+	exitEvent.set()
 	sys.stderr.write("Done\n")
+	
 def runServerForever(args):	
 	global p
 	f=open("server.log","w")
@@ -77,131 +85,182 @@ def runServerForever(args):
 		Global.supportedCommands.append(command)
 	while(True):
 		p=subprocess.Popen(args, stdin=subprocess.PIPE, stdout=f, stderr=subprocess.STDOUT )
+		sys.stderr.write("DEBUG: Executing "+" ".join(args)+"\n")
 		while(True):
 			p.poll()
-			if p.returncode==0:
+			if p.returncode==0 or p.returncode==-15:
 				return
 			elif p.returncode!=None:
 				sys.stderr.write("------- SERVER CRASHED. Restarting. Exit code: ")
 				sys.stderr.write(str(p.returncode)+"\n" )
 				break
 			time.sleep(2)
-def read_stdin():
+def	read_stdin():
 	import Armagetronad
 	while(True):
 		try:
-			Armagetronad.SendCommand(sys.__stdin__.readline().strip())
-			sys.stderr.write("Command sent to server.\n")
+			line=sys.__stdin__.readline().strip()
+			if line.startswith("/"):
+				command=line[1:]
+				if command=="quit":
+					parser.exit(True)
+					exit()
+			else:
+				Armagetronad.SendCommand(line)
+				sys.stderr.write("Command sent to server.\n")
 		except:
 			pass
-# SETTINGS ##############################################
-userdatadir="./server/data"
-userconfigdir="./server/config"
-
-# COMMAND LINE OPTIONS ##################################
-parser=OptionParser()
-#parser.add_option("-v", "--vardir", dest="vardir", default=None, help="Path to the var directory (server)")
-parser.add_option("-d", "--datadir", dest="datadir", default=None, help="Path to the data directory (server)")
-parser.add_option("-c", "--configdir", dest="configdir", default=None, help="Path to the config directory (server)")
-parser.add_option("-e", "--executable", dest="server", default=None, help="Path of the server executable", metavar="EXECUTABLE")
-parser.add_option("--debug",dest="debug", default=False, action="store_true", help="Run in debug mode")
-parser.add_option("--disable", dest="disabledCommands", action="append", help="Disable COMMAND.", metavar="COMMAND", default=[])
-parser.add_option("--default", dest="save", action="store_true", default=False, help="Set this configuration as default")
-parser.add_option("-l","--load", dest="extensions", default=[], action="append", help="Load the extension with the name EXTENSION.", metavar="EXTENSION")
-parser.add_option("--list-extensions", dest="list_extensions", default=False, action="store_true", help="List all available extensions.")
-options, args=parser.parse_args()
-options.vardir="server/var"
-optionsdict=dict()
-save_options=["vardir","configdir","server","datadir", "disabledCommands", "extensions"]
-
-# START #################################################
-if(options.list_extensions):
+def main():
+	# SETTINGS ##############################################
+	userdatadir="./server/data"
+	userconfigdir="./server/config"
+	# COMMAND LINE OPTIONS ##################################
+	parser=OptionParser()
+	#parser.add_option("-v", "--vardir", dest="vardir", default=None, help="Path to the var directory (server)")
+	parser.add_option("-d", "--dConditionatadir", dest="datadir", default=None, help="Path to the data directory (server)")
+	parser.add_option("-c", "--configdir", dest="configdir", default=None, help="Path to the config directory (server)")
+	parser.add_option("-e", "--executable", dest="server", default=None, help="Path of the server executable", metavar="EXECUTABLE")
+	parser.add_option("-p", "--prefix", dest="prefix", default=None, help="The prefix the server was installed to.")
+	parser.add_option("--debug",dest="debug", default=False, action="store_true", help="Run in debug mode")
+	parser.add_option("--disable", dest="disabledCommands", action="append", help="Disable COMMAND.", metavar="COMMAND", default=[])
+	parser.add_option("--default", dest="save", action="store_true", default=False, help="Set this configuration as default")
+	parser.add_option("-D","--disableExt", dest="disabledExtensions", default=[], action="append", help="Dsiable the extension with the name EXTENSION.", metavar="EXTENSION")
+	parser.add_option("--list-extensions", dest="list_extensions", default=False, action="store_true", help="List all available extensions.")
+	options, args=parser.parse_args()
+	options.vardir="server/var"
+	optionsdict=dict()
+	save_options=["vardir","configdir","server","datadir"]
+	global Global
+	# START #################################################
+	# Get available extensions
 	for file in glob.glob("extensions/*.py"):
-		print("Found extension: "+os.path.basename(file)[:-3]+" ("+os.path.abspath(file)+")")
-	sys.exit(0)
-os.chdir(os.path.dirname(sys.argv[0]) )
-if not os.path.exists("run"):
-	os.mkdir("run")
-os.chdir("run")
-
-# Read and write config files
-if os.path.exists("config.conf"):
-	optionsdict2=yaml.load(open("config.conf","r") )
-	for key,value in optionsdict2.items():
-		try:
-			if getattr(options, key)==None:
-				setattr(options, key, value)
-		except:
-			pass
-for save_option in save_options:
-	optionsdict[save_option]=getattr(options, save_option)
-if options.save or not os.path.exists("config.conf"):
-	yaml.dump(optionsdict, open("config.conf","w"), default_flow_style=False )
-
-if not os.path.exists(userconfigdir):
-	os.makedirs(userconfigdir)
-if not os.path.exists(userdatadir):
-	os.makedirs(userdatadir)
-if not os.path.exists(options.vardir):
-	os.makedirs(options.vardir)
-open(os.path.join(options.vardir,"ladderlog.txt"),"w" ).close()
-print("[START] Starting server. Serverlog can be found in run/server.log")
-args=["--vardir",options.vardir, "--datadir",options.datadir, "--configdir",options.configdir,
-      "--userdatadir",userdatadir, "--userconfigdir",userconfigdir]
-print("[START] Server executable: "+options.server)
-t=Thread(None, target=runServerForever,args=([options.server]+args,) )
-t.daemon=True
-t.start()
-while(p==None):
-	time.sleep(2) # Give the the server some time to start up
-atexit.register(exit)
-sys.stdout=OutputToProcess()
-sys.stdin=WatchFile(open(os.path.join(options.vardir,"ladderlog.txt"), encoding="latin-1" ) )
-sys.stdin.skipUnreadLines()
-sys.stderr=sys.__stdout__
-t2=Thread(None, read_stdin)
-t2.daemon=True
-t2.start()
-sys.stderr.write("Reading commands from stdin.\n")
-sys.path.append("../extensions/")
-import parser
-while True:
-	try:
-		sys.stderr.write("[START] Starting script.\n")
-		sys.stderr.write("[START] Press ctrl+c to exit.\n")
-		for mod in options.extensions:
-			sys.stderr.write("[START] Loading extension "+mod+" ... ")
+		extname=os.path.basename(file)[:-3] # Without the .py
+		Global.availableExtensions+=[extname]
+		if(options.list_extensions):
+			print("Found extension: "+extname+" ("+os.path.abspath(file)+")")
+	if options.list_extensions:
+		exit()
+	os.chdir(os.path.dirname(sys.argv[0]) )
+	if not os.path.exists("run"):
+		os.mkdir("run")
+	os.chdir("run")
+	
+	# Read config files ++++++++++++++++++++++++++++++++
+	if os.path.exists("config.conf"):
+		optionsdict2=yaml.load(open("config.conf","r") )
+		for key,value in optionsdict2.items():
 			try:
-				exec("import "+mod+"\nGlobal.loadedExtensions.append("+mod+")")
-			except ImportError as e:
-				sys.stderr.write("NOT FOUND")
-			except Exception as e:
-				sys.stderr.write("FAILED\n")
-				continue
-			sys.stderr.write("OK\n")
-		sys.stderr.write("\n")
-		sys.stderr.flush()	
-		imp.reload(parser)
-		parser.main(debug=options.debug, disabledCommands=options.disabledCommands)
-	except KeyboardInterrupt:
-		break
-	except Exception as e:
-		sys.stderr.write("#####################################################################\n")
-		sys.stderr.write("################## SCRIPT CRASHED ###################################\n")
-		sys.stderr.write("#####################################################################\n")
-		traceback.print_exc(file=sys.stderr)
-		sys.stderr.write("#####################################################################\n")
-		sys.stderr.flush()
-		parser.exit(False, quiet=True)		
+				if getattr(options, key)==None:
+					setattr(options, key, value)
+			except:
+				pass
+	else:
+		default=""
+		test_prefixes=["/usr","/usr/local"]
+		for test_prefix in test_prefixes:
+			if os.path.exists(os.path.join(test_prefix,"bin/armagetronad-dedicated")):
+				default="["+test_prefix+"]"
+				break
+		while options.prefix==NoConditionne or not os.path.exists(options.prefix):
+			options.prefix=input("Prefix the server was installed to "+default+": ")
+			if options.prefix.strip()=="":
+				options.prefix=default[1:-1]
+	if options.prefix and not os.path.exists(options.prefix):
+		sys.stderr.write("[ERROR] Prefix doesn't exist.\n")
+		exit()
+	if not options.server: options.server=os.path.join(options.prefix, "bin/armagetronad-dedicated")	
+	if not options.datadir: options.datadir=os.path.join(options.prefix, "share/armagetronad-dedicated")
+	if not options.configdir: options.configdir=os.path.join(options.prefix, "etc/armagetronad-dedicated")
+	if not os.path.exists(options.server): options.server=os.path.join(options.prefix,"games/armagetronad-dedicated")
+	if not os.path.exists(options.configdir): options.configdir=os.path.join(options.prefix, "etc/games/armagetronad-dedicated")
+	if not os.path.exists(options.configdir): options.configir="/etc/armagetronad-dedicated"
+	if not os.path.exists(options.datadir): options.datadir=os.path.join(options.prefix, "share/games/armagetronad-dedicated")
+	
+	# Write config files +++++++++++++++++++++++++++++++
+	for save_option in save_options:
+		optionsdict[save_option]=getattr(options, save_option)
+	if options.save or not os.path.exists("config.conf"):
+		yaml.dump(optionsdict, open("config.conf","w"), default_flow_style=False )
+	
+	if not os.path.exists(userconfigdir):
+		os.makedirs(userconfigdir)
+	if not os.path.exists(userdatadir):
+		os.makedirs(userdatadir)
+	if not os.path.exists(options.vardir):
+		os.makedirs(options.vardir)
+	open(os.path.join(options.vardir,"ladderlog.txt"),"w" ).close()
+	print("[START] Starting server. Serverlog can be found in run/server.log")
+	args=["--vardir",options.vardir, "--datadir",options.datadir, "--configdir",options.configdir,
+	      "--userdatadir",userdatadir, "--userconfigdir",userconfigdir]
+	print("[START] Server executable: "+options.server)
+	t=Thread(None, target=runServerForever,args=([options.server]+args,) )
+	t.daemon=True
+	t.start()
+	while(p==None):
+		time.sleep(1) # Give the the server some time to start up
+	atexit.register(exit)
+	sys.stdout=OutputToProcess()
+	sys.stdin=WatchFile(open(os.path.join(options.vardir,"ladderlog.txt"), encoding="latin-1" ) )
+	sys.stdin.skipUnreadLines()
+	sys.stderr=sys.__stdout__
+	t2=Thread(None, read_stdin)
+	t2.daemon=True
+	t2.start()
+	sys.stderr.write("Reading commands from stdin.\n")
+	sys.path.append("../extensions/")
+	import parser
+	disabledExtensions=[x.lower() for x in options.disabledExtensions]
+	while True:
 		try:
-			sys.stderr.write("Restarting in 3 seconds ... \n")		
+			sys.stderr.write("[START] Starting script.\n")
+			sys.stderr.write("[START] Press ctrl+c or type /quit to exit.\n")
+			for mod in Global.availableExtensions:
+				if mod.lower() in disabledExtensions:
+					continue
+				sys.stderr.write("[START] Loading extension "+mod+" ... ")
+				try:
+					exec("import "+mod+"\nGlobal.loadedExtensions.append("+mod+")")
+				except ImportError as e:
+					sys.stderr.write("NOT FOUND\n")
+					continue
+				except Exception as e:
+					sys.stderr.write("FAILED\n")
+					continue
+				sys.stderr.write("OK\n")
 			sys.stderr.write("\n")
-			time.sleep(3)
-			import Global
-			Global.reloadModules()
+			sys.stderr.flush()	
+			imp.reload(parser)
+			parser.main(debug=options.debug, disabledCommands=options.disabledCommands)
 		except KeyboardInterrupt:
 			break
-		except:
+		except SystemExit:
+			break
+		except Exception as e:
+			sys.stderr.write("#####################################################################\n")
+			sys.stderr.write("################## SCRIPT CRASHED ###################################\n")
+			sys.stderr.write("#####################################################################\n")
+			traceback.print_exc(file=sys.stderr)
+			sys.stderr.write("#####################################################################\n")
+			sys.stderr.flush()
+			parser.exit(False, quiet=True)		
+			try:
+				sys.stderr.write("Restarting in 3 seconds ... \n")		
+				sys.stderr.write("\n")
+				time.sleep(3)
+				import Global
+				Global.reloadModules()
+			except KeyboardInterrupt:
+				break
+			except:
+				continue
 			continue
-		continue
-	break
+		break
+	exit()
+if __name__=="__main__":
+	t=Thread(None, target=main)
+	t.daemon=True
+	t.start()
+	try:
+		exitEvent.wait()
+	except:
+		exit()

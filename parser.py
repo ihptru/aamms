@@ -41,7 +41,6 @@ def main(debug=False, disabledCommands=[]):
 	Armagetronad.SendCommand("EXTRA_ROUND_TIME 1")
 	if debug:
 		log.info("Starting in debug mode.")
-		log.warning("In debug mode commands like /script and /reload are enabled.")
 		Player.enableLogging(logging.DEBUG)
 		Team.enableLogging(logging.DEBUG)
 		LadderLogHandlers.enableLogging(logging.DEBUG)
@@ -49,7 +48,6 @@ def main(debug=False, disabledCommands=[]):
 		Vote.enableLogging(logging.DEBUG)
 		Zone.enableLogging(logging.DEBUG)
 	else:
-		Commands.disabled=Commands.disabled+["script","reload","execbuffer"]
 		Player.enableLogging(logging.WARNING)
 		Team.enableLogging(logging.WARNING)
 		LadderLogHandlers.enableLogging(logging.WARNING)
