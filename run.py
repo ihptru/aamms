@@ -69,7 +69,7 @@ def exit():
 	exitEvent.set()
 	sys.stderr.write("Done\n")
 	
-def runServerForever(args):	
+def runServerForever(args, debug=False):	
 	global p
 	f=open("server.log","w")
 	Global.serverlog=os.path.abspath("server.log")
@@ -85,7 +85,8 @@ def runServerForever(args):
 		Global.supportedCommands.append(command)
 	while(True):
 		p=subprocess.Popen(args, stdin=subprocess.PIPE, stdout=f, stderr=subprocess.STDOUT )
-		sys.stderr.write("DEBUG: Executing "+" ".join(args)+"\n")
+		if debug:
+			sys.stderr.write("DEBUG: Executing "+" ".join(args)+"\n")
 		while(True):
 			p.poll()
 			if p.returncode==0 or p.returncode==-15:
@@ -192,8 +193,9 @@ def main():
 	print("[START] Starting server. Serverlog can be found in run/server.log")
 	args=["--vardir",options.vardir, "--datadir",options.datadir, "--configdir",options.configdir,
 	      "--userdatadir",userdatadir, "--userconfigdir",userconfigdir]
-	print("[START] Server executable: "+options.server)
-	t=Thread(None, target=runServerForever,args=([options.server]+args,) )
+	print("[START] Executable: "+options.server)
+	t=Thread(None, 
+target=runServerForever,args=([options.server]+args,options.debug) )
 	t.daemon=True
 	t.start()
 	while(p==None):
