@@ -147,8 +147,8 @@ def main():
 	os.chdir("run")
 	
 	# Read config files ++++++++++++++++++++++++++++++++
-	if os.path.exists("config.conf"):
-		optionsdict2=yaml.load(open("config.conf","r") )
+	if os.path.exists("config.yaml"):
+		optionsdict2=yaml.load(open("config.yaml","r") )
 		for key,value in optionsdict2.items():
 			try:
 				if getattr(options, key)==None:
@@ -180,8 +180,8 @@ def main():
 	# Write config files +++++++++++++++++++++++++++++++
 	for save_option in save_options:
 		optionsdict[save_option]=getattr(options, save_option)
-	if options.save or not os.path.exists("config.conf"):
-		yaml.dump(optionsdict, open("config.conf","w"), default_flow_style=False )
+	if options.save or not os.path.exists("config.yaml"):
+		yaml.dump(optionsdict, open("config.yaml","w"), default_flow_style=False )
 	
 	if not os.path.exists(userconfigdir):
 		os.makedirs(userconfigdir)

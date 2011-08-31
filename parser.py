@@ -10,6 +10,7 @@ import Zone
 import Mode
 import Global
 import Commands
+import AccessLevel
 import Vote
 if "h" in dir() and "log" in dir():
 	log.removeHandler(h)
@@ -24,6 +25,7 @@ log.setLevel(logging.INFO)
 def exit(normal=False, quiet=False):
 	if normal:
 		Mode.saveModes()
+		AccessLevel.save()
 	if not quiet:
 		log.info("Exit")
 	if normal:
@@ -58,6 +60,7 @@ def main(debug=False, disabledCommands=[]):
 	Commands.disabled=Commands.disabled+disabledCommands	
 	#Init
 	Mode.loadModes()
+	AccessLevel.load()
 	Global.updateHelpTopics()
 	log.info("Script started")	
 	Armagetronad.PrintMessage("0xff0000Script started")

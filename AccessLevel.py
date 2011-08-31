@@ -3,6 +3,8 @@
  # @brief Access level management
  # @details This file contains functions for access level management.
 
+import yaml
+from os.path import exists
 
 import logging
 if "__accessLevels" not in dir():
@@ -33,3 +35,20 @@ def isAllowed(command, access):
  # @param access The access level
 def setAccessLevel(command,access):
 	__accessLevels[command]=access
+	
+## @brief Save access levels to a file
+ # @details Saves access levels to a file by using yaml. 
+ # @param file: The name of the file to which to save access levels. Default is access.yaml
+def save(file="access.yaml"):
+	with open(file, "w") as f:
+		yaml.dump(__accessLevels, f, default_flow_style=False)
+
+## @brief Read access levels from a file.
+ # @details Uses yaml to read the access levels from a file into the memory.
+ # @param file The name of the file to read from.
+ # @info If the file doesn't exists, it's ignored.
+def load(file="access.yaml"):
+	if not exists("access.yaml"):
+		return
+	with open(file) as f:
+		 __accessLevels=yaml.load(f)

@@ -164,6 +164,7 @@ class Zone(yaml.YAMLObject):
 				time.sleep(delay)
 				func()
 			t=Thread(None, run, args=(delay, self.spawn))
+			t.daemon(True)
 			t.start()
 			return
 		name=""

@@ -16,7 +16,15 @@ import time
  # @details Send a command to the server. You only have to replace this function if you
  #          don't want to print commands to stdout.
  # @param command The command to send
-def SendCommand(command):
+ # @param delay Seconds to wait before executing the command.
+def SendCommand(command, delay=0, forked=False):
+	if delay and not forked:
+		t=threading.Thread(target=SendCommand, args=(command, delay, True) )
+		t.daemon=True
+		t.start()
+		return
+	if forked:
+		time.sleep(delay)
 	command=command.replace("\n","\\n") # Never allow to execute more than one command.
 	print(command)
 	sys.stdout.flush()

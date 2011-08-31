@@ -264,7 +264,8 @@ class Mode(yaml.YAMLObject):
 	## @brief Enables the mode
 	 # @details Includes the file given with settings_file and sets all the other settings.
 	 # @param kill Kill all players to activate the mode? Default True when round is already started, otherwise False.
-	def activate(self, kill=None):
+	 # @param silent If true, do not print any messages. 
+	def activate(self, kill=None, silent=False):
 		global settings_prefix
 		global current_mode
 		if kill == None:
@@ -278,15 +279,16 @@ class Mode(yaml.YAMLObject):
 			Armagetronad.SendCommand("INCLUDE {0}/{1}".format(settings_prefix, self.settings_file) )
 		Armagetronad.SendCommand("TEAMS_MAX "+str(self.max_teams) )
 		Armagetronad.SendCommand("TEAM_MAX_PLAYERS "+str(self.max_team_members) )
-		for setting, value in self.settings.items():
-			Armagetronad.SendCommand("{0} {1}".format(setting,value) )
+		for setting, value, delay in self.settings.items():
+			Armagetronad.SendCommand("{0} {1}".format(setting,value), delay)
 		Team.max_teams=self.max_teams
 		Team.max_team_members=self.max_team_members
 		if kill == True:
 			for player in Player.players.values():
 				player.kill()
 		current_mode=self
-		log.info("Mode "+current_mode.name+" activated.")
+		if not silent:
+			log.info("Mode "+current_mode.name+" activated.")
 
 	## @brief Spawns all players (teams)
 	 # @details Spawns all teams by using the respoints.
@@ -306,20 +308,20 @@ class Mode(yaml.YAMLObject):
 	 # @details Spawns all zones related to the mode
 	def spawnZones(self):
 		log.debug("Spawn zones ...")
-		for team,zone in self.__zones:
+		for team,zone, delay in self.__zones:
 			if team==None:
 				for team in Team.teams.values():
 					zone.color=team.color
 					zone.teamnames=[team.getEscapedName(),]
-					zone.spawn()
+					zone.spawn(delay=delay)
 				return
 			elif team == -1:
-					zone.spawn()
+					zone.spawn(delay=delay)
 			else:
 				if len(Team.teams)-1 < team-1:
 					continue
 				zone.teamnames=[list(Team.teams.keys())[team-1]]
-				zone.spawn()
+				zone.spawn(delay=delay)
 	## @brief Gets a respoint
 	 # @details Gets a respoint for roundstart or normal for the given team
 	 # @param mode The mode which to use (roundstart, normal)
