@@ -12,7 +12,7 @@ It requires the ct+sty version of Armagetron Advanced.
 * Voting for Modes
 
 #Requirements:
-* [Armagetron Advanced Server](https://code.launchpad.net/~armagetronad-ct/armagetronad/0.2.8-armagetronad-sty+ct) 
+* [Armagetron Advanced Server with sty+ct hack](https://code.launchpad.net/~armagetronad-ct/armagetronad/0.2.8-armagetronad-sty+ct) 
 * [YAML](http://pyyaml.org/wiki/PyYAML) for python 3. 
 
 
