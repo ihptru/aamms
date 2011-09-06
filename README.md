@@ -15,6 +15,9 @@ It requires the ct+sty version of Armagetron Advanced.
 * [Armagetron Advanced Server with sty+ct hack](https://code.launchpad.net/~armagetronad-ct/armagetronad/0.2.8-armagetronad-sty+ct) 
 * [YAML](http://pyyaml.org/wiki/PyYAML) for python 3. 
 
+#How to run it:
+./run.py should be enough to run it.
+./run.py --help to get a list of options.
 
 #Todo:
 * Add some modes :)
