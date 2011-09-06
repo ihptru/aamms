@@ -11,6 +11,11 @@ It requires the ct+sty version of Armagetron Advanced.
 * Access levels
 * Voting for Modes
 
+#Requirements:
+* [Armagetron Advanced Server](https://code.launchpad.net/~armagetronad-ct/armagetronad/0.2.8-armagetronad-sty+ct) 
+* [YAML](http://pyyaml.org/wiki/PyYAML) for python 3. 
+
+
 #Todo:
 * Add some modes :)
 * some other stuff
