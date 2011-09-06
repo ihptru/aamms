@@ -17,6 +17,7 @@ It requires the ct+sty version of Armagetron Advanced.
 
 #How to run it:
 ./run.py should be enough to run it.
+
 ./run.py --help to get a list of options.
 
 #Todo:
