@@ -4,6 +4,7 @@
 import Player
 import Armagetronad
 import Commands
+import Messages
 
 ## @brief Teleports a player to the given position.
  # @details Teleports the given player to the given position.
