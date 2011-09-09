@@ -350,11 +350,6 @@ def modeEditor(acl, player):
 	Armagetronad.SendCommand("SINCLUDE settings_custom.cfg")
 	Armagetronad.SendCommand("DEFAULT_KICK_REASON Server\ under\ maintenance.")
 	def setSettings():
-		if "data" in globals():
-			global data
-		else:
-			global data
-			data=dict()
 		Armagetronad.SendCommand("ALLOW_TEAM_NAME_PLAYER 1")
 		Armagetronad.SendCommand("FORTRESS_CONQUEST_TIMEOUT -1")
 		Armagetronad.SendCommand("MAX_CLIENTS 1")
@@ -367,7 +362,6 @@ def modeEditor(acl, player):
 		Armagetronad.SendCommand("CYCLE_SPEED_MIN 0")
 		Armagetronad.SendCommand("CYCLE_RUBBER 10000000")
 		Armagetronad.SendCommand("SP_WALLS_LENGTH 0.000001")
-		#if "data" in globals() and not "speed" in data:
 		Armagetronad.SendCommand("CYCLE_SPEED 5")
 		Armagetronad.SendCommand("CYCLE_BRAKE -100")
 		Armagetronad.SendCommand("CYCLE_BRAKE_DEPLETE 0")
@@ -390,10 +384,9 @@ def modeEditor(acl, player):
 	Armagetronad.PrintPlayerMessage(player, "0xff0000Kicking other players ...")
 	Armagetronad.PrintPlayerMessage(player, "\n"*4)
 	for playero in Player.players.values():
-		if playero.ip!=Player.players[player].ip:
+		if playero.ip!=Player.players[player].ip:	
 			#Armagetronad.SendCommand("KICK "+playero.getLadderName() )
 			pass
-			
 		else:
 			playero.kill()	
 	Armagetronad.SendCommand("NETWORK_AUTOBAN_FACTOR 10")
