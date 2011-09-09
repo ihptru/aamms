@@ -311,7 +311,7 @@ class Player:
 			self.__lives=0
 		if force:
 			Armagetronad.SendCommand("KILL "+self.__ladder_name)
-		SendCommand("RESPAWN_PLAYER "+str(self.__ladder_name) + " 0 "+str(x)+
+		Armagetronad.SendCommand("RESPAWN_PLAYER "+str(self.__ladder_name) + " 0 "+str(x)+
 		            " "+str(y)+" "+str(xdir)+" "+str(ydir) )
 		if force:
 			#SendCommand("TELEPORT_PLAYER {0} {1} {2} {3} {4}".format(self.__old_ladder_name,
