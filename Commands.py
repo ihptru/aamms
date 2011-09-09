@@ -611,7 +611,7 @@ def saveMode(acl, player):
 	Armagetronad.PrintMessage("0x00ff00Saved mode")	
 
 ## @brief Test the mode.
-def testMode():
+def testMode(acl, player):
 	global data
 	m=Mode.current_mode
 	data["mode"].activate()
