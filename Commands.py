@@ -367,8 +367,8 @@ def modeEditor(acl, player):
 		Armagetronad.SendCommand("CYCLE_SPEED_MIN 0")
 		Armagetronad.SendCommand("CYCLE_RUBBER 10000000")
 		Armagetronad.SendCommand("SP_WALLS_LENGTH 0.000001")
-		if "data" in globals() and not "speed" in data:
-			Armagetronad.SendCommand("CYCLE_SPEED 5")
+		#if "data" in globals() and not "speed" in data:
+		Armagetronad.SendCommand("CYCLE_SPEED 5")
 		Armagetronad.SendCommand("CYCLE_BRAKE -100")
 		Armagetronad.SendCommand("CYCLE_BRAKE_DEPLETE 0")
 		Armagetronad.SendCommand("CYCLE_SPEED_DECAY_ABOVE 1.5")
