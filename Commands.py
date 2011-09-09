@@ -288,14 +288,14 @@ def register_help(name,label, data, access=None, override=False):
 # @param code The code to evaluate.
 # @param player The player who called /script
 def script(acl, player, *code):
-    code=" ".join(code)
-    Armagetronad.PrintMessage("[Script Command] Started script execution")
-    code.replace("\"","'")
-    try:
-        exec(code.replace("print(","Armagetronad.PrintPlayerMessage('"+player+"','[Script Command] Output: ' + ") )
-        Armagetronad.PrintPlayerMessage(player, "[Script Command] Script execution finished.")
-    except Exception as e:
-        Armagetronad.PrintPlayerMessage(player, "[Script Command] Exception: " + e.__class__.__name__+" "+str(e))
+	code=" ".join(code)
+	Armagetronad.PrintPlayerMessage(player, "[Script Command] Started script execution")
+	code.replace("\"","'")
+	try:
+		exec(code.replace("print(","Armagetronad.PrintPlayerMessage('"+player+"','[Script Command] Output: ' + ") )
+		Armagetronad.PrintPlayerMessage(player, "[Script Command] Script execution finished.")
+	except Exception as e:
+		Armagetronad.PrintPlayerMessage(player, "[Script Command] Exception: " + e.__class__.__name__+" "+str(e))
 
 ## @brief Executes the buffer of a player
 # @param player The player who executed this command
@@ -349,6 +349,8 @@ def modeEditor(acl, player):
 	Armagetronad.SendCommand("INCLUDE settings.cfg")
 	Armagetronad.SendCommand("SINCLUDE settings_custom.cfg")
 	Armagetronad.SendCommand("DEFAULT_KICK_REASON Server\ under\ maintenance.")
+	global data
+	data=dict()
 	def setSettings():
 		Armagetronad.SendCommand("ALLOW_TEAM_NAME_PLAYER 1")
 		Armagetronad.SendCommand("FORTRESS_CONQUEST_TIMEOUT -1")
@@ -362,7 +364,8 @@ def modeEditor(acl, player):
 		Armagetronad.SendCommand("CYCLE_SPEED_MIN 0")
 		Armagetronad.SendCommand("CYCLE_RUBBER 10000000")
 		Armagetronad.SendCommand("SP_WALLS_LENGTH 0.000001")
-		Armagetronad.SendCommand("CYCLE_SPEED 5")
+		if speed not in data:
+			Armagetronad.SendCommand("CYCLE_SPEED 5")
 		Armagetronad.SendCommand("CYCLE_BRAKE -100")
 		Armagetronad.SendCommand("CYCLE_BRAKE_DEPLETE 0")
 		Armagetronad.SendCommand("CYCLE_SPEED_DECAY_ABOVE 1.5")
@@ -407,7 +410,7 @@ def modeEditor(acl, player):
 	def PrintMessage():
 		message="""0x00ffffWelcome to ModeEditor! 0xffffff
 ModeEditor was made to help you creating new modes.
-Use the /stop, /go, /lessSpeed, /moreSpeed and brake commands to controll the speed of the cycle.
+Use the /stop, /go, /lessSpeed, /moreSpeed commands and brake to control the speed of the cycle.
 To add a zone or a respawn point at the current position of your cycle use /makeZone and /makeRes.
 If you want to go to a specific position, use /stop and then use /tele.
 You can use /modeSetting to change settings like name and lives.
@@ -424,141 +427,108 @@ If you want to go back to normal mode, use /normal."""
 ## @brief Get help about commands and more.
 # @param topics The name of the topic (topic subtopic1 subtopic2 ...) or of a chat command.
 def info(acl, player, *topics):
-    try:
-        commandname_real=[i for i in getCommands() if i.lower()==" ".join(topics)][0]
-        Armagetronad.PrintPlayerMessage(player, getHelp(commandname_real) )
-        return
-    except IndexError:
-        pass
-    acl=int(acl)
-    def checkAclTopics(topic2):
-        if hasattr(topic2,"__call__"):
-            topic2=topic2()
-        if type(topic2)==tuple:
-            if len(topic2)>2:
-                acl_needed=topic2[2]
-                if acl_needed<acl:
-                    return None
-            else:
-                acl_needed=0
-            topic=topic2[1]
-        else:
-            topic=topic2
-        if type(topic)==dict:
-            ret=dict()
-            for subtopic in topic:
-                newtopic=checkAclTopics(topic[subtopic])
-                if newtopic!=None:
-                    ret[subtopic]=newtopic
-        elif type(topic)==list:
-            ret=[]
-            for command in topic:
-                if AccessLevel.isAllowed(command,acl):
-                    ret+=[command]
-        elif type(topic)==str:
-            if acl<=acl_needed: ret=topic
-            else:               ret=""
-        if len(ret): 
-            if type(topic2)==tuple:
-                ret=topic2[0:1]+(ret,)+topic2[2:]
-            return ret
-        else:        
-            return None
+	if " ".join(topics) in getCommands():
+		Armagetronad.PrintPlayerMessage(player, getHelp(" ".join(topics) ) )
+		return
+	acl=int(acl)
+	def checkAclTopic(topic2):
+		if hasattr(topic2,"__call__"):
+			topic2=topic2()
+		if type(topic2)==tuple:
+			if len(topic2)>2:
+				acl_needed=topic2[2]
+				if acl_needed<acl:
+					return None
+			else:
+				acl_needed=0
+			topic=topic2[1]
+		else:
+			topic=topic2
+		if type(topic)==dict:
+			ret=dict()
+			for subtopic in topic:
+				newtopic=checkAclTopic(topic[subtopic])
+				if newtopic!=None:
+					ret[subtopic]=newtopic
+				else:
+					pass
+		elif type(topic)==list:
+			ret=[]
+			for command in topic:
+				if AccessLevel.isAllowed(command,acl):
+					ret+=[command]
+		elif type(topic)==str:
+			if acl<=acl_needed: ret=topic
+			else:               ret=""
+		if len(ret): 
+			if type(topic2)==tuple:
+				ret=topic2[0:1]+(ret,)+topic2[2:]
+			return ret
+		else:        
+			return None
 
-    curtopic=checkAclTopics(helpTopics)
-    for topicname in topics:
-        if type(curtopic)==tuple:
-            curtopic=curtopic[1]
-        if hasattr(curtopic,"__call__"):
-            curtopic=curtopic()
-        if topicname in curtopic:
-            if type(curtopic)==dict:
-                curtopic=curtopic[topicname]
-            elif type(curtopic)==list:
-                curtopic=getHelp(topicname)
-        else:
-            Armagetronad.PrintPlayerMessage(player, Messages.InfoTopicInvalid.format(topic=" ".join(topics)) )
-            return
-    if type(curtopic)==tuple:
-        topic_desc=curtopic[0] #@UnusedVariable
-        curtopic=curtopic[1]
-    else:
-        topic_desc="" #@UnusedVariable
-    if hasattr(curtopic, "__call__"):
-        curtopic=curtopic()
-    if type(curtopic)==dict:
-        Armagetronad.PrintPlayerMessage(player, "0x8888ffThis topic has the following subtopics: ")
-        for topicname, value in curtopic.items() :
-            if type(value)==tuple:
-                desc=value[0]
-            else:
-                desc=""
-            Armagetronad.PrintPlayerMessage(player, "0x00ff88"+" ".join(topics)+" "+topicname+": 0xffffff"+desc)
-    elif type(curtopic)==str:
-        Armagetronad.PrintPlayerMessage(player, curtopic)
-    elif type(curtopic)==list:
-        Armagetronad.PrintPlayerMessage(player, "0x8888ffFor usage details, use /info <command name>")
-        for command in curtopic:
-            Armagetronad.PrintPlayerMessage(player, "0x00ff88/"+command+": 0xffffff"+getDescription(command)[0])
-    else:
-        Armagetronad.PrintPlayerMessage(player, "0xff0000ERROR No topics available.")
+	curtopic=checkAclTopic(helpTopics)
+	for topicname in topics:
+		if type(curtopic)==tuple:
+			curtopic=curtopic[1]
+		if hasattr(curtopic,"__call__"):
+			curtopic=curtopic()
+		if topicname in curtopic:
+			if type(curtopic)==dict:
+				curtopic=curtopic[topicname]
+			elif type(curtopic)==list:
+				curtopic=getHelp(topicname)
+		else:
+			Armagetronad.PrintPlayerMessage(player, Messages.InfoTopicInvalid.format(topic=" ".join(topics)) )
+			return
+	if type(curtopic)==tuple:
+		topic_desc=curtopic[0]
+		curtopic=curtopic[1]
+	else:
+		topic_desc=""
+	if hasattr(curtopic, "__call__"):
+		curtopic=curtopic()
+	if type(curtopic)==dict:
+		Armagetronad.PrintPlayerMessage(player, "0x8888ffThis topic has the following subtopics: ")
+		for topicname, value in curtopic.items() :
+			if type(value)==tuple:
+				desc=value[0]
+			else:
+				desc=""
+			Armagetronad.PrintPlayerMessage(player, "0x00ff88"+" ".join(topics)+" "+topicname+": 0xffffff"+desc)
+	elif type(curtopic)==str:
+		Armagetronad.PrintPlayerMessage(player, curtopic)
+	elif type(curtopic)==list:
+		Armagetronad.PrintPlayerMessage(player, "0x8888ffTo get help for a specific command, use '/info "+" ".join(topics)+" <command name>'")
+		for command in curtopic:
+			Armagetronad.PrintPlayerMessage(player, "0x00ff88/"+command+": 0xffffff"+getDescription(command)[0])
+	else:
+		Armagetronad.PrintPlayerMessage(player, "0xff0000ERROR No topics available.")
+		
 
+## @brief Load a mode to edit.
+ # @param mode The mode to load. For a list of available modes see /info modes.
+def loadMode(acl, player, mode):
+	global data
+	for k,m in Mode.modes.items():
+		if k==mode or m.short_name==mode:
+			mode=m
+			break
+	else:
+		Armagetronad.PrintMessage(Messages.ModeNotExist.format(mode=mode) )
+	data["mode"]=mode
+	mode.activate(False)
+	Mode.current_mode=None
+
+## @brief Clear the screen
 def clearScreen(acl, player):
-    for i in range(30): #@UnusedVariable
-        Armagetronad.PrintPlayerMessage(player, "")
-    Armagetronad.PrintPlayerMessage(player, "Test")
-    
-## @brief Set the access level that is needed for a specific command.
-# @details Calls AccessLevel.setAccessLevel()
-# @param acl The accesslevel of the player
-# @param player The name of the player
-# @param command The command for which to set the access level.#
-# @param access Optional The minmal access level that a user must have to excute the given command.
-def acl(acl, player, command, access=0):
-    try:
-        access=int(access)
-    except:
-        return
-    AccessLevel.setAccessLevel(command, access)
-    Armagetronad.PrintPlayerMessage(player, Messages.AccessLevelChanged.format(command=command, access=access) )
-    
-## @brief Vote for the current poll
-def yes(acl, player):
-    if not Poll.current_poll:
-        Armagetronad.PrintPlayerMessage(player, Messages.NoActivePoll)
-        return
-    try:
-        Poll.current_poll.SetPlayerVote(player, True)
-        Armagetronad.PrintMessage( Messages.PlayerVotedYes.format(player=Player.players[player].name, target=Poll.current_poll.target) )
-    except RuntimeError as r:
-        if r.args[1]==1:
-            Armagetronad.PrintPlayerMessage(player, Messages.PlayerAlreadyVoted)
-        elif r.args[1]==2:
-            Armagetronad.PrintPlayerMessage(player, Messages.SpecNotAllowed)
+	for i in range(30):
+		Armagetronad.PrintPlayerMessage(player, "")
+	Armagetronad.PrintPlayerMessage(player, "Test")
 
-## @brief Vote against the current poll
-def no(acl, player):
-    if not Poll.current_poll:
-        Armagetronad.PrintPlayerMessage(player, Messages.NoActivePoll)
-        return
-    try:
-        Poll.current_poll.SetPlayerVote(player, False)
-        Armagetronad.PrintMessage( Messages.PlayerVotedNo.format(player=Player.players[player].name, target=Poll.current_poll.target) )
-    except RuntimeError as r:
-        if r.args[1]==1:
-            Armagetronad.PrintPlayerMessage(player, Messages.PlayerAlreadyVoted)
-        elif r.args[1]==2:
-            Armagetronad.PrintPlayerMessage(player, Messages.SpecNotAllowed)
-
-## @brief Cancel all currently active polls.
-def cancel(acl, player):
-    if not Poll.current_poll:
-        Armagetronad.PrintPlayerMessage(player, Messages.NoActivePoll)
-        return
-    Poll.Cancel()
-    
-  
-add_help_group("misc", "Other commands")
-add_help_group("voting", "Commands for voting")
-register_commands(info, reload, clearBuffer, printBuffer,acl, script, execBuffer, group="misc")
-register_commands(no, yes,cancel,  group="voting")
+## @brief List modes
+def modes(acl, player):
+	Armagetronad.PrintPlayerMessage(player, "0xffff00Available Modes:")
+	for m in Mode.modes.values():
+		Armagetronad.PrintPlayerMessage("0xaaff00"+m.shortname+": 0x888888"+m.name)
+	

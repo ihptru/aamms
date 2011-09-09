@@ -46,23 +46,15 @@ if "log" not in dir(): # Don't overwrite variables
 # @param event The name of the ladderlog event, in uppercase. Example: INVALID_COMMAND
 # @param *functions Function(s) to add as a handler.
 def register_handler(event, *functions):
-    if event in extraHandlers:
-        funcnames=dict()
-        for func in extraHandlers[event]:
-            funcnames[func.__name__]=func.__module__
-        for func in functions:
-            if func.__name__ not in funcnames or func.__module != funcnames[func.__name]:
-                extraHandlers[event]+=[func]
-    else:
-        extraHandlers[event]=list(functions)
-        
-def unregister_handler(event, *functions):
-    global extraHandlers
-    if event in extraHandlers:
-        for func in functions:
-            del extraHandlers[extraHandlers.index(func)]
-    else:
-        return
+	if event in extraHandlers:
+		funcnames=dict()
+		for func in extraHandlers[event]:
+			funcnames[func.__name__]=func.__module__
+		for func in functions:
+			if func.__name__ not in funcnames or func.__module__ != funcnames[func.__name__]:
+				extraHandlers[event]+=[func]
+	else:
+		extraHandlers[event]=list(functions)
 ## @brief Handles commands
 # @details Every time when a command that isn't handled by the server is entered, this
 #          function will be called.

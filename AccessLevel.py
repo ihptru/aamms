@@ -48,7 +48,7 @@ def save(file="access.yaml"):
 # @param file The name of the file to read from.
 # @info If the file doesn't exists, it's ignored.
 def load(file="access.yaml"):
-    if not exists("access.yaml"):
-        return
-    with open(file) as f:
-        __accessLevels=yaml.load(f)
+	if not exists("access.yaml"):
+		return
+	with open(file) as f:
+		 __accessLevels=yaml.load(f)

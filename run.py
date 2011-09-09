@@ -117,89 +117,89 @@ def read_stdin():
         except Exception as e:
             print(e)
 def main():
-    # SETTINGS ##############################################
-    userdatadir="./server/data"
-    userconfigdir="./server/config"
-    # COMMAND LINE OPTIONS ##################################
-    parser=OptionParser()
-    #parser.add_option("-v", "--vardir", dest="vardir", default=None, help="Path to the var directory (server)")
-    parser.add_option("-d", "--dConditionatadir", dest="datadir", default=None, help="Path to the data directory (server)")
-    parser.add_option("-c", "--configdir", dest="configdir", default=None, help="Path to the config directory (server)")
-    parser.add_option("-e", "--executable", dest="server", default=None, help="Path of the server executable", metavar="EXECUTABLE")
-    parser.add_option("-p", "--prefix", dest="prefix", default=None, help="The prefix the server was installed to.")
-    parser.add_option("--debug",dest="debug", default=False, action="store_true", help="Run in debug mode")
-    parser.add_option("--disable", dest="disabledCommands", action="append", help="Disable COMMAND.", metavar="COMMAND", default=[])
-    parser.add_option("--default", dest="save", action="store_true", default=False, help="Set this configuration as default")
-    parser.add_option("-D","--disableExt", dest="disabledExtensions", default=[], action="append", help="Dsiable the extension with the name EXTENSION.", metavar="EXTENSION")
-    parser.add_option("--list-extensions", dest="list_extensions", default=False, action="store_true", help="List all available extensions.")
-    options=parser.parse_args()[0]
-    options.vardir="server/var"
-    optionsdict=dict()
-    save_options=["vardir","configdir","server","datadir"]
-    global Global
-    # START #################################################
-    # Get available extensions
-    if options.list_extensions:
-        print("Extensions:")
-        print("\n".join(extensions.getExtensions()))
-    os.chdir(os.path.dirname(sys.argv[0]) )
-    if not os.path.exists("run"):
-        os.mkdir("run")
-    os.chdir("run")
-    
-    # Read config files ++++++++++++++++++++++++++++++++
-    if os.path.exists("config.yaml"):
-        optionsdict2=yaml.load(open("config.yaml","r") )
-        for key,value in optionsdict2.items():
-            try:
-                if getattr(options, key)==None:
-                    setattr(options, key, value)
-            except:
-                pass
-    else:
-        default=""
-        test_prefixes=["/usr","/usr/local"]
-        for test_prefix in test_prefixes:
-            if os.path.exists(os.path.join(test_prefix,"bin/armagetronad-dedicated")):
-                default="["+test_prefix+"]"
-                break
-        while options.prefix==None or not os.path.exists(options.prefix):
-            options.prefix=input("Prefix the server was installed to "+default+": ")
-            if options.prefix.strip()=="":
-                options.prefix=default[1:-1]
-    if options.prefix and not os.path.exists(options.prefix):
-        sys.stderr.write("[ERROR] Prefix doesn't exist.\n")
-        exit()
-    if not options.server: options.server=os.path.join(options.prefix, "bin/armagetronad-dedicated")    
-    if not options.datadir: options.datadir=os.path.join(options.prefix, "share/armagetronad-dedicated")
-    if not options.configdir: options.configdir=os.path.join(options.prefix, "etc/armagetronad-dedicated")
-    if not os.path.exists(options.server): options.server=os.path.join(options.prefix,"games/armagetronad-dedicated")
-    if not os.path.exists(options.configdir): options.configdir=os.path.join(options.prefix, "etc/games/armagetronad-dedicated")
-    if not os.path.exists(options.configdir): options.configir="/etc/armagetronad-dedicated"
-    if not os.path.exists(options.datadir): options.datadir=os.path.join(options.prefix, "share/games/armagetronad-dedicated")
-    
-    Global.datadir=options.datadir
-    Global.configdir=options.configdir
-    Global.debug=options.debug
-    
-    # Write config files +++++++++++++++++++++++++++++++
-    for save_option in save_options:
-        optionsdict[save_option]=getattr(options, save_option)
-    if options.save or not os.path.exists("config.yaml"):
-        yaml.dump(optionsdict, open("config.yaml","w"), default_flow_style=False )
-    
-    if not os.path.exists(userconfigdir):
-        os.makedirs(userconfigdir)
-    if not os.path.exists(userdatadir):
-        os.makedirs(userdatadir)
-    if not os.path.exists(options.vardir):
-        os.makedirs(options.vardir)
-    open(os.path.join(options.vardir,"ladderlog.txt"),"w" ).close()
-    print("[START] Starting server. Serverlog can be found in run/server.log")
-    args=["--vardir",options.vardir, "--datadir",options.datadir, "--configdir",options.configdir,
-          "--userdatadir",userdatadir, "--userconfigdir",userconfigdir]
-    print("[START] Executable: "+options.server)
-    t=Thread(None, 
+	# SETTINGS ##############################################
+	userdatadir="./server/data"
+	userconfigdir="./server/config"
+	# COMMAND LINE OPTIONS ##################################
+	parser=OptionParser()
+	#parser.add_option("-v", "--vardir", dest="vardir", default=None, help="Path to the var directory (server)")
+	parser.add_option("-d", "--dConditionatadir", dest="datadir", default=None, help="Path to the data directory (server)")
+	parser.add_option("-c", "--configdir", dest="configdir", default=None, help="Path to the config directory (server)")
+	parser.add_option("-e", "--executable", dest="server", default=None, help="Path of the server executable", metavar="EXECUTABLE")
+	parser.add_option("-p", "--prefix", dest="prefix", default=None, help="The prefix the server was installed to.")
+	parser.add_option("--debug",dest="debug", default=False, action="store_true", help="Run in debug mode")
+	parser.add_option("--disable", dest="disabledCommands", action="append", help="Disable COMMAND.", metavar="COMMAND", default=[])
+	parser.add_option("--default", dest="save", action="store_true", default=False, help="Set this configuration as default")
+	parser.add_option("-D","--disableExt", dest="disabledExtensions", default=[], action="append", help="Dsiable the extension with the name EXTENSION.", metavar="EXTENSION")
+	parser.add_option("--list-extensions", dest="list_extensions", default=False, action="store_true", help="List all available extensions.")
+	options, args=parser.parse_args()
+	options.vardir="server/var"
+	optionsdict=dict()
+	save_options=["vardir","configdir","server","datadir"]
+	global Global
+	# START #################################################
+	# Get available extensions
+	for file in glob.glob("extensions/*.py"):
+		extname=os.path.basename(file)[:-3] # Without the .py
+		Global.availableExtensions+=[extname]
+		if(options.list_extensions):
+			print("Found extension: "+extname+" ("+os.path.abspath(file)+")")
+	if options.list_extensions:
+		exit()
+	os.chdir(os.path.dirname(sys.argv[0]) )
+	if not os.path.exists("run"):
+		os.mkdir("run")
+	os.chdir("run")
+	
+	# Read config files ++++++++++++++++++++++++++++++++
+	if os.path.exists("config.yaml"):
+		optionsdict2=yaml.load(open("config.yaml","r") )
+		for key,value in optionsdict2.items():
+			try:
+				if getattr(options, key)==None:
+					setattr(options, key, value)
+			except:
+				pass
+	else:
+		default=""
+		test_prefixes=["/usr","/usr/local"]
+		for test_prefix in test_prefixes:
+			if os.path.exists(os.path.join(test_prefix,"bin/armagetronad-dedicated")):
+				default="["+test_prefix+"]"
+				break
+		while options.prefix==None or not os.path.exists(options.prefix):
+			options.prefix=input("Prefix the server was installed to "+default+": ")
+			if options.prefix.strip()=="":
+				options.prefix=default[1:-1]
+	if options.prefix and not os.path.exists(options.prefix):
+		sys.stderr.write("[ERROR] Prefix doesn't exist.\n")
+		exit()
+	if not options.server: options.server=os.path.join(options.prefix, "bin/armagetronad-dedicated")	
+	if not options.datadir: options.datadir=os.path.join(options.prefix, "share/armagetronad-dedicated")
+	if not options.configdir: options.configdir=os.path.join(options.prefix, "etc/armagetronad-dedicated")
+	if not os.path.exists(options.server): options.server=os.path.join(options.prefix,"games/armagetronad-dedicated")
+	if not os.path.exists(options.configdir): options.configdir=os.path.join(options.prefix, "etc/games/armagetronad-dedicated")
+	if not os.path.exists(options.configdir): options.configir="/etc/armagetronad-dedicated"
+	if not os.path.exists(options.datadir): options.datadir=os.path.join(options.prefix, "share/games/armagetronad-dedicated")
+	
+	# Write config files +++++++++++++++++++++++++++++++
+	for save_option in save_options:
+		optionsdict[save_option]=getattr(options, save_option)
+	if options.save or not os.path.exists("config.yaml"):
+		yaml.dump(optionsdict, open("config.yaml","w"), default_flow_style=False )
+	
+	if not os.path.exists(userconfigdir):
+		os.makedirs(userconfigdir)
+	if not os.path.exists(userdatadir):
+		os.makedirs(userdatadir)
+	if not os.path.exists(options.vardir):
+		os.makedirs(options.vardir)
+	open(os.path.join(options.vardir,"ladderlog.txt"),"w" ).close()
+	print("[START] Starting server. Serverlog can be found in run/server.log")
+	args=["--vardir",options.vardir, "--datadir",options.datadir, "--configdir",options.configdir,
+	      "--userdatadir",userdatadir, "--userconfigdir",userconfigdir]
+	print("[START] Executable: "+options.server)
+	t=Thread(None, 
 target=runServerForever,args=([options.server]+args,options.debug) )
     t.daemon=True
     t.start()
