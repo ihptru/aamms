@@ -352,6 +352,9 @@ def modeEditor(acl, player):
 	def setSettings():
 		if "data" in globals():
 			global data
+		else:
+			global data
+			data=dict()
 		Armagetronad.SendCommand("ALLOW_TEAM_NAME_PLAYER 1")
 		Armagetronad.SendCommand("FORTRESS_CONQUEST_TIMEOUT -1")
 		Armagetronad.SendCommand("MAX_CLIENTS 1")
