@@ -251,7 +251,7 @@ def register_commands(*functions):
  # @param player The player who called /script
 def script(acl, player, *code):
 	code=" ".join(code)
-	Armagetronad.PrintMessage("[Script Command] Started script execution")
+	Armagetronad.PrintPlayerMessage(player, "[Script Command] Started script execution")
 	code.replace("\"","'")
 	try:
 		exec(code.replace("print(","Armagetronad.PrintPlayerMessage('"+player+"','[Script Command] Output: ' + ") )
@@ -400,6 +400,8 @@ def modeEditor(acl, player):
 	Armagetronad.SendCommand("INCLUDE settings.cfg")
 	Armagetronad.SendCommand("SINCLUDE settings_custom.cfg")
 	Armagetronad.SendCommand("DEFAULT_KICK_REASON Server\ under\ maintenance.")
+	global data
+	data=dict()
 	def setSettings():
 		Armagetronad.SendCommand("ALLOW_TEAM_NAME_PLAYER 1")
 		Armagetronad.SendCommand("FORTRESS_CONQUEST_TIMEOUT -1")
@@ -413,7 +415,8 @@ def modeEditor(acl, player):
 		Armagetronad.SendCommand("CYCLE_SPEED_MIN 0")
 		Armagetronad.SendCommand("CYCLE_RUBBER 10000000")
 		Armagetronad.SendCommand("SP_WALLS_LENGTH 0.000001")
-		Armagetronad.SendCommand("CYCLE_SPEED 5")
+		if speed not in data:
+			Armagetronad.SendCommand("CYCLE_SPEED 5")
 		Armagetronad.SendCommand("CYCLE_BRAKE -100")
 		Armagetronad.SendCommand("CYCLE_BRAKE_DEPLETE 0")
 		Armagetronad.SendCommand("CYCLE_SPEED_DECAY_ABOVE 1.5")
@@ -458,7 +461,7 @@ def modeEditor(acl, player):
 	def PrintMessage():
 		message="""0x00ffffWelcome to ModeEditor! 0xffffff
 ModeEditor was made to help you creating new modes.
-Use the /stop, /go, /lessSpeed, /moreSpeed and brake commands to controll the speed of the cycle.
+Use the /stop, /go, /lessSpeed, /moreSpeed commands and brake to control the speed of the cycle.
 To add a zone or a respawn point at the current position of your cycle use /makeZone and /makeRes.
 If you want to go to a specific position, use /stop and then use /tele.
 You can use /modeSetting to change settings like name and lives.
@@ -684,17 +687,14 @@ def info(acl, player, *topics):
 		Armagetronad.PrintPlayerMessage(player, "0x8888ffThis topic has the following subtopics: ")
 		for topicname, value in curtopic.items() :
 			if type(value)==tuple:
-				import sys
-				sys.stderr.write("test\n")
 				desc=value[0]
 			else:
-				import sys
-				sys.stderr.write(type(value).__name__+"\n")
 				desc=""
 			Armagetronad.PrintPlayerMessage(player, "0x00ff88"+" ".join(topics)+" "+topicname+": 0xffffff"+desc)
 	elif type(curtopic)==str:
 		Armagetronad.PrintPlayerMessage(player, curtopic)
 	elif type(curtopic)==list:
+		Armagetronad.PrintPlayerMessage(player, "0x8888ffTo get help for a specific command, use '/info "+" ".join(topics)+" <command name>'")
 		for command in curtopic:
 			Armagetronad.PrintPlayerMessage(player, "0x00ff88/"+command+": 0xffffff"+getDescription(command)[0])
 	else:
@@ -715,7 +715,15 @@ def loadMode(acl, player, mode):
 	mode.activate(False)
 	Mode.current_mode=None
 
+## @brief Clear the screen
 def clearScreen(acl, player):
 	for i in range(30):
 		Armagetronad.PrintPlayerMessage(player, "")
 	Armagetronad.PrintPlayerMessage(player, "Test")
+
+## @brief List modes
+def modes(acl, player):
+	Armagetronad.PrintPlayerMessage(player, "0xffff00Available Modes:")
+	for m in Mode.modes.values():
+		Armagetronad.PrintPlayerMessage("0xaaff00"+m.shortname+": 0x888888"+m.name)
+	

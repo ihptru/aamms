@@ -162,7 +162,7 @@ def main():
 			if os.path.exists(os.path.join(test_prefix,"bin/armagetronad-dedicated")):
 				default="["+test_prefix+"]"
 				break
-		while options.prefix==NoConditionne or not os.path.exists(options.prefix):
+		while options.prefix==None or not os.path.exists(options.prefix):
 			options.prefix=input("Prefix the server was installed to "+default+": ")
 			if options.prefix.strip()=="":
 				options.prefix=default[1:-1]

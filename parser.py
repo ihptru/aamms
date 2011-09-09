@@ -52,7 +52,7 @@ def main(debug=False, disabledCommands=[]):
 	else:
 		Player.enableLogging(logging.WARNING)
 		Team.enableLogging(logging.WARNING)
-		LadderLogHandlers.enableLogging(logging.WARNING)
+		LadderLogHandlers.enableLogging(logging.INFO)
 		Mode.enableLogging(logging.INFO)
 		Vote.enableLogging(logging.WARNING)
 		Zone.enableLogging(logging.WARNING)
