@@ -415,7 +415,7 @@ def modeEditor(acl, player):
 		Armagetronad.SendCommand("CYCLE_SPEED_MIN 0")
 		Armagetronad.SendCommand("CYCLE_RUBBER 10000000")
 		Armagetronad.SendCommand("SP_WALLS_LENGTH 0.000001")
-		if speed not in data:
+		if "speed" not in data:
 			Armagetronad.SendCommand("CYCLE_SPEED 5")
 		Armagetronad.SendCommand("CYCLE_BRAKE -100")
 		Armagetronad.SendCommand("CYCLE_BRAKE_DEPLETE 0")
@@ -453,8 +453,6 @@ def modeEditor(acl, player):
 			setSettings()
 	LadderLogHandlers.register_handler("ADMIN_COMMAND", HandleAdminCommand)
 	Global.state="modeeditor"
-	global data
-	data=dict()
 	data["speed"]=5
 	data["mode"]=Mode.Mode("Unsaved")
 	data["stopped"]=False

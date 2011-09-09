@@ -49,7 +49,7 @@ class OutputToProcess(io.TextIOWrapper):
 		pass
 	def write(self, x):
 		try:
-			p.stdin.write(x.encode())
+			p.stdin.write(x.encode("latin1"))
 			p.stdin.flush()
 		except IOError as e:
 			pass # Ignore
