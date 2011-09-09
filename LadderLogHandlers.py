@@ -57,6 +57,10 @@ def register_handler(event, *functions):
 				extraHandlers[event]+=[func]
 	else:
 		extraHandlers[event]=list(functions)
+## @brief Removes a registered handler
+def deregister_handler(event, *functions):
+	for func in functions:
+		del extraHandlers[event].index(func)
 ## @brief Handles commands
  # @details Every time when a command that isn't handled by the server is entered, this
  #          function will be called.

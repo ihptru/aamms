@@ -447,6 +447,8 @@ def modeEditor(acl, player):
 	Armagetronad.SendCommand("LADDERLOG_WRITE_ADMIN_COMMAND 1")
 	def HandleAdminCommand(player, ip, acl, *command):
 		global data
+		if Global.state!="modeeditor":
+			LadderLogHandlers.deregister_handler("ADMIN_COMMAND",HandleAdminCommand)
 		if(Armagetronad.IsSetting(command[0]) and len(command)>1):
 			data["mode"].settings[command[0]]=" ".join(command[1:])
 			Armagetronad.PrintMessage("0xff0000"+command[0]+" changed to "+" ".join(command[1:]))
