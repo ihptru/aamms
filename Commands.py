@@ -336,10 +336,93 @@ def printBuffer(acl, player):
 # @param acl The accesslevel of the player
 # @param player The name of the player
 def reload(acl, player):
-    Armagetronad.PrintPlayerMessage(player, "This feature is bugged. It's not available at the moment.")
-    return
-    #Armagetronad.PrintPlayerMessage(player,  "0xff0000Reloading script ....")
-    #Global.reloadModules()
+	Armagetronad.PrintPlayerMessage(player,  "0xff0000Reloading script ....")
+	Global.reloadModules()
+
+## @brief Enter the mode editor.
+ # @details This command changes the state to modeeditor.
+ # @param acl The accesslevel of the player
+ # @param playername The name of the player
+def modeEditor(acl, player):
+	if Global.state=="modeEditor":
+		Armagetronad.PrintPlayerMessage(player, "0xff0000Already in mode editor state!")
+	Armagetronad.SendCommand("INCLUDE settings.cfg")
+	Armagetronad.SendCommand("SINCLUDE settings_custom.cfg")
+	Armagetronad.SendCommand("DEFAULT_KICK_REASON Server\ under\ maintenance.")
+	def setSettings():
+		if "data" in globals():
+			global data
+		Armagetronad.SendCommand("ALLOW_TEAM_NAME_PLAYER 1")
+		Armagetronad.SendCommand("FORTRESS_CONQUEST_TIMEOUT -1")
+		Armagetronad.SendCommand("MAX_CLIENTS 1")
+		Armagetronad.SendCommand("SP_TEAMS_MAX 1")
+		Armagetronad.SendCommand("TEAMS_MAX 1")
+		Armagetronad.SendCommand("SP_AUTO_AIS 0")
+		Armagetronad.SendCommand("AUTO_AIS 0")
+		Armagetronad.SendCommand("SP_NUM_AIS 0")
+		Armagetronad.SendCommand("NUM_AIS 0")
+		Armagetronad.SendCommand("CYCLE_SPEED_MIN 0")
+		Armagetronad.SendCommand("CYCLE_RUBBER 10000000")
+		Armagetronad.SendCommand("SP_WALLS_LENGTH 0.000001")
+		if not "speed" in data:
+			Armagetronad.SendCommand("CYCLE_SPEED 5")
+		Armagetronad.SendCommand("CYCLE_BRAKE -100")
+		Armagetronad.SendCommand("CYCLE_BRAKE_DEPLETE 0")
+		Armagetronad.SendCommand("CYCLE_SPEED_DECAY_ABOVE 1.5")
+		Armagetronad.SendCommand("CYCLE_ACCEL 0")
+		Armagetronad.SendCommand("SP_MIN_PLAYERS 0")
+		Armagetronad.SendCommand("CYCLE_TURN_SPEED_FACTOR 1")
+		Armagetronad.SendCommand("CYCLE_SPEED_DECAY_BELOW 2")
+		Armagetronad.SendCommand("FORTRESS_SURVIVE_WIN 0")
+		camera_state={"FOLLOW":0, "SMART":0, "FREE":0, "IN":0, "SMART":0, "CUSTOM": 1, "SERVER_CUSTOM": 1}
+		for cam, state in camera_state.items():
+			Armagetronad.SendCommand("CAMERA_FORBID_"+cam+" "+state)
+		Armagetronad.SendCommand("CAMERA_SERVER_CUSTOM_BACK 75")
+		Armagetronad.SendCommand("CAMERA_SERVER_CUSTOM_PITCH")
+		Armagetronad.SendCommand("CAMERA_ALLOW_")
+	setSettings()
+	Vote.Cancel()
+	Mode.current_mode=None
+	Armagetronad.SendCommand("NETWORK_AUTOBAN_FACTOR 0")
+	Armagetronad.PrintPlayerMessage(player, "0xff0000Kicking other players ...")
+	Armagetronad.PrintPlayerMessage(player, "\n"*4)
+	for playero in Player.players.values():
+		if playero.ip!=Player.players[player].ip:
+			#Armagetronad.SendCommand("KICK "+playero.getLadderName() )
+			pass
+			
+		else:
+			playero.kill()	
+	Armagetronad.SendCommand("NETWORK_AUTOBAN_FACTOR 10")
+	Armagetronad.SendCommand("LADDERLOG_WRITE_ADMIN_COMMAND 1")
+	def HandleAdminCommand(player, ip, acl, *command):
+		global data
+		if(Armagetronad.IsSetting(command[0]) and len(command)>1):
+			data["mode"].settings[command[0]]=" ".join(command[1:])
+			Armagetronad.PrintMessage("0xff0000"+command[0]+" changed to "+" ".join(command[1:]))
+			setSettings()
+	LadderLogHandlers.register_handler("ADMIN_COMMAND", HandleAdminCommand)
+	Global.state="modeeditor"
+	global data
+	data=dict()
+	data["speed"]=5
+	data["mode"]=Mode.Mode("Unsaved")
+	data["stopped"]=False
+	def PrintMessage():
+		message="""0x00ffffWelcome to ModeEditor! 0xffffff
+ModeEditor was made to help you creating new modes.
+Use the /stop, /go, /lessSpeed, /moreSpeed and brake commands to controll the speed of the cycle.
+To add a zone or a respawn point at the current position of your cycle use /makeZone and /makeRes.
+If you want to go to a specific position, use /stop and then use /tele.
+You can use /modeSetting to change settings like name and lives.
+To change game settings like rubber you can use /admin (i.e. /admin CYCLE_RUBBER 5). Your changes will get recorded.
+To save the mode use /saveMode to save the mode. 
+If you want to go back to normal mode, use /normal."""
+		for msg in message.split("\n"):
+			Armagetronad.PrintMessage(msg)
+			time.sleep(3)
+	LadderLogHandlers.atRoundend.append(PrintMessage)
+	            
 
 
 ## @brief Get help about commands and more.
