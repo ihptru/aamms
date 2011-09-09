@@ -24,3 +24,4 @@ def ParseZones(map):
 #  @param lives The lives each player should get in this mode.
 #  @param desc The description of the mode.
 def AddMode(acl, player, name, file, desc):
+    pass

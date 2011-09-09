@@ -1,0 +1,216 @@
+\hypertarget{class_poll_1_1_poll}{
+\section{\-Poll\-:\-:\-Poll \-Class \-Reference}
+\label{class_poll_1_1_poll}\index{\-Poll\-::\-Poll@{\-Poll\-::\-Poll}}
+}
+
+
+\-The vote class.  
+
+
+\subsection*{\-Public \-Member \-Functions}
+\begin{DoxyCompactItemize}
+\item 
+def \hyperlink{class_poll_1_1_poll_af39ee012b51f66471e429d0fce6d2a60}{\-\_\-\-\_\-init\-\_\-\-\_\-}
+\begin{DoxyCompactList}\small\item\em \-Init function (\-Constructor) \end{DoxyCompactList}\item 
+def \hyperlink{class_poll_1_1_poll_a4f68e25ba912c163462a50fe2197e8c7}{\-Check\-Result}
+\begin{DoxyCompactList}\small\item\em \-Checks the result of the \hyperlink{class_poll_1_1_poll}{\-Poll}. \end{DoxyCompactList}\item 
+def \hyperlink{class_poll_1_1_poll_a63dd1c17fe8f6ef6d6b3afb690157988}{\-Set\-Player\-Vote}
+\begin{DoxyCompactList}\small\item\em \-Sets what a player voted. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{\-Public \-Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\hyperlink{class_poll_1_1_poll_a4ba15cd9aa2b52ac8226eb969679632f}{target}
+\begin{DoxyCompactList}\small\item\em \-The human readable target of the \hyperlink{class_poll_1_1_poll}{\-Poll}. \end{DoxyCompactList}\item 
+\hyperlink{class_poll_1_1_poll_a94dd36f9a7715b95458df8e87aa5debc}{action}
+\begin{DoxyCompactList}\small\item\em \-Function that is called when the \hyperlink{class_poll_1_1_poll}{\-Poll} success. \end{DoxyCompactList}\item 
+\hyperlink{class_poll_1_1_poll_a6784d251ce1b468a297aec9d1a8deb30}{alive\-Rounds}
+\begin{DoxyCompactList}\small\item\em \-When does the \hyperlink{class_poll_1_1_poll}{\-Poll} expire? \end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{\-Private \-Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\hyperlink{class_poll_1_1_poll_a5163f62ef55bcd78348edc7b0689c2ce}{\-\_\-\-\_\-players\-\_\-voted\-\_\-no}
+\begin{DoxyCompactList}\small\item\em \-What players voted against the \hyperlink{class_poll_1_1_poll}{\-Poll}? \end{DoxyCompactList}\item 
+\hyperlink{class_poll_1_1_poll_abec0d453364a9368692794bbb2c9bc0e}{\-\_\-\-\_\-players\-\_\-voted\-\_\-yes}
+\begin{DoxyCompactList}\small\item\em \-What players voted for the \hyperlink{class_poll_1_1_poll}{\-Poll}? \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\subsection{\-Detailed \-Description}
+\-The vote class. 
+
+\-This class is used to manage a \hyperlink{class_poll_1_1_poll}{\-Poll}. 
+
+\-Definition at line 57 of file \-Poll.\-py.
+
+
+
+\subsection{\-Constructor \& \-Destructor \-Documentation}
+\hypertarget{class_poll_1_1_poll_af39ee012b51f66471e429d0fce6d2a60}{
+\index{\-Poll\-::\-Poll@{\-Poll\-::\-Poll}!\-\_\-\-\_\-init\-\_\-\-\_\-@{\-\_\-\-\_\-init\-\_\-\-\_\-}}
+\index{\-\_\-\-\_\-init\-\_\-\-\_\-@{\-\_\-\-\_\-init\-\_\-\-\_\-}!Poll::Poll@{\-Poll\-::\-Poll}}
+\subsubsection[{\-\_\-\-\_\-init\-\_\-\-\_\-}]{\setlength{\rightskip}{0pt plus 5cm}def \-Poll\-::\-Poll\-::\-\_\-\-\_\-init\-\_\-\-\_\- (
+\begin{DoxyParamCaption}
+\item[{}]{self, }
+\item[{}]{target, }
+\item[{}]{action = {\ttfamily \-None}}
+\end{DoxyParamCaption}
+)}}
+\label{class_poll_1_1_poll_af39ee012b51f66471e429d0fce6d2a60}
+
+
+\-Init function (\-Constructor) 
+
+\-Inits a new \hyperlink{class_poll_1_1_poll}{\-Poll}. 
+\begin{DoxyParams}{\-Parameters}
+{\em target} & \-Human readable target of the \hyperlink{class_poll_1_1_poll}{\-Poll}. \\
+\hline
+{\em action} & \-Action. \-None if no function should be called. \\
+\hline
+\end{DoxyParams}
+
+
+\-Definition at line 82 of file \-Poll.\-py.
+
+
+
+\subsection{\-Member \-Function \-Documentation}
+\hypertarget{class_poll_1_1_poll_a4f68e25ba912c163462a50fe2197e8c7}{
+\index{\-Poll\-::\-Poll@{\-Poll\-::\-Poll}!\-Check\-Result@{\-Check\-Result}}
+\index{\-Check\-Result@{\-Check\-Result}!Poll::Poll@{\-Poll\-::\-Poll}}
+\subsubsection[{\-Check\-Result}]{\setlength{\rightskip}{0pt plus 5cm}def \-Poll\-::\-Poll\-::\-Check\-Result (
+\begin{DoxyParamCaption}
+\item[{}]{self, }
+\item[{}]{not\-\_\-voted = {\ttfamily \char`\"{}dont\-\_\-count\char`\"{}}, }
+\item[{}]{not\-\_\-voted\-\_\-spec = {\ttfamily \-None}, }
+\item[{}]{min\-\_\-needed = {\ttfamily 51}, }
+\item[{}]{only\-\_\-sure = {\ttfamily \-False}}
+\end{DoxyParamCaption}
+)}}
+\label{class_poll_1_1_poll_a4f68e25ba912c163462a50fe2197e8c7}
+
+
+\-Checks the result of the \hyperlink{class_poll_1_1_poll}{\-Poll}. 
+
+\-Checks if the vote successed or failed. or \char`\"{}\-Poll failed\char`\"{} event. 
+\begin{DoxyParams}{\-Parameters}
+{\em not\-\_\-voted} & \-What happens with players who didn't vote? \-Could be \char`\"{}yes\char`\"{}, \char`\"{}no\char`\"{} or \char`\"{}dont\-\_\-count\char`\"{}. \-If \char`\"{}yes\char`\"{}$|$\char`\"{}no\char`\"{} is given, players who didn't vote are counted as if the had voted \char`\"{}yes\char`\"{}$|$\char`\"{}no\char`\"{}. \-Otherwise, they aren't counted. \-Default is \char`\"{}dont\-\_\-count\char`\"{}. \\
+\hline
+{\em not\-\_\-voted\-\_\-spec} & \-Same as not\-\_\-voted, but only for spectators. \-If not given or set to \-None, not\-\_\-voted is used. \\
+\hline
+{\em min\-\_\-needed} & \-How much precent yes votes are at least needed that the vote gets accepted? \-Default 51. \\
+\hline
+\end{DoxyParams}
+
+\begin{DoxyExceptions}{\-Exceptions}
+{\em \-Value\-Error} & \-Raised if not\-\_\-voted ot not\-\_\-voted\-\_\-spec aren't on of \char`\"{}yes\char`\"{}, \char`\"{}no\char`\"{} or \char`\"{}dont\-\_\-count\char`\"{}. \\
+\hline
+\end{DoxyExceptions}
+
+
+\-Definition at line 104 of file \-Poll.\-py.
+
+\hypertarget{class_poll_1_1_poll_a63dd1c17fe8f6ef6d6b3afb690157988}{
+\index{\-Poll\-::\-Poll@{\-Poll\-::\-Poll}!\-Set\-Player\-Vote@{\-Set\-Player\-Vote}}
+\index{\-Set\-Player\-Vote@{\-Set\-Player\-Vote}!Poll::Poll@{\-Poll\-::\-Poll}}
+\subsubsection[{\-Set\-Player\-Vote}]{\setlength{\rightskip}{0pt plus 5cm}def \-Poll\-::\-Poll\-::\-Set\-Player\-Vote (
+\begin{DoxyParamCaption}
+\item[{}]{self, }
+\item[{}]{player, }
+\item[{}]{vote}
+\end{DoxyParamCaption}
+)}}
+\label{class_poll_1_1_poll_a63dd1c17fe8f6ef6d6b3afb690157988}
+
+
+\-Sets what a player voted. 
+
+\-Checks if the player is a spectator. \-If yes and spec\-\_\-allowed is set to \-False, return immendiately. \-Otherwise, add the player to the list of players who voted for$|$agains the \hyperlink{class_poll_1_1_poll}{\-Poll}. 
+\begin{DoxyParams}{\-Parameters}
+{\em player} & \-The ladder name of the player who voted. \\
+\hline
+{\em vote} & \-True if the player voted yes for the \hyperlink{class_poll_1_1_poll}{\-Poll}, \-False otherwise. \\
+\hline
+\end{DoxyParams}
+
+\begin{DoxyExceptions}{\-Exceptions}
+{\em \-Runtime\-Error} & \-Raised if the player has already voted. \\
+\hline
+{\em \-Value\-Error} & \-Raised if the player doesn't exist.' \\
+\hline
+\end{DoxyExceptions}
+
+
+\-Definition at line 162 of file \-Poll.\-py.
+
+
+
+\subsection{\-Member \-Data \-Documentation}
+\hypertarget{class_poll_1_1_poll_a5163f62ef55bcd78348edc7b0689c2ce}{
+\index{\-Poll\-::\-Poll@{\-Poll\-::\-Poll}!\-\_\-\-\_\-players\-\_\-voted\-\_\-no@{\-\_\-\-\_\-players\-\_\-voted\-\_\-no}}
+\index{\-\_\-\-\_\-players\-\_\-voted\-\_\-no@{\-\_\-\-\_\-players\-\_\-voted\-\_\-no}!Poll::Poll@{\-Poll\-::\-Poll}}
+\subsubsection[{\-\_\-\-\_\-players\-\_\-voted\-\_\-no}]{\setlength{\rightskip}{0pt plus 5cm}{\bf \-Poll\-::\-Poll\-::\-\_\-\-\_\-players\-\_\-voted\-\_\-no}\hspace{0.3cm}{\ttfamily  \mbox{[}private\mbox{]}}}}
+\label{class_poll_1_1_poll_a5163f62ef55bcd78348edc7b0689c2ce}
+
+
+\-What players voted against the \hyperlink{class_poll_1_1_poll}{\-Poll}? 
+
+\-Set of the players who voted against the \hyperlink{class_poll_1_1_poll}{\-Poll}. 
+
+\-Definition at line 82 of file \-Poll.\-py.
+
+\hypertarget{class_poll_1_1_poll_abec0d453364a9368692794bbb2c9bc0e}{
+\index{\-Poll\-::\-Poll@{\-Poll\-::\-Poll}!\-\_\-\-\_\-players\-\_\-voted\-\_\-yes@{\-\_\-\-\_\-players\-\_\-voted\-\_\-yes}}
+\index{\-\_\-\-\_\-players\-\_\-voted\-\_\-yes@{\-\_\-\-\_\-players\-\_\-voted\-\_\-yes}!Poll::Poll@{\-Poll\-::\-Poll}}
+\subsubsection[{\-\_\-\-\_\-players\-\_\-voted\-\_\-yes}]{\setlength{\rightskip}{0pt plus 5cm}{\bf \-Poll\-::\-Poll\-::\-\_\-\-\_\-players\-\_\-voted\-\_\-yes}\hspace{0.3cm}{\ttfamily  \mbox{[}private\mbox{]}}}}
+\label{class_poll_1_1_poll_abec0d453364a9368692794bbb2c9bc0e}
+
+
+\-What players voted for the \hyperlink{class_poll_1_1_poll}{\-Poll}? 
+
+\-Set of the players who voted for the \hyperlink{class_poll_1_1_poll}{\-Poll}. 
+
+\-Definition at line 82 of file \-Poll.\-py.
+
+\hypertarget{class_poll_1_1_poll_a94dd36f9a7715b95458df8e87aa5debc}{
+\index{\-Poll\-::\-Poll@{\-Poll\-::\-Poll}!action@{action}}
+\index{action@{action}!Poll::Poll@{\-Poll\-::\-Poll}}
+\subsubsection[{action}]{\setlength{\rightskip}{0pt plus 5cm}{\bf \-Poll\-::\-Poll\-::action}}}
+\label{class_poll_1_1_poll_a94dd36f9a7715b95458df8e87aa5debc}
+
+
+\-Function that is called when the \hyperlink{class_poll_1_1_poll}{\-Poll} success. 
+
+\-Function could be every object that has a \-\_\-\-\_\-call\-\_\-\-\_\- method(is callable) 
+
+\-Definition at line 82 of file \-Poll.\-py.
+
+\hypertarget{class_poll_1_1_poll_a6784d251ce1b468a297aec9d1a8deb30}{
+\index{\-Poll\-::\-Poll@{\-Poll\-::\-Poll}!alive\-Rounds@{alive\-Rounds}}
+\index{alive\-Rounds@{alive\-Rounds}!Poll::Poll@{\-Poll\-::\-Poll}}
+\subsubsection[{alive\-Rounds}]{\setlength{\rightskip}{0pt plus 5cm}{\bf \-Poll\-::\-Poll\-::alive\-Rounds}}}
+\label{class_poll_1_1_poll_a6784d251ce1b468a297aec9d1a8deb30}
+
+
+\-When does the \hyperlink{class_poll_1_1_poll}{\-Poll} expire? 
+
+\-Number of round for which the \hyperlink{class_poll_1_1_poll}{\-Poll} stays \char`\"{}alive\char`\"{}. 
+
+\-Definition at line 82 of file \-Poll.\-py.
+
+\hypertarget{class_poll_1_1_poll_a4ba15cd9aa2b52ac8226eb969679632f}{
+\index{\-Poll\-::\-Poll@{\-Poll\-::\-Poll}!target@{target}}
+\index{target@{target}!Poll::Poll@{\-Poll\-::\-Poll}}
+\subsubsection[{target}]{\setlength{\rightskip}{0pt plus 5cm}{\bf \-Poll\-::\-Poll\-::target}}}
+\label{class_poll_1_1_poll_a4ba15cd9aa2b52ac8226eb969679632f}
+
+
+\-The human readable target of the \hyperlink{class_poll_1_1_poll}{\-Poll}. 
+
+\-Target\-: \-What is the \hyperlink{class_poll_1_1_poll}{\-Poll} about? \-Used by the script to display to the user. 
+
+\-Definition at line 82 of file \-Poll.\-py.
+
+
+
+\-The documentation for this class was generated from the following file\-:\begin{DoxyCompactItemize}
+\item 
+\hyperlink{_poll_8py}{\-Poll.\-py}\end{DoxyCompactItemize}
