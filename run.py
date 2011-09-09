@@ -44,20 +44,16 @@ class WatchFile():
         return r.split("\n")[0]
 
 class OutputToProcess(io.TextIOWrapper):
-    def __init__(self):
-        pass
-    def write(self, x):
-        try:
-            p.stdin.write(x.encode("latin-1"))
-            if Global.debug:
-                f=open("debug.log", "w+")
-                f.write(x)
-                f.close()
-            p.stdin.flush()
-        except IOError:
-            pass # Ignore
-    def flush(self):
-        pass # File not buffered, ignore that.
+	def __init__(self):
+		pass
+	def write(self, x):
+		try:
+			p.stdin.write(x.encode("latin1"))
+			p.stdin.flush()
+		except IOError as e:
+			pass # Ignore
+	def flush(self):
+		pass # File not buffered, ignore that.
 
 # FUNCTIONS #############################################
 def exit():
