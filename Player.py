@@ -8,7 +8,7 @@ import logging
 import logging.handlers
 import Team
 import Event
-from Armagetronad import *
+import Armagetronad
 import copy
 
 if "players" not in dir():
@@ -282,7 +282,7 @@ class Player:
 	 # @note The lives of the player are set to 0.
 	 # @note This triggers the event "Player killed" and "Player died".
 	def kill(self):
-		SendCommand("KILL "+self.__old_ladder_name)
+		Armagetronad.SendCommand("KILL "+self.__old_ladder_name)
 		events.triggerEvent("Player killed",self.__ladder_name)
 		events.triggerEvent("Player died",self.__ladder_name)
 		self.__lives=0
@@ -310,7 +310,7 @@ class Player:
 		if self.__lives < 0:
 			self.__lives=0
 		if force:
-			SendCommand("KILL "+self.__ladder_name)
+			Armagetronad.SendCommand("KILL "+self.__ladder_name)
 		SendCommand("RESPAWN_PLAYER "+str(self.__ladder_name) + " 0 "+str(x)+
 		            " "+str(y)+" "+str(xdir)+" "+str(ydir) )
 		if force:
@@ -330,12 +330,12 @@ class Player:
 	 # @param force Force renaming?
 	def applyChanges(self, force=True):
 		if self.__old_name != self.name:
-			SendCommand("RENAME "+self.__old_ladder_name+" "+self.name)
+			Armagetronad.SendCommand("RENAME "+self.__old_ladder_name+" "+self.name)
 			self.__old_name=self.name
 			if force:
-				SendCommand("DISALLOW_RENAME_PLAYER "+self.__ladder_name)
+				Armagetronad.SendCommand("DISALLOW_RENAME_PLAYER "+self.__ladder_name)
 			else:
-				SendCommand("ALLOW_RENAME_PLAYER "+self.__ladder_name)
+				Armagetronad.SendCommand("ALLOW_RENAME_PLAYER "+self.__ladder_name)
 		self.__old_ladder_name=self.__ladder_name
 
 	## @brief Player logged in
@@ -452,5 +452,5 @@ def suite():
 
 if __name__=="__main__":
 	nullFunction=lambda *args: None
-	SendCommand=nullFunction
+	Armagetronad.SendCommand=nullFunction
 	unittest.TextTestRunner(verbosity=2).run(suite() )

@@ -401,6 +401,8 @@ def modeEditor(acl, player):
 	Armagetronad.SendCommand("SINCLUDE settings_custom.cfg")
 	Armagetronad.SendCommand("DEFAULT_KICK_REASON Server\ under\ maintenance.")
 	def setSettings():
+		if "data" in globals():
+			global data
 		Armagetronad.SendCommand("ALLOW_TEAM_NAME_PLAYER 1")
 		Armagetronad.SendCommand("FORTRESS_CONQUEST_TIMEOUT -1")
 		Armagetronad.SendCommand("MAX_CLIENTS 1")
@@ -413,7 +415,8 @@ def modeEditor(acl, player):
 		Armagetronad.SendCommand("CYCLE_SPEED_MIN 0")
 		Armagetronad.SendCommand("CYCLE_RUBBER 10000000")
 		Armagetronad.SendCommand("SP_WALLS_LENGTH 0.000001")
-		Armagetronad.SendCommand("CYCLE_SPEED 5")
+		if not "speed" in data:
+			Armagetronad.SendCommand("CYCLE_SPEED 5")
 		Armagetronad.SendCommand("CYCLE_BRAKE -100")
 		Armagetronad.SendCommand("CYCLE_BRAKE_DEPLETE 0")
 		Armagetronad.SendCommand("CYCLE_SPEED_DECAY_ABOVE 1.5")
@@ -422,6 +425,12 @@ def modeEditor(acl, player):
 		Armagetronad.SendCommand("CYCLE_TURN_SPEED_FACTOR 1")
 		Armagetronad.SendCommand("CYCLE_SPEED_DECAY_BELOW 2")
 		Armagetronad.SendCommand("FORTRESS_SURVIVE_WIN 0")
+		camera_state={"FOLLOW":0, "SMART":0, "FREE":0, "IN":0, "SMART":0, "CUSTOM": 1, "SERVER_CUSTOM": 1}
+		for cam, state in camera_state.items():
+			Armagetronad.SendCommand("CAMERA_FORBID_"+cam+" "+state)
+		Armagetronad.SendCommand("CAMERA_SERVER_CUSTOM_BACK 75")
+		Armagetronad.SendCommand("CAMERA_SERVER_CUSTOM_PITCH")
+		Armagetronad.SendCommand("CAMERA_ALLOW_")
 	setSettings()
 	Vote.Cancel()
 	Mode.current_mode=None
@@ -430,7 +439,9 @@ def modeEditor(acl, player):
 	Armagetronad.PrintPlayerMessage(player, "\n"*4)
 	for playero in Player.players.values():
 		if playero.ip!=Player.players[player].ip:
-			Armagetronad.SendCommand("KICK "+playero.getLadderName() )
+			#Armagetronad.SendCommand("KICK "+playero.getLadderName() )
+			pass
+			
 		else:
 			playero.kill()	
 	Armagetronad.SendCommand("NETWORK_AUTOBAN_FACTOR 10")
