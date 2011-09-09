@@ -528,5 +528,5 @@ def clearScreen(acl, player):
 def modes(acl, player):
 	Armagetronad.PrintPlayerMessage(player, "0xffff00Available Modes:")
 	for m in Mode.modes.values():
-		Armagetronad.PrintPlayerMessage("0xaaff00"+m.shortname+": 0x888888"+m.name)
+		Armagetronad.PrintPlayerMessage("0xaaff00"+m.short_name+": 0x888888"+m.name)
 	
