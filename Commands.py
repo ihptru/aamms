@@ -430,7 +430,7 @@ def modeEditor(acl, player):
 		Armagetronad.SendCommand("FORTRESS_SURVIVE_WIN 0")
 		camera_state={"FOLLOW":0, "SMART":0, "FREE":0, "IN":0, "SMART":0, "CUSTOM": 1, "SERVER_CUSTOM": 1}
 		for cam, state in camera_state.items():
-			Armagetronad.SendCommand("CAMERA_FORBID_"+cam+" "+state)
+			Armagetronad.SendCommand("CAMERA_FORBID_"+cam+" "+str(state))
 		Armagetronad.SendCommand("CAMERA_SERVER_CUSTOM_BACK 75")
 		Armagetronad.SendCommand("CAMERA_SERVER_CUSTOM_PITCH")
 		Armagetronad.SendCommand("CAMERA_ALLOW_")
