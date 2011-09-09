@@ -57,61 +57,59 @@ class OutputToProcess(io.TextIOWrapper):
 
 # FUNCTIONS #############################################
 def exit():
-    sys.stderr.write("Exiting ... ")
-    parser.exit(True, True)
-    sys.stderr.write("Ok \n")
-    sys.stderr.write("Exiting server ... ")
-    global p
-    if p!=None:
-        print("QUIT")
-        p.wait()
-    atexit.unregister(exit)
-    global exitEvent
-    exitEvent.set()
-    sys.stderr.write("Done\n")
-    
-def runServerForever(args, debug=False):    
-    global p
-    f=open("server.log","w")
-    Global.serverlog=os.path.abspath("server.log")
-    c=subprocess.Popen([args[0]]+["--doc"], stderr=subprocess.PIPE, stdout=subprocess.PIPE)
-    doctext=c.communicate()[0].decode()
-    c.wait()
-    doctext=doctext[doctext.find("Available console commands/config file settings")+len("Available console commands/config file settings"):]
-    for line in doctext.split("\n"):
-        line=line.strip()
-        if len(line)==0 or line[0] not in "QWERTZUIOPASDFGHJKLYXCVBNM":    
-            continue
-        command=line[:line.find(" ")]
-        Global.supportedCommands.append(command)
-    while(True):
-        p=subprocess.Popen(args, stdin=subprocess.PIPE, stdout=f, stderr=subprocess.STDOUT )
-        if debug:
-            sys.stderr.write("DEBUG: Executing "+" ".join(args)+"\n")
-        while(True):
-            p.poll()
-            if p.returncode==0 or p.returncode==-15:
-                return
-            elif p.returncode!=None:
-                sys.stderr.write("------- SERVER CRASHED. Restarting. Exit code: ")
-                sys.stderr.write(str(p.returncode)+"\n" )
-                break
-            time.sleep(2)
+	sys.stderr.write("Exiting ... ")
+	parser.exit(True, True)
+	sys.stderr.write("Ok \n")
+	sys.stderr.write("Killing server ... ")
+	p.terminate()
+	p.wait()
+	atexit.unregister(exit)
+	global exitEvent
+	exitEvent.set()
+	sys.stderr.write("Done\n")
+	
+def runServerForever(args, debug=False):	
+	global p
+	f=open("server.log","w")
+	Global.serverlog=os.path.abspath("server.log")
+	c=subprocess.Popen([args[0]]+["--doc"], stderr=subprocess.PIPE, stdout=subprocess.PIPE)
+	doctext=c.communicate()[0].decode()
+	c.wait()
+	doctext=doctext[doctext.find("Available console commands/config file settings")+len("Available console commands/config file settings"):]
+	for line in doctext.split("\n"):
+		line=line.strip()
+		if len(line)==0 or line[0] not in "QWERTZUIOPASDFGHJKLYXCVBNM":	
+			continue
+		command=line[:line.find(" ")]
+		Global.supportedCommands.append(command)
+	while(True):
+		p=subprocess.Popen(args, stdin=subprocess.PIPE, stdout=f, stderr=subprocess.STDOUT )
+		if debug:
+			sys.stderr.write("DEBUG: Executing "+" ".join(args)+"\n")
+		while(True):
+			p.poll()
+			if p.returncode==0 or p.returncode==-15:
+				return
+			elif p.returncode!=None:
+				sys.stderr.write("------- SERVER CRASHED. Restarting. Exit code: ")
+				sys.stderr.write(str(p.returncode)+"\n" )
+				break
+			time.sleep(2)
 def read_stdin():
-    import Armagetronad
-    while(True):
-        try:
-            line=sys.__stdin__.readline().strip()
-            if line.startswith("/"):
-                command=line[1:]
-                if command=="quit":
-                    parser.exit(True)
-                    exit()
-            else:
-                Armagetronad.SendCommand(line)
-                sys.stderr.write("Command sent to server.\n")
-        except Exception as e:
-            print(e)
+	import Armagetronad
+	while(True):
+		try:
+			line=sys.__stdin__.readline().strip()
+			if line.startswith("/"):
+				command=line[1:]
+				if command=="quit":
+					parser.exit(True)
+					exit()
+			elif line!="":
+				Armagetronad.SendCommand(line)
+				sys.stderr.write("Command sent to server.\n")
+		except:
+			pass
 def main():
 	# SETTINGS ##############################################
 	userdatadir="./server/data"
