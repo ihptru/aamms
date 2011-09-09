@@ -348,7 +348,7 @@ class Mode(yaml.YAMLObject):
         if "random" in self.__restype:
             respoint=random.Random().choice(team_respoints)
             self.__last_respoint[team_num]=team_respoints.index(respoint)
-            return repoint
+            return respoint
         if "toggle" in self.__restype:
             self.__last_respoint[team_num]=self.__last_respoint[team_num]+1
             if self.__last_respoint[team_num]>=len(team_respoints):

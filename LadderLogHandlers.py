@@ -216,7 +216,7 @@ def NewRound(date, time, timezone):
     global atRoundend
     global roundNumber
     roundStarted=False
-    log.info("New round started -----------------------------")
+    log.debug("New round started -----------")
     # Lives
     if Mode.current_mode:
         for player in Player.players.values():
@@ -233,13 +233,13 @@ def NewRound(date, time, timezone):
             log.error("Could not execute round end handler "+str(func)+": "+str(e.__class__.__name__) )
     atRoundend=list() # Flush list
     # Votes
-    if Poll.current_vote != None:
-        if Poll.current_vote.aliveRounds==0:
-            Poll.current_vote.CheckResult()
+    if Poll.current_poll != None:
+        if Poll.current_poll.aliveRounds==0:
+            Poll.current_poll.CheckResult()
         else:
-            if not Poll.current_vote.CheckResult(only_sure=True):
-                Armagetronad.PrintMessage(Messages.VoteInProgress.format(target=Poll.current_vote.target, expire=Poll.current_vote.aliveRounds) )
-                Poll.current_vote.aliveRounds=Poll.current_vote.aliveRounds-1
+            if not Poll.current_poll.CheckResult(only_sure=True):
+                Armagetronad.PrintMessage(Messages.VoteInProgress.format(target=Poll.current_poll.target, expire=Poll.current_poll.aliveRounds) )
+                Poll.current_poll.aliveRounds=Poll.current_poll.aliveRounds-1
     Armagetronad.SendCommand("LADDERLOG_WRITE_GAME_TIME 1")
     roundStarted=True
     roundNumber=roundNumber+1

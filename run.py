@@ -134,7 +134,7 @@ def main():
     global Global
     # START #################################################
     # Get available extensions
-    for file in glob.glob("extensions/*.py"):
+    for file in glob.glob("extensions/*/__init__.py"):
         extname=os.path.basename(file)[:-3] # Without the .py
         Global.availableExtensions+=[extname]
         if(options.list_extensions):

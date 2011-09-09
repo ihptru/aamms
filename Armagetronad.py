@@ -14,7 +14,7 @@ import time
 
 ## @brief Executes a command
 # @details Send a command to the server. You only have to replace this function if you
- #          don't want to print commands to stdout.
+#          don't want to print commands to stdout.
 # @param command The command to send
 # @param delay Seconds to wait before executing the command.
 def SendCommand(command, delay=0, forked=False):
@@ -98,8 +98,6 @@ def GetSetting(setting):
         raise RuntimeError("Script wasn't started with run.py or Global.serverlog wasn't set.")
     serverlog=open(Global.serverlog, encoding="latin-1")
     serverlog.seek(0,2)
-    timeformat="%Y/%m/%d-%H:%M:%S"
-    now=datetime.now()
     SendCommand(setting.upper())
     startpattern=r"\[0[^\]]*] "
     pattern1=re.compile(startpattern+setting.upper()+r" is currently set to (?P<value>[^.]*)\.")

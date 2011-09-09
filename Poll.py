@@ -1,10 +1,9 @@
 ## @file Poll.py
 # @package Poll
-# @brief Classes and functions for votes.
+# @brief Classes and functions for voting.
 # @details This file contains classes and functions needed for votes.
 
 import logging
-import Event
 import Armagetronad
 import Player
 import Messages
@@ -16,23 +15,9 @@ if "log" not in dir():
     log=logging.getLogger("VoteModule")
     log.addHandler(logging.NullHandler() )
 
-    ## @brief The EventGroup
-    # @details EventGroup used by this module.
-     #          Events definied by this module:
-     #             Poll created: triggered when a new vote was created.
-     #             Poll successed: triggered when a vote successed. (After a call to \link Poll.Poll.CheckResult()\endlink )
-     #             Poll failed: triggered when a vote failed. (After a call to \link Poll.Poll.CheckResult()\endlink )
-     #             Poll cancelled: triggered by \link Poll.Cancel()\endlink .
-     #          Handlers for Events triggered by this module don't have any arguments.'
-    events=Event.EventGroup("VoteEvents")
-    events.addEvent(Event.Event("Poll created") )
-    events.addEvent(Event.Event("Poll successed") )
-    events.addEvent(Event.Event("Poll failed") )
-    events.addEvent(Event.Event("Poll cancelled") )
-
-    ## @brief The current vote
-    # @details None or an instance of the current vote.
-    current_vote=None
+    ## @brief The current poll
+    # @details None or an instance of the current Poll.
+    current_poll=None
 
     ## @brief Can spectators vote?
     # @details If set to True, votes of spectators are ignored.
@@ -40,60 +25,59 @@ if "log" not in dir():
 
     ## @brief When should a vote expire? (Default value)
     # @details Default number of rounds for which a vote stays alive.
-    defaultStayAlive=5
+    defaultStayAlive=3
 
-## @brief Adds a new vote.
-# @details Adds a vote with the given name and set it as current_vote.
-# @exception RuntimeError Raised if there is already a vote. (current_vote not None)
-# @param target_human The human readable target of the vote (What is the vote about? ). Used for displaying.
-# @param action Function that is executed when the vote successed.
-# @param force Cancel current vote if a vote is already active? 
+## @brief Creates a Poll.
+# @details Creates a Poll with the given name and set it as current_poll.
+# @exception RuntimeError Raised if there is already a Poll. (current_poll not None)
+# @param target_human The human readable target of the Poll (What is the Poll about? ). Used for displaying.
+# @param action Function that is executed when the Poll succeed.
+# @param force Cancel current Poll if a Poll is already active? 
 
 def Add(target_human, action, force=False):
-    global current_vote
-    if current_vote != None:
+    global current_poll
+    if current_poll != None:
         if not force:
             raise RuntimeError("Already a vote active", 1)
         else:
             Cancel()
-    current_vote=Poll(target_human, action)
-    events.triggerEvent("Poll created")
-    log.info("New vote about "+target_human+" created.")
+    current_poll=Poll(target_human, action)
+    log.info("New Poll  "+target_human+" created.")
 
-## @brief Cancels the current vote.
-# @details Sets current_vote to None and prints a message.
+## @brief Cancels the current Poll.
+# @details Sets current_poll to None and prints a message.
 def Cancel():
-    global current_vote
-    current_vote=None
+    global current_poll
+    current_poll=None
     log.info("Poll cancelled.")
 
 
 ## @brief The vote class
-# @details This class is used to manage a vote.
+# @details This class is used to manage a Poll.
 class Poll:
     ## @property __players_voted_yes
-    # @brief What players voted for the vote?
-    # @details Set of the players who voted for the vote.
+    # @brief What players voted for the Poll?
+    # @details Set of the players who voted for the Poll.
 
     ## @property __players_voted_no
-    # @brief What players voted against the vote?
-    # @details Set of the players who voted against the vote.
+    # @brief What players voted against the Poll?
+    # @details Set of the players who voted against the Poll.
 
     ## @property target
-    # @brief The human readable target of the vote.
-    # @details Target: What is the vote about? Used by the script to display to the user.
+    # @brief The human readable target of the Poll.
+    # @details Target: What is the Poll about? Used by the script to display to the user.
 
     ## @property action
-    # @brief Function that is called when the vote success.
+    # @brief Function that is called when the Poll success.
     # @details Function could be every object that has a __call__ method(is callable)
 
     ## @property aliveRounds
-    # @brief When does the vote expire?
-    # @details Number of round for which the vote stays "alive".
+    # @brief When does the Poll expire?
+    # @details Number of round for which the Poll stays "alive".
 
     ## @brief Init function (Constructor)
-    # @details Inits a new vote.
-    # @param target Human readable target of the vote.
+    # @details Inits a new Poll.
+    # @param target Human readable target of the Poll.
     # @param action Action. None if no function should be called.
     def __init__(self, target, action=None):
         global defaultStayAlive
@@ -103,8 +87,8 @@ class Poll:
         self.__players_voted_no=[]
         self.__players_voted_yes=[]
 
-    ## @brief Checks the result of the vote.
-    # @details Checks if the vote successed or failed and triggers "Poll successed"
+    ## @brief Checks the result of the Poll.
+    # @details Checks if the vote successed or failed.
      #          or "Poll failed" event.
     # @param not_voted What happens with players who didn't vote?
      #                  Could be "yes", "no" or "dont_count".
@@ -155,26 +139,24 @@ class Poll:
             percent_yes=yes_count/(len(Player.players)-len(Player.getBots() ))*100
             percent_no=no_count/(len(Player.players)-len(Player.getBots() ))*100
         if percent_yes >= min_needed:
-            events.triggerEvent("Poll successed")
             log.info("Poll for {0} successed.".format(self.target) )
             Armagetronad.PrintMessage(Messages.VoteSuccessed.format(target=self.target) )
             self.action()
         elif percent_no>(100-min_needed):
-            events.triggerEvent("Poll failed")
             log.info("Poll for {0} failed.".format(self.target) )
             Armagetronad.PrintMessage(Messages.VoteFailed.format(target=self.target) )
         else:
             return False
-        global current_vote
-        current_vote=None
+        global current_poll
+        current_poll=None
         return True
 
     ## @brief Sets what a player voted.
     # @details Checks if the player is a spectator. If yes and
-     #          spec_allowed is set to False, return immendiately. Otherwise,
-     #          add the player to the list of players who voted for|agains the vote.
+    #          spec_allowed is set to False, return immendiately. Otherwise,
+    #          add the player to the list of players who voted for|agains the Poll.
     # @param player The ladder name of the player who voted.
-    # @param vote True if the player voted for the voted, False otherwise.
+    # @param vote True if the player voted yes for the Poll, False otherwise.
     # @exception RuntimeError Raised if the player has already voted.
     # @exception ValueError Raised if the player doesn't exist.'
     def SetPlayerVote(self, player, vote):

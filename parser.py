@@ -51,7 +51,7 @@ def main(debug=False, disabledCommands=[]):
     else:
         Player.enableLogging(logging.WARNING)
         Team.enableLogging(logging.WARNING)
-        LadderLogHandlers.enableLogging(logging.WARNING)
+        LadderLogHandlers.enableLogging(logging.INFO)
         Mode.enableLogging(logging.INFO)
         Poll.enableLogging(logging.WARNING)
         Zone.enableLogging(logging.WARNING)
@@ -60,7 +60,6 @@ def main(debug=False, disabledCommands=[]):
     #Init
     Mode.loadModes()
     AccessLevel.load()
-    Global.updateHelpTopics()
     log.info("Script started")    
     Armagetronad.PrintMessage("0xff0000Script started")
     #We need to refresh player list

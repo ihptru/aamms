@@ -7,14 +7,12 @@
 import logging
 import logging.handlers
 import Team
-import Event
-from Armagetronad import *
-import copy
+import Armagetronad
 
 if "players" not in dir():
     ## @brief This variable is used to store the players.
     # @details This variable is a dictionary of players where the ladder name of the player
-     #          is the key.
+    #          is the key.
     players=dict()
 
 ## @brief Adds a new Player
@@ -30,7 +28,6 @@ def Add(lname,name,ip):
         print(players[lname] )
         raise RuntimeError("Player „"+lname+"“ already exists.")
     players[lname]=Player(lname,name,ip)
-    events.triggerEvent("Player added",lname)
 
 ## @brief Gets a bots
 # @details Returns all players that has is_human set to false.
@@ -47,6 +44,7 @@ def getBots():
 # @param oldname The old ladder name of the player
 # @param newname The new ladder name of the player
 def UpdatePlayer(oldname,newname):
+    global log
     if oldname not in players:
         log.error("Player „"+oldname+"“ should be renamed to „"+newname+"“ , but it doesn't exist. Adding it.")
         Add(newname,newname,"127.0.0.1")
@@ -76,26 +74,11 @@ def Remove(name):
     if name not in players:
         raise RuntimeError("Trying to remove player „"+name+"“, but it doesn't exist.")
     del players[name]
-    events.triggerEvent("Player removed")
 
 ## @cond
 #logging
 logging.getLogger("PlayerModule").addHandler(logging.NullHandler() )
 log=logging.getLogger("PlayerModule")
-#Events
-events=Event.EventGroup("PlayerEvents")
-events.addEvent(Event.Event("Player renamed") )
-events.addEvent(Event.Event("Player joined team") )
-events.addEvent(Event.Event("Player left team") )
-events.addEvent(Event.Event("Player died") )
-events.addEvent(Event.Event("Player killed") )
-events.addEvent(Event.Event("Player crashed") )
-events.addEvent(Event.Event("Player logged in") )
-events.addEvent(Event.Event("Player logged out") )
-events.addEvent(Event.Event("Player respawned") )
-events.addEvent(Event.Event("Player added") )
-events.addEvent(Event.Event("Player removed") )
-events.getEvent("Player renamed").addAction(UpdatePlayer)
 ## @endcond
 
 
@@ -107,7 +90,7 @@ class Player:
     ## @property __ladder_name
     # @brief The name of the player on the ladder
     # @details This variable is set to the escaped name or login of the player. It's
-     #          used to indentify the player.
+    #          used to identify the player.
     # @private
 
     ## @property name
@@ -129,7 +112,7 @@ class Player:
     ## @property __team
     # @brief The name of the team in which the player is in.
     # @details The name of the player's team. None if the player is spectating, or
-     #          AI if the player is in the AI team.
+    #          AI if the player is in the AI team.
 
     ## @property __logged_in
     # @brief If the player is logged in?
@@ -139,7 +122,7 @@ class Player:
     # @brief The ping of the player
     # @details The current ping of the player.
     # @note Currently there's no use for the ping of the player, but it may be used
-     #       in future.
+    #       in future.
 
     ## @property __old_name
     # @brief The old name
@@ -192,12 +175,11 @@ class Player:
     ## @brief Sets the team of the player
     # @details This function lets the player join the given team
     # @param teamname The escaped name of the team to which to add the player.
-     #                 None if the player is specating. AI if the player is in the AI team.
+    #                 None if the player is specating. AI if the player is in the AI team.
     # @param force Create the team if it doesn't exist?
     # @param quiet If True, don't print info log messages
     # @exception RuntimeError Raised if the team doesn't exist and force isn't set
     # @note This also calls Team::addPlayer (adds the player to the team)
-    # @note This triggers the event "Player joined team"
     # @note If the team name is AI, is_human is set to False
     def joinTeam(self, teamname, force=False, quiet=False):
         if self.__team == teamname and teamname!=None and teamname in Team.teams:
@@ -219,7 +201,6 @@ class Player:
             else:
                 raise RuntimeError("Team „" + teamname + "“ doesn't exist.")
         Team.teams[teamname].addPlayer(self.__ladder_name)
-        events.triggerEvent("Player joined team",self.__ladder_name,teamname)
         if not quiet:
             log.info("Player „" + self.name + "“ joined team „" + Team.teams[teamname].getName()
                      + "“.")
@@ -231,7 +212,6 @@ class Player:
     # @details This function lets the player leave the team.
     # @param quiet If True, don't print info log messages
     # @note This also calls Team::removePlayer (removes the player from the team)
-    # @note This triggers the event "Player left team".
     def leaveTeam(self,quiet=False):
         if self.__team == None:
             return
@@ -245,18 +225,17 @@ class Player:
                 pass
         if len(Team.teams[self.__team].getMembers())==0:
             Team.Remove(self.__team)
-        events.triggerEvent("Player left team",self.__ladder_name, self.__team)
         if not quiet:
             log.info("Player „"+self.name+"” left team „"+teamname+"“.")
         self.__team=None
 
     ## @brief Set player's lives
     # @details This sets the player's lives to the given number. A value less or equal
-     #          0 means the player is death.
+    #          0 means the player is death.
     # @param lives The lives
     # @note If the number of lives is less than 0, 0 is used for lives.
-    # @note Setting the lives to 0 does NOT immenediately kill the player. For that,
-     #       use Player::kill.
+    # @note Setting the lives to 0 does NOT immediately kill the player. For that,
+    #       use Player::kill.
     def setLives(self, lives):
         if lives < 0:
             lives=0
@@ -265,16 +244,11 @@ class Player:
     ## @brief This decreases the player's lives counter by 1
     # @details Call this function when the player crashed.
     # @return Remaining lives. 0 is the player is death.
-    # @note This triggers the event "Player crashed". If the lives are less or equal 0
-     #       after decreasing them, "Player died" is also triggered.
     def crashed(self):
         self.__lives=self.__lives-1
         if self.__lives<0:
             log.debug("A player is crashed but shouldn't have been alive. Setting lives to 0.")
             self.__lives=0
-        events.triggerEvent("Player crashed",self.__ladder_name)
-        if self.__lives==0:
-            events.triggerEvent("Player died",self.__ladder_name)
         return self.__lives
 
     ## @brief Kills the player.
@@ -282,20 +256,17 @@ class Player:
     # @note The lives of the player are set to 0.
     # @note This triggers the event "Player killed" and "Player died".
     def kill(self):
-        SendCommand("KILL "+self.__old_ladder_name)
-        events.triggerEvent("Player killed",self.__ladder_name)
-        events.triggerEvent("Player died",self.__ladder_name)
+        Armagetronad.SendCommand("KILL "+self.__old_ladder_name)
         self.__lives=0
         log.info("Player " + self.__old_ladder_name + " got killed by the script.")
 
     ## @brief Sets the ladder name
     # @details This function sets the ladder name.
     # @param name The new ladder name
-    # @note This triggers the event "Player renamed"
     def setLadderName(self, name):
         oldname=self.__ladder_name
         self.__ladder_name=name
-        events.triggerEvent("Player renamed",oldname,self.__ladder_name)
+        UpdatePlayer(oldname, name)
 
     ## @brief Respawns the player
     # @details This function respawns the player at the given position.
@@ -305,19 +276,17 @@ class Player:
     # @param ydir The y direction
     # @param force Force position changing(teleporting) ?
     # @note This sets Player's lives to 0 if they are less 0
-    # @note This triggers the event "Player respawned"
     def respawn(self, x ,y, xdir, ydir, force):
         if self.__lives < 0:
             self.__lives=0
         if force:
-            SendCommand("KILL "+self.__ladder_name)
-        SendCommand("RESPAWN_PLAYER "+str(self.__ladder_name) + " 0 "+str(x)+
+            Armagetronad.SendCommand("KILL "+self.__ladder_name)
+        Armagetronad.SendCommand("RESPAWN_PLAYER "+str(self.__ladder_name) + " 0 "+str(x)+
                     " "+str(y)+" "+str(xdir)+" "+str(ydir) )
-        if force:
+        #if force
             #SendCommand("TELEPORT_PLAYER {0} {1} {2} {3} {4}".format(self.__old_ladder_name,
             #            y,x,xdir,ydir) )
-            pass
-        events.triggerEvent("Player respawned",self.__ladder_name)
+        #    pass
 
     ## @brief Gets ladder name
     # @details This function gets the ladder name
@@ -330,22 +299,20 @@ class Player:
     # @param force Force renaming?
     def applyChanges(self, force=True):
         if self.__old_name != self.name:
-            SendCommand("RENAME "+self.__old_ladder_name+" "+self.name)
+            Armagetronad.SendCommand("RENAME "+self.__old_ladder_name+" "+self.name)
             self.__old_name=self.name
             if force:
-                SendCommand("DISALLOW_RENAME_PLAYER "+self.__ladder_name)
+                Armagetronad.SendCommand("DISALLOW_RENAME_PLAYER "+self.__ladder_name)
             else:
-                SendCommand("ALLOW_RENAME_PLAYER "+self.__ladder_name)
+                Armagetronad.SendCommand("ALLOW_RENAME_PLAYER "+self.__ladder_name)
         self.__old_ladder_name=self.__ladder_name
 
     ## @brief Player logged in
     # @details Sets logged_in to True and ladder_name to the login
     # @param global_id The login
-    # @note This triggers the event "Player logged in"
     def login(self,global_id):
         self.__logged_in=True
         self.setLadderName(global_id)
-        events.triggerEvent("Player logged in",self.__ladder_name)
 
     ## @brief Player logged out
     # @details Sets logged in to False and ladder_name to the given ladder_name
@@ -354,7 +321,6 @@ class Player:
     def logout(self,ladder_name):
         self.__logged_in=False
         self.setLadderName(ladder_name)
-        events.triggerEvent("Player logged out", self.__ladder_name)
 
     ## @brief Returns the lives of the player
     # @details Returns the remaining lives of the player
@@ -363,14 +329,14 @@ class Player:
 
     ## @brief Returns in-game ladder name
     # @details This function return the ladder name of the player that is currently used
-     #          in the game.
+    #          in the game.
     # @return The in-game ladder name
     def getInGameLadderName(self):
         return self.__old_ladder_name
 
     ## @brief Returns in-game name
     # @details This function returns the name of the player that is currently used
-     #          in the game
+    #          in the game
     # @return The in-game name
     def getInGameName(self):
         return self.__old_name
@@ -389,7 +355,7 @@ class Player:
 
 ## @brief Enables Logging
 # @details This function enables logging for all Player classes. For more information see
- #          the logging module.
+#          the logging module.
 # @param h The handler used for logging
 # @param f The formatter used for logging
 # @param level The logging level
@@ -421,7 +387,6 @@ class PlayerModuleTest(unittest.TestCase):
 
     def test_renaming(self):
         Add("test_rename_player","Test rename player", "127.0.0.1")    
-        old_player=players["test_rename_player"]
         players["test_rename_player"].setLadderName("renamed_player")
         self.assertNotIn("test_rename_player", players.keys(), "Renaming of a player failed: Old player got not removed from player list")
         self.assertIn("renamed_player", players.keys(), "Renaming of a player failed: Player isn't moved to the new position in the player list")
@@ -452,5 +417,5 @@ def suite():
 
 if __name__=="__main__":
     nullFunction=lambda *args: None
-    SendCommand=nullFunction
+    Armagetronad.SendCommand=nullFunction
     unittest.TextTestRunner(verbosity=2).run(suite() )

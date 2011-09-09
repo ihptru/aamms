@@ -380,8 +380,7 @@ def acl(acl, player, command, access=0):
         return
     AccessLevel.setAccessLevel(command, access)
     Armagetronad.PrintPlayerMessage(player, Messages.AccessLevelChanged.format(command=command, access=access) )
-    Global.updateHelpTopics()
-
+    
 ## @brief Reload the script.
 # @details This command reloads all files of the script.
 # @param acl The accesslevel of the player
