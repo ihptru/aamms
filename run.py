@@ -96,7 +96,7 @@ def runServerForever(args, debug=False):
 				sys.stderr.write(str(p.returncode)+"\n" )
 				break
 			time.sleep(2)
-def	read_stdin():
+def read_stdin():
 	import Armagetronad
 	while(True):
 		try:
@@ -106,7 +106,7 @@ def	read_stdin():
 				if command=="quit":
 					parser.exit(True)
 					exit()
-			else:
+			elif line!="":
 				Armagetronad.SendCommand(line)
 				sys.stderr.write("Command sent to server.\n")
 		except:
