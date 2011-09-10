@@ -11,8 +11,7 @@ import AccessLevel
 import Poll
 import Player
 
-def onStartup():
-    global log
+if "log" not in globals():
     log=logging.getLogger("MainModule")
     h=logging.StreamHandler()
     h.setLevel(logging.DEBUG)

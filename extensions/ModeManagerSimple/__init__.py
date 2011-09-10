@@ -1,1 +1,1 @@
-from Manger import *
+from .Manger import *

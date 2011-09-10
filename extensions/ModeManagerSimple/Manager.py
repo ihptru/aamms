@@ -1,4 +1,3 @@
-import LadderLogHandlers
 import Commands
 
 ## @brief Parses a map file and returns respoints.
@@ -25,3 +24,6 @@ def ParseZones(map):
 #  @param desc The description of the mode.
 def AddMode(acl, player, name, file, desc):
     pass
+
+Commands.add_help_group("ModeManager", "Commands for managing modes (Add, Edit, Remove)")
+Commands.register_commands(AddMode, group="ModeManager")

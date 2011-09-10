@@ -9,7 +9,6 @@ import AccessLevel
 import Messages
 import Player
 import logging
-import logging.handlers
 import Team
 import Mode
 import Poll
@@ -220,7 +219,7 @@ def NewRound(date, time, timezone):
     # Lives
     if Mode.current_mode:
         for player in Player.players.values():
-            player.setLives(Mode.current_mode.lives)
+            player.setLives(Mode.current_mode.lives) #@UndefinedVariable
     # Flush bot list (NEEDED because no PlayerLeft is called for bots)
     bots=Player.getBots()
     for bot in bots:
@@ -259,15 +258,15 @@ def CycleCreated(lname, x, y, xdir, ydir):
         Team.Add("AI")
     Player.players[lname].joinTeam("ai", quiet=True)
     if(Mode.current_mode):
-        Player.players[lname].setLives(Mode.current_mode.lives)
+        Player.players[lname].setLives(Mode.current_mode.lives) #@UndefinedVariable
 
 def GameTime(time):
     if time=="-4" and Mode.current_mode:
-        Mode.current_mode.spawnTeams()
+        Mode.current_mode.spawnTeams() #@UndefinedVariable
         Team
     if time=="-2" and Mode.current_mode:
         Armagetronad.SendCommand("LADDERLOG_WRITE_GAME_TIME 0")
-        Mode.current_mode.spawnZones()
+        Mode.current_mode.spawnZones() #@UndefinedVariable
     if int(time)>0:
         Armagetronad.SendCommand("LADDERLOG_WRITE_GAME_TIME 0")
 
@@ -297,7 +296,7 @@ def Positions(team, *members):
 respawn_events=("DEATH_SUICIDE","DEATH_TEAMKILL", "DEATH_DEATHZONE", "DEATH_FRAG", "DEATH_SHOT_FRAG", "DEATH_SHOT_SUICIDE", "DEATH_SHOT_TEAMKILL")
 def HandlePlayerDied(event, player, *args): 
     if Mode.current_mode: 
-        Mode.current_mode.playerCrashed(player, event)
+        Mode.current_mode.playerCrashed(player, event) #@UndefinedVariable
 for event in respawn_events:
     f=lambda *args: HandlePlayerDied(event, *args) 
     if event in extraHandlers:

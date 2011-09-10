@@ -4,19 +4,16 @@
 # @details This file contains classes and functions for mode management
 # @package Mode
 
-import Zone
 import copy
 import Player
 import Team
 import random
 import Armagetronad
 import logging
-import logging.handlers
 import LadderLogHandlers
 import yaml
 from glob import glob
 import os.path
-import os
 import Messages
 
 if "settings_prefix" not in dir():
@@ -32,11 +29,11 @@ if "settings_prefix" not in dir():
     log.addHandler(logging.NullHandler() )
 
     ## @brief Stores all modes
-    # @details This is a dictionary of all avaliable modes, where the name of the mode is the key.
+    # @details This is a dictionary of all available modes, where the name of the mode is the key.
     modes=dict()
 
     ## @brief The current mode
-    # @details The escaped name of the currently active mode.
+    # @details The Mode object of the current mode.
     current_mode=None
 
 ## @brief Adds a new mode
@@ -115,10 +112,10 @@ class Mode(yaml.YAMLObject):
     ## @property __zones
     # @brief The zones of the modes.
     # @details A list of zones. Each item is a tuple of team and the zone object and optionaly the delay after which the zone gets spawned.
-     #          The team could be None if the zone should be spawned for all teams.
-     #          Otherwise, set team to the number of the team for which the zone
-     #          should be spawned, or -1 if the zone doesn't belong to any team and
-     #          should allways be spawned.
+    #          The team could be None if the zone should be spawned for all teams.
+    #          Otherwise, set team to the number of the team for which the zone
+    #          should be spawned, or -1 if the zone doesn't belong to any team and
+    #          should allways be spawned.
 
     ## @property max_teams
     # @brief Maximal teams that can be active in this mode.
@@ -131,7 +128,7 @@ class Mode(yaml.YAMLObject):
     ## @property settings_file
     # @brief The settings file which to include when the mode gets activated.
     # @details The path of the file which gets include when the mode is activated, relative
-     #          to settings_prefix
+    #          to settings_prefix
 
     ## @property settings_prefix
     # @brief The directory under which the settings files are stored.
@@ -141,20 +138,20 @@ class Mode(yaml.YAMLObject):
     ## @property __respoints
     # @brief Respoints of this mode.
     # @details List of respawn points. Each respawn point is a tuple of team,x,y,xdir and ydir.
-     #          Where x,y are the coordinates, and xdir and ydir are the dirtion.
-     #          If the respoint should be avaliable for all teams, set team to None.
-     #          Else set team to the number of the team for which the respoint should be
-     #          avaliable.
+    #          Where x,y are the coordinates, and xdir and ydir are the dirtion.
+    #          If the respoint should be avaliable for all teams, set team to None.
+    #          Else set team to the number of the team for which the respoint should be
+    #          avaliable.
 
     ## @property settings
     # @brief Additional settings.
     # @details Dictionary of settings where the key is the name of the setting and the
-     #          value is the value of the setting.
+    #          value is the value of the setting.
 
     ## @property __restype
     # @brief How should the respoints be used?
     # @details Could be random_roundstart, random_allways, toggle_roundstart,
-     #          toggle_allways,toggle_whileround, random_whileround or first.
+    #          toggle_allways,toggle_whileround, random_whileround or first.
 
     ## @property __last_respoint
     # @brief The last used respoint.
@@ -206,7 +203,7 @@ class Mode(yaml.YAMLObject):
     # @param xdir The x-direction
     # @param ydir The y-direction
     # @param team Optional the number of the team for which the respoint should be used.
-     #             If not given, the respoint is used for all teams.
+    #             If not given, the respoint is used for all teams.
     def addRespoint(self, x, y, xdir, ydir, team=-1):
         if team not in self.__last_respoint:
             self.__last_respoint[team]=0
@@ -225,7 +222,7 @@ class Mode(yaml.YAMLObject):
 
     ## @brief Call this when a player crashed.
     # @details This function will handle the crash and if the lives of the player arent't
-     #          0, it will respawn the player.
+    #          0, it will respawn the player.
     # @param player The ladder name of the player who crashed.
     # @param type The type of the crash("DEATH_FRAG","DEATH_TEAMKILL",...)
     # @return Has the player been respawned?
@@ -237,7 +234,6 @@ class Mode(yaml.YAMLObject):
             log.warning("No respoints for mode {0} registered.".format(self.name) )
             return False
         # get a repoint
-        respoint=None
         i=0
         for team in Team.teams.keys():
             if team==Player.players[player].getTeam():
@@ -247,7 +243,7 @@ class Mode(yaml.YAMLObject):
             log.error("Player „{0}“ has an invalid team".format(player) )
             return
         respoint=self.__getRespoint("normal",i)
-        t,x,y,xdir,ydir=respoint
+        x,y,xdir,ydir=respoint[1:]
         Player.players[player].respawn(x,y,xdir,ydir,False)
         name=Player.players[player].name
         msg=""
@@ -298,7 +294,7 @@ class Mode(yaml.YAMLObject):
         for team in Team.teams:
             try:
                 respoint=self.__getRespoint("roundstart",i)
-                t,x,y,xdir,ydir=respoint
+                x,y,xdir,ydir=respoint[1:]
                 Team.teams[team].respawn(x,y,xdir,ydir,1,1,True)
             except Exception as e:
                 log.error("Could not spawn team {0}: {1}".format(str(team),str(e)) )
@@ -359,7 +355,7 @@ class Mode(yaml.YAMLObject):
     ## @brief Adds a zone
     # @details Adds the given zone to the internal zone list.
     # @param team The number of the team for which the zone should be spawned, or None
-     #             if it should be spawned for all teams.
+    #             if it should be spawned for all teams.
     # @param zone The zone to add
     # @param delay The delay after which the zone gets spawned. 
     def addZone(self, team, zone, delay=0):

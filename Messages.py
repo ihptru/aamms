@@ -54,7 +54,7 @@ VoteAdded="0x00ff00Vote for 0xffff00{target} 0x00ff00submitted by 0x00ff88{playe
 ## @brief Vote cancelled message
 # @details This message is printed when an admin cancelled a vote.
 # @param target The target of the cancelled vote.
-VoteCancelled=("0xff2200The vote about 0xffff00{target} 0xff2200got cancelled by an administrator.")
+VoteCancelled="0xff2200The vote about 0xffff00{target} 0xff2200got cancelled by an administrator."
 
 ## @brief Vote successed message
 # @details This message is printed when a vote successed.

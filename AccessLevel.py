@@ -10,7 +10,7 @@ import logging
 if "__accessLevels" not in dir():
     ## @brief Access level needed for a specific commands
     # @details This is an dictionary of the minimum access level needed for a command, where
-     #          the command is the key.
+    #          the command is the key.
     # @private
     __accessLevels=dict()
     ## @cond
@@ -51,4 +51,4 @@ def load(file="access.yaml"):
     if not exists("access.yaml"):
         return
     with open(file) as f:
-         __accessLevels=yaml.load(f)
+        __accessLevels=yaml.load(f)

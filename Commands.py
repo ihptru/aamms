@@ -6,7 +6,6 @@
 import Armagetronad
 import Zone
 import Player
-import Team
 import Mode
 import LadderLogHandlers
 import Messages
@@ -15,7 +14,6 @@ import Poll
 import AccessLevel
 import re
 import Global
-import threading
 import time
 if "disabled" not in dir():
     ###################################### VARIABLES #########################################
@@ -57,7 +55,6 @@ if "disabled" not in dir():
 # @return A tuple of (minargcount, maxargcount, defaultvalues, names)
 def getArgs(command):
     commandf=globals()[command]
-    defline=""
     with open(commandf.__code__.co_filename) as f:
         defline=f.readlines()[commandf.__code__.co_firstlineno-1]
     defline=defline[defline.find("(")+1:defline.rfind(")")]
@@ -95,14 +92,13 @@ def getArgs(command):
 def checkUsage(command, *args):
     if command.startswith("/"):
         command=command[1:]
-    commandf=globals()[command]
     minargcount, maxargcount, unused, unused=getArgs(command)
     if minargcount <= len(args) <= maxargcount:
         return True
     else:
         return False
 
-## @brief Returns all avaliable commands.
+## @brief Returns all available commands.
 # @details Searches this file for commands and return its names.
 # @return The command names.
 def getCommands():
@@ -136,7 +132,7 @@ def getCommands():
 def getCommandLine(command):
     if command.startswith("/"):
         command=command[1:] #Remove the slash
-    minargcount, maxargcount, defaultvalues, argnames=getArgs(command)
+    minargcount, maxargcount, defaultvalues, argnames=getArgs(command) #@UnusedVariable
     neededargs=argnames[:minargcount]
     optionalargs=argnames[minargcount:maxargcount]
     optionalargsstr=""
@@ -159,12 +155,10 @@ def getDescription(command):
         command=command[1:] #Remove the slash
     commandf=globals()[command]
     minargcount, maxargcount, defaultvalues, argnames=getArgs(command)
-    neededargs=argnames[:minargcount]
+    neededargs=argnames[:minargcount] #@UnusedVariable
     optionalargs=argnames[minargcount:maxargcount]
 
-    lines=""
     commentars=list()
-    currentlineno=0
     with open(commandf.__code__.co_filename) as f:
         lines=f.readlines()
         currentlineno=commandf.__code__.co_firstlineno - 2
@@ -236,10 +230,58 @@ def getHelp(command):
 ## @brief Register new commands
 # @details Register new functions to be used as commands.
 # @param *functions Functions to register.
-def register_commands(*functions):
+def register_commands(*functions, group=None):
+    if group:
+        try:
+            get_help_topic("commands "+group)
+        except ValueError:
+            return
     for func in functions:
         globals()[func.__name__]=func
 
+def get_help_topic(*path):
+    global helpTopics
+    curtopic=helpTopics
+    for i in path:
+        if type(i)!=tuple:
+            if i in curtopic:
+                curtopic=curtopic[i]
+            else:
+                raise ValueError("Path doesn't exist")
+        else:
+            if i in curtopic[1]:
+                curtopic=curtopic[1][i]
+            else:
+                raise ValueError("Path doesn't exist")
+    return curtopic
+
+def add_help_group(group, desc):
+    register_help("commands "+group, desc, dict()) 
+    
+                
+        
+## @brief Register a help topic for commands or other things.
+#  @details Add a new help topic.
+#  @param name The name of the help topic.
+#  @param label The short description of the topic.
+#  @param data The data. (List of commands, text, function which to call when accessing the help topic.)
+#  @param access Optional The access level which is required to see this help topic (Usefull for data types text and function)
+#  @param override Override existing topics?
+def register_help(name,label, data, access=None, override=False):
+    h=get_help_topic(*name.split()[:-1])
+    if type(h)!=tuple:
+        return
+    if type(h[1]) == dict:
+        name=name.split()[-1]
+        if name in h[1] and not override:
+            return
+        if not access:
+            h[1][name]=(label, data)
+        else:
+            h[1][name]=(label, data, access)
+    else:
+        return
+    
 
 ###################################### COMMANDS ##########################################
 #START COMMANDS
@@ -292,95 +334,7 @@ def printBuffer(acl, player):
     else:
         Armagetronad.PrintPlayerMessage(player,"Buffer: Empty")
 
-## @brief Activates a mode.
-# @details This is the /mode command
-# @param player The player who executed this command
-# @param gmode The mode which to activate.
-# @param type Optional How does the mode get activated? Could be set or vote. Set isn't avaliable for normal players.
-# @param when Optional When gets the mode activated? Only affects if type is set. Could be now, roundend or matchend.
-def mode(acl, player, gmode, type="vote", when="now"):
-    smode=""
-    mode=None
-    for key, m in Mode.modes.items():
-        if m.short_name.lower()==gmode.lower() or m.getEscapedName==gmode.lower():
-            mode=key
-            smode=m.short_name.lower()
-    if mode not in Mode.modes:
-        Armagetronad.PrintPlayerMessage(player, Messages.ModeNotExist.format(mode=gmode))
-        return
-    if(type=="vote"):
-        if Poll.current_vote != None:
-            Armagetronad.PrintPlayerMessage(player, Messages.VoteAlreadyActive)
-            return
-        Poll.Add(Mode.modes[mode].short_name, Mode.modes[mode].activate)
-        Poll.current_vote.SetPlayerVote(player, True)
-        Armagetronad.PrintMessage(Messages.VoteAdded.format(target=smode, player=Player.players[player].name) )
-        return
-    elif type=="set":
-        if when=="now" and AccessLevel.isAllowed("mode_set_now", acl):
-            Mode.modes[mode].activate(True)
-        elif when=="roundend" and AccessLevel.isAllowed("mode_set_roundend", acl):
-            Armagetronad.PrintMessage("0x00ffffMode will change to {0} after this round. ".format(smode) )
-            LadderLogHandlers.atRoundend.append(Mode.modes[mode].activate)
-        elif when=="matchend" and AccessLevel.isAllowed("mode_set_matchend", acl):
-            Armagetronad.PrintMessage("0x00ffffNext match's gamemode changed to {0}.".format(smode) )
-            LadderLogHandlers.atMatchend.append(Mode.modes[mode].activate)
-        else:
-            pass
-    else:
-        pass
 
-## @brief Vote for a poll
-# @details Adds the player to the list of yes voters
-# @param acl The accesslevel of the player
-# @param player The name of the player
-def yes(acl, player):
-    if not Poll.current_vote:
-        Armagetronad.PrintPlayerMessage(player, Messages.NoActiveVote)
-        return
-    try:
-        Poll.current_vote.SetPlayerVote(player, True)
-        Armagetronad.PrintMessage(Messages.PlayerVotedYes.format(player=Player.players[player].name, target=Poll.current_vote.target) )
-    except RuntimeError:
-        Armagetronad.PrintPlayerMessage(player, Messages.PlayerAlreadyVoted)
-
-## @brief Vote against a vote
-# @details Adds the player to the list of no voters
-# @param acl The accesslevel of the player
-# @param player The name of the player
-def no(acl, player):
-    if not Poll.current_vote:
-        Armagetronad.PrintPlayerMessage(player, Messages.NoActiveVote)
-        return
-    try:
-        Poll.current_vote.SetPlayerVote(player, False)
-        Armagetronad.PrintMessage(Messages.PlayerVotedNo.format(player=Player.players[player].name, target=Poll.current_vote.target) )
-    except RuntimeError:
-        Armagetronad.PrintPlayerMessage(player, Messages.PlayerAlreadyVoted)
-
-## @brief Cancel a vote.
-# @details Cancel the current vote if a vote is active.
-# @param acl The accesslevel of the player
-# @param player The name of the player
-def cancel(acl, player):
-    if Poll.current_vote:
-        Armagetronad.PrintMessage(Messages.VoteCancelled.format(target=Poll.current_vote.target) )
-        Poll.Cancel()
-
-## @brief Set the access level that is needed for a specific command.
-# @details Calls AccessLevel.setAccessLevel()
-# @param acl The accesslevel of the player
-# @param player The name of the player
-# @param command The command for which to set the access level.#
-# @param access Optional The minmal access level that a user must have to excute the given command.
-def acl(acl, player, command, access=0):
-    try:
-        access=int(access)
-    except:
-        return
-    AccessLevel.setAccessLevel(command, access)
-    Armagetronad.PrintPlayerMessage(player, Messages.AccessLevelChanged.format(command=command, access=access) )
-    
 ## @brief Reload the script.
 # @details This command reloads all files of the script.
 # @param acl The accesslevel of the player
@@ -470,7 +424,7 @@ def normal(acl, player):
     Armagetronad.SendCommand("SINCLUDE settings_custom.cfg")
     Global.reloadPlayerList()
     if Mode.current_mode:
-        Mode.current_mode.activate(True)
+        Mode.current_mode.activate(True) #@UndefinedVariable (for Eclipse)
     for player in Player.players.values():
         player.kill()
     Global.state="normal"
@@ -527,8 +481,8 @@ def lessSpeed(acl, player):
 # @param g Green
 # @param b Blue
 # @param team The team for which the zone should get spawned. 
- #             -1 if the zone doesn't belong to any team. 
- #              0 if the zone should be spawned once for every team.
+#             -1 if the zone doesn't belong to any team. 
+#              0 if the zone should be spawned once for every team.
 # @param extrasettings Additional settings for the zone type (like <rubber> for rubber zones)
 def makeZone(acl, player, name,type,size, grow="0", team="-1",r=0,g=0,b=15, extrasettings=""):
     if type not in Zone._ZONE_TYPES :
@@ -597,7 +551,6 @@ def modeSetting(acl, player, setting, *value):
 def saveMode(acl, player):
     global data
     Mode.modes[data["mode"].getEscapedName()]=data["mode"]
-    Global.updateHelpTopics()
     Mode.saveModes(modename=data["mode"].getEscapedName())
     Armagetronad.PrintMessage("0x00ff00Saved mode")    
 
@@ -615,7 +568,7 @@ def info(acl, player, *topics):
         Armagetronad.PrintPlayerMessage(player, getHelp(" ".join(topics) ) )
         return
     acl=int(acl)
-    def checkAclTopic(topic2):
+    def checkAclTopics(topic2):
         if hasattr(topic2,"__call__"):
             topic2=topic2()
         if type(topic2)==tuple:
@@ -631,11 +584,9 @@ def info(acl, player, *topics):
         if type(topic)==dict:
             ret=dict()
             for subtopic in topic:
-                newtopic=checkAclTopic(topic[subtopic])
+                newtopic=checkAclTopics(topic[subtopic])
                 if newtopic!=None:
                     ret[subtopic]=newtopic
-                else:
-                    pass
         elif type(topic)==list:
             ret=[]
             for command in topic:
@@ -651,7 +602,7 @@ def info(acl, player, *topics):
         else:        
             return None
 
-    curtopic=checkAclTopic(helpTopics)
+    curtopic=checkAclTopics(helpTopics)
     for topicname in topics:
         if type(curtopic)==tuple:
             curtopic=curtopic[1]
@@ -666,22 +617,18 @@ def info(acl, player, *topics):
             Armagetronad.PrintPlayerMessage(player, Messages.InfoTopicInvalid.format(topic=" ".join(topics)) )
             return
     if type(curtopic)==tuple:
-        topic_desc=curtopic[0]
+        topic_desc=curtopic[0] #@UnusedVariable
         curtopic=curtopic[1]
     else:
-        topic_desc=""
+        topic_desc="" #@UnusedVariable
     if hasattr(curtopic, "__call__"):
         curtopic=curtopic()
     if type(curtopic)==dict:
         Armagetronad.PrintPlayerMessage(player, "0x8888ffThis topic has the following subtopics: ")
         for topicname, value in curtopic.items() :
             if type(value)==tuple:
-                import sys
-                sys.stderr.write("test\n")
                 desc=value[0]
             else:
-                import sys
-                sys.stderr.write(type(value).__name__+"\n")
                 desc=""
             Armagetronad.PrintPlayerMessage(player, "0x00ff88"+" ".join(topics)+" "+topicname+": 0xffffff"+desc)
     elif type(curtopic)==str:
@@ -708,6 +655,21 @@ def loadMode(acl, player, mode):
     Mode.current_mode=None
 
 def clearScreen(acl, player):
-    for i in range(30):
+    for i in range(30): #@UnusedVariable
         Armagetronad.PrintPlayerMessage(player, "")
     Armagetronad.PrintPlayerMessage(player, "Test")
+    
+## @brief Set the access level that is needed for a specific command.
+# @details Calls AccessLevel.setAccessLevel()
+# @param acl The accesslevel of the player
+# @param player The name of the player
+# @param command The command for which to set the access level.#
+# @param access Optional The minmal access level that a user must have to excute the given command.
+def acl(acl, player, command, access=0):
+    try:
+        access=int(access)
+    except:
+        return
+    AccessLevel.setAccessLevel(command, access)
+    Armagetronad.PrintPlayerMessage(player, Messages.AccessLevelChanged.format(command=command, access=access) )
+  

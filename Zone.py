@@ -4,8 +4,7 @@
 #  @details This file contains functions and classes that are used for zone management.
 
 import Armagetronad
-import logging #@UnusedImport
-import logging.handlers
+import logging
 import Team
 import yaml
 import time
@@ -40,7 +39,7 @@ class Zone(yaml.YAMLObject):
     ## @property color
     # @brief The zone color
     # @details The color of the zone is the tuple of r,g,b. The maximal values 
-     #          for each r, g or b are 1.
+    #          for each r, g or b are 1.
     
     ## @property position
     # @brief The position of the zone.
@@ -61,7 +60,7 @@ class Zone(yaml.YAMLObject):
     ## @property __type
     # @brief The type of the zone
     # @details Could be: win, death, ball, ballTeam, blast, deathTeam, koh, fortress, flag,
-     #                    rubber, sumo, target, teleport, zombie, zombieOwner
+    #                    rubber, sumo, target, teleport, zombie, zombieOwner
     
     ## @property interactive
     # @brief Should the zone bounce at walls?
@@ -90,9 +89,9 @@ class Zone(yaml.YAMLObject):
     ## @property teleport_settings
     # @brief Extra settings for teleport zones
     # @details This setting is needed because the different types of zones has different
-     #          settings. The extra settings are allways at the end, except for teleport 
-     #          zones. This settings are passed to SPAWN_ZONE at this position, but only
-     #          if the zone is a teleport zone.
+    #          settings. The extra settings are allways at the end, except for teleport 
+    #          zones. This settings are passed to SPAWN_ZONE at this position, but only
+    #          if the zone is a teleport zone.
 
     ## @brief slots
     # @internal
@@ -153,7 +152,6 @@ class Zone(yaml.YAMLObject):
             t.start()
             return
         name=""
-        command=""
         teams=list()
         command=str("SPAWN_ZONE {name} {type} {teams} {x} {y} {radius} {grow} {dirx} {diry} "
                 "{tele_settings} {ztss} {intera} {r} {g} {b} {ts}")
@@ -174,7 +172,6 @@ class Zone(yaml.YAMLObject):
         tele_settings=""
         if self.__type=="teleport":
             tele_settings=" ".join(self.teleport_settings)
-        settings=(" ").join(self.settings)
         x,y=self.position
         r,g,b=self.color
         dirx,diry=self.dir
@@ -196,7 +193,7 @@ class Zone(yaml.YAMLObject):
         name=""
         if self.name != None:
             name=self.name.replace(" ","_")
-        SendCommand("COLLAPSE_ZONE {0}".format(name) )
+        Armagetronad.SendCommand("COLLAPSE_ZONE {0}".format(name) )
         if self.killteam and len(self.teamnames)!=0 and len(self.teamnames)==1:
             if self.teamnames[0] not in Team.teams:
                 if self.name != None:
@@ -230,7 +227,7 @@ class Zone(yaml.YAMLObject):
 
     ## @brief Sets the zone type
     # @details For more information about zone types go to 
-     #          http://crazy-tronners.com/wiki/index.php/Settings#type
+    #          http://crazy-tronners.com/wiki/index.php/Settings#type
     # @param ztype The name of the zone type.
     # @exception ValueError Raised if the zone type doesn't exist.
     def setType(self, ztype):

@@ -89,18 +89,18 @@ class Poll:
 
     ## @brief Checks the result of the Poll.
     # @details Checks if the vote successed or failed.
-     #          or "Poll failed" event.
+    #          or "Poll failed" event.
     # @param not_voted What happens with players who didn't vote?
-     #                  Could be "yes", "no" or "dont_count".
-     #                  If "yes"|"no" is given, players who didn't vote are counted
-     #                  as if the had voted "yes"|"no". Otherwise, they aren't counted.
-     #                  Default is "dont_count".
+    #                  Could be "yes", "no" or "dont_count".
+    #                  If "yes"|"no" is given, players who didn't vote are counted
+    #                  as if the had voted "yes"|"no". Otherwise, they aren't counted.
+    #                  Default is "dont_count".
     # @param not_voted_spec Same as not_voted, but only for spectators. If not given
-     #                       or set to None, not_voted is used.
+    #                       or set to None, not_voted is used.
     # @param min_needed How much precent yes votes are at least needed that the vote gets
-     #                   accepted? Default 51.
+    #                   accepted? Default 51.
     # @exception ValueError Raised if not_voted ot not_voted_spec aren't on of
-     #                      "yes", "no" or "dont_count".
+    #                      "yes", "no" or "dont_count".
     def CheckResult(self, not_voted="dont_count", not_voted_spec=None, min_needed=51, only_sure=False):
         if not_voted not in {"dont_count","yes","no"}:
             raise ValueError("Invalid value of argument not_voted")

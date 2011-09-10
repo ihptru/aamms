@@ -5,7 +5,6 @@
 # @details This file contains functions and classes that used for player management.
 
 import logging
-import logging.handlers
 import Team
 import Armagetronad
 

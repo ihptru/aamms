@@ -6,7 +6,6 @@
 # IMPORTS ###############################################
 import subprocess
 from optparse import OptionParser
-import os
 import os.path
 import sys
 import io
@@ -16,9 +15,9 @@ import yaml
 import atexit
 import imp
 from threading import Thread, Event
-import glob
 import parser
 import Global
+import extensions
 exitEvent=Event()
 
 # GLOBAL VARIABLES ######################################
@@ -51,7 +50,7 @@ class OutputToProcess(io.TextIOWrapper):
         try:
             p.stdin.write(x.encode())
             p.stdin.flush()
-        except IOError as e:
+        except IOError:
             pass # Ignore
     def flush(self):
         pass # File not buffered, ignore that.
@@ -96,7 +95,7 @@ def runServerForever(args, debug=False):
                 sys.stderr.write(str(p.returncode)+"\n" )
                 break
             time.sleep(2)
-def    read_stdin():
+def read_stdin():
     import Armagetronad
     while(True):
         try:
@@ -127,20 +126,17 @@ def main():
     parser.add_option("--default", dest="save", action="store_true", default=False, help="Set this configuration as default")
     parser.add_option("-D","--disableExt", dest="disabledExtensions", default=[], action="append", help="Dsiable the extension with the name EXTENSION.", metavar="EXTENSION")
     parser.add_option("--list-extensions", dest="list_extensions", default=False, action="store_true", help="List all available extensions.")
-    options, args=parser.parse_args()
+    options=parser.parse_args()[0]
     options.vardir="server/var"
     optionsdict=dict()
     save_options=["vardir","configdir","server","datadir"]
     global Global
     # START #################################################
     # Get available extensions
-    for file in glob.glob("extensions/*/__init__.py"):
-        extname=os.path.basename(file)[:-3] # Without the .py
-        Global.availableExtensions+=[extname]
-        if(options.list_extensions):
-            print("Found extension: "+extname+" ("+os.path.abspath(file)+")")
     if options.list_extensions:
-        exit()
+        print("Extensions:")
+        print("\n".join(extensions.getExtensions()))
+    extensions.loadExtensions()
     os.chdir(os.path.dirname(sys.argv[0]) )
     if not os.path.exists("run"):
         os.mkdir("run")
@@ -162,7 +158,7 @@ def main():
             if os.path.exists(os.path.join(test_prefix,"bin/armagetronad-dedicated")):
                 default="["+test_prefix+"]"
                 break
-        while options.prefix==NoConditionne or not os.path.exists(options.prefix):
+        while options.prefix==None or not os.path.exists(options.prefix):
             options.prefix=input("Prefix the server was installed to "+default+": ")
             if options.prefix.strip()=="":
                 options.prefix=default[1:-1]
@@ -222,10 +218,10 @@ target=runServerForever,args=([options.server]+args,options.debug) )
                 sys.stderr.write("[START] Loading extension "+mod+" ... ")
                 try:
                     exec("import "+mod+"\nGlobal.loadedExtensions.append("+mod+")")
-                except ImportError as e:
+                except ImportError:
                     sys.stderr.write("NOT FOUND\n")
                     continue
-                except Exception as e:
+                except Exception:
                     sys.stderr.write("FAILED\n")
                     continue
                 sys.stderr.write("OK\n")
@@ -237,7 +233,7 @@ target=runServerForever,args=([options.server]+args,options.debug) )
             break
         except SystemExit:
             break
-        except Exception as e:
+        except Exception:
             sys.stderr.write("#####################################################################\n")
             sys.stderr.write("################## SCRIPT CRASHED ###################################\n")
             sys.stderr.write("#####################################################################\n")

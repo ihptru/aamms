@@ -6,7 +6,6 @@
 import Messages
 import sys
 import threading
-from datetime import datetime
 import re
 import LadderLogHandlers
 import Global
@@ -102,7 +101,7 @@ def GetSetting(setting):
     startpattern=r"\[0[^\]]*] "
     pattern1=re.compile(startpattern+setting.upper()+r" is currently set to (?P<value>[^.]*)\.")
     pattern2=re.compile(startpattern+setting.upper()+r" changed from (?P<value>((([^t]|t+[^o])*)(to)*)*)to \.")
-    for i in range(10):
+    for i in range(10): #@UnusedVariable
         lines="".join(serverlog.readlines() )
         match=pattern1.search(lines)
         if match==None:
