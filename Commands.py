@@ -233,11 +233,14 @@ def getHelp(command):
 def register_commands(*functions, group=None):
     if group:
         try:
-            get_help_topic("commands "+group)
+            a=get_help_topic("commands "+group)
         except ValueError:
+            import sys
+            sys.stderr.write("Test\n")
             return
     for func in functions:
         globals()[func.__name__]=func
+        a[1].append(func.__name__)
 
 def get_help_topic(*path):
     global helpTopics
@@ -256,7 +259,7 @@ def get_help_topic(*path):
     return curtopic
 
 def add_help_group(group, desc):
-    register_help("commands "+group, desc, dict()) 
+    register_help("commands "+group, desc, []) 
     
                 
         

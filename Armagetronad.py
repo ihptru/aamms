@@ -1,7 +1,7 @@
 #!/usr/bin/python3
 ## @file Armagetronad.py
 # @brief Functions for Armagetron Advanced server scripting
-# @details This file contains some usefull functions for %Armagetronad server scripting.
+# @details This file contains some useful functions for %Armagetronad server scripting.
 
 import Messages
 import sys
