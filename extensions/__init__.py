@@ -17,11 +17,11 @@ def loadExtensions():
         print("[EXTENSION] Loading "+i+" ... ", end="")
         try:
             imp.acquire_lock()
-            loadedExtensions+=[imp.load_module(i, *imp.find_module("extensions/Voting"))]
+            loadedExtensions+=[imp.load_module(i, *imp.find_module("extensions/"+i))]
             imp.release_lock()
         except ImportError:
             print("Not found.")
-        except Exception:
-            print("Error")
+        #except BaseException as b:
+        #    print("Error")
         else:
             print("Ok")

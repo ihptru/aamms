@@ -16,6 +16,7 @@ import imp
 import Global
 from threading import Thread
 import threading
+import extensions
 
 if "log" not in dir(): # Don't overwrite variables
     ## @brief The logging object
@@ -56,6 +57,14 @@ def register_handler(event, *functions):
                 extraHandlers[event]+=[func]
     else:
         extraHandlers[event]=list(functions)
+        
+def unregister_handler(event, *functions):
+    global extraHandlers
+    if event in extraHandlers:
+        for func in functions:
+            del extraHandlers[extraHandlers.index(func)]
+    else:
+        return
 ## @brief Handles commands
 # @details Every time when a command that isn't handled by the server is entered, this
 #          function will be called.
@@ -78,7 +87,7 @@ def InvalidCommand(command, player, ip, access, *args):
         Armagetronad.PrintPlayerMessage(player," ".join(args) )
         return
     imp.reload(Commands)
-    for mod in Global.loadedExtensions:
+    for mod in extensions.loadedExtensions:
         imp.reload(mod)
     saved_command=command
     command=[realcommand for realcommand in Commands.getCommands() if realcommand.lower()==command]
@@ -112,7 +121,7 @@ def InvalidCommand(command, player, ip, access, *args):
         global runningCommands
         args=(access,player) + args
         try:
-            getattr(Commands,command)(*args)
+            Commands.commands[command](*args)
         except Exception as e:
             raise e
         try:

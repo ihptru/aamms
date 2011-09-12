@@ -1,1 +1,1 @@
-from .ModeCommands import *
+from . import ModeCommands
