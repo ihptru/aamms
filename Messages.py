@@ -30,41 +30,41 @@ PlayerNotExist="Sorry, the script has a bug. You don't exist in the script's pla
 PlayerTeleport="0xff0088Player {player} teleported himself to ({x}|{y})"
 
 ## @brief Feature not implemented message
-# @details This message is printed when a feature is currently not avaliable, but still in develop.
+# @details This message is printed when a feature is currently not available, but still in develop.
 # @param feature The name of the feature
 FeatureNotImplemented="{feature} is currently not supported, but it's coming soon! :)"
 
 ## @brief Mode not exists message
 # @details This message is printed when a mode doesn't exist.
 # @param mode The name of the mode
-ModeNotExist="Mode {mode} doesn't exist! Look at /help modes for a list of all avaliable modes."
+ModeNotExist="Mode {mode} doesn't exist! Look at /info modes for a list of all available modes."
 
 ## @brief Vote is in progress message
 # @details This message is printed when a vote is active.
 # @param target The target of the active vote
 # @param expire How much rounds does this vote still stay alive?
-VoteInProgress="0xff8844Vote for {target} in progress. Use /yes or /no to vote! This vote expires in {expire} rounds"
+PollInProgress="0xff8844Poll {target} in progress. Use /yes or /no to vote! This vote expires in {expire} rounds"
 
 ## @brief Vote added message
 # @details This message is displayed when a new vote was added.
 # @param target The target of the vote which was added
 # @param player The player who added the vote.
-VoteAdded="0x00ff00Vote for 0xffff00{target} 0x00ff00submitted by 0x00ff88{player}"
+PollAdded="0x00ff00Poll 0xffff00{target} 0x00ff00submitted by 0x00ff88{player}"
 
 ## @brief Vote cancelled message
 # @details This message is printed when an admin cancelled a vote.
 # @param target The target of the cancelled vote.
-VoteCancelled="0xff2200The vote about 0xffff00{target} 0xff2200got cancelled by an administrator."
+PollCancelled="0xff2200Poll 0xffff00{target} 0xff2200got cancelled by an administrator."
 
 ## @brief Vote successed message
 # @details This message is printed when a vote successed.
 # @param target The target of the vote which successed.
-VoteSuccessed="0x00ffffThe vote about 0xffff00{target} 0x00ffffsuccessed!"
+PollSuccessed="0x00ffffPoll 0xffff00{target} 0x00ffffsuccessed!"
 
 ## @brief Vote failed message
 # @details This message is printed when a vote failed.
 # @param target The target of the vote which failed.
-VoteFailed="0x00ffffThe vote about 0xffff00{target} 0x00fffffailed!"
+PollFailed="0x00ffffPoll 0xffff00{target} 0x00fffffailed!"
 
 ## @brief Player voted for a vote message
 # @details This message is displayed when a player used the /yes command
@@ -86,7 +86,7 @@ PlayerAlreadyVoted="0xff0033You have already voted!"
 ## @brief No vote active message.
 # @details This message is printed when a player tries to use the /yes or /no commands, but
 #          there isn't any active vote at the time.
-NoActiveVote="There's no vote in progress!"
+NoActivePoll="There's no poll in progress!"
 
 ## @brief Access level changed message.
 # @details This message is printed when /acl was successfully called.
@@ -96,7 +96,7 @@ AccessLevelChanged="0x00ff00The needed access level for command /{command} has b
 
 ## @brief Already a vote active message
 # @details This message is printed when a player tries to create a vote, but there is already one active.
-VoteAlreadyActive="0xff4400There is already a vote in progress! Try again when the vote finished."
+PollAlreadyActive="0xff4400There is already a poll in progress! Try again when the current poll finished."
 
 ## @brief Wrong state message.
 # @details This message is printed when a player tries to use a command in the wrong state.

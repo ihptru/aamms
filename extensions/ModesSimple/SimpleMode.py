@@ -40,14 +40,12 @@ class Mode(yaml.YAMLObject):
     
     def __init__(self, name, desc=None, map=None, lives=1):
         global modes
-        
         if not desc:
             desc=name
         self.name=name
         self.desc=desc
         self.map=map
-        self.lives=lives
-        
+        self.lives=lives   
         modes[self.getEscapedName()]=self
         
     def activate(self, kill=None):
@@ -66,11 +64,13 @@ class Mode(yaml.YAMLObject):
             for player in Player.players:
                 player.kill()
         return True
+    
     def playerCrashed(self, laddername):
         p=Player.players[laddername]
         if "respoint" in p.data:
             p.respawn(*p.data["respoint"], force=False)
         else:
             Armagetronad.PrintMessage("Player "+p.getLadderName()+" doesn't exists in script.")
+            
     def getEscapedName(self):
         return self.name.replace(" ","_").lower()
