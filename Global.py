@@ -44,3 +44,4 @@ if "state" not in dir():
     supportedCommands=[]
     availableExtensions=[]
     serverlog=None
+    datadir=None

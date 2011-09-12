@@ -15,6 +15,7 @@ import AccessLevel
 import re
 import Global
 import time
+import extensions
 if "disabled" not in dir():
     ###################################### VARIABLES #########################################
     ## @brief Commands that couldn't be used in a given state.
@@ -104,7 +105,7 @@ def checkUsage(command, *args):
 def getCommands():
     lines=list()
     func_names=list()
-    for mod in Global.loadedExtensions + [None]:
+    for mod in extensions.loadedExtension + [None]:
         if mod==None:
             filename=__file__
         else:
