@@ -55,9 +55,7 @@ class Mode(yaml.YAMLObject):
                 kill=True
             else:
                 kill=False
-        configfile=os.path.join(Global.configdir, self.file)
-        if not os.path.exists(configfile):
-            return False
+        configfile=self.file
         Armagetronad.SendCommand("SINCLUDE "+configfile)
         if kill:
             for player in Player.players.values():
@@ -68,12 +66,12 @@ class Mode(yaml.YAMLObject):
     
     def playerCrashed(self, laddername):
         p=Player.players[laddername]
-        if p.getLives() <= 0:
+        if p.getLives() <= 1:
             return None
         elif "respoint" in p.data:
             p.crashed()
             p.respawn(*p.data["respoint"], force=False)
-            return p.getLives()
+            return p.getLives()-1
         else:
             Armagetronad.PrintMessage("Player "+p.getLadderName()+" doesn't exists in script.")
         return False
