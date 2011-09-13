@@ -30,14 +30,14 @@ def reloadModules():
                 imp.reload(sys.modules[f])
 
 if "state" not in dir():
-	## @brief Current state.
-	 # @details Possible values are "normal" or "modeeditor".
-	state="normal"
-	not_a_setting=("CONSOLE_MESSAGE", "CENTER_MESSAGE", "SAY", "QUIT", "EXIT", "SPAWN_ZONE", 
+    ## @brief Current state.
+     # @details Possible values are "normal" or "modeeditor".
+    state="normal"
+    not_a_setting=("CONSOLE_MESSAGE", "CENTER_MESSAGE", "SAY", "QUIT", "EXIT", "SPAWN_ZONE", 
                "COLLAPSE_ZONE", "TELEPORT_PLAYER", "RESPAWN_PLAYER", "KICK", "SUSPEND", "SILENCE"
                "ADD_HELP_TOPIC", "REMOVE_HELP_TOPIC", "PLAYER_MESSAGE", "UNBAN_IP","UNSUSPEND", "UNBAN_USER",
-	       "KILL", "SLAP")
-	not_a_setting_prefixes=("SPAWN_","REMOVE")
-	loadedExtensions=[]
-	supportedCommands=[]
-	availableExtensions=[]
+           "KILL", "SLAP")
+    not_a_setting_prefixes=("SPAWN_","REMOVE")
+    loadedExtensions=[]
+    supportedCommands=[]
+    availableExtensions=[]

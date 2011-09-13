@@ -30,28 +30,28 @@ def exit(normal=False, quiet=False):
         Armagetronad.PrintMessage("0xff0000Script crashed.")
 
 def main(debug=False, disabledCommands=[]):
-	#We need some special settings. Set it
-	Armagetronad.SendCommand("LADDERLOG_WRITE_ONLINE_PLAYER 1")
-	Armagetronad.SendCommand("LADDERLOG_WRITE_CYCLE_CREATED 1")
-	Armagetronad.SendCommand("LADDERLOG_WRITE_INVALID_COMMAND 1")
-	Armagetronad.SendCommand("INTERCEPT_UNKNOWN_COMMANDS 1")
-	Armagetronad.SendCommand("LADDERLOG_GAME_TIME_INTERVAL 1")
-	Armagetronad.SendCommand("EXTRA_ROUND_TIME 1")
-	if debug:
-		log.info("Starting in debug mode.")
-		Player.enableLogging(logging.DEBUG)
-		Team.enableLogging(logging.DEBUG)
-		LadderLogHandlers.enableLogging(logging.DEBUG)
-		Mode.enableLogging(logging.DEBUG)
-		Vote.enableLogging(logging.DEBUG)
-		Zone.enableLogging(logging.DEBUG)
-	else:
-		Player.enableLogging(logging.WARNING)
-		Team.enableLogging(logging.WARNING)
-		LadderLogHandlers.enableLogging(logging.INFO)
-		Mode.enableLogging(logging.INFO)
-		Vote.enableLogging(logging.WARNING)
-		Zone.enableLogging(logging.WARNING)
+    #We need some special settings. Set it
+    Armagetronad.SendCommand("LADDERLOG_WRITE_ONLINE_PLAYER 1")
+    Armagetronad.SendCommand("LADDERLOG_WRITE_CYCLE_CREATED 1")
+    Armagetronad.SendCommand("LADDERLOG_WRITE_INVALID_COMMAND 1")
+    Armagetronad.SendCommand("INTERCEPT_UNKNOWN_COMMANDS 1")
+    Armagetronad.SendCommand("LADDERLOG_GAME_TIME_INTERVAL 1")
+    Armagetronad.SendCommand("EXTRA_ROUND_TIME 1")
+    if debug:
+        log.info("Starting in debug mode.")
+        Player.enableLogging(logging.DEBUG)
+        Team.enableLogging(logging.DEBUG)
+        LadderLogHandlers.enableLogging(logging.DEBUG)
+        Mode.enableLogging(logging.DEBUG)
+        Vote.enableLogging(logging.DEBUG)
+        Zone.enableLogging(logging.DEBUG)
+    else:
+        Player.enableLogging(logging.WARNING)
+        Team.enableLogging(logging.WARNING)
+        LadderLogHandlers.enableLogging(logging.INFO)
+        Mode.enableLogging(logging.INFO)
+        Vote.enableLogging(logging.WARNING)
+        Zone.enableLogging(logging.WARNING)
 
     Commands.disabled=Commands.disabled+disabledCommands    
     #Init
