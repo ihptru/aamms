@@ -1,59 +1,83 @@
 \hypertarget{_messages_8py}{
-\section{Messages.py File Reference}
-\label{_messages_8py}\index{Messages.py@{Messages.py}}
+\section{\-Messages.py \-File \-Reference}
+\label{_messages_8py}\index{\-Messages.\-py@{\-Messages.\-py}}
 }
 
 
-Game messages.  
+\-Game messages.  
 
 
-\subsection*{Variables}
+\subsection*{\-Variables}
 \begin{DoxyCompactItemize}
 \item 
-string \hyperlink{namespace_messages_a3e3faaf68afad52c8ae777f0f47bb334}{Messages.PlayerColorCode} = \char`\"{}0xddffdd\char`\"{}
-\begin{DoxyCompactList}\small\item\em The color code for user messages. \item\end{DoxyCompactList}\item 
-string \hyperlink{namespace_messages_ac8c1ff58f613cf1b6c546425b8ca3d01}{Messages.CommandNotFound} = \char`\"{}Sorry, command /\{command\} doesn't exist. Maybe you can try /help.\char`\"{}
-\begin{DoxyCompactList}\small\item\em Command not found message. \item\end{DoxyCompactList}\item 
-string \hyperlink{namespace_messages_ab0ea5d8e862938d3d4684a7e4bdb5572}{Messages.NotAllowed} = \char`\"{}You're not allowed to use the command /\{command\}. Go away!\char`\"{}
-\begin{DoxyCompactList}\small\item\em Access denied message. \item\end{DoxyCompactList}\item 
-tuple \hyperlink{namespace_messages_a77552d65bc4e9f1f3aba447d0f7a3545}{Messages.PlayerNotExist}
-\begin{DoxyCompactList}\small\item\em \hyperlink{namespace_player}{Player} not found message. \item\end{DoxyCompactList}\item 
-tuple \hyperlink{namespace_messages_ae1e90af63bd5ca7c6c23067c1dba6167}{Messages.PlayerTeleport} = (\char`\"{}0xff0088Player \{player\} teleported himself to (\{x\}$|$\{y\})\char`\"{})
-\begin{DoxyCompactList}\small\item\em Teleport message. \item\end{DoxyCompactList}\item 
-tuple \hyperlink{namespace_messages_a4465383f0a23d7a182e18447c782ecd5}{Messages.FeatureNotImplemented} = (\char`\"{}\{feature\} is currently not supported, but it's coming soon! :)\char`\"{})
-\begin{DoxyCompactList}\small\item\em Feature not implemented message. \item\end{DoxyCompactList}\item 
-tuple \hyperlink{namespace_messages_afa3b2eb455a55fa640142e621cda0298}{Messages.ModeNotExist} = (\char`\"{}Mode \{mode\} doesn't exist! Look at /help modes for a list of all avaliable modes.\char`\"{})
-\begin{DoxyCompactList}\small\item\em Mode not exists message. \item\end{DoxyCompactList}\item 
-tuple \hyperlink{namespace_messages_aff519efc9c26287f1852afe761563602}{Messages.VoteInProgress} = (\char`\"{}0xff8844Vote for \{target\} in progress. Use /yes or /no to vote! This vote expires in \{expire\} rounds\char`\"{})
-\begin{DoxyCompactList}\small\item\em \hyperlink{namespace_vote}{Vote} is in progress message. \item\end{DoxyCompactList}\item 
-tuple \hyperlink{namespace_messages_a6d7f3162f38c3a6552a3dab5b6754f43}{Messages.VoteAdded} = (\char`\"{}0x00ff00Vote for 0xffff00\{target\} 0x00ff00submitted by 0x00ff88\{player\}\char`\"{})
-\begin{DoxyCompactList}\small\item\em \hyperlink{namespace_vote}{Vote} added message. \item\end{DoxyCompactList}\item 
-tuple \hyperlink{namespace_messages_ac02b12d249d61f97eec79cb5e1ea8a08}{Messages.VoteCancelled} = (\char`\"{}0xff2200The vote about 0xffff00\{target\} 0xff2200got cancelled by an administrator.\char`\"{})
-\begin{DoxyCompactList}\small\item\em \hyperlink{namespace_vote}{Vote} cancelled message. \item\end{DoxyCompactList}\item 
-tuple \hyperlink{namespace_messages_a199081dd923e4998d3885a0509a001c8}{Messages.VoteSuccessed} = (\char`\"{}0x00ffffThe vote about 0xffff00\{target\} 0x00ffffsuccessed!\char`\"{})
-\begin{DoxyCompactList}\small\item\em \hyperlink{namespace_vote}{Vote} successed message. \item\end{DoxyCompactList}\item 
-tuple \hyperlink{namespace_messages_aa8d5980986423956ec12fcdcfa80de25}{Messages.VoteFailed} = (\char`\"{}0x00ffffThe vote about 0xffff00\{target\} 0x00fffffailed!\char`\"{})
-\begin{DoxyCompactList}\small\item\em \hyperlink{namespace_vote}{Vote} failed message. \item\end{DoxyCompactList}\item 
-tuple \hyperlink{namespace_messages_a20034f79dd8add47d2e3bf20575d3e23}{Messages.PlayerVotedYes} = (\char`\"{}0x00ff88\{player\} 0x99ff99voted for 0xffff00\{target\}0x99ff99.\char`\"{})
-\begin{DoxyCompactList}\small\item\em \hyperlink{namespace_player}{Player} voted for a vote message. \item\end{DoxyCompactList}\item 
-tuple \hyperlink{namespace_messages_a3502d8215e70215b9fe39cbf1f1164a0}{Messages.PlayerVotedNo} = (\char`\"{}0x00ff88\{player\} 0x99ff99voted against 0xffff00\{target\}0x99ff99.\char`\"{})
-\begin{DoxyCompactList}\small\item\em \hyperlink{namespace_player}{Player} voted against a vote message. \item\end{DoxyCompactList}\item 
-tuple \hyperlink{namespace_messages_ae29d170f9e6ecde8edb516f5e113a133}{Messages.PlayerAlreadyVoted} = (\char`\"{}0xff0033You have already voted!\char`\"{})
-\begin{DoxyCompactList}\small\item\em \hyperlink{namespace_player}{Player} has already voted message. \item\end{DoxyCompactList}\item 
-tuple \hyperlink{namespace_messages_a2b4a710a776b5ad20064ceaeba25c177}{Messages.NoActiveVote} = (\char`\"{}There's no vote in progress!\char`\"{})
-\begin{DoxyCompactList}\small\item\em No vote active message. \item\end{DoxyCompactList}\item 
-tuple \hyperlink{namespace_messages_afef66c4b2e2a4abdc9d2309fff00ad0b}{Messages.AccessLevelChanged} = (\char`\"{}0x00ff00The needed access level for command /\{command\} has been changed to \{access\}.\char`\"{})
-\begin{DoxyCompactList}\small\item\em Access level changed message. \item\end{DoxyCompactList}\item 
-tuple \hyperlink{namespace_messages_aca3b7404c487fb47208e84286863bc02}{Messages.VoteAlreadyActive} = (\char`\"{}0xff4400There is already a vote in progress! Try again when the vote finished.\char`\"{})
-\begin{DoxyCompactList}\small\item\em Already a vote active message. \item\end{DoxyCompactList}\item 
-tuple \hyperlink{namespace_messages_ab5171102ae0c13566af9ab34e7745a73}{Messages.WrongState} = (\char`\"{}0xff0000/\{command\} cannot be used in this state.\char`\"{})
-\begin{DoxyCompactList}\small\item\em Wrong state message. \item\end{DoxyCompactList}\item 
-tuple \hyperlink{namespace_messages_a5f86e4fe2e24a4751dd59a6dc816787c}{Messages.DisabledCommand} = (\char`\"{}0xff0000This command has been disabled by an administrator.\char`\"{})
-\begin{DoxyCompactList}\small\item\em Disabled command message. \item\end{DoxyCompactList}\end{DoxyCompactItemize}
+string {\bfseries \-Messages\-::\-Player\-Color\-Code} = \char`\"{}0xddffdd\char`\"{}
+\begin{DoxyCompactList}\small\item\em \-The color code for user messages. \end{DoxyCompactList}\item 
+string {\bfseries \-Messages\-::\-Command\-Not\-Found} = \char`\"{}\-Sorry, command /\{command\} doesn't exist. \-Maybe you can try /help.\char`\"{}
+\begin{DoxyCompactList}\small\item\em \-Command not found message. \end{DoxyCompactList}\item 
+string {\bfseries \-Messages\-::\-Not\-Allowed} = \char`\"{}\-You're not allowed to use the command /\{command\}. \-Go away!\char`\"{}
+\begin{DoxyCompactList}\small\item\em \-Access denied message. \end{DoxyCompactList}\item 
+string {\bfseries \-Messages\-::\-Player\-Not\-Exist} = \char`\"{}\-Sorry, the script has a bug. \-You don't exist in the script's player list. $\backslash$n\char`\"{}
+\begin{DoxyCompactList}\small\item\em \hyperlink{namespace_player}{\-Player} not found message. \end{DoxyCompactList}\item 
+string {\bfseries \-Messages\-::\-Player\-Teleport} = \char`\"{}0xff0088\-Player \{player\} teleported himself to (\{x\}$|$\{y\})\char`\"{}
+\begin{DoxyCompactList}\small\item\em \-Teleport message. \end{DoxyCompactList}\item 
+string {\bfseries \-Messages\-::\-Feature\-Not\-Implemented} = \char`\"{}\{feature\} is currently not supported, but it's coming soon! \-:)\char`\"{}
+\begin{DoxyCompactList}\small\item\em \-Feature not implemented message. \end{DoxyCompactList}\item 
+string {\bfseries \-Messages\-::\-Mode\-Not\-Exist} = \char`\"{}\-Mode \{mode\} doesn't exist! \-Look at /help modes for a list of all avaliable modes.\char`\"{}
+\begin{DoxyCompactList}\small\item\em \-Mode not exists message. \end{DoxyCompactList}\item 
+string {\bfseries \-Messages\-::\-Vote\-In\-Progress} = \char`\"{}0xff8844\-Vote for \{target\} in progress. Use /yes or /no to vote! This vote expires in \{expire\} rounds\char`\"{}
+\begin{DoxyCompactList}\small\item\em \-Vote is in progress message. \end{DoxyCompactList}\item 
+string {\bfseries \-Messages\-::\-Vote\-Added} = \char`\"{}0x00ff00\-Vote for 0xffff00\{target\} 0x00ff00submitted by 0x00ff88\{player\}\char`\"{}
+\begin{DoxyCompactList}\small\item\em \-Vote added message. \end{DoxyCompactList}\item 
+tuple {\bfseries \-Messages\-::\-Vote\-Cancelled} = (\char`\"{}0xff2200\-The vote about 0xffff00\{target\} 0xff2200got cancelled by an administrator.\char`\"{})
+\begin{DoxyCompactList}\small\item\em \-Vote cancelled message. \end{DoxyCompactList}\item 
+string {\bfseries \-Messages\-::\-Vote\-Successed} = \char`\"{}0x00ffff\-The vote about 0xffff00\{target\} 0x00ffffsuccessed!\char`\"{}
+\begin{DoxyCompactList}\small\item\em \-Vote successed message. \end{DoxyCompactList}\item 
+string {\bfseries \-Messages\-::\-Vote\-Failed} = \char`\"{}0x00ffff\-The vote about 0xffff00\{target\} 0x00fffffailed!\char`\"{}
+\begin{DoxyCompactList}\small\item\em \-Vote failed message. \end{DoxyCompactList}\item 
+string {\bfseries \-Messages\-::\-Player\-Voted\-Yes} = \char`\"{}0x00ff88\{player\} 0x99ff99voted for 0xffff00\{target\}0x99ff99.\char`\"{}
+\begin{DoxyCompactList}\small\item\em \hyperlink{namespace_player}{\-Player} voted for a vote message. \end{DoxyCompactList}\item 
+string {\bfseries \-Messages\-::\-Player\-Voted\-No} = \char`\"{}0x00ff88\{player\} 0x99ff99voted against 0xffff00\{target\}0x99ff99.\char`\"{}
+\begin{DoxyCompactList}\small\item\em \hyperlink{namespace_player}{\-Player} voted against a vote message. \end{DoxyCompactList}\item 
+string {\bfseries \-Messages\-::\-Player\-Already\-Voted} = \char`\"{}0xff0033\-You have already voted!\char`\"{}
+\begin{DoxyCompactList}\small\item\em \hyperlink{namespace_player}{\-Player} has already voted message. \end{DoxyCompactList}\item 
+string {\bfseries \-Messages\-::\-No\-Active\-Vote} = \char`\"{}\-There's no vote in progress!\char`\"{}
+\begin{DoxyCompactList}\small\item\em \-No vote active message. \end{DoxyCompactList}\item 
+string {\bfseries \-Messages\-::\-Access\-Level\-Changed} = \char`\"{}0x00ff00\-The needed access level for command /\{command\} has been changed to \{access\}.\char`\"{}
+\begin{DoxyCompactList}\small\item\em \-Access level changed message. \end{DoxyCompactList}\item 
+string {\bfseries \-Messages\-::\-Vote\-Already\-Active} = \char`\"{}0xff4400\-There is already a vote in progress! Try again when the vote finished.\char`\"{}
+\begin{DoxyCompactList}\small\item\em \-Already a vote active message. \end{DoxyCompactList}\item 
+string {\bfseries \-Messages\-::\-Wrong\-State} = \char`\"{}0xff0000/\{command\} cannot be used in this state.\char`\"{}
+\begin{DoxyCompactList}\small\item\em \-Wrong state message. \end{DoxyCompactList}\item 
+string {\bfseries \-Messages\-::\-Disabled\-Command} = \char`\"{}0xff0000\-This command has been disabled by an administrator.\char`\"{}
+\begin{DoxyCompactList}\small\item\em \-Disabled command message. \end{DoxyCompactList}\item 
+string {\bfseries \-Messages\-::\-Player\-Respawned} = \char`\"{}0x0066ff\{player\}0x00ff44 got respawned. \{msg\}\char`\"{}
+\begin{DoxyCompactList}\small\item\em \-This is the \-Message that is printed when a player got respawned by the script. \end{DoxyCompactList}\item 
+\hypertarget{namespace_messages_ace97bcd7d214eedf7a5225dbb179a8b1}{
+string {\bfseries \-Messages\-::\-Last\-Life\-Msg} = \char`\"{}0xff0000\-Last life!\char`\"{}}
+\label{namespace_messages_ace97bcd7d214eedf7a5225dbb179a8b1}
+
+\item 
+\hypertarget{namespace_messages_ab5267cfb0b4211b70027697a6dd2241f}{
+string {\bfseries \-Messages\-::\-One\-Life\-Msg} = \char`\"{}\-One life left!\char`\"{}}
+\label{namespace_messages_ab5267cfb0b4211b70027697a6dd2241f}
+
+\item 
+\hypertarget{namespace_messages_a700ae952c19bac98c1ff2d74bf89cb0b}{
+string {\bfseries \-Messages\-::\-Lives\-Msg} = \char`\"{}\{lives\} lives left!\char`\"{}}
+\label{namespace_messages_a700ae952c19bac98c1ff2d74bf89cb0b}
+
+\item 
+string {\bfseries \-Messages\-::\-About}
+\begin{DoxyCompactList}\small\item\em \-About message displayed by /info about. \end{DoxyCompactList}\item 
+\hypertarget{namespace_messages_a0a4a457a3e65acd3abbb8428d4b181ce}{
+string {\bfseries \-Messages\-::\-Info\-Topic\-Invalid} = \char`\"{}0xff0000\-Error\-: There is no topic \{topic\}!\char`\"{}}
+\label{namespace_messages_a0a4a457a3e65acd3abbb8428d4b181ce}
+
+\begin{DoxyCompactList}\small\item\em \-Invalid info topic message. \end{DoxyCompactList}\end{DoxyCompactItemize}
 
 
-\subsection{Detailed Description}
-Game messages. This file contains game messages 
+\subsection{\-Detailed \-Description}
+\-Game messages. \-This file contains game messages 
 
-Definition in file \hyperlink{_messages_8py_source}{Messages.py}.
+\-Definition in file \hyperlink{_messages_8py_source}{\-Messages.\-py}.
 

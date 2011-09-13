@@ -1,0 +1,176 @@
+\hypertarget{namespace_poll}{
+\section{\-Poll \-Namespace \-Reference}
+\label{namespace_poll}\index{\-Poll@{\-Poll}}
+}
+
+
+\-Classes and functions for voting.  
+
+
+\subsection*{\-Classes}
+\begin{DoxyCompactItemize}
+\item 
+class \hyperlink{class_poll_1_1_poll}{\-Poll}
+\begin{DoxyCompactList}\small\item\em \-The vote class. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{\-Functions}
+\begin{DoxyCompactItemize}
+\item 
+def \hyperlink{namespace_poll_a1efbfb31eb4d8136d2f290f0eaee2d21}{\-Add}
+\begin{DoxyCompactList}\small\item\em \-Creates a \hyperlink{namespace_poll}{\-Poll}. \end{DoxyCompactList}\item 
+def \hyperlink{namespace_poll_a19aa695ad336e36c6ff3d42d9ef15ae1}{\-Cancel}
+\begin{DoxyCompactList}\small\item\em \-Cancels the current \hyperlink{namespace_poll}{\-Poll}. \end{DoxyCompactList}\item 
+def \hyperlink{namespace_poll_a611264a388beae4d03f30fdd38caac99}{enable\-Logging}
+\begin{DoxyCompactList}\small\item\em \-Enables logging. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{\-Variables}
+\begin{DoxyCompactItemize}
+\item 
+tuple \hyperlink{namespace_poll_a28faa328e749b1f223645edbde41f768}{log} = logging.\-get\-Logger(\char`\"{}\-Vote\-Module\char`\"{})
+\begin{DoxyCompactList}\small\item\em \-The logging object. \end{DoxyCompactList}\item 
+\hyperlink{namespace_poll_a3c8693f8b91cc3ee5e782a4e2ca956ca}{current\-\_\-poll} = \-None
+\begin{DoxyCompactList}\small\item\em \-The current poll. \end{DoxyCompactList}\item 
+\hyperlink{namespace_poll_af31724cfe1530e7ef893bd510d6db6c0}{spec\-\_\-allowed} = \-False
+\begin{DoxyCompactList}\small\item\em \-Can spectators vote? \end{DoxyCompactList}\item 
+int \hyperlink{namespace_poll_af0f8c4361cc5fd3dfba26e9c6a18436d}{default\-Stay\-Alive} = 3
+\begin{DoxyCompactList}\small\item\em \-When should a vote expire? (\-Default value) \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\subsection{\-Detailed \-Description}
+\-Classes and functions for voting. \-This file contains classes and functions needed for votes. 
+
+\subsection{\-Function \-Documentation}
+\hypertarget{namespace_poll_a1efbfb31eb4d8136d2f290f0eaee2d21}{
+\index{\-Poll@{\-Poll}!\-Add@{\-Add}}
+\index{\-Add@{\-Add}!Poll@{\-Poll}}
+\subsubsection[{\-Add}]{\setlength{\rightskip}{0pt plus 5cm}def \-Poll\-::\-Add (
+\begin{DoxyParamCaption}
+\item[{}]{target\-\_\-human, }
+\item[{}]{action, }
+\item[{}]{force = {\ttfamily \-False}}
+\end{DoxyParamCaption}
+)}}
+\label{namespace_poll_a1efbfb31eb4d8136d2f290f0eaee2d21}
+
+
+\-Creates a \hyperlink{namespace_poll}{\-Poll}. 
+
+\-Creates a \hyperlink{namespace_poll}{\-Poll} with the given name and set it as current\-\_\-poll. 
+\begin{DoxyExceptions}{\-Exceptions}
+{\em \-Runtime\-Error} & \-Raised if there is already a \hyperlink{namespace_poll}{\-Poll}. (current\-\_\-poll not \-None) \\
+\hline
+\end{DoxyExceptions}
+
+\begin{DoxyParams}{\-Parameters}
+{\em target\-\_\-human} & \-The human readable target of the \hyperlink{namespace_poll}{\-Poll} (\-What is the \hyperlink{namespace_poll}{\-Poll} about? ). \-Used for displaying. \\
+\hline
+{\em action} & \-Function that is executed when the \hyperlink{namespace_poll}{\-Poll} succeed. \\
+\hline
+{\em force} & \-Cancel current \hyperlink{namespace_poll}{\-Poll} if a \hyperlink{namespace_poll}{\-Poll} is already active? \\
+\hline
+\end{DoxyParams}
+
+
+\-Definition at line 37 of file \-Poll.\-py.
+
+\hypertarget{namespace_poll_a19aa695ad336e36c6ff3d42d9ef15ae1}{
+\index{\-Poll@{\-Poll}!\-Cancel@{\-Cancel}}
+\index{\-Cancel@{\-Cancel}!Poll@{\-Poll}}
+\subsubsection[{\-Cancel}]{\setlength{\rightskip}{0pt plus 5cm}def \-Poll\-::\-Cancel (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)}}
+\label{namespace_poll_a19aa695ad336e36c6ff3d42d9ef15ae1}
+
+
+\-Cancels the current \hyperlink{namespace_poll}{\-Poll}. 
+
+\-Sets current\-\_\-poll to \-None and prints a message. 
+
+\-Definition at line 49 of file \-Poll.\-py.
+
+\hypertarget{namespace_poll_a611264a388beae4d03f30fdd38caac99}{
+\index{\-Poll@{\-Poll}!enable\-Logging@{enable\-Logging}}
+\index{enable\-Logging@{enable\-Logging}!Poll@{\-Poll}}
+\subsubsection[{enable\-Logging}]{\setlength{\rightskip}{0pt plus 5cm}def \-Poll\-::enable\-Logging (
+\begin{DoxyParamCaption}
+\item[{}]{level = {\ttfamily logging.\-D\-E\-B\-U\-G}, }
+\item[{}]{h = {\ttfamily \-None}, }
+\item[{}]{f = {\ttfamily \-None}}
+\end{DoxyParamCaption}
+)}}
+\label{namespace_poll_a611264a388beae4d03f30fdd38caac99}
+
+
+\-Enables logging. 
+
+\-This function enables logging for this module. 
+\begin{DoxyParams}{\-Parameters}
+{\em h} & \-The handler used for logging \\
+\hline
+{\em f} & \-The formatter used for logging \\
+\hline
+{\em level} & \-The logging level \\
+\hline
+\end{DoxyParams}
+
+
+\-Definition at line 180 of file \-Poll.\-py.
+
+
+
+\subsection{\-Variable \-Documentation}
+\hypertarget{namespace_poll_a3c8693f8b91cc3ee5e782a4e2ca956ca}{
+\index{\-Poll@{\-Poll}!current\-\_\-poll@{current\-\_\-poll}}
+\index{current\-\_\-poll@{current\-\_\-poll}!Poll@{\-Poll}}
+\subsubsection[{current\-\_\-poll}]{\setlength{\rightskip}{0pt plus 5cm}{\bf \-Poll\-::current\-\_\-poll} = \-None}}
+\label{namespace_poll_a3c8693f8b91cc3ee5e782a4e2ca956ca}
+
+
+\-The current poll. 
+
+\-None or an instance of the current \hyperlink{namespace_poll}{\-Poll}. 
+
+\-Definition at line 20 of file \-Poll.\-py.
+
+\hypertarget{namespace_poll_af0f8c4361cc5fd3dfba26e9c6a18436d}{
+\index{\-Poll@{\-Poll}!default\-Stay\-Alive@{default\-Stay\-Alive}}
+\index{default\-Stay\-Alive@{default\-Stay\-Alive}!Poll@{\-Poll}}
+\subsubsection[{default\-Stay\-Alive}]{\setlength{\rightskip}{0pt plus 5cm}int {\bf \-Poll\-::default\-Stay\-Alive} = 3}}
+\label{namespace_poll_af0f8c4361cc5fd3dfba26e9c6a18436d}
+
+
+\-When should a vote expire? (\-Default value) 
+
+\-Default number of rounds for which a vote stays alive. 
+
+\-Definition at line 28 of file \-Poll.\-py.
+
+\hypertarget{namespace_poll_a28faa328e749b1f223645edbde41f768}{
+\index{\-Poll@{\-Poll}!log@{log}}
+\index{log@{log}!Poll@{\-Poll}}
+\subsubsection[{log}]{\setlength{\rightskip}{0pt plus 5cm}tuple {\bf \-Poll\-::log} = logging.\-get\-Logger(\char`\"{}\-Vote\-Module\char`\"{})}}
+\label{namespace_poll_a28faa328e749b1f223645edbde41f768}
+
+
+\-The logging object. 
+
+\-The logging object used for log messages by this module. \begin{DoxyNote}{\-Note}
+\-To enable or disable logging for this module use \hyperlink{namespace_poll_a611264a388beae4d03f30fdd38caac99}{\-Poll.\-enable\-Logging} 
+\end{DoxyNote}
+
+
+\-Definition at line 15 of file \-Poll.\-py.
+
+\hypertarget{namespace_poll_af31724cfe1530e7ef893bd510d6db6c0}{
+\index{\-Poll@{\-Poll}!spec\-\_\-allowed@{spec\-\_\-allowed}}
+\index{spec\-\_\-allowed@{spec\-\_\-allowed}!Poll@{\-Poll}}
+\subsubsection[{spec\-\_\-allowed}]{\setlength{\rightskip}{0pt plus 5cm}{\bf \-Poll\-::spec\-\_\-allowed} = \-False}}
+\label{namespace_poll_af31724cfe1530e7ef893bd510d6db6c0}
+
+
+\-Can spectators vote? 
+
+\-If set to \-True, votes of spectators are ignored. 
+
+\-Definition at line 24 of file \-Poll.\-py.
+
