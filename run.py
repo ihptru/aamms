@@ -48,9 +48,13 @@ class OutputToProcess(io.TextIOWrapper):
         pass
     def write(self, x):
         try:
-            p.stdin.write(x.encode("latin1"))
+            p.stdin.write(x.encode("latin-1"))
+            if Global.debug:
+                f=open("debug.log", "w+")
+                f.write(x)
+                f.close()
             p.stdin.flush()
-        except IOError as e:
+        except IOError:
             pass # Ignore
     def flush(self):
         pass # File not buffered, ignore that.
@@ -60,9 +64,11 @@ def exit():
     sys.stderr.write("Exiting ... ")
     parser.exit(True, True)
     sys.stderr.write("Ok \n")
-    sys.stderr.write("Killing server ... ")
-    p.terminate()
-    p.wait()
+    sys.stderr.write("Exiting server ... ")
+    global p
+    if p!=None:
+        print("QUIT")
+        p.wait()
     atexit.unregister(exit)
     global exitEvent
     exitEvent.set()
@@ -105,11 +111,11 @@ def read_stdin():
                 if command=="quit":
                     parser.exit(True)
                     exit()
-            elif line!="":
+            else:
                 Armagetronad.SendCommand(line)
                 sys.stderr.write("Command sent to server.\n")
-        except:
-            pass
+        except Exception as e:
+            print(e)
 def main():
     # SETTINGS ##############################################
     userdatadir="./server/data"
@@ -126,20 +132,16 @@ def main():
     parser.add_option("--default", dest="save", action="store_true", default=False, help="Set this configuration as default")
     parser.add_option("-D","--disableExt", dest="disabledExtensions", default=[], action="append", help="Dsiable the extension with the name EXTENSION.", metavar="EXTENSION")
     parser.add_option("--list-extensions", dest="list_extensions", default=False, action="store_true", help="List all available extensions.")
-    options, args=parser.parse_args()
+    options=parser.parse_args()[0]
     options.vardir="server/var"
     optionsdict=dict()
     save_options=["vardir","configdir","server","datadir"]
     global Global
     # START #################################################
     # Get available extensions
-    for file in glob.glob("extensions/*.py"):
-        extname=os.path.basename(file)[:-3] # Without the .py
-        Global.availableExtensions+=[extname]
-        if(options.list_extensions):
-            print("Found extension: "+extname+" ("+os.path.abspath(file)+")")
     if options.list_extensions:
-        exit()
+        print("Extensions:")
+        print("\n".join(extensions.getExtensions()))
     os.chdir(os.path.dirname(sys.argv[0]) )
     if not os.path.exists("run"):
         os.mkdir("run")
@@ -176,6 +178,10 @@ def main():
     if not os.path.exists(options.configdir): options.configir="/etc/armagetronad-dedicated"
     if not os.path.exists(options.datadir): options.datadir=os.path.join(options.prefix, "share/games/armagetronad-dedicated")
     
+    Global.datadir=options.datadir
+    Global.configdir=options.configdir
+    Global.debug=options.debug
+    
     # Write config files +++++++++++++++++++++++++++++++
     for save_option in save_options:
         optionsdict[save_option]=getattr(options, save_option)
@@ -193,7 +199,8 @@ def main():
     args=["--vardir",options.vardir, "--datadir",options.datadir, "--configdir",options.configdir,
           "--userdatadir",userdatadir, "--userconfigdir",userconfigdir]
     print("[START] Executable: "+options.server)
-    t=Thread(None, target=runServerForever,args=([options.server]+args,options.debug) )
+    t=Thread(None, 
+target=runServerForever,args=([options.server]+args,options.debug) )
     t.daemon=True
     t.start()
     extensions.loadExtensions()

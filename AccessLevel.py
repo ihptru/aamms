@@ -51,4 +51,4 @@ def load(file="access.yaml"):
     if not exists("access.yaml"):
         return
     with open(file) as f:
-         __accessLevels=yaml.load(f)
+        __accessLevels=yaml.load(f)

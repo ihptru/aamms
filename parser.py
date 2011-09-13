@@ -42,15 +42,13 @@ def main(debug=False, disabledCommands=[]):
         Player.enableLogging(logging.DEBUG)
         Team.enableLogging(logging.DEBUG)
         LadderLogHandlers.enableLogging(logging.DEBUG)
-        Mode.enableLogging(logging.DEBUG)
-        Vote.enableLogging(logging.DEBUG)
+        Poll.enableLogging(logging.DEBUG)
         Zone.enableLogging(logging.DEBUG)
     else:
         Player.enableLogging(logging.WARNING)
         Team.enableLogging(logging.WARNING)
         LadderLogHandlers.enableLogging(logging.INFO)
-        Mode.enableLogging(logging.INFO)
-        Vote.enableLogging(logging.WARNING)
+        Poll.enableLogging(logging.WARNING)
         Zone.enableLogging(logging.WARNING)
 
     Commands.disabled=Commands.disabled+disabledCommands    
