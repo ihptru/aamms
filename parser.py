@@ -4,7 +4,6 @@ import logging
 import Team
 import Armagetronad
 import Zone
-import Mode
 import Global
 import Commands
 import AccessLevel
@@ -22,7 +21,6 @@ if "log" not in globals():
 
 def exit(normal=False, quiet=False):
     if normal:
-        Mode.saveModes()
         AccessLevel.save()
     if not quiet:
         log.info("Exit")
@@ -44,20 +42,17 @@ def main(debug=False, disabledCommands=[]):
         Player.enableLogging(logging.DEBUG)
         Team.enableLogging(logging.DEBUG)
         LadderLogHandlers.enableLogging(logging.DEBUG)
-        Mode.enableLogging(logging.DEBUG)
         Poll.enableLogging(logging.DEBUG)
         Zone.enableLogging(logging.DEBUG)
     else:
         Player.enableLogging(logging.WARNING)
         Team.enableLogging(logging.WARNING)
         LadderLogHandlers.enableLogging(logging.INFO)
-        Mode.enableLogging(logging.INFO)
         Poll.enableLogging(logging.WARNING)
         Zone.enableLogging(logging.WARNING)
 
     Commands.disabled=Commands.disabled+disabledCommands    
     #Init
-    Mode.loadModes()
     AccessLevel.load()
     log.info("Script started")    
     Armagetronad.PrintMessage("0xff0000Script started")

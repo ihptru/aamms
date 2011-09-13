@@ -19,9 +19,10 @@ def loadExtensions():
             imp.acquire_lock()
             loadedExtensions+=[imp.load_module(i, *imp.find_module("extensions/"+i))]
             imp.release_lock()
-        except ImportError:
+        except ImportError as i:
             print("Not found.")
-        #except BaseException as b:
-        #    print("Error")
+            raise i
+        except BaseException as b: #@UnusedVariable
+            print("Error")
         else:
             print("Ok")

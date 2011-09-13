@@ -32,6 +32,7 @@ def SendCommand(command, delay=0, forked=False):
 # @details Writes a message to the game
 # @param msg The message to print
 def PrintMessage(msg):
+    msg=str(msg)
     msgs=msg.split("\n")
     for msg in msgs:
         SendCommand("CONSOLE_MESSAGE 0xffffff"+str(msg) )
@@ -98,7 +99,7 @@ def GetSetting(setting):
     serverlog=open(Global.serverlog, encoding="latin-1")
     serverlog.seek(0,2)
     SendCommand(setting.upper())
-    startpattern=r"\[0[^\]]*] "
+    startpattern=r"\[0[^\]]*\] "
     pattern1=re.compile(startpattern+setting.upper()+r" is currently set to (?P<value>[^.]*)\.")
     pattern2=re.compile(startpattern+setting.upper()+r" changed from (?P<value>((([^t]|t+[^o])*)(to)*)*)to \.")
     for i in range(10): #@UnusedVariable

@@ -8,7 +8,7 @@ import Player
 import Messages
 import textwrap
 import AccessLevel
-import Global
+import Poll
 if "disabled" not in dir():
     ###################################### VARIABLES #########################################
     ## @brief Commands that couldn't be used in a given state.
@@ -336,8 +336,10 @@ def printBuffer(acl, player):
 # @param acl The accesslevel of the player
 # @param player The name of the player
 def reload(acl, player):
-    Armagetronad.PrintPlayerMessage(player,  "0xff0000Reloading script ....")
-    Global.reloadModules()
+    Armagetronad.PrintPlayerMessage(player, "This feature is bugged. It's not available at the moment.")
+    return
+    #Armagetronad.PrintPlayerMessage(player,  "0xff0000Reloading script ....")
+    #Global.reloadModules()
 
 
 ## @brief Get help about commands and more.
@@ -440,6 +442,44 @@ def acl(acl, player, command, access=0):
         return
     AccessLevel.setAccessLevel(command, access)
     Armagetronad.PrintPlayerMessage(player, Messages.AccessLevelChanged.format(command=command, access=access) )
+    
+## @brief Vote for the current poll
+def yes(acl, player):
+    if not Poll.current_poll:
+        Armagetronad.PrintPlayerMessage(player, Messages.NoActivePoll)
+        return
+    try:
+        Poll.current_poll.SetPlayerVote(player, True)
+        Armagetronad.PrintMessage( Messages.PlayerVotedYes.format(player=Player.players[player].name, target=Poll.current_poll.target) )
+    except RuntimeError as r:
+        if r.args[1]==1:
+            Armagetronad.PrintPlayerMessage(player, Messages.PlayerAlreadyVoted)
+        elif r.args[1]==2:
+            Armagetronad.PrintPlayerMessage(player, Messages.SpecNotAllowed)
+
+## @brief Vote against the current poll
+def no(acl, player):
+    if not Poll.current_poll:
+        Armagetronad.PrintPlayerMessage(player, Messages.NoActivePoll)
+        return
+    try:
+        Poll.current_poll.SetPlayerVote(player, False)
+        Armagetronad.PrintMessage( Messages.PlayerVotedNo.format(player=Player.players[player].name, target=Poll.current_poll.target) )
+    except RuntimeError as r:
+        if r.args[1]==1:
+            Armagetronad.PrintPlayerMessage(player, Messages.PlayerAlreadyVoted)
+        elif r.args[1]==2:
+            Armagetronad.PrintPlayerMessage(player, Messages.SpecNotAllowed)
+
+## @brief Cancel all currently active polls.
+def cancel(acl, player):
+    if not Poll.current_poll:
+        Armagetronad.PrintPlayerMessage(player, Messages.NoActivePoll)
+        return
+    Poll.Cancel()
+    
   
 add_help_group("misc", "Other commands")
+add_help_group("voting", "Commands for voting")
 register_commands(info, reload, clearBuffer, printBuffer,acl, script, execBuffer, group="misc")
+register_commands(no, yes, group="voting")

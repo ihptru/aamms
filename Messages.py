@@ -43,7 +43,7 @@ ModeNotExist="Mode {mode} doesn't exist! Look at /info modes for a list of all a
 # @details This message is printed when a vote is active.
 # @param target The target of the active vote
 # @param expire How much rounds does this vote still stay alive?
-PollInProgress="0xff8844Poll {target} in progress. Use /yes or /no to vote! This vote expires in {expire} rounds"
+PollInProgress="0xff8844Poll 0xffff00{target} 0xff8844in progress. Use /yes or /no to vote! This vote expires in {expire} rounds"
 
 ## @brief Vote added message
 # @details This message is displayed when a new vote was added.
@@ -70,13 +70,13 @@ PollFailed="0x00ffffPoll 0xffff00{target} 0x00fffffailed!"
 # @details This message is displayed when a player used the /yes command
 # @param player The name of the player who voted.
 # @param target The target of the vote for which the player voted.
-PlayerVotedYes="0x00ff88{player} 0x99ff99voted for 0xffff00{target}0x99ff99."
+PlayerVotedYes="0x00ff88{player} 0x99ff99voted for 0xffff00{target}."
 
 ## @brief Player voted against a vote message
 # @details This message is displayed when a player used the /no command
 # @param player The name of the player who voted.
 # @param target The target of the vote for which the player voted.
-PlayerVotedNo="0x00ff88{player} 0x99ff99voted against 0xffff00{target}0x99ff99."
+PlayerVotedNo="0x00ff88{player} 0x99ff99voted against 0xffff00{target}."
 
 ## @brief Player has already voted message.
 # @details This message is printed when a player tries to use the /yes or /no commands
@@ -109,6 +109,7 @@ DisabledCommand="0xff0000This command has been disabled by an administrator."
 
 ## @brief This is the Message that is printed when a player got respawned by the script.
 PlayerRespawned="0x0066ff{player}0x00ff44 got respawned. {msg}"
+PlayerDied="0x0066ff{player}0x00ff44 is dead!"
 
 LastLifeMsg="0xff0000Last life!"
 OneLifeMsg="One life left!"
@@ -124,3 +125,5 @@ About="""0x00ffff                  About
 
 ## @brief Invalid info topic message
 InfoTopicInvalid="0xff0000Error: There is no topic {topic}!"
+
+SpecNotAllowed="0xff8800Spectators aren't allowed to vote!"

@@ -48,7 +48,11 @@ class OutputToProcess(io.TextIOWrapper):
         pass
     def write(self, x):
         try:
-            p.stdin.write(x.encode())
+            p.stdin.write(x.encode("latin-1"))
+            if Global.debug:
+                f=open("debug.log", "w+")
+                f.write(x)
+                f.close()
             p.stdin.flush()
         except IOError:
             pass # Ignore
@@ -60,9 +64,11 @@ def exit():
     sys.stderr.write("Exiting ... ")
     parser.exit(True, True)
     sys.stderr.write("Ok \n")
-    sys.stderr.write("Killing server ... ")
-    p.terminate()
-    p.wait()
+    sys.stderr.write("Exiting server ... ")
+    global p
+    if p!=None:
+        print("QUIT")
+        p.wait()
     atexit.unregister(exit)
     global exitEvent
     exitEvent.set()
@@ -108,8 +114,8 @@ def read_stdin():
             else:
                 Armagetronad.SendCommand(line)
                 sys.stderr.write("Command sent to server.\n")
-        except:
-            pass
+        except Exception as e:
+            print(e)
 def main():
     # SETTINGS ##############################################
     userdatadir="./server/data"
@@ -136,7 +142,6 @@ def main():
     if options.list_extensions:
         print("Extensions:")
         print("\n".join(extensions.getExtensions()))
-    extensions.loadExtensions()
     os.chdir(os.path.dirname(sys.argv[0]) )
     if not os.path.exists("run"):
         os.mkdir("run")
@@ -173,6 +178,10 @@ def main():
     if not os.path.exists(options.configdir): options.configir="/etc/armagetronad-dedicated"
     if not os.path.exists(options.datadir): options.datadir=os.path.join(options.prefix, "share/games/armagetronad-dedicated")
     
+    Global.datadir=options.datadir
+    Global.configdir=options.configdir
+    Global.debug=options.debug
+    
     # Write config files +++++++++++++++++++++++++++++++
     for save_option in save_options:
         optionsdict[save_option]=getattr(options, save_option)
@@ -194,6 +203,7 @@ def main():
 target=runServerForever,args=([options.server]+args,options.debug) )
     t.daemon=True
     t.start()
+    extensions.loadExtensions()
     while(p==None):
         time.sleep(1) # Give the the server some time to start up
     atexit.register(exit)

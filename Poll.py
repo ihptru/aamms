@@ -48,8 +48,10 @@ def Add(target_human, action, force=False):
 # @details Sets current_poll to None and prints a message.
 def Cancel():
     global current_poll
+    target=current_poll.target
     current_poll=None
     log.info("Poll cancelled.")
+    Armagetronad.PrintMessage(Messages.PollCancelled.format(target=target))
 
 
 ## @brief The vote class
@@ -132,19 +134,23 @@ class Poll:
                 pass
         if yes_count+no_count==0 or len(Player.players)==0:
             percent_yes=0
+            percent_no=0
         elif only_sure==False:
             percent_yes=yes_count/(yes_count+no_count)*100
             percent_no=100-percent_yes
         else:
             percent_yes=yes_count/(len(Player.players)-len(Player.getBots() ))*100
             percent_no=no_count/(len(Player.players)-len(Player.getBots() ))*100
+        if len(Player.players)-len(Player.getBots())==1:
+            percent_yes=100
+            percent_no=0
         if percent_yes >= min_needed:
             log.info("Poll for {0} successed.".format(self.target) )
-            Armagetronad.PrintMessage(Messages.VoteSuccessed.format(target=self.target) )
+            Armagetronad.PrintMessage(Messages.PollSuccessed.format(target=self.target) )
             self.action()
         elif percent_no>(100-min_needed):
             log.info("Poll for {0} failed.".format(self.target) )
-            Armagetronad.PrintMessage(Messages.VoteFailed.format(target=self.target) )
+            Armagetronad.PrintMessage(Messages.PollFailed.format(target=self.target) )
         else:
             return False
         global current_poll
@@ -165,7 +171,7 @@ class Poll:
         if Player.players[player].ip in (self.__players_voted_yes + self.__players_voted_no):
             raise RuntimeError("Player already voted", 1)
         if Player.players[player].getTeam()==None and not spec_allowed: #spec not allowed and player is spectator
-            return
+            raise RuntimeError("Player not allowed to vote", 3)
         if vote:
             self.__players_voted_yes.append(Player.players[player].ip)
         else:

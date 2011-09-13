@@ -10,13 +10,11 @@ import Messages
 import Player
 import logging
 import Team
-import Mode
 import Poll
 import imp
 import Global
 from threading import Thread
 import threading
-import extensions
 
 if "log" not in dir(): # Don't overwrite variables
     ## @brief The logging object
@@ -86,9 +84,9 @@ def InvalidCommand(command, player, ip, access, *args):
             Player.players[player].data["buffer"]=[" ".join(args)]
         Armagetronad.PrintPlayerMessage(player," ".join(args) )
         return
-    imp.reload(Commands)
-    for mod in extensions.loadedExtensions:
-        imp.reload(mod)
+    #imp.reload(Commands)
+    #for mod in extensions.loadedExtensions:
+    #    imp.reload(mod)
     saved_command=command
     command=[realcommand for realcommand in Commands.getCommands() if realcommand.lower()==command]
     if len(command)>1:
@@ -121,6 +119,8 @@ def InvalidCommand(command, player, ip, access, *args):
         global runningCommands
         args=(access,player) + args
         try:
+            import sys
+            imp.reload(sys.modules[Commands.commands[command].__module__])
             Commands.commands[command](*args)
         except Exception as e:
             raise e
@@ -225,10 +225,6 @@ def NewRound(date, time, timezone):
     global roundNumber
     roundStarted=False
     log.debug("New round started -----------")
-    # Lives
-    if Mode.current_mode:
-        for player in Player.players.values():
-            player.setLives(Mode.current_mode.lives) #@UndefinedVariable
     # Flush bot list (NEEDED because no PlayerLeft is called for bots)
     bots=Player.getBots()
     for bot in bots:
@@ -240,13 +236,13 @@ def NewRound(date, time, timezone):
         except Exception as e:
             log.error("Could not execute round end handler "+str(func)+": "+str(e.__class__.__name__) )
     atRoundend=list() # Flush list
-    # Votes
+    # Polls
     if Poll.current_poll != None:
         if Poll.current_poll.aliveRounds==0:
             Poll.current_poll.CheckResult()
         else:
             if not Poll.current_poll.CheckResult(only_sure=True):
-                Armagetronad.PrintMessage(Messages.VoteInProgress.format(target=Poll.current_poll.target, expire=Poll.current_poll.aliveRounds) )
+                Armagetronad.PrintMessage(Messages.PollInProgress.format(target=Poll.current_poll.target, expire=Poll.current_poll.aliveRounds) )
                 Poll.current_poll.aliveRounds=Poll.current_poll.aliveRounds-1
     Armagetronad.SendCommand("LADDERLOG_WRITE_GAME_TIME 1")
     roundStarted=True
@@ -266,17 +262,10 @@ def CycleCreated(lname, x, y, xdir, ydir):
     if "ai" not in Team.teams:
         Team.Add("AI")
     Player.players[lname].joinTeam("ai", quiet=True)
-    if(Mode.current_mode):
-        Player.players[lname].setLives(Mode.current_mode.lives) #@UndefinedVariable
 
 def GameTime(time):
-    if time=="-4" and Mode.current_mode:
-        Mode.current_mode.spawnTeams() #@UndefinedVariable
-        Team
-    if time=="-2" and Mode.current_mode:
-        Armagetronad.SendCommand("LADDERLOG_WRITE_GAME_TIME 0")
-        Mode.current_mode.spawnZones() #@UndefinedVariable
-    if int(time)>0:
+    time=int(time)
+    if time==0:
         Armagetronad.SendCommand("LADDERLOG_WRITE_GAME_TIME 0")
 
 def NewMatch(data, time, timezone):
@@ -300,22 +289,6 @@ def Positions(team, *members):
         Team.teams[team].shufflePlayer(member, pos)
     teamstr=" ".join(Team.teams[team].getMembers() )
     log.info("Team "+team+": "+teamstr)
-
-# Generate handlers for lives
-respawn_events=("DEATH_SUICIDE","DEATH_TEAMKILL", "DEATH_DEATHZONE", "DEATH_FRAG", "DEATH_SHOT_FRAG", "DEATH_SHOT_SUICIDE", "DEATH_SHOT_TEAMKILL")
-def HandlePlayerDied(event, player, *args): 
-    if Mode.current_mode: 
-        Mode.current_mode.playerCrashed(player, event) #@UndefinedVariable
-for event in respawn_events:
-    f=lambda *args: HandlePlayerDied(event, *args) 
-    if event in extraHandlers:
-        for handler in extraHandlers[event]:
-            if f.__code__ == handler.__code__:
-                break
-        else:
-            extraHandlers[event].append(f)
-    else:
-        extraHandlers[event]=[f]
 
 ## @brief Enables logging
 # @details This function enables logging for this module.

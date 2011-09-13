@@ -7,6 +7,7 @@ import LadderLogHandlers
 import Player
 
 modes=dict()
+current_mode=None 
 
 def SaveModes(dir="ModesSimple", ext=".mod", modename=None):
     global modes
@@ -34,18 +35,18 @@ def LoadModes(dir="ModesSimple", ext=".mod"):
         f=open(filename, "r")
         m=yaml.load(f)
         modes[m.getEscapedName()]=m
-
+        
 class Mode(yaml.YAMLObject):
     yaml_tag="!simplemode"
     
-    def __init__(self, name, desc=None, map=None, lives=1):
+    def __init__(self, name, desc=None, file=None, lives=1):
         global modes
         if not desc:
             desc=name
         self.name=name
         self.desc=desc
-        self.map=map
-        self.lives=lives   
+        self.file=file
+        self.lives=int(lives)   
         modes[self.getEscapedName()]=self
         
     def activate(self, kill=None):
@@ -54,23 +55,28 @@ class Mode(yaml.YAMLObject):
                 kill=True
             else:
                 kill=False
-        mapfile=os.path.exists(os.path.join(Global.datadir, "included", self.map) )
-        if not os.path.exists(mapfile):
-            mapfile=os.path.exists(os.path.join(Global.datadir, "automatic", self.map) )
-        if not os.path.exists(mapfile):
+        configfile=os.path.join(Global.configdir, self.file)
+        if not os.path.exists(configfile):
             return False
-        Armagetronad.SendCommand("MAP_FILE "+mapfile)
+        Armagetronad.SendCommand("SINCLUDE "+configfile)
         if kill:
-            for player in Player.players:
+            for player in Player.players.values():
                 player.kill()
+        global current_mode
+        current_mode=self
         return True
     
     def playerCrashed(self, laddername):
         p=Player.players[laddername]
-        if "respoint" in p.data:
+        if p.getLives() <= 0:
+            return None
+        elif "respoint" in p.data:
+            p.crashed()
             p.respawn(*p.data["respoint"], force=False)
+            return p.getLives()
         else:
             Armagetronad.PrintMessage("Player "+p.getLadderName()+" doesn't exists in script.")
+        return False
             
     def getEscapedName(self):
         return self.name.replace(" ","_").lower()

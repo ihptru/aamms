@@ -4,7 +4,6 @@
 # @details This file contains global functions and variables.
 
 import Armagetronad
-import Mode
 from time import sleep
 import imp
 import glob
@@ -19,8 +18,6 @@ def reloadPlayerList():
     sleep(2)
     Armagetronad.SendCommand("SINCLUDE settings.cfg")
     Armagetronad.SendCommand("SINCLUDE settings_custom.cfg")
-    if Mode.current_mode in Mode.modes:
-        Mode.modes[Mode.current_mode].activate(False)
 
 ## @brief Reloads all modules used by this script
 # @details Reloads all modules loaded by the dcript by calling imp.reload(Module) for each Module
@@ -45,3 +42,5 @@ if "state" not in dir():
     availableExtensions=[]
     serverlog=None
     datadir=None
+    configdir=None
+    debug=False
