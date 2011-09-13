@@ -482,4 +482,4 @@ def cancel(acl, player):
 add_help_group("misc", "Other commands")
 add_help_group("voting", "Commands for voting")
 register_commands(info, reload, clearBuffer, printBuffer,acl, script, execBuffer, group="misc")
-register_commands(no, yes, group="voting")
+register_commands(no, yes,cancel,  group="voting")
