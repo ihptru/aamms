@@ -50,7 +50,7 @@ class OutputToProcess(io.TextIOWrapper):
         try:
             p.stdin.write(x.encode("latin-1"))
             if Global.debug:
-                f=open("debug.log", "w+")
+                f=open("debug.log", "a+")
                 f.write(x)
                 f.close()
             p.stdin.flush()
