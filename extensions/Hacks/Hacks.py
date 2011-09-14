@@ -20,11 +20,12 @@ def tele(acl, player, x, y, xdir=0, ydir=1):
 #  @param lives new lives
 def lives(acl, player, lives):
 	try:
-		lives=int(lives)
+		lives=int(lives)+1
 	except ValueError:
 		Armagetronad.PrintPlayerMessage(player, "0xff0000Wrong value for argument lives!")
 		return
 	Player.players[player].setLives(lives)
 	Armagetronad.PrintPlayerMessage(player, "0xff0000Lives changed to "+str(lives) )
 
-Commands.register_commands(lives, tele)
+Commands.add_help_group("Hacks", "Some commands that allow cheating")
+Commands.register_commands(lives, tele, group="Hacks")

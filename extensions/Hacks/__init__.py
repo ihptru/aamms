@@ -1,1 +1,1 @@
-import Hacks
+from . import Hacks
