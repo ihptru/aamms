@@ -53,3 +53,6 @@ def load(file="access.yaml"):
         return
     with open(file) as f:
         __accessLevels=yaml.load(f)
+        
+def accessLevelSet(command):
+    return command in __accessLevels

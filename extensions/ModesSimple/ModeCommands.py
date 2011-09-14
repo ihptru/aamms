@@ -5,6 +5,7 @@ import Messages
 import Poll
 import LadderLogHandlers
 import Player
+import AccessLevel
 
 ## @brief Add a mode. 
 #  @details Add a new mode.
@@ -49,6 +50,7 @@ def mode(acl, player, modename, type="vote", when="matchend"):
     if SimpleMode.current_mode:
         if SimpleMode.current_mode.name==modename: #@UndefinedVariable
             Armagetronad.PrintPlayerMessage(player, Messages.ModeAlreadyPlaying)
+            return
     if type=="vote":
         try:
             target="Change mode to '"+modename+"'"
@@ -59,7 +61,14 @@ def mode(acl, player, modename, type="vote", when="matchend"):
             Armagetronad.PrintPlayerMessage(player, Messages.PollAlreadyActive)
             return
     elif type=="set":
+        if not AccessLevel.isAllowed("mode_set", acl):
+            Armagetronad.PrintPlayerMessage(player, "0xff0000You're not allowed to do that. ")
+            return
         when=when.lower()
+        access_name="mode_set_"+when
+        if AccessLevel.accessLevelSet(access_name) and not AccessLevel.isAllowed(access_name, acl):
+            Armagetronad.PrintPlayerMessage(player, "0xff0000You're not allowed to do that. ")
+            return
         if when=="now":
             SimpleMode.modes[modename.lower()].activate()
         elif when=="roundend":
@@ -68,7 +77,6 @@ def mode(acl, player, modename, type="vote", when="matchend"):
         elif when=="matchend":
             LadderLogHandlers.atRoundend.append(SimpleMode.modes[modename.lower()].activate)
             Armagetronad.PrintMessage(Messages.NextMatchMode.format(mode=modename.lower(), player=Player.players[player].name))
-
 ## @brief List available modes.
 def modes(acl, player):
     Armagetronad.PrintPlayerMessage(player, "0x8888ffAvailable Modes on this server:")
