@@ -62,9 +62,8 @@ class Mode(yaml.YAMLObject):
             Armagetronad.SendCommand("SINCLUDE settings.cfg")
             Armagetronad.SendCommand("SINCLUDE default.cfg")
         Armagetronad.SendCommand("SINCLUDE "+configfile)
-        if first_time:
-            Armagetronad.SendCommand("SINCLUDE settings_custom.cfg")
-            Armagetronad.SendCommand("SERVER_NAME "+Armagetronad.GetSetting("SERVER_NAME")+" 0xff8800["+self.name+"]")
+        Armagetronad.SendCommand("SINCLUDE settings_custom.cfg")
+        Armagetronad.SendCommand("SERVER_NAME "+Armagetronad.GetSetting("SERVER_NAME")+" 0xff8800["+self.name+"]")
         if kill:
             for player in Player.players.values():
                 player.kill()
