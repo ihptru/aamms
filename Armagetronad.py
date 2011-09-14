@@ -96,12 +96,12 @@ def GetSetting(setting):
         raise ValueError("Not a setting.")
     if not Global.serverlog:
         raise RuntimeError("Script wasn't started with run.py or Global.serverlog wasn't set.")
-    serverlog=open(Global.serverlog, encoding="latin-1")
-    serverlog.seek(0,2)
-    SendCommand(setting.upper())
     startpattern=r"\[0[^\]]*\] "
     pattern1=re.compile(startpattern+setting.upper()+r" is currently set to (?P<value>[^.]*)\.")
     pattern2=re.compile(startpattern+setting.upper()+r" changed from (?P<value>((([^t]|t+[^o])*)(to)*)*)to \.")
+    SendCommand(setting.upper())
+    serverlog=open(Global.serverlog, encoding="latin-1")
+    serverlog.seek(0,2)
     for i in range(10): #@UnusedVariable
         lines="".join(serverlog.readlines() )
         match=pattern1.search(lines)
@@ -111,16 +111,6 @@ def GetSetting(setting):
             time.sleep(0.5)
             continue
         break
-    if match==None:
-        for i in range(10): #@UnusedVariable
-            lines="".join(serverlog.readlines() )
-            match=pattern1.search(lines)
-            if match==None:
-                match=pattern2.search(lines)
-            if match==None:
-                time.sleep(1)
-                continue
-            break
     if match==None:
         return ""
     value=match.group("value")
