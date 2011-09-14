@@ -76,4 +76,4 @@ def modes(acl, player):
         Armagetronad.PrintPlayerMessage(player, "    0x88ff44"+m.name+": 0x888800"+m.desc)
 
 Commands.add_help_group("modes", "Commands about modes (change mode, ...)")
-Commands.register_commands(addMode, mode, modes, group="modes")
+Commands.register_commands(addMode,editMode,  mode, modes, group="modes")
