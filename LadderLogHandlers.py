@@ -120,7 +120,7 @@ def InvalidCommand(command, player, ip, access, *args):
         args=(access,player) + args
         try:
             import sys
-            imp.reload(sys.modules[Commands.commands[command].__module__])
+            #imp.reload(sys.modules[Commands.commands[command].__module__])
             Commands.commands[command](*args)
         except Exception as e:
             raise e
