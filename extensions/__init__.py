@@ -15,17 +15,19 @@ def loadExtensions():
     global loadedExtensions
     sys.path.append(__path__)
     for i in getExtensions():
-        print("[EXTENSION] Loading "+i+" ... ", end="")
+        sys.stderr.write("[EXTENSION] Loading "+i+" ... ")
+        sys.stderr.flush()
         try:
             imp.acquire_lock()
             loadedExtensions+=[imp.load_module(i, *imp.find_module("extensions/"+i))]
             imp.release_lock()
         except ImportError as i:
-            print("Not found.")
+            sys.stderr.write("Not found.\n")
             raise i
         except BaseException as b: #@UnusedVariable
             if Global.debug:
                 raise b
-            print("Error")
+            sys.stderr.write("Error\n")
         else:
-            print("Ok")
+            sys.stderr.write("Ok\n")
+        sys.stderr.flush()

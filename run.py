@@ -203,7 +203,6 @@ def main():
 target=runServerForever,args=([options.server]+args,options.debug) )
     t.daemon=True
     t.start()
-    extensions.loadExtensions()
     while(p==None):
         time.sleep(1) # Give the the server some time to start up
     atexit.register(exit)
@@ -211,6 +210,7 @@ target=runServerForever,args=([options.server]+args,options.debug) )
     sys.stdin=WatchFile(open(os.path.join(options.vardir,"ladderlog.txt"), encoding="latin-1" ) )
     sys.stdin.skipUnreadLines()
     sys.stderr=sys.__stdout__
+    extensions.loadExtensions()
     t2=Thread(None, read_stdin)
     t2.daemon=True
     t2.start()

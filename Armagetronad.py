@@ -108,6 +108,15 @@ def GetSetting(setting):
         if match==None:
             match=pattern2.search(lines)
         if match==None:
+            time.sleep(0.5)
+            continue
+        break
+    for i in range(10): #@UnusedVariable
+        lines="".join(serverlog.readlines() )
+        match=pattern1.search(lines)
+        if match==None:
+            match=pattern2.search(lines)
+        if match==None:
             time.sleep(1)
             continue
         break
