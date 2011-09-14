@@ -102,16 +102,20 @@ def GetSetting(setting):
     SendCommand(setting.upper())
     serverlog=open(Global.serverlog, encoding="latin-1")
     serverlog.seek(0,2)
+    match=None
     for i in range(10): #@UnusedVariable
-        lines="".join(serverlog.readlines() )
-        match=pattern1.search(lines)
-        if match==None:
-            match=pattern2.search(lines)
-        if match==None:
-            time.sleep(0.5)
-            continue
-        break
+        for line in serverlog.readlines():
+            match=pattern1.match(line)
+            if match==None:
+                match=pattern2.match(line)
+            if match!=None:
+                break
+        if match!=None:
+            break
+        time.sleep(0.5)
     if match==None:
+        import sys
+        sys.stderr.write("Test\n")
         return ""
     value=match.group("value")
     SendCommand(setting.upper()+" "+value)
