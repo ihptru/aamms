@@ -65,7 +65,7 @@ class Mode(yaml.YAMLObject):
         Armagetronad.SendCommand("SINCLUDE "+configfile)
         Armagetronad.SendCommand("SINCLUDE settings_custom.cfg")
         server_name=Armagetronad.GetSetting("SERVER_NAME")
-        server_name=re.sub(" 0xff8800\[[^\]]*\]", "", server_name)
+        server_name=re.sub("\[[^\]]*\]", "", server_name)
         if server_name.find("["+self.name+"]") == -1:
             Armagetronad.SendCommand("SERVER_NAME "+server_name+" 0xff8800["+self.name+"]")
         if kill:
