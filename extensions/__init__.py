@@ -1,6 +1,7 @@
 import glob
 import imp
 import sys
+import Global
 
 loadedExtensions=[]
 
@@ -23,6 +24,8 @@ def loadExtensions():
             print("Not found.")
             raise i
         except BaseException as b: #@UnusedVariable
+            if Global.debug:
+                raise b
             print("Error")
         else:
             print("Ok")

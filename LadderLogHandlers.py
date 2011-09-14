@@ -160,6 +160,7 @@ def PlayerRenamed(oldlname,newlname, ip, logged_in, *name):
 #        Player.Add(oldlname,name,ip)
     Player.players[oldlname].name=name
     Player.players[oldlname].ip=ip
+    if newlname==oldlname: return
     if logged_in=="1":
         log.info("Player {0} logged in as {1}".format(Player.players[oldlname].name,newlname) )
         Player.players[oldlname].login(newlname)
@@ -239,7 +240,9 @@ def NewRound(date, time, timezone):
     # Polls
     if Poll.current_poll != None:
         if Poll.current_poll.aliveRounds==0:
-            Poll.current_poll.CheckResult()
+            if not Poll.current_poll.CheckResult(only_sure=True):
+                Armagetronad.PrintMessage(Messages.PollTimedOut.format(target=Poll.current_poll.target))
+                Poll.current_poll=None
         else:
             if not Poll.current_poll.CheckResult(only_sure=True):
                 Armagetronad.PrintMessage(Messages.PollInProgress.format(target=Poll.current_poll.target, expire=Poll.current_poll.aliveRounds) )

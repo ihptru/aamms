@@ -59,7 +59,7 @@ PollCancelled="0xff2200Poll 0xffff00{target} 0xff2200got cancelled by an adminis
 ## @brief Vote successed message
 # @details This message is printed when a vote successed.
 # @param target The target of the vote which successed.
-PollSuccessed="0x00ffffPoll 0xffff00{target} 0x00ffffsuccessed!"
+PollSuccessed="0x00ffffPoll 0xffff00{target} 0x00ffffsucceed!"
 
 ## @brief Vote failed message
 # @details This message is printed when a vote failed.
@@ -127,3 +127,13 @@ About="""0x00ffff                  About
 InfoTopicInvalid="0xff0000Error: There is no topic {topic}!"
 
 SpecNotAllowed="0xff8800Spectators aren't allowed to vote!"
+
+ModeMessage="0x00aaffNow playing: 0xff8800{mode}"
+
+NextRoundMode="0xffff00{player} 0x00aaffchanged next round's mode to 0xffdd00{mode}."
+
+NextMatchMode="0xffff00{player} 0x00aaffchanged next match's mode to 0xffdd00{mode}."
+
+PollTimedOut="0xffff00The poll about {target} timed out."
+
+ModeAlreadyPlaying="0xff0000You are already playing this mode!"

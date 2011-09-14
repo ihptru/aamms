@@ -5,6 +5,8 @@ import atexit
 
 SimpleMode.LoadModes()
 atexit.register(SimpleMode.SaveModes)
+if len(SimpleMode.modes):
+    next(iter(SimpleMode.modes.values())).activate() # Get first mode and activate it
 
 class OnShutdown:
     def __del__(self):

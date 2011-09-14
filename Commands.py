@@ -452,6 +452,7 @@ def yes(acl, player):
     try:
         Poll.current_poll.SetPlayerVote(player, True)
         Armagetronad.PrintMessage( Messages.PlayerVotedYes.format(player=Player.players[player].name, target=Poll.current_poll.target) )
+        Poll.current_poll.CheckResult(only_sure=True)
     except RuntimeError as r:
         if r.args[1]==1:
             Armagetronad.PrintPlayerMessage(player, Messages.PlayerAlreadyVoted)
@@ -466,6 +467,7 @@ def no(acl, player):
     try:
         Poll.current_poll.SetPlayerVote(player, False)
         Armagetronad.PrintMessage( Messages.PlayerVotedNo.format(player=Player.players[player].name, target=Poll.current_poll.target) )
+        Poll.current_poll.CheckResult(only_sure=True)
     except RuntimeError as r:
         if r.args[1]==1:
             Armagetronad.PrintPlayerMessage(player, Messages.PlayerAlreadyVoted)

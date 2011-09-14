@@ -17,12 +17,16 @@ def HandlePlayerDied(player, *args):
         Armagetronad.PrintMessage(message)
     
 def HandleCycleCreated(player_name, x, y, xdir, ydir):
+    if SimpleMode.current_mode:
+        if "respoint" not in Player.players[player_name].data:
+            Player.players[player_name].setLives(SimpleMode.current_mode.lives+1) #@UndefinedVariable
     Player.players[player_name].data["respoint"]=tuple( map( float,(x,y,xdir,ydir) ) )
 
 def HandleNewRound(*args):
     if SimpleMode.current_mode:
+        SimpleMode.current_mode.activate(kill=False) #@UndefinedVariable
         for player_name in Player.players:
-            Player.players[player_name].setLives(SimpleMode.current_mode.lives) #@UndefinedVariable
+            Player.players[player_name].setLives(SimpleMode.current_mode.lives+1) #@UndefinedVariable
     
 for respawn_event in RESPAWN_EVENTS:
     LadderLogHandlers.register_handler(respawn_event, HandlePlayerDied)
