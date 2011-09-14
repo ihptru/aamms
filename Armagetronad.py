@@ -114,8 +114,6 @@ def GetSetting(setting):
             break
         time.sleep(0.5)
     if match==None:
-        import sys
-        sys.stderr.write("Test\n")
         return ""
     value=match.group("value")
     SendCommand(setting.upper()+" "+value)

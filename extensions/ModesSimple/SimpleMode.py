@@ -4,7 +4,7 @@ import Armagetronad, Messages
 from glob import glob
 import LadderLogHandlers
 import Player
-import re
+import Global
 
 modes=dict()
 current_mode=None 
@@ -64,10 +64,8 @@ class Mode(yaml.YAMLObject):
             Armagetronad.SendCommand("SINCLUDE default.cfg")
         Armagetronad.SendCommand("SINCLUDE "+configfile)
         Armagetronad.SendCommand("SINCLUDE settings_custom.cfg")
-        server_name=Armagetronad.GetSetting("SERVER_NAME")
-        server_name=re.sub("\[[^\]]*\]", "", server_name)
-        if server_name.find("["+self.name+"]") == -1:
-            Armagetronad.SendCommand("SERVER_NAME "+server_name+" 0xff8800["+self.name+"]")
+        server_name=Global.server_name
+        Armagetronad.SendCommand("SERVER_NAME "+server_name+" 0xff8800["+self.name+"]")
         if kill:
             for player in Player.players.values():
                 player.kill()

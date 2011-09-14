@@ -18,6 +18,7 @@ from threading import Thread, Event
 import parser
 import Global
 import extensions
+import Armagetronad
 exitEvent=Event()
 
 # GLOBAL VARIABLES ######################################
@@ -102,7 +103,6 @@ def runServerForever(args, debug=False):
                 break
             time.sleep(2)
 def read_stdin():
-    import Armagetronad
     while(True):
         try:
             line=sys.__stdin__.readline().strip()
@@ -210,6 +210,11 @@ target=runServerForever,args=([options.server]+args,options.debug) )
     sys.stdin=WatchFile(open(os.path.join(options.vardir,"ladderlog.txt"), encoding="latin-1" ) )
     sys.stdin.skipUnreadLines()
     sys.stderr=sys.__stdout__
+    sys.stderr.write("[START] Getting server name ... ")
+    sys.stderr.flush()
+    Global.server_name=Armagetronad.GetSetting("SERVER_NAME")
+    sys.stderr.write("OK\n")
+    sys.stderr.flush()
     extensions.loadExtensions()
     t2=Thread(None, read_stdin)
     t2.daemon=True

@@ -44,3 +44,4 @@ if "state" not in dir():
     datadir=None
     configdir=None
     debug=False
+    server_name="Unnamed server"

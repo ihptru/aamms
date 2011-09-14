@@ -24,7 +24,7 @@ def addMode(acl, player, name, file, lives, *desc):
 #  @param mode The name of the mode you'd like to edit.
 #  @param what What do you want to change? (name, desc (=description), lives, file)
 #  @param value The new value
-def editMode(acl, player, modename, what, value):
+def editMode(acl, player, modename, what, *value):
     modename=modename.lower()
     value=" ".join(value)
     if modename not in SimpleMode.modes:
@@ -35,7 +35,10 @@ def editMode(acl, player, modename, what, value):
     if what not in modefields:
         Armagetronad.PrintPlayerMessage(player, "Modes do not have a setting called "+ what)
     try:
-        setattr(SimpleMode.modes[modename], what, modefields[what](value) )
+        if len(value):
+            setattr(SimpleMode.modes[modename], what, modefields[what](value) )
+        else:
+            Armagetronad.PrintPlayerMessage(getattr(SimpleMode.modes[modename], what) )
         Armagetronad.PrintPlayerMessage(player, "Operation successful")
     except ValueError:
         Armagetronad.PrintPlayerMessage(player, "0xff0000Wrong value given!")
@@ -54,7 +57,7 @@ def mode(acl, player, modename, type="vote", when="matchend"):
     if type=="vote":
         try:
             target="Change mode to '"+modename+"'"
-            Poll.Add(target, SimpleMode.modes[modename.lower()].activate)
+            Poll.Add(target, lambda: LadderLogHandlers.atMatchend.append(SimpleMode.modes[modename.lower()].activate))
             Poll.current_poll.SetPlayerVote(player, True)
             Armagetronad.PrintMessage(Messages.PollAdded.format(target=target, player=Player.players[player].name))
         except RuntimeError:
