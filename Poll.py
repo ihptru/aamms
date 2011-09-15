@@ -132,16 +132,19 @@ class Poll:
                 no_count=no_count+1
             else:
                 pass
-        if yes_count+no_count==0 or len(Player.players)==0:
+        num_allowed=len(Player.players)-len(Player.getBots())
+        if not spec_allowed:
+            num_allowed=num_allowed-len([i for i in Player.players.values() if i.getTeam()==None])
+        if yes_count+no_count==0 or num_allowed==0:
             percent_yes=0
             percent_no=0
         elif only_sure==False:
             percent_yes=yes_count/(yes_count+no_count)*100
             percent_no=100-percent_yes
         else:
-            percent_yes=yes_count/(len(Player.players)-len(Player.getBots() ))*100
-            percent_no=no_count/(len(Player.players)-len(Player.getBots() ))*100
-        if len(Player.players)-len(Player.getBots())==1:
+            percent_yes=yes_count/num_allowed*100
+            percent_no=no_count/num_allowed*100
+        if num_allowed==1:
             percent_yes=100
             percent_no=0
         if percent_yes >= min_needed:
@@ -159,8 +162,8 @@ class Poll:
 
     ## @brief Sets what a player voted.
     # @details Checks if the player is a spectator. If yes and
-    #          spec_allowed is set to False, return immendiately. Otherwise,
-    #          add the player to the list of players who voted for|agains the Poll.
+    #          spec_allowed is set to False, return immediately. Otherwise,
+    #          add the player to the list of players who voted for|against the Poll.
     # @param player The ladder name of the player who voted.
     # @param vote True if the player voted yes for the Poll, False otherwise.
     # @exception RuntimeError Raised if the player has already voted.
@@ -176,6 +179,13 @@ class Poll:
             self.__players_voted_yes.append(Player.players[player].ip)
         else:
             self.__players_voted_no.append(Player.players[player].ip)
+    
+    def RemovePlayerVote(self, player):
+        player=Player.players[player].ip
+        try:
+            del self.__players_voted_no[self.__players_voted_no.index(player)]
+        except IndexError:
+            del self.__players_voted_yes[self.__players_voted_yes.index(player)]
 
 
 ## @brief Enables logging

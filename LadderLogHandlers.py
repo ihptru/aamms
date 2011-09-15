@@ -179,6 +179,8 @@ def PlayerLeft(lname, ip):
         log.warning("„{0} left the game but the script doesn't know him. Ignoring.".format(lname) )
         return
     log.info("Player {0} left the server.".format(lname) )
+    if Poll.current_poll and len([i for i in Player.players if Player.players[i].ip==Player.players[lname]])==1:
+        Poll.current_poll.RemovePlayerVote(lname)
     Player.Remove(lname)
 
 ## @brief Handle online player
