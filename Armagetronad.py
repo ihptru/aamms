@@ -91,7 +91,7 @@ def IsSetting(command):
 # @param setting The name of the setting.
 # @return The value to which the setting is currently set.
 # @note This requires that the script was started with run.py. Otherwise RuntimeError is raised.
-def GetSetting(setting):
+def GetSetting(setting, timeout=5):
     if not IsSetting(setting):    
         raise ValueError("Not a setting.")
     if not Global.serverlog:
@@ -103,7 +103,7 @@ def GetSetting(setting):
     serverlog=open(Global.serverlog, encoding="latin-1")
     serverlog.seek(0,2)
     match=None
-    for i in range(10): #@UnusedVariable
+    for i in range(timeout*2): #@UnusedVariable
         for line in serverlog.readlines():
             match=pattern1.match(line)
             if match==None:
