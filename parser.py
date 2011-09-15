@@ -37,7 +37,7 @@ def main(debug=False, disabledCommands=[]):
     Armagetronad.SendCommand("INTERCEPT_UNKNOWN_COMMANDS 1")
     Armagetronad.SendCommand("LADDERLOG_GAME_TIME_INTERVAL 1")
     Armagetronad.SendCommand("EXTRA_ROUND_TIME 1")
-    if debug:
+    if Global.debug:
         log.info("Starting in debug mode.")
         Player.enableLogging(logging.DEBUG)
         Team.enableLogging(logging.DEBUG)
@@ -86,7 +86,7 @@ def main(debug=False, disabledCommands=[]):
                 else:
                     raise e
             except Exception as e:
-                if debug: raise(e)
+                if Global.debug: raise(e)
                 else:
                     log.error("Exception " +e.__class__.__name__ + " raised in Ladder log handler. This might be a bug.")
         if real_commandname in LadderLogHandlers.extraHandlers:

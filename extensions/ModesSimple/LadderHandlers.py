@@ -13,8 +13,9 @@ def HandlePlayerDied(player, *args):
                 res_msg=Messages.LastLifeMsg
             elif lives_left==1:
                 res_msg=Messages.OneLifeMsg
-            message=Messages.PlayerRespawned.format(player=Player.players[player].name, msg=res_msg) 
-        Armagetronad.PrintMessage(message)
+            message=Messages.PlayerRespawned.format(player=Player.players[player].name, msg=res_msg)
+        if not SimpleMode.current_mode.lives==0:  #@UndefinedVariable
+            Armagetronad.PrintMessage(message)
     
 def HandleCycleCreated(player_name, x, y, xdir, ydir):
     if SimpleMode.current_mode:

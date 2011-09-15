@@ -57,7 +57,7 @@ def mode(acl, player, modename, type="vote", when="matchend"):
     if type=="vote":
         try:
             target="Change mode to '"+modename+"'"
-            Poll.Add(target, lambda: LadderLogHandlers.atMatchend.append(SimpleMode.modes[modename.lower()].activate))
+            Poll.Add(target, lambda: LadderLogHandlers.atRoundend.append(SimpleMode.modes[modename.lower()].activate))
             Poll.current_poll.SetPlayerVote(player, True)
             Armagetronad.PrintMessage(Messages.PollAdded.format(target=target, player=Player.players[player].name))
         except RuntimeError:

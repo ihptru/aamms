@@ -214,7 +214,10 @@ class Player:
     def leaveTeam(self,quiet=False):
         if self.__team == None:
             return
-        teamname=Team.teams[self.__team].getName()
+        try:
+            teamname=Team.teams[self.__team].getName()
+        except KeyError:
+            return
         try:
             Team.teams[self.__team].removePlayer(self.__ladder_name)
         except:
