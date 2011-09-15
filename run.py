@@ -145,6 +145,7 @@ def main():
     parser.add_option("-c", "--configdir", dest="configdir", default=None, help="Path to the config directory (server)")
     parser.add_option("-e", "--executable", dest="server", default=None, help="Path of the server executable", metavar="EXECUTABLE")
     parser.add_option("-p", "--prefix", dest="prefix", default=None, help="The prefix the server was installed to.")
+    parser.add_option("-n", "--name", dest="servername", default=None, help="The name of the server", metavar="SERVERNAME")
     parser.add_option("--debug",dest="debug", default=False, action="store_true", help="Run in debug mode")
     parser.add_option("--disable", dest="disabledCommands", action="append", help="Disable COMMAND.", metavar="COMMAND", default=[])
     parser.add_option("--default", dest="save", action="store_true", default=False, help="Set this configuration as default")
@@ -153,7 +154,7 @@ def main():
     options=parser.parse_args()[0]
     options.vardir="server/var"
     optionsdict=dict()
-    save_options=["vardir","configdir","server","datadir"]
+    save_options=["vardir","configdir","server","datadir", "servername"]
     global Global
     # START #################################################
     # Get available extensions
@@ -200,6 +201,10 @@ def main():
     Global.configdir=options.configdir
     Global.debug=options.debug
     
+    if options.servername==None:
+        options.servername=input("Please enter a name for your server: ")
+    Global.server_name=options.servername
+    
     # Write config files +++++++++++++++++++++++++++++++
     for save_option in save_options:
         optionsdict[save_option]=getattr(options, save_option)
@@ -217,8 +222,7 @@ def main():
     args=["--vardir",options.vardir, "--datadir",options.datadir, "--configdir",options.configdir,
           "--userdatadir",userdatadir, "--userconfigdir",userconfigdir]
     print("[START] Executable: "+options.server)
-    t=Thread(None, 
-target=runServerForever,args=([options.server]+args,options.debug) )
+    t=Thread(None, target=runServerForever,args=([options.server]+args,options.debug) )
     t.daemon=True
     t.start()
     while(p==None):
@@ -230,22 +234,6 @@ target=runServerForever,args=([options.server]+args,options.debug) )
     sys.stderr=FlushFile(sys.__stdout__)
     server_log=open(Global.serverlog)
     last_time_read=0
-    while True:
-        l=server_log.readline()
-        if l=='':
-            for i in range(3):
-                l=server_log.readline()
-                if l=='':
-                    break
-                time.sleep(1)
-            if l=='': 
-                break
-    sys.stderr.write("OK\n")
-    sys.stderr.write("[START] Getting server name ... ")
-    sys.stderr.flush()
-    Global.server_name=Armagetronad.GetSetting("SERVER_NAME", 20)
-    sys.stderr.write("OK\n")
-    sys.stderr.write("Servername: "+Global.server_name+"\n")
     extensions.loadExtensions()
     t2=Thread(None, read_stdin)
     t2.daemon=True
