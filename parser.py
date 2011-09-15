@@ -19,7 +19,7 @@ if "log" not in globals():
     log.addHandler(h)
     log.setLevel(logging.INFO)
 
-def exit(normal=False, quiet=False):
+def exit(normal=True, quiet=False):
     if normal:
         AccessLevel.save()
     if not quiet:

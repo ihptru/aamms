@@ -156,6 +156,7 @@ def PlayerRenamed(oldlname,newlname, ip, logged_in, *name):
     if not oldlname in Player.players:
         log.warning("„{0}“ renamed but script doesn't know him. Ignoring.".format(name) )
 #        Player.Add(oldlname,name,ip)
+        return
     Player.players[oldlname].name=name
     Player.players[oldlname].ip=ip
     if newlname==oldlname: return

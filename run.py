@@ -19,7 +19,6 @@ import parser
 import Global
 import extensions
 import Armagetronad
-import re
 exitEvent=Event()
 
 # GLOBAL VARIABLES ######################################
