@@ -231,8 +231,6 @@ def main():
     sys.stdin=WatchFile(open(os.path.join(options.vardir,"ladderlog.txt"), encoding="latin-1" ) )
     sys.stdin.skipUnreadLines()
     sys.stderr=FlushFile(sys.__stdout__)
-    server_log=open(Global.serverlog)
-    last_time_read=0
     extensions.loadExtensions()
     t2=Thread(None, read_stdin)
     t2.daemon=True
