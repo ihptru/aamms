@@ -149,11 +149,11 @@ class Poll:
             percent_no=0
         if percent_yes >= min_needed:
             log.info("Poll for {0} successed.".format(self.target) )
-            Armagetronad.PrintMessage(Messages.PollSuccessed.format(target=self.target) )
+            Armagetronad.SendCommand("CENTER_MESSAGE "+Messages.PollSuccessed.format(target=self.target) )
             self.action()
         elif percent_no>(100-min_needed):
             log.info("Poll for {0} failed.".format(self.target) )
-            Armagetronad.PrintMessage(Messages.PollFailed.format(target=self.target) )
+            Armagetronad.SendCommand("CENTER_MESSAGE "+Messages.PollFailed.format(target=self.target) )
         else:
             return False
         global current_poll

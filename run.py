@@ -19,11 +19,29 @@ import parser
 import Global
 import extensions
 import Armagetronad
+import re
 exitEvent=Event()
 
 # GLOBAL VARIABLES ######################################
 p=None
 
+
+class FlushFile(io.TextIOWrapper):
+    def __init__(self, file):
+        self.f=file
+    def write(self, x):
+        self.f.write(x)
+        self.f.flush()
+    def writelines(self, lines):
+        for l in lines:
+            self.write(l+"\n")
+    def writeable(self):
+        return True
+    def close(self):
+        pass
+    def flush(self):
+        pass
+    
 # CLASSES ###############################################
 class WatchFile():
     def __init__(self, f):
@@ -209,12 +227,26 @@ target=runServerForever,args=([options.server]+args,options.debug) )
     sys.stdout=OutputToProcess()
     sys.stdin=WatchFile(open(os.path.join(options.vardir,"ladderlog.txt"), encoding="latin-1" ) )
     sys.stdin.skipUnreadLines()
-    sys.stderr=sys.__stdout__
+    sys.stderr=FlushFile(sys.__stdout__)
+    sys.stderr.write("[START] Waiting for server to finish startup ... ")
+    server_log=open(Global.serverlog)
+    last_time_read=0
+    while True:
+        l=server_log.readline()
+        if l=='':
+            for i in range(3):
+                l=server_log.readline()
+                if l=='':
+                    break
+                time.sleep(1)
+            if l=='': 
+                break
+    sys.stderr.write("OK\n")
     sys.stderr.write("[START] Getting server name ... ")
     sys.stderr.flush()
     Global.server_name=Armagetronad.GetSetting("SERVER_NAME")
     sys.stderr.write("OK\n")
-    sys.stderr.flush()
+    sys.stderr.write("Servername: "+Global.server_name+"\n")
     extensions.loadExtensions()
     t2=Thread(None, read_stdin)
     t2.daemon=True
