@@ -99,9 +99,9 @@ def GetSetting(setting, timeout=5):
     startpattern=r"\[0[^\]]*\] "
     pattern1=re.compile(startpattern+setting.upper()+r" is currently set to (?P<value>[^.]*)\.")
     pattern2=re.compile(startpattern+setting.upper()+r" changed from (?P<value>((([^t]|t+[^o])*)(to)*)*)to \.")
-    SendCommand(setting.upper())
     serverlog=open(Global.serverlog, encoding="latin-1")
     serverlog.seek(0,2)
+    SendCommand(setting.upper())
     match=None
     for i in range(timeout*2): #@UnusedVariable
         for line in serverlog.readlines():

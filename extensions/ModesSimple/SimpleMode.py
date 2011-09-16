@@ -7,7 +7,8 @@ import Player
 import Global
 
 modes=dict()
-current_mode=None 
+current_mode=None
+mode_message_printed=False 
 
 def SaveModes(dir="ModesSimple", ext=".mod", modename=None):
     global modes
@@ -62,16 +63,18 @@ class Mode(yaml.YAMLObject):
         if first_time:
             Armagetronad.SendCommand("SINCLUDE settings.cfg")
             Armagetronad.SendCommand("SINCLUDE default.cfg")
-        Armagetronad.SendCommand("SINCLUDE "+configfile)
-        Armagetronad.SendCommand("SINCLUDE settings_custom.cfg")
-        server_name=Global.server_name
-        Armagetronad.SendCommand("SERVER_NAME "+server_name+" 0xff8800["+self.name+"]")
+            Armagetronad.SendCommand("SINCLUDE "+configfile)
+            Armagetronad.SendCommand("SINCLUDE settings_custom.cfg")
+            server_name=Global.server_name
+            Armagetronad.SendCommand("SERVER_NAME "+server_name+" 0xff8800["+self.name+"]")
         if kill:
             for player in Player.players.values():
                 player.kill()
         current_mode=self
-        if not first_time:
+        global mode_message_printed
+        if not mode_message_printed:
             Armagetronad.PrintMessage(Messages.ModeMessage.format(mode=self.name))
+            mode_message_printed=True
         return True
     
     def playerCrashed(self, laddername):

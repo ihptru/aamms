@@ -435,8 +435,11 @@ def clearScreen(acl, player):
 # @param acl The accesslevel of the player
 # @param player The name of the player
 # @param command The command for which to set the access level.#
-# @param access Optional The minmal access level that a user must have to excute the given command.
-def acl(acl, player, command, access=0):
+# @param access The minmal access level that a user must have to excute the given command. If not given, print the needed access. 
+def acl(acl, player, command, access=None):
+    if access is None:
+        Armagetronad.PrintPlayerMessage(player, "0x00ff00The minimal access level needed for "+command+" is "+str(AccessLevel.getAccessLevel(command)))
+        return
     try:
         access=int(access)
     except:

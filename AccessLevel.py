@@ -9,9 +9,9 @@ from os.path import exists
 import logging
 if "__accessLevels" not in dir():
     ## @brief Access level needed for a specific commands
-    # @details This is an dictionary of the minimum access level needed for a command, where
+    #  @details This is an dictionary of the minimum access level needed for a command, where
     #          the command is the key.
-    # @private
+    #  @private
     __accessLevels=dict()
     ## @cond
     log=logging.getLogger("AccessLevel")
@@ -19,9 +19,9 @@ if "__accessLevels" not in dir():
     ## @endcond
 
 ## @brief Checks access level
-# @details Checks if the the given access level high enough to execute the command.
-# @param command The name of the command for which to check the access level
-# @param access The given access level.
+#  @details Checks if the the given access level high enough to execute the command.
+#  @param command The name of the command for which to check the access level
+#  @param access The given access level.
 def isAllowed(command, access):
     access=int(access)
     if command not in __accessLevels:
@@ -30,11 +30,18 @@ def isAllowed(command, access):
     return __accessLevels[command]>=access
 
 ## @brief Registers or changes an access level
-# @details Sets the minimum required access level for the given command
-# @param command The command for which to change the access level 
-# @param access The access level
+#  @details Sets the minimum required access level for the given command
+#  @param command The command for which to change the access level 
+#  @param access The access level
 def setAccessLevel(command,access):
     __accessLevels[command]=access
+
+## @brief Get the access level needed.
+def getAccessLevel(command):
+    if command not in __accessLevels:
+        return 0
+    else:
+        return __accessLevels[command]
     
 ## @brief Save access levels to a file
 # @details Saves access levels to a file by using yaml. 
@@ -44,9 +51,9 @@ def save(file="access.yaml"):
         yaml.dump(__accessLevels, f, default_flow_style=False)
 
 ## @brief Read access levels from a file.
-# @details Uses yaml to read the access levels from a file into the memory.
-# @param file The name of the file to read from.
-# @info If the file doesn't exists, it's ignored.
+#  @details Uses yaml to read the access levels from a file into the memory.
+#  @param file The name of the file to read from.
+#  e@info If the file doesn't exists, it's ignored.
 def load(file="access.yaml"):
     global __accessLevels
     if not exists("access.yaml"):

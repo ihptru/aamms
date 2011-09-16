@@ -26,19 +26,24 @@ def addMode(acl, player, name, file, lives, *desc):
 #  @param value The new value
 def editMode(acl, player, modename, what, *value):
     modename=modename.lower()
-    value=" ".join(value)
+    what=what.lower()
+    modefields={"lives":int, "name":str, "desc":str, "file":str}
+    if what not in modefields:
+        Armagetronad.PrintPlayerMessage(player, "Modes do not have a setting called "+ what)
+        return
     if modename not in SimpleMode.modes:
         Armagetronad.PrintPlayerMessage(player, Messages.ModeNotExist.format(mode=modename))
         return
-    modefields={"lives":int, "name":str, "desc":str, "file":str}
-    what=what.lower()
-    if what not in modefields:
-        Armagetronad.PrintPlayerMessage(player, "Modes do not have a setting called "+ what)
+    value=" ".join(value)
     try:
-        if len(value):
+        if len(value.strip()):
             setattr(SimpleMode.modes[modename], what, modefields[what](value) )
         else:
             Armagetronad.PrintPlayerMessage(getattr(SimpleMode.modes[modename], what) )
+        if what=="name":
+            modes[value]=modes[modename]
+            del modes[modename]
+            SimpleMode.current_mode=modes[value]
         Armagetronad.PrintPlayerMessage(player, "Operation successful")
     except ValueError:
         Armagetronad.PrintPlayerMessage(player, "0xff0000Wrong value given!")
@@ -86,5 +91,6 @@ def modes(acl, player):
     for m in SimpleMode.modes.values():
         Armagetronad.PrintPlayerMessage(player, "    0x88ff44"+m.name+": 0x888800"+m.desc)
 
-Commands.add_help_group("modes", "Commands about modes (change mode, ...)")
-Commands.register_commands(addMode,editMode,  mode, modes, group="modes")
+Commands.add_help_group("modes", "Commands about modes (edit, add, ...)")
+Commands.register_commands(addMode,editMode, group="modes")
+Commands.register_commands(mode, modes, group="voting")
