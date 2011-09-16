@@ -250,7 +250,7 @@ def NewRound(date, time, timezone):
     if Poll.current_poll != None:
         if Poll.current_poll.aliveRounds==0:
             if not Poll.current_poll.CheckResult(only_sure=True):
-                Armagetronad.PrintMessage(Messages.PollTimedOut.format(target=Poll.current_poll.target))
+                Armagetronad.SendCommand("CENTER_MESSAGE "+Messages.PollTimedOut.format(target=Poll.current_poll.target))
                 Poll.current_poll=None
         else:
             if not Poll.current_poll.CheckResult(only_sure=True):
