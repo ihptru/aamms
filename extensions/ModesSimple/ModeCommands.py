@@ -65,6 +65,7 @@ def mode(acl, player, modename, type="vote", when="matchend"):
             Poll.Add(target, lambda: LadderLogHandlers.atRoundend.append(SimpleMode.modes[modename.lower()].activate))
             Poll.current_poll.SetPlayerVote(player, True)
             Armagetronad.PrintMessage(Messages.PollAdded.format(target=target, player=Player.players[player].name))
+            Poll.current_poll.CheckResult(only_sure=True)
         except RuntimeError:
             Armagetronad.PrintPlayerMessage(player, Messages.PollAlreadyActive)
             return
