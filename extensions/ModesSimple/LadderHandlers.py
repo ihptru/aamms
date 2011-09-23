@@ -23,20 +23,25 @@ def HandleCycleCreated(player_name, x, y, xdir, ydir):
             Player.players[player_name].setLives(SimpleMode.current_mode.lives+1) #@UndefinedVariable
     Player.players[player_name].data["respoint"]=tuple( map( float,(x,y,xdir,ydir) ) )
 
-def HandleNewRound(*args):
+def DoInit(*args):
     SimpleMode.mode_message_printed=False
     if SimpleMode.current_mode:
         SimpleMode.current_mode.activate(kill=False) #@UndefinedVariable
         for player_name in Player.players:
             Player.players[player_name].setLives(SimpleMode.current_mode.lives+1) #@UndefinedVariable
+    Armagetronad.SendCommand("WAIT_FOR_EXTERNAL_SCRIPT 0")
+
+def HandleNewRound(*args):
+    Armagetronad.SendCommand("WAIT_FOR_EXTERNAL_SCRIPT 1")
     
 for respawn_event in RESPAWN_EVENTS:
     LadderLogHandlers.register_handler(respawn_event, HandlePlayerDied)
 LadderLogHandlers.register_handler("CYCLE_CREATED", HandleCycleCreated)
+LadderLogHandlers.register_handler("WAIT_FOR_EXTERNAL_SCRIPT", DoInit)
 LadderLogHandlers.register_handler("NEW_ROUND", HandleNewRound)
 
 def onShutdown():
     for respawn_event in RESPAWN_EVENTS:
         LadderLogHandlers.unregister_handler(respawn_event, HandlePlayerDied)
     LadderLogHandlers.unregister_handler("CYCLE_CREATED", HandleCycleCreated)
-    LadderLogHandlers.unregister_handler("NEW_ROUND", HandleNewRound)
+    LadderLogHandlers.unregister_handler("NEW_ROUND", DoInit)
