@@ -20,8 +20,7 @@ if "log" not in globals():
     log.setLevel(logging.INFO)
 
 def exit(normal=True, quiet=False):
-    if normal:
-        AccessLevel.save()
+    AccessLevel.save()
     if not quiet:
         log.info("Exit")
     if normal:
