@@ -21,7 +21,7 @@ def addMode(acl, player, name, file, lives, *desc):
     Armagetronad.PrintPlayerMessage(player, "0x00ff00Mode "+name+" added. It's now ready to use :)")
     
 ## @brief Edit a mode
-#  @param mode The name of the mode you'd like to edit.
+#  @param modename The name of the mode you'd like to edit.
 #  @param what What do you want to change? (name, desc (=description), lives, file)
 #  @param value The new value
 def editMode(acl, player, modename, what, *value):
@@ -39,7 +39,7 @@ def editMode(acl, player, modename, what, *value):
         if len(value.strip()):
             setattr(SimpleMode.modes[modename], what, modefields[what](value) )
         else:
-            Armagetronad.PrintPlayerMessage(getattr(SimpleMode.modes[modename], what) )
+            Armagetronad.PrintPlayerMessage(player, getattr(SimpleMode.modes[modename], what) )
         if what=="name":
             modes[value]=modes[modename]
             del modes[modename]
@@ -82,9 +82,9 @@ def mode(acl, player, modename, type="vote", when="matchend"):
             SimpleMode.modes[modename.lower()].activate()
         elif when=="roundend":
             LadderLogHandlers.atRoundend.append(SimpleMode.modes[modename.lower()].activate)
-            Armagetronad.PrintMessage(Messages.NextRoundMode.format(mode=modename.lower()), player=Player.players[player].name)
+            Armagetronad.PrintMessage(Messages.NextRoundMode.format(mode=modename.lower(), player=Player.players[player].name))
         elif when=="matchend":
-            LadderLogHandlers.atRoundend.append(SimpleMode.modes[modename.lower()].activate)
+            LadderLogHandlers.atMatchend.append(SimpleMode.modes[modename.lower()].activate)
             Armagetronad.PrintMessage(Messages.NextMatchMode.format(mode=modename.lower(), player=Player.players[player].name))
 ## @brief List available modes.
 def modes(acl, player):
