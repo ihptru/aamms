@@ -1,1 +1,1 @@
-import CollapseZoneBug
+from . import CollapseZoneBug

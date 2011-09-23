@@ -62,6 +62,13 @@ def unregister_handler(event, *functions):
             del extraHandlers[extraHandlers.index(func)]
     else:
         return
+    
+def unregister_module(name):
+    global extraHandlers
+    for event in extraHandlers:
+        for func in extraHandlers[event]:
+            if func.__module__.lower()==name.lower():
+                extraHandlers[event].remove(func) 
 ## @brief Handles commands
 # @details Every time when a command that isn't handled by the server is entered, this
 #          function will be called.
