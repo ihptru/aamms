@@ -279,7 +279,7 @@ def main():
                 import Global
                 Global.reloadModules()
             except KeyboardInterrupt:
-                parser.exit()
+                break
             except:
                 continue
             continue

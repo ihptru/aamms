@@ -231,6 +231,17 @@ def OnlinePlayer(lname, red, green, blue, ping, teamname=None):
     Player.players[lname].color=red,green,blue
     Player.players[lname].ping=ping
 
+def WaitForExternalScript(*args):
+    global atRoundend
+    # Handle roundend actions
+    for func in atRoundend:
+        try:
+            func()
+        except Exception as e:
+            log.error("Could not execute round end handler "+str(func)+": "+str(e.__class__.__name__) )
+    atRoundend=list() # Flush list
+    Armagetronad.SendCommand("WAIT_FOR_EXTERNAL_SCRIPT 0")
+
 ## @brief Handles new round
 # @details Every time a new round starts this function is called.
 # @param date The day when the new round is started
@@ -246,13 +257,6 @@ def NewRound(date, time, timezone):
     bots=Player.getBots()
     for bot in bots:
         Player.Remove(bot)
-    # Handle roundend actions
-    for func in atRoundend:
-        try:
-            func()
-        except Exception as e:
-            log.error("Could not execute round end handler "+str(func)+": "+str(e.__class__.__name__) )
-    atRoundend=list() # Flush list
     # Polls
     if Poll.current_poll != None:
         if Poll.current_poll.aliveRounds==0:
@@ -266,6 +270,7 @@ def NewRound(date, time, timezone):
     Armagetronad.SendCommand("LADDERLOG_WRITE_GAME_TIME 1")
     roundStarted=True
     roundNumber=roundNumber+1
+    Armagetronad.SendCommand("WAIT_FOR_EXTERNAL_SCRIPT 1")
 
 ## @brief Handles cycle created
 # @details For each cycle which is created, this function is called.
