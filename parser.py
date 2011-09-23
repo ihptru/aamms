@@ -9,6 +9,7 @@ import Commands
 import AccessLevel
 import Poll
 import Player
+import atexit
 
 if "log" not in globals():
     log=logging.getLogger("MainModule")
@@ -27,6 +28,8 @@ def exit(normal=True, quiet=False):
         Armagetronad.PrintMessage("0xff0000Script exited.")
     else:
         Armagetronad.PrintMessage("0xff0000Script crashed.")
+        
+atexit.register(exit, (True,))
 
 def main(debug=False, disabledCommands=[]):
     #We need some special settings. Set it

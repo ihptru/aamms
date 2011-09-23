@@ -96,7 +96,7 @@ def runServerForever(args, debug=False):
     global p
     f=open("server.log","w")
     Global.serverlog=os.path.abspath("server.log")
-    c=subprocess.Popen([args[0]]+["--doc"], stderr=subprocess.PIPE, stdout=subprocess.PIPE)
+    c=subprocess.Popen([args[0]]+["--doc"]+args[1:], stderr=subprocess.PIPE, stdout=subprocess.PIPE)
     doctext=c.communicate()[0].decode()
     c.wait()
     doctext=doctext[doctext.find("Available console commands/config file settings")+len("Available console commands/config file settings"):]
@@ -279,7 +279,7 @@ def main():
                 import Global
                 Global.reloadModules()
             except KeyboardInterrupt:
-                break
+                parser.exit()
             except:
                 continue
             continue
