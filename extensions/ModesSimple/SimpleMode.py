@@ -15,7 +15,7 @@ def SaveModes(dir="ModesSimple", ext=".mod", modename=None):
     if not dir.endswith("/"):
         dir=dir+"/"
     if os.path.exists(dir):
-        os.rmdir(dir)
+        os.remove(dir)
     os.mkdir(dir)
     if modename==None:
         for mode in modes.values():
