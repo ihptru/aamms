@@ -5,6 +5,7 @@ from glob import glob
 import LadderLogHandlers
 import Player
 import Global
+import shutil
 
 modes=dict()
 current_mode=None
@@ -15,7 +16,7 @@ def SaveModes(dir="ModesSimple", ext=".mod", modename=None):
     if not dir.endswith("/"):
         dir=dir+"/"
     if os.path.exists(dir):
-        os.removedirs(dir)
+        shutil.rmtree(dir)
     os.mkdir(dir)
     if modename==None:
         for mode in modes.values():
