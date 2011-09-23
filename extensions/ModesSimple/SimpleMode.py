@@ -14,8 +14,9 @@ def SaveModes(dir="ModesSimple", ext=".mod", modename=None):
     global modes
     if not dir.endswith("/"):
         dir=dir+"/"
-    if not os.path.exists(dir):
-        os.mkdir(dir)
+    if os.path.exists(dir):
+        os.rmdir(dir)
+    os.mkdir(dir)
     if modename==None:
         for mode in modes.values():
             f=open(dir+mode.getEscapedName()+ext,"w")
