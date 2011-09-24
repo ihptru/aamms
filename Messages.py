@@ -137,3 +137,5 @@ NextMatchMode="0xffff00{player} 0x00aaffchanged next match's mode to 0xffdd00{mo
 PollTimedOut="0xffff00The poll about {target} timed out."
 
 ModeAlreadyPlaying="0xff0000You are already playing this mode!"
+
+ModeLocked="0xff0000Mode got locked by an adminsitrator."

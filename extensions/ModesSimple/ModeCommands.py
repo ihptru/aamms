@@ -7,6 +7,8 @@ import LadderLogHandlers
 import Player
 import AccessLevel
 
+locked=False
+
 ## @brief Add a mode. 
 #  @details Add a new mode.
 #  @param name The name of the mode.
@@ -41,22 +43,31 @@ def editMode(acl, player, modename, what, *value):
         else:
             Armagetronad.PrintPlayerMessage(player, getattr(SimpleMode.modes[modename], what) )
         if what=="name":
-            modes[value]=modes[modename]
-            del modes[modename]
-            SimpleMode.current_mode=modes[value]
-        Armagetronad.PrintPlayerMessage(player, "Operation successful")
+            SimpleMode.modes[value]=SimpleMode.modes[modename]
+            del SimpleMode.modes[modename]
+            SimpleMode.current_mode=SimpleMode.modes[value]
+        Armagetronad.PrintPlayerMessage(player, "0x00ff00"+modename+": "+what+" changed to "+str(value))
     except ValueError:
         Armagetronad.PrintPlayerMessage(player, "0xff0000Wrong value given!")
+## @brief Delete a mode.
+#  @param modename The name of the mode which should be deleted.
+def deleteMode(acl, player, modename):
+    if SimpleMode.current_mode.name==modename:
+        Armagetronad.PrintPlayerMessage("0xff0000Can't delete the current mode. Change it first!")
+        return
+    del SimpleMode.modes[modename]
 ## @brief Change the game mode.
 #  @param modename The name of the mode to which to set the game mode.
 #  @param type     The change type. Possible values are: set, vote
 #  @param when     Only if type is set: When is the mode  activated? Matchend, roundend or now. 
-def mode(acl, player, modename, type="vote", when="matchend"):
+def mode(acl, player, modename, type="vote", when="roundend"):
+    if locked:
+        Armagetronad.PrintPlayerMessage(player, Messages.ModeLocked)
     if modename.lower() not in SimpleMode.modes:
         Armagetronad.PrintPlayerMessage(player, Messages.ModeNotExist.format(mode=modename))
         return
     if SimpleMode.current_mode:
-        if SimpleMode.current_mode.name==modename: #@UndefinedVariable
+        if SimpleMode.current_mode.name==modename and type=="vote": #@UndefinedVariable
             Armagetronad.PrintPlayerMessage(player, Messages.ModeAlreadyPlaying)
             return
     if type=="vote":
@@ -92,6 +103,19 @@ def modes(acl, player):
     for m in SimpleMode.modes.values():
         Armagetronad.PrintPlayerMessage(player, "    0x88ff44"+m.name+": 0x888800"+m.desc)
 
+## @brief Lock the current mode.
+def lock(acl, player):
+    global locked
+    locked=True
+    Armagetronad.PrintPlayerMessage(player, "0xff0000Mode locked.")
+## @brief Unlock the current mode.
+def unlock(acl, player):
+    global locked
+    locked=False
+    Armagetronad.PrintPlayerMessage(player, "0x00ff88Mode unlocked.")
+
+
+
 Commands.add_help_group("modes", "Commands about modes (edit, add, ...)")
-Commands.register_commands(addMode,editMode, group="modes")
+Commands.register_commands(addMode,editMode, deleteMode, lock, unlock, group="modes")
 Commands.register_commands(mode, modes, group="voting")
