@@ -1,7 +1,7 @@
 from . import SimpleMode
 import Messages, Armagetronad, Player, LadderLogHandlers
 
-RESPAWN_EVENTS=["DEATH_SUICIDE","DEATH_TEAMKILL", "DEATH_DEATHZONE", "DEATH_FRAG", "DEATH_SHOT_FRAG", "DEATH_SHOT_SUICIDE", "DEATH_SHOT_TEAMKILL"]
+RESPAWN_EVENTS=["DEATH_SUICIDE","DEATH_TEAMKILL", "DEATH_FRAG", "DEATH_SHOT_FRAG", "DEATH_SHOT_SUICIDE", "DEATH_SHOT_TEAMKILL"]
 
 def HandlePlayerDied(player, *args):
     if SimpleMode.current_mode:
