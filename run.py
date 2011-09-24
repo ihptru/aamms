@@ -140,7 +140,7 @@ def main():
     # COMMAND LINE OPTIONS ##################################
     parser=OptionParser()
     #parser.add_option("-v", "--vardir", dest="vardir", default=None, help="Path to the var directory (server)")
-    parser.add_option("-d", "--dConditionatadir", dest="datadir", default=None, help="Path to the data directory (server)")
+    parser.add_option("-d", "--datadir", dest="datadir", default=None, help="Path to the data directory (server)")
     parser.add_option("-c", "--configdir", dest="configdir", default=None, help="Path to the config directory (server)")
     parser.add_option("-e", "--executable", dest="server", default=None, help="Path of the server executable", metavar="EXECUTABLE")
     parser.add_option("-p", "--prefix", dest="prefix", default=None, help="The prefix the server was installed to.")
