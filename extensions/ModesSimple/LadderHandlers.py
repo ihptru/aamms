@@ -24,7 +24,6 @@ def HandleCycleCreated(player_name, x, y, xdir, ydir):
     Player.players[player_name].data["respoint"]=tuple( map( float,(x,y,xdir,ydir) ) )
 
 def DoInit(*args):
-    SimpleMode.mode_message_printed=False
     if SimpleMode.current_mode:
         SimpleMode.current_mode.activate(kill=False) #@UndefinedVariable
         for player_name in Player.players:

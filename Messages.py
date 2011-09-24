@@ -27,10 +27,11 @@ PlayerNotExist="Sorry, the script has a bug. You don't exist in the script's pla
 # @param player The name of the player who teleported.
 # @param x The x coordinate to which the player teleported.
 # @param y The y coordinate to which the player teleported.
-PlayerTeleport="0xff0088Player {player} teleported himself to ({x}|{y})"
+PlayerSelfTeleport="0xff0000{player} 0xff0088teleported himself to (0xff0000{x}0xff0088|0xff0000{y}0xff0088)"
+PlayerTeleported="0xff0000{player} 0xff0088got teleported to (0xff0000{x}0xff0088|0xff0000{y}0xff0088) by 0xff0000{by}"
 
 ## @brief Feature not implemented message
-# @details This message is printed when a feature is currently not available, but still in develop.
+# @details This message is printed when a feature is currently not available, but in develop.
 # @param feature The name of the feature
 FeatureNotImplemented="{feature} is currently not supported, but it's coming soon! :)"
 
@@ -138,4 +139,4 @@ PollTimedOut="0xffff00The poll about {target} timed out."
 
 ModeAlreadyPlaying="0xff0000You are already playing this mode!"
 
-ModeLocked="0xff0000Mode got locked by an adminsitrator."
+ModeLocked="0xff0000Mode was locked by an adminsitrator."

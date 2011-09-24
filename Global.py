@@ -20,14 +20,9 @@ def reloadPlayerList():
     Armagetronad.SendCommand("SINCLUDE settings_custom.cfg")
 
 ## @brief Reloads all modules used by this script
-# @details Reloads all modules loaded by the dcript by calling imp.reload(Module) for each Module
+# @details Reloads all modules.
 def reloadModules():
-        for f in glob.glob(os.path.join(os.path.dirname(__file__),"*.py") ):
-            f=os.path.basename(f)
-            f=f[:-3]
-            if f in sys.modules:
-                sys.stderr.write("[RELOADING] Module: "+f+"\n")
-                imp.reload(sys.modules[f])
+    pass
 
 if "state" not in dir():
     ## @brief Current state.
