@@ -9,6 +9,7 @@ import Messages
 import textwrap
 import AccessLevel
 import Poll
+import tools
 if "disabled" not in dir():
     ###################################### VARIABLES #########################################
     ## @brief Commands that couldn't be used in a given state.
@@ -250,10 +251,57 @@ def get_help_topic(*path):
                 raise ValueError("Path doesn't exist")
     return curtopic
 
+def find_help_topic_applies(func,apply_on=[list],curtopic=None):
+    ret=list()
+    if not curtopic:
+        curtopic=helpTopics
+    if type(curtopic)==tuple:
+        if tuple in apply_on:
+            if func(curtopic):
+                ret.extend((curtopic,))
+        curtopic=curtopic[1]
+    if type(curtopic) in apply_on:
+        if func(curtopic):
+            ret.extend((curtopic,))
+    if type(curtopic)==dict:
+        for i in curtopic.values():
+            a=find_help_topic_applies(func, apply_on, curtopic=i)
+            if a:
+                ret.extend(a)
+    if not(len(ret)):
+        return False
+    else:
+        return tools.remove_duplicates(ret)
+
 def add_help_group(group, desc):
-    register_help("commands "+group, desc, []) 
+    register_help("commands "+group, desc, [])
     
-                
+def unregister_command(name):
+    if not name.lower() in [i.lower() for i in getCommands()]:
+        raise RuntimeError("No command "+name+ " to unregister.")
+    name=getRealCommand(name)
+    command_listing=find_help_topic_applies(lambda x: name in x, apply_on=[list])
+    if not command_listing:
+        raise RuntimeError("No command "+name+ " to unregister.")
+    else:
+        command_listing[0].remove(name)
+    global commands
+    del commands[name]
+
+def getRealCommand(x):
+    x=x.lower()
+    try:
+        return [command for command in commands if command.lower()==x][0]
+    except:
+        raise RuntimeError("No command "+command)
+
+def unregister_package(name):
+    command_topics=find_help_topic_applies(lambda x: any((y for y in x if tools.get_package(commands[getRealCommand(y)]).lower()==name.lower())), apply_on=[list])
+    if not command_topics:
+        return
+    for topic in command_topics:
+        for command in [i for i in topic if tools.get_package(commands[getRealCommand(i)]).lower()==name.lower()]:
+            unregister_command(command)
         
 ## @brief Register a help topic for commands or other things.
 #  @details Add a new help topic.
@@ -280,22 +328,22 @@ def register_help(name,label, data, access=None, override=False):
     
 
 ###################################### COMMANDS ##########################################
-#START COMMANDS
-##Don't remove the comment before this one, it's needed by the script.
-
 ## @brief Evaluates the given code
 # @details This function is used for the /script command in the game
 # @param code The code to evaluate.
 # @param player The player who called /script
 def script(acl, player, *code):
     code=" ".join(code)
-    Armagetronad.PrintMessage("[Script Command] Started script execution")
+    Armagetronad.PrintMessage("[nameScript Command] Started script execution")
     code.replace("\"","'")
     try:
         exec(code.replace("print(","Armagetronad.PrintPlayerMessage('"+player+"','[Script Command] Output: ' + ") )
         Armagetronad.PrintPlayerMessage(player, "[Script Command] Script execution finished.")
     except Exception as e:
-        Armagetronad.PrintPlayerMessage(player, "[Script Command] Exception: " + e.__class__.__name__+" "+str(e))
+        Armagetronad.PrintPlayerMessage(player, "[Script Exception] SCRIPT COMMAND: Exception: " + e.__class__.__name__+" "+str(e))
+        #Armagetronad.PrintPlayerMessage(player, "[Script Exception] At: " + e.__traceback__.tb_frame.f_code.co_filename+": "+str(e.__traceback__.tb_frame.f_back.f_lineno))
+        a=Exception()
+        a.__traceback__
 
 ## @brief Executes the buffer of a player
 # @param player The player who executed this command
@@ -408,7 +456,7 @@ def info(acl, player, *topics):
     if hasattr(curtopic, "__call__"):
         curtopic=curtopic()
     if type(curtopic)==dict:
-        Armagetronad.PrintPlayerMessage(player, "0x8888ffThis topic has the following subtopics: ")
+        Armagetronad.PrintPlayerMessage(player, "0x8888ffTo get help about one of the following topics, use 0xffff00/info "+" ".join(helpTopics)+" <subtopic_name>")
         for topicname, value in curtopic.items() :
             if type(value)==tuple:
                 desc=value[0]

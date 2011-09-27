@@ -11,6 +11,7 @@ import inspect
 locked=False
 
 
+
 ## @brief Add a mode. 
 #  @details Add a new mode.
 #  @param name The name of the mode.
@@ -54,7 +55,7 @@ def editMode(acl, player, modename, what, *value):
 ## @brief Delete a mode.
 #  @param modename The name of the mode which should be deleted.
 def deleteMode(acl, player, modename):
-    if SimpleMode.current_mode.name==modename:
+    if SimpleMode.current_mode.name==modename: #@UndefinedVariable
         Armagetronad.PrintPlayerMessage("0xff0000Can't delete the current mode. Change it first!")
         return
     del SimpleMode.modes[modename]
@@ -92,7 +93,7 @@ def mode(acl, player, modename, type="vote", when="roundend"):
             w=w.capitalize()
             handler_list=getattr(LadderLogHandlers, "at"+w)
             handler_list=removeActivateMethods(handler_list)
-            handler_list.append(SimpleMode.modes[modename.lower()].activate)
+            handler_list.append(SimpleMode.modes[modename.lower()].activate) #UndefiniedVariable
             setattr(LadderLogHandlers, "at"+w, handler_list)
         
     if type=="vote":

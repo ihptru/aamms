@@ -1,6 +1,5 @@
 from . import SimpleMode
 import Messages, Armagetronad, Player, LadderLogHandlers
-
 RESPAWN_EVENTS=["DEATH_SUICIDE","DEATH_TEAMKILL", "DEATH_FRAG", "DEATH_SHOT_FRAG", "DEATH_SHOT_SUICIDE", "DEATH_SHOT_TEAMKILL"]
 
 def HandlePlayerDied(player, *args):
@@ -30,14 +29,12 @@ def DoInit(*args):
             Player.players[player_name].setLives(SimpleMode.current_mode.lives+1) #@UndefinedVariable
     Armagetronad.SendCommand("WAIT_FOR_EXTERNAL_SCRIPT 0")
 
-def HandleNewRound(*args):
-    Armagetronad.SendCommand("WAIT_FOR_EXTERNAL_SCRIPT 1")
     
 for respawn_event in RESPAWN_EVENTS:
     LadderLogHandlers.register_handler(respawn_event, HandlePlayerDied)
 LadderLogHandlers.register_handler("CYCLE_CREATED", HandleCycleCreated)
-LadderLogHandlers.register_handler("WAIT_FOR_EXTERNAL_SCRIPT", DoInit)
-LadderLogHandlers.register_handler("NEW_ROUND", HandleNewRound)
+LadderLogHandlers.register_handler("ROUND_COMMENCING", DoInit)
+LadderLogHandlers.register_handler("NEW_MATCH", lambda *args: Armagetronad.SendCommand(""))
 
 def onShutdown():
     for respawn_event in RESPAWN_EVENTS:

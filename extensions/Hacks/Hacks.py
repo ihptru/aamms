@@ -21,19 +21,19 @@ def tele(acl, player, x, y, xdir=0, ydir=1, player_name=None):
         Player.players[player_name].respawn(x,y,xdir,ydir, True)
         Armagetronad.PrintMessage(Messages.PlayerTeleported.format(player=Player.players[player_name].name, by=player, x=x,y=x) )
     else:
-    	Player.players[player].respawn(x,y,xdir,ydir,True)
-    	Armagetronad.PrintMessage(Messages.PlayerSelfTeleport.format(player=player,x=x,y=y) )
+        Player.players[player].respawn(x,y,xdir,ydir,True)
+        Armagetronad.PrintMessage(Messages.PlayerSelfTeleport.format(player=player,x=x,y=y) )
 
 ## @brief Changes your lives.
 #  @param lives new lives
 def lives(acl, player, lives):
-	try:
-		lives=int(lives)+1
-	except ValueError:
-		Armagetronad.PrintPlayerMessage(player, "0xff0000Wrong value for argument lives!")
-		return
-	Player.players[player].setLives(lives)
-	Armagetronad.PrintPlayerMessage(player, "0xff0000Your lives left: "+str(lives-1) )
+    try:
+        lives=int(lives)+1
+    except ValueError:
+        Armagetronad.PrintPlayerMessage(player, "0xff0000Wrong value for argument lives!")
+        return
+    Player.players[player].setLives(lives)
+    Armagetronad.PrintPlayerMessage(player, "0xff0000Your lives left: "+str(lives-1) )
 
 Commands.add_help_group("Hacks", "Some commands that allow cheating")
 Commands.register_commands(lives, tele, group="Hacks")

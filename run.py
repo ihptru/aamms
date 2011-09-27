@@ -153,7 +153,7 @@ def main():
     options=parser.parse_args()[0]
     options.vardir="server/var"
     optionsdict=dict()
-    save_options=["vardir","configdir","server","datadir", "servername"]
+    save_options=["vardir","configdir","server","datadir", "servername", "prefix"]
     global Global
     # START #################################################
     # Get available extensions
@@ -164,17 +164,10 @@ def main():
     if not os.path.exists("run"):
         os.mkdir("run")
     os.chdir("run")
-    
-    # Read config files ++++++++++++++++++++++++++++++++
-    if os.path.exists("config.yaml"):
-        optionsdict2=yaml.load(open("config.yaml","r") )
-        for key,value in optionsdict2.items():
-            try:
-                if getattr(options, key)==None:
-                    setattr(options, key, value)
-            except:
-                pass
-    else:
+    asked=False
+    # Read prefix
+    def read_prefix():
+        global asked
         default=""
         test_prefixes=["/usr","/usr/local"]
         for test_prefix in test_prefixes:
@@ -185,9 +178,26 @@ def main():
             options.prefix=input("Prefix the server was installed to "+default+": ")
             if options.prefix.strip()=="":
                 options.prefix=default[1:-1]
-    if options.prefix and not os.path.exists(options.prefix):
-        sys.stderr.write("[ERROR] Prefix doesn't exist.\n")
-        exit()
+            if not os.path.exists(options.prefix):
+                print("Error: Prefix doesn't exist.")
+    # Read config files ++++++++++++++++++++++++++++++++
+    if os.path.exists("config.yaml"):
+        optionsdict2=yaml.load(open("config.yaml","r") )
+        for key,value in optionsdict2.items():
+            try:
+                if getattr(options, key)==None:
+                    setattr(options, key, value)
+            except:
+                pass
+    else:
+        read_prefix()
+        asked=True
+    if ( not options.prefix or not os.path.exists(options.prefix)) and not all((not os.path.exists(i) for i in (options.datadir, options.configdir, options.server))):
+        read_prefix()
+        asked=True
+        options.server=None
+        options.datadir=None
+        options.configdir=None     
     if not options.server: options.server=os.path.join(options.prefix, "bin/armagetronad-dedicated")    
     if not options.datadir: options.datadir=os.path.join(options.prefix, "share/armagetronad-dedicated")
     if not options.configdir: options.configdir=os.path.join(options.prefix, "etc/armagetronad-dedicated")
@@ -202,12 +212,12 @@ def main():
     
     if options.servername==None:
         options.servername=input("Please enter a name for your server: ")
+        asked=True
     Global.server_name=options.servername
-    
     # Write config files +++++++++++++++++++++++++++++++
     for save_option in save_options:
         optionsdict[save_option]=getattr(options, save_option)
-    if options.save or not os.path.exists("config.yaml"):
+    if options.save or not os.path.exists("config.yaml") or asked:
         yaml.dump(optionsdict, open("config.yaml","w"), default_flow_style=False )
     
     if not os.path.exists(userconfigdir):

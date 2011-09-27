@@ -34,9 +34,11 @@ def main(debug=False, disabledCommands=[]):
     Armagetronad.SendCommand("LADDERLOG_WRITE_ONLINE_PLAYER 1")
     Armagetronad.SendCommand("LADDERLOG_WRITE_CYCLE_CREATED 1")
     Armagetronad.SendCommand("LADDERLOG_WRITE_INVALID_COMMAND 1")
+    Armagetronad.SendCommand("LADDERLOG_WRITE_NUM_HUMANS 1")
+    Armagetronad.SendCommand("LADDERLOG_WRITE_NEW_ROUND 1")
     Armagetronad.SendCommand("INTERCEPT_UNKNOWN_COMMANDS 1")
-    Armagetronad.SendCommand("LADDERLOG_GAME_TIME_INTERVAL 1")
-    Armagetronad.SendCommand("EXTRA_ROUND_TIME 1")
+    # Armagetronad.SendCommand("LADDERLOG_GAME_TIME_INTERVAL 1")
+    # Armagetronad.SendCommand("EXTRA_ROUND_TIME 1") Do we need this?
     if Global.debug:
         log.info("Starting in debug mode.")
         Player.enableLogging(logging.DEBUG)

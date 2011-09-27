@@ -5,10 +5,6 @@
 
 import Armagetronad
 from time import sleep
-import imp
-import glob
-import os.path
-import sys
 
 ## @brief Call to reload player list.
 # @details This will kill all players and reset match score so the script can reload the player list.

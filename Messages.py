@@ -46,6 +46,8 @@ ModeNotExist="Mode {mode} doesn't exist! Look at /info modes for a list of all a
 # @param expire How much rounds does this vote still stay alive?
 PollInProgress="0xff8844Poll 0xffff00{target} 0xff8844in progress. Use /yes or /no to vote! This vote expires in {expire} rounds"
 
+PollInProgressCenter="0xff8800Poll in progress! VOTE!"
+
 ## @brief Vote added message
 # @details This message is displayed when a new vote was added.
 # @param target The target of the vote which was added

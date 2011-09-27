@@ -63,12 +63,13 @@ def unregister_handler(event, *functions):
     else:
         return
     
-def unregister_module(name):
+def unregister_package(name):
     global extraHandlers
     for event in extraHandlers:
         for func in extraHandlers[event]:
-            if func.__module__.lower()==name.lower():
-                extraHandlers[event].remove(func) 
+            if len(func.__module__.split("."))>1:
+                if func.__module__.split(".")[-2].lower()==name.lower():
+                    extraHandlers[event].remove(func) 
 ## @brief Handles commands
 # @details Every time when a command that isn't handled by the server is entered, this
 #          function will be called.
@@ -266,6 +267,7 @@ def NewRound(date, time, timezone):
         else:
             if not Poll.current_poll.CheckResult(only_sure=True):
                 Armagetronad.PrintMessage(Messages.PollInProgress.format(target=Poll.current_poll.target, expire=Poll.current_poll.aliveRounds) )
+                Armagetronad.SendCommand("CENTER_MESSAGE "+Messages.PollInProgressCenter) 
                 Poll.current_poll.aliveRounds=Poll.current_poll.aliveRounds-1
     Armagetronad.SendCommand("LADDERLOG_WRITE_GAME_TIME 1")
     roundStarted=True
