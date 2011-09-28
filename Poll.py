@@ -8,24 +8,24 @@ import Armagetronad
 import Player
 import Messages
 
-if "log" not in dir():
-    ## @brief The logging object
-    # @details The logging object used for log messages by this module.
-    # @note To enable or disable logging for this module use \link Poll.enableLogging\endlink
-    log=logging.getLogger("VoteModule")
-    log.addHandler(logging.NullHandler() )
+__save_vars=["log", "current_poll"]
+## @brief The logging object
+# @details The logging object used for log messages by this module.
+# @note To enable or disable logging for this module use \link Poll.enableLogging\endlink
+log=logging.getLogger("VoteModule")
+log.addHandler(logging.NullHandler() )
 
-    ## @brief The current poll
-    # @details None or an instance of the current Poll.
-    current_poll=None
+## @brief The current poll
+# @details None or an instance of the current Poll.
+current_poll=None
 
-    ## @brief Can spectators vote?
-    # @details If set to True, votes of spectators are ignored.
-    spec_allowed=False
+## @brief Can spectators vote?
+# @details If set to True, votes of spectators are ignored.
+spec_allowed=False
 
-    ## @brief When should a vote expire? (Default value)
-    # @details Default number of rounds for which a vote stays alive.
-    defaultStayAlive=3
+## @brief When should a vote expire? (Default value)
+# @details Default number of rounds for which a vote stays alive.
+defaultStayAlive=3
 
 ## @brief Creates a Poll.
 # @details Creates a Poll with the given name and set it as current_poll.

@@ -3,13 +3,12 @@ import LadderLogHandlers
 import logging
 import Team
 import Armagetronad
-import Zone
 import Global
 import Commands
 import AccessLevel
 import Poll
 import Player
-import atexit
+import time
 
 if "log" not in globals():
     log=logging.getLogger("MainModule")
@@ -45,13 +44,11 @@ def main(debug=False, disabledCommands=[]):
         Team.enableLogging(logging.DEBUG)
         LadderLogHandlers.enableLogging(logging.DEBUG)
         Poll.enableLogging(logging.DEBUG)
-        Zone.enableLogging(logging.DEBUG)
     else:
         Player.enableLogging(logging.WARNING)
         Team.enableLogging(logging.WARNING)
         LadderLogHandlers.enableLogging(logging.INFO)
         Poll.enableLogging(logging.WARNING)
-        Zone.enableLogging(logging.WARNING)
 
     Commands.disabled=Commands.disabled+disabledCommands    
     #Init
@@ -62,6 +59,9 @@ def main(debug=False, disabledCommands=[]):
     Global.reloadPlayerList()
     while(True):
         line=""
+        if Global.handleLadderLog==False:
+            time.sleep(1)
+            continue
         try:
             line=input()
         except KeyboardInterrupt:

@@ -1,5 +1,8 @@
 import os.path, sys
 import imp
+import inspect
+
+sub_mods=dict()
 
 def remove_duplicates(l):
     ret=set()
@@ -28,7 +31,7 @@ def is_script_component(mod, *args, **kwargs):
     try:
         if type(mod)==str:
             mod=sys.modules[mod]
-        if mod.__name__.startswith("__") and mod.__name__.endswith("__"):
+        if mod.__name__.startswith("__") and mod.__name__.endswith("__"):# and not mod.__name__=="__main__": 
             return False
         return is_in_root(os.path.abspath(mod.__file__), *args, **kwargs)
     except ValueError:
@@ -43,8 +46,11 @@ def reload_none_modules():
         imp.load_module(mod, *imp.find_module(mod))
 
 def delete_module(mod):
+    global sub_mods
     if type(mod)==str:
         mod=sys.modules[mod]
+    if mod.__name__=="__main__":
+        return
     if not is_script_component(mod):
         sys.stderr.write("[WARNING] Tried to reload non script module. Aborted."+"\n")
         sys.stderr.write(mod.__name__+"\n")
@@ -52,35 +58,48 @@ def delete_module(mod):
     sys.stderr.write("[Delete Module] "+mod.__name__+"\n")
     if hasattr(mod, "__del__"):
         mod.__del__()
+    for attr in filter(lambda x : not (x.startswith("__") and x.endswith("__")), dir(mod)):
+        if inspect.ismodule(getattr(mod, attr)) and not is_script_component(getattr(mod, attr)):
+            continue
+        elif inspect.ismodule(getattr(mod, attr)):
+            delattr(mod, attr)
     del sys.modules[mod.__name__]
     for i in sys.modules:
         if is_script_component(i) or i == "__main__":
             if hasattr(sys.modules[i],mod.__name__):
                 delattr(sys.modules[i],mod.__name__)
+                if sys.modules[i].__name__ not in sub_mods:
+                    sub_mods[sys.modules[i].__name__]=[]
+                sub_mods[sys.modules[i].__name__].append(mod.__name__)
     #reload_none_modules()
 
 def delete_script_modules():
     return delete_modules_from_dir()
 
-def delete_modules_from_dir(dir=None, dir_rel=True):
-    need_delete=filter(lambda mod: is_script_component(mod, root=dir, root_rel=dir_rel), sys.modules)
+def delete_modules_from_dir(directory=None, dir_rel=True):
+    need_delete=filter(lambda mod: is_script_component(mod, root=directory, root_rel=dir_rel), sys.modules)
     need_delete=list(need_delete)
     vars=dict()
+    global sub_mods
     for mod in need_delete:
             if hasattr(sys.modules[mod], "__save_vars"):
                 vars[mod]=dict()
                 for var in sys.modules[mod].__save_vars:
                     if hasattr(sys.modules[mod], var):
                         vars[mod][var]=getattr(sys.modules[mod], var)
+            if mod not in sub_mods:
+                sub_mods[mod]=[]
+            for attr in dir(sys.modules[mod]):
+                x=getattr(sys.modules[mod], attr)
+                if inspect.ismodule(x):
+                    sub_mods[mod].append(x.__name__)
+                
             delete_module(mod)
     return need_delete, vars
 
 def reload_script_modules():
-    import __main__
-    main_modules=[]
-    for attr in dir(__main__):
-        if attr in sys.modules and is_script_component(attr):
-            main_modules.append(attr)
+    import Global
+    Global.handleLadderLog=False
     modules, vars=delete_script_modules()
     import extensions
     for mod in modules:
@@ -93,11 +112,25 @@ def reload_script_modules():
                 sys.stderr.write("Failed.\n")
                 continue
             sys.stderr.write("OK\n")
-            if mod in vars:
-                if hasattr(sys.modules[mod], "__reload__"):
-                    sys.modules[mod].__reload__(**vars[mod])
+
+    sys.stderr.write(str(sub_mods)+"\n")
+    for mod in modules:
+        sys.stderr.write(mod+"\n")
+        if mod in sys.modules:
+            for sub_mod in sub_mods[mod]:
+                if sub_mod not in extensions.loadedExtensions:
+                    sys.stderr.write(mod+"->"+  sub_mod+"\n")
+                    setattr(sys.modules[mod], sub_mod, sys.modules[sub_mod])
                 else:
-                    for var in vars[mod]:
-                        setattr(sys.modules[mod], var, vars[mod][var])
-    for main_module in main_modules:
-        setattr(__main__, main_module, sys.modules[main_module])
+                    setattr(sys.modules[mod], sub_mod, extensions.loadedExtensions[mod])
+        if mod in vars:
+            if hasattr(sys.modules[mod], "__reload__"):
+                sys.modules[mod].__reload__(**vars[mod])
+            else:
+                for var in vars[mod]:
+                    setattr(sys.modules[mod], var, vars[mod][var])
+    import __main__
+    for mod in sub_mods["__main__"]:
+            setattr(__main__,mod, sys.modules[mod])
+    Global.handleLadderLog=True
+    extensions.loadExtensions()

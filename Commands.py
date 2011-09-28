@@ -10,30 +10,32 @@ import textwrap
 import AccessLevel
 import Poll
 import tools
-if "disabled" not in dir():
-    ###################################### VARIABLES #########################################
-    ## @brief Commands that couldn't be used in a given state.
-    # @details List of commands that couldn't be used in the given state.
-    not_in_state={}
-    only_in_state={}
+import Global
+
+__save_vars=["disabled","data"]
+###################################### VARIABLES #########################################
+## @brief Commands that couldn't be used in a given state.
+# @details List of commands that couldn't be used in the given state.
+not_in_state={}
+only_in_state={}
 
 
-    ## @brief Disabled commands.
-    # @details List of commands that are disabled (means they cannot be used).
-    disabled=[]
-    
-    ## @brief State specific data
-    # @details Data that is only need for a specific state.
-    data=None
+## @brief Disabled commands.
+# @details List of commands that are disabled (means they cannot be used).
+disabled=[]
 
-    ## @brief Help topics
-    helpTopics= {
-                  "about": ("About this script",Messages.About, 20),
-                  "commands":("Help about commands", 
-                    { 
-                    } )
-                }
-    commands=dict()
+## @brief State specific data
+# @details Data that is only need for a specific state.
+data=None
+
+## @brief Help topics
+helpTopics= {
+              "about": ("About this script",Messages.About, 20),
+              "commands":("Help about commands", 
+                { 
+                } )
+            }
+commands=dict()
 
 ###################################### COMMAND HELPERS ###################################
 
@@ -342,9 +344,8 @@ def script(acl, player, *code):
     except Exception as e:
         Armagetronad.PrintPlayerMessage(player, "[Script Exception] SCRIPT COMMAND: Exception: " + e.__class__.__name__+" "+str(e))
         #Armagetronad.PrintPlayerMessage(player, "[Script Exception] At: " + e.__traceback__.tb_frame.f_code.co_filename+": "+str(e.__traceback__.tb_frame.f_back.f_lineno))
-        a=Exception()
-        a.__traceback__
-
+        if Global.debug:
+            raise e
 ## @brief Executes the buffer of a player
 # @param player The player who executed this command
 # @param flush_buffer Flush the player's buffer after it was executed?
@@ -531,9 +532,13 @@ def cancel(acl, player):
         Armagetronad.PrintPlayerMessage(player, Messages.NoActivePoll)
         return
     Poll.Cancel()
+
+## @brief Reload the script.
+def reload_script(acl, player):
+    raise Global.ReloadException()
     
   
 add_help_group("misc", "Other commands")
 add_help_group("voting", "Commands for voting")
-register_commands(info, reload, clearBuffer, printBuffer,acl, script, execBuffer, group="misc")
+register_commands(info, reload, clearBuffer, printBuffer,acl, script,reload_script, execBuffer, group="misc")
 register_commands(no, yes,cancel,  group="voting")

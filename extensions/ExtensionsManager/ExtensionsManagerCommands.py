@@ -7,18 +7,18 @@ import Commands
 def loadExt(acl, player, name):
     Armagetronad.PrintPlayerMessage(player, "Loading "+name+ " ...")
     if extensions.loadExtension(name):
-        Armagetronad.PrintPlayerMessage(player, "0xff0000Failed ----------- +"+name)
+        Armagetronad.PrintPlayerMessage(player, "0xff0000Failed ----------- 0xaaaaaa"+name+" [+]")
     else:
-        Armagetronad.PrintPlayerMessage(player, "0x00ff00Succeed ---------- +"+name)
+        Armagetronad.PrintPlayerMessage(player, "0x00ff00Succeed ---------- 0xaaaaaa"+name+" [+]")
 
 ## @brief Unload an extension
 #  @param name The name of the extension to unload.
 def unloadExt(acl, player, name):
     Armagetronad.PrintPlayerMessage(player, "Unloading "+name+" ...")
     if extensions.unloadExtension(name):
-        Armagetronad.PrintPlayerMessage(player, "0xff0000Failed ---------- -"+name)
+        Armagetronad.PrintPlayerMessage(player, "0xff0000Failed ---------- 0xaaaaaa"+name+" [-]")
     else:
-        Armagetronad.PrintPlayerMessage(player, "0x00ff00Succeed --------- 0xff0000-"+name)
+        Armagetronad.PrintPlayerMessage(player, "0x00ff00Succeed --------- 0xaaaaaa"+name+" [-]")
 
 ## @brief List all available extensions.
 def listExt(acl, player):

@@ -5,6 +5,7 @@
 
 import Armagetronad
 from time import sleep
+__save_vars=["state", "serverlog", "datadir","configdir","debug","server_name"]
 
 ## @brief Call to reload player list.
 # @details This will kill all players and reset match score so the script can reload the player list.
@@ -20,19 +21,21 @@ def reloadPlayerList():
 def reloadModules():
     pass
 
-if "state" not in dir():
-    ## @brief Current state.
-    # @details Possible values are "normal" or "modeeditor".
-    state="normal"
-    not_a_setting=("CONSOLE_MESSAGE", "CENTER_MESSAGE", "SAY", "QUIT", "EXIT", "SPAWN_ZONE", 
-               "COLLAPSE_ZONE", "TELEPORT_PLAYER", "RESPAWN_PLAYER", "KICK", "SUSPEND", "SILENCE"
-               "ADD_HELP_TOPIC", "REMOVE_HELP_TOPIC", "PLAYER_MESSAGE", "UNBAN_IP","UNSUSPEND", "UNBAN_USER")
-    not_a_setting_prefixes=("SPAWN_","REMOVE")
-    loadedExtensions=[]
-    supportedCommands=[]
-    availableExtensions=[]
-    serverlog=None
-    datadir=None
-    configdir=None
-    debug=False
-    server_name="Unnamed server"
+
+## @brief Current state.
+# @details Possible values are "normal" or "modeeditor".
+state="normal"
+not_a_setting=("CONSOLE_MESSAGE", "CENTER_MESSAGE", "SAY", "QUIT", "EXIT", "SPAWN_ZONE", 
+           "COLLAPSE_ZONE", "TELEPORT_PLAYER", "RESPAWN_PLAYER", "KICK", "SUSPEND", "SILENCE"
+           "ADD_HELP_TOPIC", "REMOVE_HELP_TOPIC", "PLAYER_MESSAGE", "UNBAN_IP","UNSUSPEND", "UNBAN_USER")
+not_a_setting_prefixes=("SPAWN_","REMOVE")
+supportedCommands=[]
+serverlog=None
+datadir=None
+configdir=None
+debug=False
+server_name="Unnamed server"
+handleLadderLog=True
+    
+class ReloadException(Exception):
+    pass

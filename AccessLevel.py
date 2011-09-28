@@ -5,18 +5,19 @@
 
 import yaml
 from os.path import exists
-
 import logging
-if "__accessLevels" not in dir():
-    ## @brief Access level needed for a specific commands
-    #  @details This is an dictionary of the minimum access level needed for a command, where
-    #          the command is the key.
-    #  @private
-    __accessLevels=dict()
-    ## @cond
-    log=logging.getLogger("AccessLevel")
-    log.addHandler(logging.NullHandler() )
-    ## @endcond
+
+__save_vars=["log", "__accessLevels"]
+
+## @brief Access level needed for a specific commands
+#  @details This is an dictionary of the minimum access level needed for a command, where
+#          the command is the key.
+#  @private
+__accessLevels=dict()
+## @cond
+log=logging.getLogger("AccessLevel")
+log.addHandler(logging.NullHandler() )
+## @endcond
 
 ## @brief Checks access level
 #  @details Checks if the the given access level high enough to execute the command.

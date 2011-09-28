@@ -13,13 +13,13 @@ import time
 import traceback
 import yaml
 import atexit
-import imp
 from threading import Thread, Event
 import parser
 import Global
 import extensions
 import Armagetronad
 exitEvent=Event()
+__save_vars=["p"]
 
 # GLOBAL VARIABLES ######################################
 p=None
@@ -111,6 +111,8 @@ def runServerForever(args, debug=False):
         if debug:
             sys.stderr.write("DEBUG: Executing "+" ".join(args)+"\n")
         while(True):
+            if p==None:
+                return
             p.poll()
             if p.returncode==0 or p.returncode==-15:
                 return
@@ -138,23 +140,23 @@ def main():
     userdatadir="./server/data"
     userconfigdir="./server/config"
     # COMMAND LINE OPTIONS ##################################
-    parser=OptionParser()
+    oparser=OptionParser()
     #parser.add_option("-v", "--vardir", dest="vardir", default=None, help="Path to the var directory (server)")
-    parser.add_option("-d", "--datadir", dest="datadir", default=None, help="Path to the data directory (server)")
-    parser.add_option("-c", "--configdir", dest="configdir", default=None, help="Path to the config directory (server)")
-    parser.add_option("-e", "--executable", dest="server", default=None, help="Path of the server executable", metavar="EXECUTABLE")
-    parser.add_option("-p", "--prefix", dest="prefix", default=None, help="The prefix the server was installed to.")
-    parser.add_option("-n", "--name", dest="servername", default=None, help="The name of the server", metavar="SERVERNAME")
-    parser.add_option("--debug",dest="debug", default=False, action="store_true", help="Run in debug mode")
-    parser.add_option("--disable", dest="disabledCommands", action="append", help="Disable COMMAND.", metavar="COMMAND", default=[])
-    parser.add_option("--default", dest="save", action="store_true", default=False, help="Set this configuration as default")
-    parser.add_option("-D","--disableExt", dest="disabledExtensions", default=[], action="append", help="Dsiable the extension with the name EXTENSION.", metavar="EXTENSION")
-    parser.add_option("--list-extensions", dest="list_extensions", default=False, action="store_true", help="List all available extensions.")
-    options=parser.parse_args()[0]
+    oparser.add_option("-d", "--datadir", dest="datadir", default=None, help="Path to the data directory (server)")
+    oparser.add_option("-c", "--configdir", dest="configdir", default=None, help="Path to the config directory (server)")
+    oparser.add_option("-e", "--executable", dest="server", default=None, help="Path of the server executable", metavar="EXECUTABLE")
+    oparser.add_option("-p", "--prefix", dest="prefix", default=None, help="The prefix the server was installed to.")
+    oparser.add_option("-n", "--name", dest="servername", default=None, help="The name of the server", metavar="SERVERNAME")
+    oparser.add_option("--debug",dest="debug", default=False, action="store_true", help="Run in debug mode")
+    oparser.add_option("--disable", dest="disabledCommands", action="append", help="Disable COMMAND.", metavar="COMMAND", default=[])
+    oparser.add_option("--default", dest="save", action="store_true", default=False, help="Set this configuration as default")
+    oparser.add_option("-D","--disableExt", dest="disabledExtensions", default=[], action="append", help="Dsiable the extension with the name EXTENSION.", metavar="EXTENSION")
+    oparser.add_option("--list-extensions", dest="list_extensions", default=False, action="store_true", help="List all available extensions.")
+    options=oparser.parse_args()[0]
     options.vardir="server/var"
     optionsdict=dict()
     save_options=["vardir","configdir","server","datadir", "servername", "prefix"]
-    global Global
+
     # START #################################################
     # Get available extensions
     if options.list_extensions:
@@ -213,7 +215,6 @@ def main():
     if options.servername==None:
         options.servername=input("Please enter a name for your server: ")
         asked=True
-    Global.server_name=options.servername
     # Write config files +++++++++++++++++++++++++++++++
     for save_option in save_options:
         optionsdict[save_option]=getattr(options, save_option)
@@ -247,33 +248,23 @@ def main():
     t2.start()
     sys.stderr.write("Reading commands from stdin.\n")
     sys.path.append("../extensions/")
-    import parser
-    disabledExtensions=[x.lower() for x in options.disabledExtensions]
     while True:
         try:
+            Global.server_name=options.servername
             sys.stderr.write("[START] Starting script.\n")
             sys.stderr.write("[START] Press ctrl+c or type /quit to exit.\n")
-            for mod in Global.availableExtensions:
-                if mod.lower() in disabledExtensions:
-                    continue
-                sys.stderr.write("[START] Loading extension "+mod+" ... ")
-                try:
-                    exec("import "+mod+"\nGlobal.loadedExtensions.append("+mod+")")
-                except ImportError:
-                    sys.stderr.write("NOT FOUND\n")
-                    continue
-                except Exception:
-                    sys.stderr.write("FAILED\n")
-                    continue
-                sys.stderr.write("OK\n")
             sys.stderr.write("\n")
             sys.stderr.flush()    
-            imp.reload(parser)
             parser.main(debug=options.debug, disabledCommands=options.disabledCommands)
         except KeyboardInterrupt:
             break
         except SystemExit:
             break
+        except Global.ReloadException:
+            import tools
+            tools.reload_script_modules()
+            sys.stderr.write(str(sys.modules["parser"]))
+            continue
         except Exception:
             sys.stderr.write("#####################################################################\n")
             sys.stderr.write("################## SCRIPT CRASHED ###################################\n")
@@ -286,7 +277,6 @@ def main():
                 sys.stderr.write("Restarting in 3 seconds ... \n")        
                 sys.stderr.write("\n")
                 time.sleep(3)
-                import Global
                 Global.reloadModules()
             except KeyboardInterrupt:
                 break

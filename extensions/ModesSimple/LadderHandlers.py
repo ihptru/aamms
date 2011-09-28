@@ -42,9 +42,3 @@ LadderLogHandlers.register_handler("CYCLE_CREATED", HandleCycleCreated)
 LadderLogHandlers.register_handler("ROUND_COMMENCING", DoInit)
 LadderLogHandlers.register_handler("NEW_MATCH", lambda *args: Armagetronad.SendCommand(""))
 LadderLogHandlers.register_handler("ROUND_COMMENCING", CheckForNewMatch)
-
-def __del__():
-    for respawn_event in RESPAWN_EVENTS:
-        LadderLogHandlers.unregister_handler(respawn_event, HandlePlayerDied)
-    LadderLogHandlers.unregister_handler("CYCLE_CREATED", HandleCycleCreated)
-    LadderLogHandlers.unregister_handler("NEW_ROUND", DoInit)

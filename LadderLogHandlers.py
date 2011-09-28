@@ -15,31 +15,31 @@ import Global
 from threading import Thread
 import threading
 
-if "log" not in dir(): # Don't overwrite variables
-    ## @brief The logging object
-    # @private
-    # @details Used for logging by this module
-    # @note To enable or disable logging of this module use \link enableLogging\endlink
-    log=logging.getLogger("LadderModule")
-    log.addHandler(logging.NullHandler() )
+__save_vars=["log", "runningCommands"]
+## @brief The logging object
+# @private
+# @details Used for logging by this module
+# @note To enable or disable logging of this module use \link enableLogging\endlink
+log=logging.getLogger("LadderModule")
+log.addHandler(logging.NullHandler() )
 
-    ## @brief Round|match end handlers
-    # @details List of functions called after a round|match ended. Functions can be every object that is callable.
-    # @note This list is cleared every time after all the functions were executed.
-    atRoundend=[]
-    atMatchend=[]
+## @brief Round|match end handlers
+# @details List of functions called after a round|match ended. Functions can be every object that is callable.
+# @note This list is cleared every time after all the functions were executed.
+atRoundend=[]
+atMatchend=[]
 
-    extraHandlers=dict()
+extraHandlers=dict()
 
-    ## @brief Is the round started?
-    # @details True if yes, False otherwise.
-    roundStarted=False
+## @brief Is the round started?
+# @details True if yes, False otherwise.
+roundStarted=False
 
-    ## @brief Round number
-    # @details Current round number starting with 1 for the first round. This number is reseted every time a new match starts.
-    roundNumber=1
+## @brief Round number
+# @details Current round number starting with 1 for the first round. This number is reseted every time a new match starts.
+roundNumber=1
 
-    runningCommands=[]
+runningCommands=[]
 ## @brief Adds a handler for a ladderlog event.
 # @details Adds a custom functions as a handler for a ladderlog event.
 # @param event The name of the ladderlog event, in uppercase. Example: INVALID_COMMAND
@@ -59,12 +59,13 @@ def unregister_handler(event, *functions):
     global extraHandlers
     if event in extraHandlers:
         for func in functions:
-            del extraHandlers[event][extraHandlers[event].index(func)]
+            del extraHandlers[event][extraHandlers.index(func)]
     else:
         return
     
 def unregister_package(name):
     global extraHandlers
+    Armagetronad.PrintMessage("Unregister commands of "+name)
     for event in extraHandlers:
         for func in extraHandlers[event]:
             if len(func.__module__.split("."))>1:
@@ -135,6 +136,8 @@ def InvalidCommand(command, player, ip, access, *args):
         except:
             log.debug("Command thread already removed. Command:"+command)
             pass
+    if command=="reload_script": # we need to do this here
+        raise Global.ReloadException()
     t=Thread(target=ProcessCommand, args=(command, args), name="HandleCommand"+command.capitalize() )
     t.daemon=True
     global runningCommands
