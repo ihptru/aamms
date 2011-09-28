@@ -4,13 +4,16 @@ import sys
 import Global
 import os.path
 import LadderLogHandlers, Commands
+import tools
+__save_vars=["loadedExtensions"]
 
 loadedExtensions=[]
 
 def getExtensions():
+    root=os.path.dirname(os.path.abspath(__file__))
     extensions=[]
-    for i in glob.glob(__path__[0]+"/*/__init__.py"):
-        i=i[len(__path__[0])+1:-(len("/__init__.py"))]
+    for i in glob.glob(root+"/*/__init__.py"):
+        i=i[len(root)+1:-(len("/__init__.py"))]
         extensions+=[i]
     return extensions
 
@@ -25,14 +28,7 @@ def unloadExtension(name):
         return False
     module=module[0]
     loadedExtensions.remove(module)
-    for i in dir(module):
-        if not (i.startswith("__") and i.endswith("__")):
-            i=getattr(module, i)
-            if type(i)==type(glob):
-                if os.path.dirname(i.__file__) == __path__[0]+"/"+name:
-                    del(sys.modules[i.__name__])
-                    delattr(module, i.__name__)
-    del(sys.modules[module.__name__])
+    tools.delete_modules_from_dir(os.path.join("extensions", name))
     LadderLogHandlers.unregister_package(module.__name__)
     Commands.unregister_package(module.__name__)
     sys.stderr.write("[EXTENSION] Unloaded extension "+module.__name__+"\n")
@@ -71,3 +67,7 @@ def loadExtensions():
     sys.path.append(__path__)
     for i in getExtensions():
         missing_deps=loadExtension(i)
+
+def __reload__(loadedExtensions):
+    for ext in loadedExtensions:
+        loadExtension(ext.__name__)

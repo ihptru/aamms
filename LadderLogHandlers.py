@@ -50,7 +50,7 @@ def register_handler(event, *functions):
         for func in extraHandlers[event]:
             funcnames[func.__name__]=func.__module__
         for func in functions:
-            if func.__name__ not in funcnames or func.__module != funcnames[func.__name]:
+            if func.__name__ not in funcnames or func.__module__ != funcnames[func.__name__]:
                 extraHandlers[event]+=[func]
     else:
         extraHandlers[event]=list(functions)
@@ -59,7 +59,7 @@ def unregister_handler(event, *functions):
     global extraHandlers
     if event in extraHandlers:
         for func in functions:
-            del extraHandlers[extraHandlers.index(func)]
+            del extraHandlers[event][extraHandlers[event].index(func)]
     else:
         return
     
