@@ -46,8 +46,11 @@ commands=dict()
 def getArgs(command):
     global commands
     commandf=commands[command]
-    with open(commandf.__code__.co_filename) as f:
-        defline=f.readlines()[commandf.__code__.co_firstlineno-1]
+    try:
+        with open(commandf.__code__.co_filename) as f:
+            defline=f.readlines()[commandf.__code__.co_firstlineno-1]
+    except:
+        return commandf.__code__.co_argcount-len(commandf.__defaults__), commandf.__code__.co_argcount, commandf.__defaults__, commandf.__code__.co_varnames[:commandf.__code__.co_argcount]
     defline=defline[defline.find("(")+1:defline.rfind(")")]
     args=defline.split(",")
     minargcount=0

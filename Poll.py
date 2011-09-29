@@ -34,14 +34,18 @@ defaultStayAlive=3
 # @param action Function that is executed when the Poll succeed.
 # @param force Cancel current Poll if a Poll is already active? 
 
-def Add(target_human, action, force=False):
+def Add(target_human, action,player, force=False):
     global current_poll
+    if player not in Player.players:
+        raise RuntimeError("Player doesn't exist.")
+    if Player.players[player].getTeam()==None and not spec_allowed:
+        raise RuntimeError("Spectators are not allowed to vote",3)
     if current_poll != None:
         if not force:
             raise RuntimeError("Already a vote active", 1)
         else:
             Cancel()
-    current_poll=Poll(target_human, action)
+    current_poll=Poll(target_human, action)        
     log.info("New Poll  "+target_human+" created.")
 
 ## @brief Cancels the current Poll.

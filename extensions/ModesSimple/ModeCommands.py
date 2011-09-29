@@ -61,9 +61,9 @@ def deleteMode(acl, player, modename):
     del SimpleMode.modes[modename]
 ## @brief Change the game mode.
 #  @param modename The name of the mode to which to set the game mode.
-#  @param type     The change type. Possible values are: set, vote
-#  @param when     Only if type is set: When is the mode  activated? Matchend, roundend or now. 
-def mode(acl, player, modename, type="vote", when="roundend"):
+def mode(acl, player, modename, when=None):
+    if when!=None:
+        type="set"
     if locked:
         Armagetronad.PrintPlayerMessage(player, Messages.ModeLocked)
         return
@@ -99,12 +99,16 @@ def mode(acl, player, modename, type="vote", when="roundend"):
     if type=="vote":
         try:
             target="Change mode to '"+modename+"'"
-            Poll.Add(target, activator)
+            Poll.Add(target, activator, player)
             Poll.current_poll.SetPlayerVote(player, True)
             Armagetronad.PrintMessage(Messages.PollAdded.format(target=target, player=Player.players[player].name))
             Poll.current_poll.CheckResult(only_sure=True)
-        except RuntimeError:
-            Armagetronad.PrintPlayerMessage(player, Messages.PollAlreadyActive)
+        except RuntimeError as r:
+            if r.args[1]==1:
+                Armagetronad.PrintPlayerMessage(player, Messages.PollAlreadyActive)
+            elif r.args[1]==2:
+                Armagetronad.PrintPlayerMessage(player, Messages.SpecNotAllowed)
+                Poll.Cancel()
             return
     elif type=="set":
         if not AccessLevel.isAllowed("mode_set", acl):
