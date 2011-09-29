@@ -53,7 +53,6 @@ def delete_module(mod):
         return
     if not is_script_component(mod):
         sys.stderr.write("[WARNING] Tried to reload non script module. Aborted."+"\n")
-        sys.stderr.write(mod.__name__+"\n")
         return
     sys.stderr.write("[Delete Module] "+mod.__name__+"\n")
     if hasattr(mod, "__del__"):
@@ -112,20 +111,19 @@ def reload_script_modules():
                 sys.stderr.write("Failed.\n")
                 continue
             sys.stderr.write("OK\n")
-
-    sys.stderr.write(str(sub_mods)+"\n")
     for mod in modules:
-        sys.stderr.write(mod+"\n")
         if mod in sys.modules:
             for sub_mod in sub_mods[mod]:
                 if sub_mod not in extensions.loadedExtensions:
-                    sys.stderr.write(mod+"->"+  sub_mod+"\n")
                     setattr(sys.modules[mod], sub_mod, sys.modules[sub_mod])
                 else:
                     setattr(sys.modules[mod], sub_mod, extensions.loadedExtensions[mod])
         if mod in vars:
             if hasattr(sys.modules[mod], "__reload__"):
-                sys.modules[mod].__reload__(**vars[mod])
+                vars_new=dict()
+                for var in vars[mod]:
+                    vars_new[var+"__old"]=vars[mod][var]
+                sys.modules[mod].__reload__(**vars_new)
             else:
                 for var in vars[mod]:
                     setattr(sys.modules[mod], var, vars[mod][var])

@@ -37,7 +37,7 @@ roundStarted=False
 
 ## @brief Round number
 # @details Current round number starting with 1 for the first round. This number is reseted every time a new match starts.
-roundNumber=1
+round=1
 
 runningCommands=[]
 ## @brief Adds a handler for a ladderlog event.
@@ -53,6 +53,7 @@ def register_handler(event, *functions):
             if func.__name__ not in funcnames or func.__module__ != funcnames[func.__name__]:
                 extraHandlers[event]+=[func]
     else:
+        Armagetronad.SendCommand("LADDERLOG_WRITE_"+event+" 1")
         extraHandlers[event]=list(functions)
         
 def unregister_handler(event, *functions):
@@ -60,6 +61,8 @@ def unregister_handler(event, *functions):
     if event in extraHandlers:
         for func in functions:
             del extraHandlers[event][extraHandlers.index(func)]
+        if len(extraHandlers[event])==0:
+            Armagetronad.SendCommand("LADDERLOG_WRITE_"+event+" 0")
     else:
         return
     
@@ -235,32 +238,22 @@ def OnlinePlayer(lname, red, green, blue, ping, teamname=None):
     Player.players[lname].color=red,green,blue
     Player.players[lname].ping=ping
 
-def WaitForExternalScript(*args):
+def RoundCommencing(round_num_current, round_num_max):
+    global round
     global atRoundend
-    # Handle roundend actions
-    for func in atRoundend:
+    global roundStarted
+    roundStarted=False
+    round=int(round_num_current)
+    handlers=atRoundend
+    if round==1:
+        handlers.extend(atMatchend)
+        atMatchend=list()
+    # Handle roundend|matchend actions
+    for func in handlers:
         try:
             func()
         except Exception as e:
-            log.error("Could not execute round end handler "+str(func)+": "+str(e.__class__.__name__) )
-    atRoundend=list() # Flush list
-    Armagetronad.SendCommand("WAIT_FOR_EXTERNAL_SCRIPT 0")
-
-## @brief Handles new round
-# @details Every time a new round starts this function is called.
-# @param date The day when the new round is started
-# @param time The time when the new round is started.
-# @param timezone The timezone of the server.
-def NewRound(date, time, timezone):
-    global roundStarted
-    global atRoundend
-    global roundNumber
-    roundStarted=False
-    log.debug("New round started -----------")
-    # Flush bot list (NEEDED because no PlayerLeft is called for bots)
-    bots=Player.getBots()
-    for bot in bots:
-        Player.Remove(bot)
+            log.error("Could not execute handler "+str(func.__name__)+": "+str(e.__class__.__name__) )
     # Polls
     if Poll.current_poll != None:
         if Poll.current_poll.aliveRounds==0:
@@ -272,10 +265,21 @@ def NewRound(date, time, timezone):
                 Armagetronad.PrintMessage(Messages.PollInProgress.format(target=Poll.current_poll.target, expire=Poll.current_poll.aliveRounds) )
                 Armagetronad.SendCommand("CENTER_MESSAGE "+Messages.PollInProgressCenter) 
                 Poll.current_poll.aliveRounds=Poll.current_poll.aliveRounds-1
-    Armagetronad.SendCommand("LADDERLOG_WRITE_GAME_TIME 1")
+    atRoundend=list() # Flush list
+
+## @brief Handles new round
+# @details Every time a new round starts this function is called.
+# @param date The day when the new round is started
+# @param time The time when the new round is started.
+# @param timezone The timezone of the server.
+def NewRound(date, time, timezone):
+    global roundStarted
+    # Flush bot list (NEEDED because no PlayerLeft is called for bots)
+    bots=Player.getBots()
+    for bot in bots:
+        Player.Remove(bot)
     roundStarted=True
-    roundNumber=roundNumber+1
-    Armagetronad.SendCommand("WAIT_FOR_EXTERNAL_SCRIPT 1")
+    log.debug("## New round started ##")
 
 ## @brief Handles cycle created
 # @details For each cycle which is created, this function is called.
@@ -291,22 +295,6 @@ def CycleCreated(lname, x, y, xdir, ydir):
     if "ai" not in Team.teams:
         Team.Add("AI")
     Player.players[lname].joinTeam("ai", quiet=True)
-
-def GameTime(time):
-    time=int(time)
-    if time==0:
-        Armagetronad.SendCommand("LADDERLOG_WRITE_GAME_TIME 0")
-
-def NewMatch(data, time, timezone):
-    global roundNumber
-    global atMatchend
-    roundNumber=1
-    for func in atMatchend:
-        try:
-            func()
-        except Exception as e:
-            log.debug("Could not execute match end handler "+str(func)+": "+str(e.__class__.__name__) )
-    atMatchend=[]
 
 def Positions(team, *members):
     team=members[0].getTeam()

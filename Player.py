@@ -356,6 +356,17 @@ class Player:
     def isLoggedIn(self):
         return self.__logged_in
 
+def __reload__(players__old, **rest):
+    global players
+    players=dict()
+    for player in players__old.values():
+        players[player.getLadderName()]=Player(player.getLadderName(), player.name, player.ip)
+        for x in filter(lambda x: not x.startswith("__") and x.endswith("__"),dir(player)):
+            setattr(players[player.getLadderName()], x, getattr(player, x))
+    for x in rest:
+        globals()[x.replace("__old", "")]=rest[x]
+    
+
 ## @brief Enables Logging
 # @details This function enables logging for all Player classes. For more information see
 #          the logging module.

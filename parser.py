@@ -9,52 +9,57 @@ import AccessLevel
 import Poll
 import Player
 import time
+import inspect
 
-if "log" not in globals():
-    log=logging.getLogger("MainModule")
-    h=logging.StreamHandler()
-    h.setLevel(logging.DEBUG)
-    f=logging.Formatter("[%(name)s] (%(asctime)s) %(levelname)s: %(message)s")
-    h.setFormatter(f)
-    log.addHandler(h)
-    log.setLevel(logging.INFO)
+log=logging.getLogger("MainModule")
 
 def exit(normal=True, quiet=False):
     AccessLevel.save()
     if not quiet:
         log.info("Exit")
-    if normal:
-        Armagetronad.PrintMessage("0xff0000Script exited.")
-    else:
-        Armagetronad.PrintMessage("0xff0000Script crashed.")
+        if normal:
+            Armagetronad.PrintMessage("0xff0000Script exited.")
+        else:
+            Armagetronad.PrintMessage("0xff0000Script crashed.")
 
-def main(debug=False, disabledCommands=[]):
+def main(debug=False, disabledCommands=[], reloaded=False):
+    if not reloaded:
+        h=logging.StreamHandler()
+        h.setLevel(logging.DEBUG)
+        f=logging.Formatter("[%(name)s] (%(asctime)s) %(levelname)s: %(message)s")
+        h.setFormatter(f)
+        log.addHandler(h)
+        log.setLevel(logging.INFO)
     #We need some special settings. Set it
-    Armagetronad.SendCommand("LADDERLOG_WRITE_ONLINE_PLAYER 1")
-    Armagetronad.SendCommand("LADDERLOG_WRITE_CYCLE_CREATED 1")
-    Armagetronad.SendCommand("LADDERLOG_WRITE_INVALID_COMMAND 1")
-    Armagetronad.SendCommand("LADDERLOG_WRITE_NUM_HUMANS 1")
-    Armagetronad.SendCommand("LADDERLOG_WRITE_NEW_ROUND 1")
     Armagetronad.SendCommand("INTERCEPT_UNKNOWN_COMMANDS 1")
-    # Armagetronad.SendCommand("LADDERLOG_GAME_TIME_INTERVAL 1")
-    # Armagetronad.SendCommand("EXTRA_ROUND_TIME 1") Do we need this?
-    if Global.debug:
-        log.info("Starting in debug mode.")
-        Player.enableLogging(logging.DEBUG)
-        Team.enableLogging(logging.DEBUG)
-        LadderLogHandlers.enableLogging(logging.DEBUG)
-        Poll.enableLogging(logging.DEBUG)
-    else:
-        Player.enableLogging(logging.WARNING)
-        Team.enableLogging(logging.WARNING)
-        LadderLogHandlers.enableLogging(logging.INFO)
-        Poll.enableLogging(logging.WARNING)
+    for x in dir(LadderLogHandlers):
+        if not x[0].isupper():
+            continue
+        if inspect.isfunction(getattr(LadderLogHandlers,x)):
+            x="".join([i.upper() if i.islower() else "_"+i for i in x])
+            Armagetronad.SendCommand("LADDERLOG_WRITE"+x+" 1") # X has already a underscore at beginning.
+    Armagetronad.SendCommand("LADDERLOG_GAME_TIME_INTERVAL 1")
+    if not reloaded:
+        if Global.debug:
+            log.info("Starting in debug mode.")
+            Player.enableLogging(logging.DEBUG)
+            Team.enableLogging(logging.DEBUG)
+            LadderLogHandlers.enableLogging(logging.DEBUG)
+            Poll.enableLogging(logging.DEBUG)
+        else:
+            Player.enableLogging(logging.WARNING)
+            Team.enableLogging(logging.WARNING)
+            LadderLogHandlers.enableLogging(logging.INFO)
+            Poll.enableLogging(logging.WARNING)
 
     Commands.disabled=Commands.disabled+disabledCommands    
     #Init
     AccessLevel.load()
-    log.info("Script started")    
-    Armagetronad.PrintMessage("0xff0000Script started")
+    if not reloaded:
+        log.info("Script started")    
+        Armagetronad.PrintMessage("0xff0000Script started")
+    else:
+        log.info("Script reloaded")
     #We need to refresh player list
     Global.reloadPlayerList()
     while(True):

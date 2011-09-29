@@ -239,6 +239,8 @@ def main():
         time.sleep(1) # Give the the server some time to start up
     atexit.register(exit)
     sys.stdout=OutputToProcess()
+    if os.path.exists("debug.log"):
+        os.remove("debug.log")
     sys.stdin=WatchFile(open(os.path.join(options.vardir,"ladderlog.txt"), encoding="latin-1" ) )
     sys.stdin.skipUnreadLines()
     sys.stderr=FlushFile(sys.__stdout__)
@@ -248,14 +250,15 @@ def main():
     t2.start()
     sys.stderr.write("Reading commands from stdin.\n")
     sys.path.append("../extensions/")
+    Global.server_name=options.servername
+    sys.stderr.write("[START] Starting script.\n")
+    sys.stderr.write("[START] Press ctrl+c or type /quit to exit.\n")
+    sys.stderr.write("\n")
+    sys.stderr.flush()    
+    reloaded=False
     while True:
         try:
-            Global.server_name=options.servername
-            sys.stderr.write("[START] Starting script.\n")
-            sys.stderr.write("[START] Press ctrl+c or type /quit to exit.\n")
-            sys.stderr.write("\n")
-            sys.stderr.flush()    
-            parser.main(debug=options.debug, disabledCommands=options.disabledCommands)
+            parser.main(debug=options.debug, disabledCommands=options.disabledCommands, reloaded=reloaded)
         except KeyboardInterrupt:
             break
         except SystemExit:
@@ -263,7 +266,8 @@ def main():
         except Global.ReloadException:
             import tools
             tools.reload_script_modules()
-            sys.stderr.write(str(sys.modules["parser"]))
+            #sys.stderr.write(str(sys.modules["parser"]))
+            reloaded=True
             continue
         except Exception:
             sys.stderr.write("#####################################################################\n")

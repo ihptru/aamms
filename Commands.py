@@ -379,18 +379,6 @@ def printBuffer(acl, player):
     else:
         Armagetronad.PrintPlayerMessage(player,"Buffer: Empty")
 
-
-## @brief Reload the script.
-# @details This command reloads all files of the script.
-# @param acl The accesslevel of the player
-# @param player The name of the player
-def reload(acl, player):
-    Armagetronad.PrintPlayerMessage(player, "This feature is bugged. It's not available at the moment.")
-    return
-    #Armagetronad.PrintPlayerMessage(player,  "0xff0000Reloading script ....")
-    #Global.reloadModules()
-
-
 ## @brief Get help about commands and more.
 # @param topics The name of the topic (topic subtopic1 subtopic2 ...) or of a chat command.
 def info(acl, player, *topics):
@@ -540,5 +528,5 @@ def reload_script(acl, player):
   
 add_help_group("misc", "Other commands")
 add_help_group("voting", "Commands for voting")
-register_commands(info, reload, clearBuffer, printBuffer,acl, script,reload_script, execBuffer, group="misc")
+register_commands(info, clearBuffer, printBuffer,acl, script,reload_script, execBuffer, group="misc")
 register_commands(no, yes,cancel,  group="voting")

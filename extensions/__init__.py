@@ -68,6 +68,6 @@ def loadExtensions():
     for i in getExtensions():
         missing_deps=loadExtension(i)
 
-def __reload__(loadedExtensions):
-    for ext in loadedExtensions:
+def __reload__(loadedExtensions__old):
+    for ext in loadedExtensions__old:
         loadExtension(ext.__name__)

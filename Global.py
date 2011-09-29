@@ -12,7 +12,7 @@ __save_vars=["state", "serverlog", "datadir","configdir","debug","server_name"]
 def reloadPlayerList():
     Armagetronad.SendCommand("START_NEW_MATCH")
     Armagetronad.SendCommand("CYCLE_RUBBER -1")
-    sleep(2)
+    sleep(1)
     Armagetronad.SendCommand("SINCLUDE settings.cfg")
     Armagetronad.SendCommand("SINCLUDE settings_custom.cfg")
 
