@@ -66,7 +66,9 @@ class Mode(yaml.YAMLObject):
             Armagetronad.SendCommand("SINCLUDE settings_dedicated.cfg")
             Armagetronad.SendCommand("SINCLUDE default.cfg")
             Armagetronad.SendCommand("SINCLUDE "+configfile)
-            if self.lives>1:
+            if type(self.lives)!=int:
+                self.lives=int(self.lives)
+            if self.lives>=1:
                 Armagetronad.SendCommand("CYCLE_INVULNERABLE_TIME 3")
             Armagetronad.SendCommand("SINCLUDE settings_custom.cfg")
             Armagetronad.SendCommand("SINCLUDE autoexec.cfg")

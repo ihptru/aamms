@@ -63,7 +63,9 @@ def deleteMode(acl, player, modename):
 #  @param modename The name of the mode to which to set the game mode.
 def mode(acl, player, modename, when=None):
     if when!=None:
-        type="set"
+        ctype="set"
+    else:
+        ctype="vote"
     if locked:
         Armagetronad.PrintPlayerMessage(player, Messages.ModeLocked)
         return
@@ -71,7 +73,7 @@ def mode(acl, player, modename, when=None):
         Armagetronad.PrintPlayerMessage(player, Messages.ModeNotExist.format(mode=modename))
         return
     if SimpleMode.current_mode:
-        if SimpleMode.current_mode.name==modename and type=="vote": #@UndefinedVariable
+        if SimpleMode.current_mode.name.lower()==modename.lower() and type=="vote": #@UndefinedVariable
             Armagetronad.PrintPlayerMessage(player, Messages.ModeAlreadyPlaying)
             return
 
@@ -96,7 +98,7 @@ def mode(acl, player, modename, when=None):
             handler_list.append(SimpleMode.modes[modename.lower()].activate) #UndefiniedVariable
             setattr(LadderLogHandlers, "at"+w, handler_list)
         
-    if type=="vote":
+    if ctype=="vote":
         try:
             target="Change mode to '"+modename+"'"
             Poll.Add(target, activator, player)
@@ -110,10 +112,7 @@ def mode(acl, player, modename, when=None):
                 Armagetronad.PrintPlayerMessage(player, Messages.SpecNotAllowed)
                 Poll.Cancel()
             return
-    elif type=="set":
-        if not AccessLevel.isAllowed("mode_set", acl):
-            Armagetronad.PrintPlayerMessage(player, "0xff0000You're not allowed to do that. ")
-            return
+    elif ctype=="set":
         when=when.lower()
         access_name="mode_set_"+when
         if AccessLevel.accessLevelSet(access_name) and not AccessLevel.isAllowed(access_name, acl):

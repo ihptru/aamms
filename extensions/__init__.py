@@ -40,12 +40,15 @@ def loadExtension(name, skip_dependency_check=False):
     if len(name)<1:
         raise RuntimeError("Trying to load Extension "+name+", but it doesn't exists.")
     name=name[0]
+    if name in [i.__name__ for i in loadedExtensions]:
+        return True
     if os.path.exists(__path__[0]+"/"+name+"/config.py"):
         config=imp.new_module("extensions/"+name+"/config")
         loadedExtNames=[i.__name__ for i in loadedExtensions]
-        missing_deps=[i for i in getExtensions() if i not in loadedExtNames]
-        if len(missing_deps) and not skip_dependency_check:
-            return missing_deps
+        if hasattr(config, "deps"):
+            missing_deps=[i for i in config.deps if i not in loadedExtNames]
+            if len(missing_deps) and not skip_dependency_check:
+                return missing_deps
     sys.stderr.write("[EXTENSION] Loading "+name+" ... ")
     sys.stderr.flush()
     try:
@@ -66,7 +69,7 @@ def loadExtensions():
     global loadedExtensions
     sys.path.append(__path__)
     for i in getExtensions():
-        missing_deps=loadExtension(i)
+        missing_deps=loadExtension(i) #@UnusedVariable
 
 def __reload__(loadedExtensions__old):
     for ext in loadedExtensions__old:

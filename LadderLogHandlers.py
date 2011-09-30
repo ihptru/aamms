@@ -68,7 +68,6 @@ def unregister_handler(event, *functions):
     
 def unregister_package(name):
     global extraHandlers
-    Armagetronad.PrintMessage("Unregister commands of "+name)
     for event in extraHandlers:
         for func in extraHandlers[event]:
             if len(func.__module__.split("."))>1:
@@ -121,8 +120,8 @@ def InvalidCommand(command, player, ip, access, *args):
     if not AccessLevel.isAllowed(command,access):
         Armagetronad.PrintPlayerMessage(player, Messages.NotAllowed.format(command=command) )
         return
-    if not Commands.checkUsage(command, *args):
-        Armagetronad.PrintPlayerMessage(player, Commands.getHelp(command))
+    if not Commands.checkUsage(command, access, *args):
+        Armagetronad.PrintPlayerMessage(player, Commands.getHelp(command,access))
         return
 
     # Process command ####
@@ -241,6 +240,7 @@ def OnlinePlayer(lname, red, green, blue, ping, teamname=None):
 def RoundCommencing(round_num_current, round_num_max):
     global round
     global atRoundend
+    global atMatchend
     global roundStarted
     roundStarted=False
     round=int(round_num_current)
@@ -296,12 +296,12 @@ def CycleCreated(lname, x, y, xdir, ydir):
         Team.Add("AI")
     Player.players[lname].joinTeam("ai", quiet=True)
 
-def Positions(team, *members):
-    team=members[0].getTeam()
+def Positions(team, *members):    
     teams=set([Player.players[p].getTeam() for p in members])
     if len(teams)!=1:
         raise Exception("Got players that are in a different team.")
         return
+    team=list(teams)[0]
     for pos, member in enumerate(members):
         Team.teams[team].shufflePlayer(member, pos)
     teamstr=" ".join(Team.teams[team].getMembers() )

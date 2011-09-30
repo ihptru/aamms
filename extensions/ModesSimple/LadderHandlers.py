@@ -27,10 +27,8 @@ def DoInit(*args):
         SimpleMode.current_mode.activate(kill=False) #@UndefinedVariable
         for player_name in Player.players:
             Player.players[player_name].setLives(SimpleMode.current_mode.lives+1) #@UndefinedVariable
-    Armagetronad.SendCommand("WAIT_FOR_EXTERNAL_SCRIPT 0")
 
 def CheckForNewMatch(cur_num, max_num):
-    Armagetronad.PrintMessage(cur_num)
     if cur_num=="1":
         if SimpleMode.current_mode:
             Armagetronad.SendCommand("CENTER_MESSAGE "+Messages.ModeMessage.format(mode=SimpleMode.current_mode.name)) #@UndefinedVariable
@@ -39,6 +37,4 @@ def CheckForNewMatch(cur_num, max_num):
 for respawn_event in RESPAWN_EVENTS:
     LadderLogHandlers.register_handler(respawn_event, HandlePlayerDied)
 LadderLogHandlers.register_handler("CYCLE_CREATED", HandleCycleCreated)
-LadderLogHandlers.register_handler("ROUND_COMMENCING", DoInit)
-LadderLogHandlers.register_handler("NEW_MATCH", lambda *args: Armagetronad.SendCommand(""))
-LadderLogHandlers.register_handler("ROUND_COMMENCING", CheckForNewMatch)
+LadderLogHandlers.register_handler("ROUND_COMMENCING", DoInit, CheckForNewMatch)

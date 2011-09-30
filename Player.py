@@ -25,7 +25,6 @@ players=dict()
 # @note This triggers the event "Player added"
 def Add(lname,name,ip):
     if lname in players:
-        print(players[lname] )
         raise RuntimeError("Player „"+lname+"“ already exists.")
     players[lname]=Player(lname,name,ip)
 

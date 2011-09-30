@@ -36,34 +36,37 @@ helpTopics= {
                 } )
             }
 commands=dict()
+args=dict()
 
 ###################################### COMMAND HELPERS ###################################
 
-## @brief Gets the parameter of a command
-# @details Gets the parameter of the given command from the function definition.
-# @param Command
-# @return A tuple of (minargcount, maxargcount, defaultvalues, names)
-def getArgs(command):
+def initArgs(command):
+    global args
     global commands
     commandf=commands[command]
     try:
         with open(commandf.__code__.co_filename) as f:
             defline=f.readlines()[commandf.__code__.co_firstlineno-1]
     except:
-        return commandf.__code__.co_argcount-len(commandf.__defaults__), commandf.__code__.co_argcount, commandf.__defaults__, commandf.__code__.co_varnames[:commandf.__code__.co_argcount]
+        minargcount=commandf.__code__.co_argcount-len(commandf.__defaults__)
+        maxargcount=commandf.__code__.co_argcount
+        defaults=commandf.__defaults__
+        varnames=commandf.__code__.co_varnames[:commandf.__code__.co_argcount]
+        args[command.lower()]=minargcount, maxargcount, defaults, varnames
+        return
     defline=defline[defline.find("(")+1:defline.rfind(")")]
-    args=defline.split(",")
+    args_func=defline.split(",")
     minargcount=0
     maxargcount=0
     names=list()
     optionalvalues=list()
-    for arg in args[2:]:
+    for arg in args_func[2:]:
         arg=arg.strip()
         arg=arg.replace(" ","")
         if arg.find("=")==-1:
             if arg.startswith("*"):
                 arg=arg[1:]
-                maxargcount=100000000000000000000 # Make the number as big as you want
+                maxargcount=float("inf") # Make the number as big as you want
                 names.append(arg)
                 break
             minargcount=minargcount+1
@@ -76,17 +79,43 @@ def getArgs(command):
             names.append(argname)
             optionalvalues.append(defaultvalue)
             maxargcount=maxargcount+1
-    return minargcount, maxargcount, optionalvalues, names
+    args[command.lower()]=minargcount, maxargcount, optionalvalues, names
+
+## @brief Gets the parameter of a command
+# @details Gets the parameter of the given command from the function definition.
+# @param Command
+# @return A tuple of (minargcount, maxargcount, defaultvalues, names)
+def getArgs(command,acl):
+    minargcount, maxargcount, defaultvalues, names=args[command.lower()]
+    allowed=lambda i: not AccessLevel.accessLevelSet(command.lower()+"_param_"+i) or AccessLevel.isAllowed(command.lower()+"_param_"+i, acl)
+    optionalargs=names[minargcount:]
+    newnames=[]
+    for name in names:
+        if not allowed(name):
+            if name not in optionalargs:
+                minargcount-=1
+            elif name in optionalargs and optionalargs.index(name)==len(optionalargs)-1 and maxargcount==float("inf"):
+                maxargcount=minargcount+len(optionalargs)
+                continue
+            maxargcount-=1
+        else:
+            newnames.append(name)
+    return minargcount, maxargcount, defaultvalues, newnames
+
+def init():
+    global commands
+    for command in commands:
+        initArgs(command)
 
 ## @brief Checks the usage of a command
 # @details Checks if a command could be called with the given parameters.
 # @param command The command for which to check the usage.
 # @param args The args which to pass to the command
 # @return True if it could be called with that parameters, False otherwise.
-def checkUsage(command, *args):
+def checkUsage(command,acl,  *args):
     if command.startswith("/"):
         command=command[1:]
-    minargcount, maxargcount, unused, unused=getArgs(command)
+    minargcount, maxargcount, unused, unused=getArgs(command, acl)
     if minargcount <= len(args) <= maxargcount:
         return True
     else:
@@ -123,10 +152,10 @@ def getCommands():
 # @details Retuns the command line for the given command.
 # @param command The command for which to get the command line.
 # @return The command line.
-def getCommandLine(command):
+def getCommandLine(command, acl=0):
     if command.startswith("/"):
         command=command[1:] #Remove the slash
-    minargcount, maxargcount, defaultvalues, argnames=getArgs(command) #@UnusedVariable
+    minargcount, maxargcount, defaultvalues, argnames=getArgs(command, acl) #@UnusedVariable
     neededargs=argnames[:minargcount]
     optionalargs=argnames[minargcount:maxargcount]
     optionalargsstr=""
@@ -144,12 +173,12 @@ def getCommandLine(command):
 # @details Returns the description for the given command.
 # @param command The command for which to get the description
 # @return Tuple of command description, param description for the given command
-def getDescription(command):
+def getDescription(command, acl=0):
     if command.startswith("/"):
         command=command[1:] #Remove the slash
     global commands
     commandf=commands[command]
-    minargcount, maxargcount, defaultvalues, argnames=getArgs(command)
+    minargcount, maxargcount, defaultvalues, argnames=getArgs(command, acl)
     neededargs=argnames[:minargcount] #@UnusedVariable
     optionalargs=argnames[minargcount:maxargcount]
 
@@ -213,9 +242,9 @@ def getDescription(command):
 # @details Returns a help message for the given command
 # @param command The command for which to generate the help message.
 # @return The help message
-def getHelp(command):
-    commandstr=getCommandLine(command)
-    commanddesc, params=getDescription(command)
+def getHelp(command, acl):
+    commandstr=getCommandLine(command,acl)
+    commanddesc, params=getDescription(command,acl)
     paramstr=("\n    "+"\n    ".join(params) )
     if len(params)==0:
         paramstr="None"
@@ -237,6 +266,7 @@ def register_commands(*functions, group=None):
     global commands
     for func in functions:
         commands[func.__name__]=func
+        initArgs(func.__name__)
         if func.__name__ not in a[1]:
             a[1].append(func.__name__)
 
@@ -386,8 +416,10 @@ def printBuffer(acl, player):
 # @param topics The name of the topic (topic subtopic1 subtopic2 ...) or of a chat command.
 def info(acl, player, *topics):
     try:
-        commandname_real=[i for i in getCommands() if i.lower()==" ".join(topics)][0]
-        Armagetronad.PrintPlayerMessage(player, getHelp(commandname_real) )
+        commandname=" ".join(topics)
+        if commandname.startswith("/"): commandname=commandname[1:]
+        commandname_real=[i for i in getCommands() if i.lower()==commandname][0]
+        Armagetronad.PrintPlayerMessage(player, getHelp(commandname_real,acl) )
         return
     except IndexError:
         pass
@@ -533,3 +565,4 @@ add_help_group("misc", "Other commands")
 add_help_group("voting", "Commands for voting")
 register_commands(info, clearBuffer, printBuffer,acl, script,reload_script, execBuffer, group="misc")
 register_commands(no, yes,cancel,  group="voting")
+init()

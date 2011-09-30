@@ -244,13 +244,12 @@ def main():
     sys.stdin=WatchFile(open(os.path.join(options.vardir,"ladderlog.txt"), encoding="latin-1" ) )
     sys.stdin.skipUnreadLines()
     sys.stderr=FlushFile(sys.__stdout__)
-    extensions.loadExtensions()
     t2=Thread(None, read_stdin)
     t2.daemon=True
     t2.start()
     sys.stderr.write("Reading commands from stdin.\n")
-    sys.path.append("../extensions/")
     Global.server_name=options.servername
+    extensions.loadExtensions()
     sys.stderr.write("[START] Starting script.\n")
     sys.stderr.write("[START] Press ctrl+c or type /quit to exit.\n")
     sys.stderr.write("\n")
@@ -266,7 +265,6 @@ def main():
         except Global.ReloadException:
             import tools
             tools.reload_script_modules()
-            #sys.stderr.write(str(sys.modules["parser"]))
             reloaded=True
             continue
         except Exception:
@@ -281,7 +279,7 @@ def main():
                 sys.stderr.write("Restarting in 3 seconds ... \n")        
                 sys.stderr.write("\n")
                 time.sleep(3)
-                Global.reloadModules()
+                reloaded=True
             except KeyboardInterrupt:
                 break
             except:
