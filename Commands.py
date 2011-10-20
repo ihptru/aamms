@@ -11,6 +11,7 @@ import AccessLevel
 import Poll
 import tools
 import Global
+import inspect
 
 __save_vars=["disabled","data"]
 ###################################### VARIABLES #########################################
@@ -36,58 +37,89 @@ helpTopics= {
                 } )
             }
 commands=dict()
-args=dict()
+commandvalues=dict()
 
 ###################################### COMMAND HELPERS ###################################
 
-def initArgs(command):
-    global args
-    global commands
+def getDescription(command, acl):
+    if command not in commands:
+        command=getRealCommand(command)
+    acl=int(acl)
+    paramstr=""
+    desc=commandvalues[command][4]
+    brief=desc[0]
+    params=desc[1]
+    ident_param=2
+    ident_param_desc=10
+    for param in params:
+        if not param[2]>=acl:
+            continue
+        paramstr=paramstr+"\n"+" "*ident_param
+        paramstr=paramstr+"0x0088ff"+param[0]+":"
+        paramdesc=textwrap.wrap(param[1], width=80-ident_param_desc)
+        paramstr=paramstr+(ident_param_desc-ident_param-len(param[0]))*" "+" 0xffffff"
+        paramstr=paramstr+paramdesc[0]
+        paramdesc=paramdesc[1:]
+        for desc in paramdesc:
+            paramstr=paramstr+"\n"+" "*ident_param_desc+" 0xffffff"+desc+"\n"
+    if len(paramstr)==0: paramstr="None"
+    return brief, paramstr
+
+        
+
+def getDescriptionInit(command, args):
+    if command not in commands:
+        command=getRealCommand(command)
+    comments=inspect.getcomments(commands[command]) 
+    params=[]
+    brief="Not documented"
+    comments="".join([comment.strip()[1:].strip() for comment in comments.splitlines()])
+    if not comments.startswith("#"): return brief, params
+    else:
+        comments=comments[1:].strip()
+    for comment in comments.split("@") :
+        comment=comment.split(" ")
+        if comment[0]=="brief":
+            brief=" ".join(comment[1:])
+        elif comment[0]=="param" and comment[1] in args:
+            paramname=comment[1]
+            paramdesc=" ".join(comment[2:])
+            acl=float("inf")
+            if AccessLevel.accessLevelSet(command.lower()+"_param_"+paramname.lower()):
+                acl=AccessLevel.getAccessLevel(command.lower()+"_param_"+paramname.lower())
+            params.append((paramname, paramdesc, acl))
+    return brief, params
+
+def initCommand(command):
+    if command not in commands:
+        command=getRealCommand(command)
+    global commandvalues
+    argsmin, argsmax, defaultvalues, names=0,0,dict(),[]
     commandf=commands[command]
-    try:
-        with open(commandf.__code__.co_filename) as f:
-            defline=f.readlines()[commandf.__code__.co_firstlineno-1]
-    except:
-        minargcount=commandf.__code__.co_argcount-len(commandf.__defaults__)
-        maxargcount=commandf.__code__.co_argcount
-        defaults=commandf.__defaults__
-        varnames=commandf.__code__.co_varnames[:commandf.__code__.co_argcount]
-        args[command.lower()]=minargcount, maxargcount, defaults, varnames
-        return
-    defline=defline[defline.find("(")+1:defline.rfind(")")]
-    args_func=defline.split(",")
-    minargcount=0
-    maxargcount=0
-    names=list()
-    optionalvalues=list()
-    for arg in args_func[2:]:
-        arg=arg.strip()
-        arg=arg.replace(" ","")
-        if arg.find("=")==-1:
-            if arg.startswith("*"):
-                arg=arg[1:]
-                maxargcount=float("inf") # Make the number as big as you want
-                names.append(arg)
-                break
-            minargcount=minargcount+1
-            maxargcount=maxargcount+1
-            names.append(arg)
-        else:
-            argname, unused, defaultvalue=arg.partition("=")
-            argname=argname.strip()
-            defaultvalue=defaultvalue.replace("\"","").replace("'","").strip()
-            names.append(argname)
-            optionalvalues.append(defaultvalue)
-            maxargcount=maxargcount+1
-    args[command.lower()]=minargcount, maxargcount, optionalvalues, names
+    argspec=inspect.getfullargspec(commandf)
+    names=argspec.args[2:]
+    if(argspec.varargs): 
+        maxargs=float("inf")
+        names+=(argspec.varargs, );
+    else:
+        maxargs=len(argspec.args)-2
+    minargs=len(argspec.args)-2
+    if argspec.defaults:
+        minargs-=len(argspec.defaults)
+        defaultvalues={argname:defaultvalue for argname, defaultvalue in zip(reversed(argspec.args), argspec.defaults)}
+    desc=getDescriptionInit(command, names)
+    commandvalues[command]=minargs, maxargs, defaultvalues, names, desc
+    return
 
 ## @brief Gets the parameter of a command
 # @details Gets the parameter of the given command from the function definition.
-# @param Command
+# @param command The name of the command
 # @return A tuple of (minargcount, maxargcount, defaultvalues, names)
 def getArgs(command,acl):
-    minargcount, maxargcount, defaultvalues, names=args[command.lower()]
-    allowed=lambda i: not AccessLevel.accessLevelSet(command.lower()+"_param_"+i) or AccessLevel.isAllowed(command.lower()+"_param_"+i, acl)
+    if command not in commands:
+        command=getRealCommand(command)
+    minargcount, maxargcount, defaultvalues, names=commandvalues[command][:4]
+    allowed=lambda i: not AccessLevel.accessLevelSet(command.lower()+"_param_"+i.lower()) or AccessLevel.isAllowed(command.lower()+"_param_"+i, acl)
     optionalargs=names[minargcount:]
     newnames=[]
     for name in names:
@@ -105,7 +137,7 @@ def getArgs(command,acl):
 def init():
     global commands
     for command in commands:
-        initArgs(command)
+        initCommand(command)
 
 ## @brief Checks the usage of a command
 # @details Checks if a command could be called with the given parameters.
@@ -113,9 +145,9 @@ def init():
 # @param args The args which to pass to the command
 # @return True if it could be called with that parameters, False otherwise.
 def checkUsage(command,acl,  *args):
-    if command.startswith("/"):
-        command=command[1:]
-    minargcount, maxargcount, unused, unused=getArgs(command, acl)
+    if command not in commands:
+        command=getRealCommand(command)
+    minargcount, maxargcount=getArgs(command, acl)[:2]
     if minargcount <= len(args) <= maxargcount:
         return True
     else:
@@ -125,27 +157,6 @@ def checkUsage(command,acl,  *args):
 # @details Searches this file for commands and return its names.
 # @return The command names.
 def getCommands():
-    #lines=list()
-    #func_names=list()
-    #for mod in extensions.loadedExtensions + [None]:
-    #    if mod==None:
-    #        filename=__file__
-    #    else:
-    #        filename=mod.__file__
-    #    with open(filename) as f:
-    #        lines=f.readlines()
-    #    try:
-    #        start=lines.index("#START COMMANDS\n")
-    #    except ValueError:
-    #        start=0
-    #    lines=lines[start:]
-    #    lines="".join(lines)
-    #    match_func_def=re.compile("def [^(]+\([^)]*\)\s*:")
-    #    func_defs=match_func_def.findall(lines)
-    #    for func_def in func_defs:
-    #        func_name=func_def[3:func_def.find("(")].strip()
-    #        if func_name in globals():
-    #            func_names.append(func_name)
     return commands.keys()
 
 ## @brief Gets the command line ( /command neededparams [optionalparams]
@@ -153,14 +164,17 @@ def getCommands():
 # @param command The command for which to get the command line.
 # @return The command line.
 def getCommandLine(command, acl=0):
-    if command.startswith("/"):
-        command=command[1:] #Remove the slash
-    minargcount, maxargcount, defaultvalues, argnames=getArgs(command, acl) #@UnusedVariable
+    if command not in commands:
+        command=getRealCommand(command)
+    minargcount, maxargcount, defaultvalues, argnames=getArgs(command, acl)[:4]
     neededargs=argnames[:minargcount]
-    optionalargs=argnames[minargcount:maxargcount]
+    if not maxargcount==float("inf"):
+        optionalargs=argnames[minargcount:maxargcount]
+    else:
+        optionalargs=argnames[minargcount:]
     optionalargsstr=""
     if len(optionalargs):
-        optionalargsstr="["+(" [").join(optionalargs)+"]"*len(optionalargs)
+        optionalargsstr="["+"][".join(optionalargs)+"]"
     neededargsstr=" ".join(neededargs)
     command=command.strip()
     if neededargsstr.strip()=="":
@@ -169,72 +183,7 @@ def getCommandLine(command, acl=0):
         neededargsstr=" "+neededargsstr
     optionalargsstr=" "+optionalargsstr
     return ("/" + command + neededargsstr + optionalargsstr).strip()
-## @brief Gets the command description including the param description.
-# @details Returns the description for the given command.
-# @param command The command for which to get the description
-# @return Tuple of command description, param description for the given command
-def getDescription(command, acl=0):
-    if command.startswith("/"):
-        command=command[1:] #Remove the slash
-    global commands
-    commandf=commands[command]
-    minargcount, maxargcount, defaultvalues, argnames=getArgs(command, acl)
-    neededargs=argnames[:minargcount] #@UnusedVariable
-    optionalargs=argnames[minargcount:maxargcount]
 
-    commentars=list()
-    with open(commandf.__code__.co_filename) as f:
-        lines=f.readlines()
-        currentlineno=commandf.__code__.co_firstlineno - 2
-    comstart=-1
-    while True:
-        if lines[currentlineno].strip().startswith("##"):
-            comstart=currentlineno
-            break
-        if not lines[currentlineno].strip().startswith("#"):
-            break
-        currentlineno=currentlineno-1
-    currentlineno=comstart
-    while currentlineno>-1:
-        if lines[currentlineno].strip()=="":
-            currentlineno=currentlineno-1
-            continue
-        if lines[currentlineno].strip().startswith("##"):
-            commentars.append(lines[currentlineno].strip()[2:].strip() ) #Remove the "##"
-        if not lines[currentlineno].strip().startswith("#"):
-            break
-        commentars.append(lines[currentlineno].strip()[1:].strip() ) #Remove the "#"
-        currentlineno=currentlineno+1
-
-    params=list()
-    commanddesc=""
-    print(commentars)
-    commentars="\n".join(commentars).split("@")
-    for commentaritem in commentars:
-        commentaritem=commentaritem.strip()
-        if commentaritem.startswith("brief"):
-            commentaritem=commentaritem[len("brief"):]
-            commanddesc=commentaritem.strip()
-            commanddesc=commanddesc.replace("of a player","")
-            commanddesc=commanddesc.replace("a player","you")
-        elif commentaritem.startswith("param"):
-            commentaritem=commentaritem[len("param"):].strip()
-            param, desc=commentaritem.split(" ",1)
-            if param not in argnames: # Probably internal arg, not needed to show the user.
-                continue
-            desc=desc.replace("player's ","your")
-            desc=desc.replace("the player ","you")
-            if not desc.endswith("."):
-                desc=desc+"."
-            if param in optionalargs and len(defaultvalues)>optionalargs.index(param):
-                desc=desc+(" Defaults to \""+str(defaultvalues[optionalargs.index(param)])+"\".")
-            desc=textwrap.wrap(desc, 60)            
-            if len(param)<7: len_param=len(param)
-            if len(param)>=7: len_param=6 
-            params.append("0xffcc00"+param+":"+" "*(7-len_param)+Messages.PlayerColorCode+desc[0])        
-            for curdescl in desc[1:]:
-                params.append(" "*8+curdescl)
-    return commanddesc, params
     
 
 
@@ -245,10 +194,7 @@ def getDescription(command, acl=0):
 def getHelp(command, acl):
     commandstr=getCommandLine(command,acl)
     commanddesc, params=getDescription(command,acl)
-    paramstr=("\n    "+"\n    ".join(params) )
-    if len(params)==0:
-        paramstr="None"
-    usagestr="0xff0000Usage: "+"0x00ff00"+commandstr+"\n"+"0xff0000Description: "+"0x00ffee"+commanddesc+"\n0xff0000Parameters: "+Messages.PlayerColorCode+paramstr
+    usagestr="0xff0000Usage: "+"0x00ff00"+commandstr+"\n"+"0xff0000Description: "+"0x00ffee"+commanddesc+"\n0xff0000Parameters: "+Messages.PlayerColorCode+params
     return usagestr
 
 ## @brief Register new commands
@@ -266,7 +212,7 @@ def register_commands(*functions, group=None):
     global commands
     for func in functions:
         commands[func.__name__]=func
-        initArgs(func.__name__)
+        initCommand(func.__name__)
         if func.__name__ not in a[1]:
             a[1].append(func.__name__)
 
@@ -363,6 +309,8 @@ def register_help(name,label, data, access=None, override=False):
     
 
 ###################################### COMMANDS ##########################################
+#Empty line NEEDED
+
 ## @brief Evaluates the given code
 # @details This function is used for the /script command in the game
 # @param code The code to evaluate.
@@ -379,7 +327,7 @@ def script(acl, player, *code):
         #Armagetronad.PrintPlayerMessage(player, "[Script Exception] At: " + e.__traceback__.tb_frame.f_code.co_filename+": "+str(e.__traceback__.tb_frame.f_back.f_lineno))
         if Global.debug:
             raise e
-## @brief Executes the buffer of a player
+## @brief Executes the buffer
 # @param player The player who executed this command
 # @param flush_buffer Flush the player's buffer after it was executed?
 # @details Executes the buffer of the given player
@@ -395,7 +343,7 @@ def execBuffer(acl, player, flush_buffer=False):
     if flush_buffer:
         del Player.players[player].data["buffer"]
 
-## @brief Empties the buffer of a player
+## @brief Empties the buffer
 # @details Clears the buffer of the given player
 # @param player The player for who to clear the buffer.
 def clearBuffer(acl, player):
@@ -403,7 +351,7 @@ def clearBuffer(acl, player):
         del Player.players[player].data["buffer"]
         Armagetronad.PrintPlayerMessage(player,"Buffer cleared.")
 
-## @brief Prints the buffer of a player
+## @brief Prints the buffer
 # @details Prints the buffer of the given player to the player.
 # @param player The player of who to print the buffer and to who to print the buffer.
 def printBuffer(acl, player):
@@ -413,7 +361,7 @@ def printBuffer(acl, player):
         Armagetronad.PrintPlayerMessage(player,"Buffer: Empty")
 
 ## @brief Get help about commands and more.
-# @param topics The name of the topic (topic subtopic1 subtopic2 ...) or of a chat command.
+# @param topics The name of the topic (topic subtopic1 subtopic2 ...) or of the chat command you'd like to get help on.
 def info(acl, player, *topics):
     try:
         commandname=" ".join(topics)
@@ -480,7 +428,7 @@ def info(acl, player, *topics):
     if hasattr(curtopic, "__call__"):
         curtopic=curtopic()
     if type(curtopic)==dict:
-        Armagetronad.PrintPlayerMessage(player, "0x8888ffTo get help about one of the following topics, use 0xffff00/info "+" ".join(helpTopics)+" <subtopic_name>")
+        Armagetronad.PrintPlayerMessage(player, "0x8888ffTo get help about one of the following topics, use 0xffff00/info "+" ".join(topics)+" <subtopic_name>")
         for topicname, value in curtopic.items() :
             if type(value)==tuple:
                 desc=value[0]
@@ -490,9 +438,10 @@ def info(acl, player, *topics):
     elif type(curtopic)==str:
         Armagetronad.PrintPlayerMessage(player, curtopic)
     elif type(curtopic)==list:
-        Armagetronad.PrintPlayerMessage(player, "0x8888ffFor usage details, use /info <command name>")
+        Armagetronad.PrintPlayerMessage(player, "0x8888ffCommands in topic 0xaaaa00 "+" ".join(topics)+":")
+        Armagetronad.PrintPlayerMessage(player, "0x8888ffFor usage details on a command, use /info <command name>")
         for command in curtopic:
-            Armagetronad.PrintPlayerMessage(player, "0x00ff88/"+command+": 0xffffff"+getDescription(command)[0])
+            Armagetronad.PrintPlayerMessage(player, "0x00ff88"+getCommandLine(command)+": 0xffffff"+getDescription(command, 0)[0])
     else:
         Armagetronad.PrintPlayerMessage(player, "0xff0000ERROR No topics available.")
 
@@ -502,11 +451,11 @@ def clearScreen(acl, player):
         Armagetronad.PrintPlayerMessage(player, "")
     Armagetronad.PrintPlayerMessage(player, "Test")
     
-## @brief Set the access level that is needed for a specific command.
+## @brief Set or get the access level that is needed for a specific command.
 # @details Calls AccessLevel.setAccessLevel()
 # @param acl The accesslevel of the player
 # @param player The name of the player
-# @param command The command for which to set the access level.#
+# @param command The command for which to set the access level.
 # @param access The minmal access level that a user must have to excute the given command. If not given, print the needed access. 
 def acl(acl, player, command, access=None):
     if access is None:

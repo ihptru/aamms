@@ -31,7 +31,7 @@ def is_script_component(mod, *args, **kwargs):
     try:
         if type(mod)==str:
             mod=sys.modules[mod]
-        if mod.__name__.startswith("__") and mod.__name__.endswith("__"):# and not mod.__name__=="__main__": 
+        if (mod.__name__.startswith("__") and mod.__name__.endswith("__")) or mod.__name__=="__main__": 
             return False
         return is_in_root(os.path.abspath(mod.__file__), *args, **kwargs)
     except ValueError:
@@ -101,6 +101,12 @@ def delete_modules_from_dir(directory=None, dir_rel=True):
 def reload_script_modules():
     import Global
     Global.handleLadderLog=False
+    main_mods=list()
+    import __main__
+    for x in dir(__main__):
+        if x=="__builtins__": continue
+        if inspect.ismodule(getattr(__main__, x)) and is_script_component(x):
+            main_mods+=[x]
     modules, vars=delete_script_modules()
     import extensions
     for mod in modules:
@@ -113,6 +119,7 @@ def reload_script_modules():
                 sys.stderr.write("Failed.\n")
                 continue
             sys.stderr.write("OK\n")
+    sys.stderr.write(str(sub_mods))
     for mod in modules:
         if mod in sys.modules:
             if mod in sub_mods:
@@ -122,6 +129,7 @@ def reload_script_modules():
                     else:
                         setattr(sys.modules[mod], sub_mod, extensions.loadedExtensions[mod])
         if mod in vars:
+            sys.stderr.write(mod)
             if hasattr(sys.modules[mod], "__reload__"):
                 vars_new=dict()
                 for var in vars[mod]:
@@ -130,8 +138,6 @@ def reload_script_modules():
             else:
                 for var in vars[mod]:
                     setattr(sys.modules[mod], var, vars[mod][var])
-    import __main__
-    if "__main__" in sub_mods:
-        for mod in sub_mods["__main__"]:
-                setattr(__main__,mod, sys.modules[mod])
+    for mod in main_mods:
+            setattr(__main__,mod, sys.modules[mod])
     Global.handleLadderLog=True

@@ -61,6 +61,7 @@ def deleteMode(acl, player, modename):
     del SimpleMode.modes[modename]
 ## @brief Change the game mode.
 #  @param modename The name of the mode to which to set the game mode.
+#  @param when When should the mode change? Possible values: now, roundend, matchend. This will set the mode without voting.
 def mode(acl, player, modename, when=None):
     if when!=None:
         ctype="set"

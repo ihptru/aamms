@@ -94,9 +94,6 @@ def InvalidCommand(command, player, ip, access, *args):
             Player.players[player].data["buffer"]=[" ".join(args)]
         Armagetronad.PrintPlayerMessage(player," ".join(args) )
         return
-    #imp.reload(Commands)
-    #for mod in extensions.loadedExtensions:
-    #    imp.reload(mod)
     saved_command=command
     command=[realcommand for realcommand in Commands.getCommands() if realcommand.lower()==command]
     if len(command)>1:
