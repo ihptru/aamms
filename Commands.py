@@ -418,7 +418,7 @@ def info(acl, player, *topics):
             if type(curtopic)==dict:
                 curtopic=curtopic[topicname]
             elif type(curtopic)==list:
-                curtopic=getHelp(topicname)
+                curtopic=getHelp(topicname, acl)
         else:
             Armagetronad.PrintPlayerMessage(player, Messages.InfoTopicInvalid.format(topic=" ".join(topics)) )
             return
