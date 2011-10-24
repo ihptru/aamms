@@ -54,6 +54,7 @@ def main(debug=False, disabledCommands=[], reloaded=False):
 
     Commands.disabled=Commands.disabled+disabledCommands    
     #Init
+    AccessLevel.load()
     if not reloaded:
         log.info("Script started")    
         Armagetronad.PrintMessage("0xff0000Script started")
