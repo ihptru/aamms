@@ -54,7 +54,6 @@ def loadExtension(name, skip_dependency_check=False):
     try:
         imp.acquire_lock()
         loadedExtensions+=[imp.load_module(name, *imp.find_module("extensions/"+name))]
-        imp.release_lock()
     except BaseException as b: #@UnusedVariable
         if Global.debug:
             raise b
@@ -62,6 +61,8 @@ def loadExtension(name, skip_dependency_check=False):
         return True
     else:
         sys.stderr.write("Ok\n")
+    finally:
+        imp.release_lock()
     sys.stderr.flush()
     return False
 

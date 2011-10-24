@@ -1,11 +1,11 @@
 #!/usr/bin/env python3
+import AccessLevel
 import LadderLogHandlers
 import logging
 import Team
 import Armagetronad
 import Global
 import Commands
-import AccessLevel
 import Poll
 import Player
 import time
@@ -54,7 +54,6 @@ def main(debug=False, disabledCommands=[], reloaded=False):
 
     Commands.disabled=Commands.disabled+disabledCommands    
     #Init
-    AccessLevel.load()
     if not reloaded:
         log.info("Script started")    
         Armagetronad.PrintMessage("0xff0000Script started")

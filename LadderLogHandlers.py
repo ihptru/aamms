@@ -293,16 +293,20 @@ def CycleCreated(lname, x, y, xdir, ydir):
         Team.Add("AI")
     Player.players[lname].joinTeam("ai", quiet=True)
 
-def Positions(team, *members):    
-    teams=set([Player.players[p].getTeam() for p in members])
-    if len(teams)!=1:
-        raise Exception("Got players that are in a different team.")
-        return
-    team=list(teams)[0]
-    for pos, member in enumerate(members):
-        Team.teams[team].shufflePlayer(member, pos)
-    teamstr=" ".join(Team.teams[team].getMembers() )
-    log.info("Team "+team+": "+teamstr)
+
+def Positions(team, *members):  
+    try:  
+        teams=set([Player.players[p].getTeam() for p in members])
+        if len(teams)!=1:
+            raise Exception("Got players that are in a different team.")
+            return
+        team=list(teams)[0]
+        for pos, member in enumerate(members):
+            Team.teams[team].shufflePlayer(member, pos)
+        teamstr=" ".join(Team.teams[team].getMembers() )
+        log.info("Team "+team+": "+teamstr)
+    except:
+        Armagetronad.PrintMessage("Script bugged, but not fatal.")
 
 ## @brief Enables logging
 # @details This function enables logging for this module.

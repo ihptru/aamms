@@ -52,7 +52,10 @@ def getDescription(command, acl):
     ident_param=2
     ident_param_desc=10
     for param in params:
-        if not param[2]>=acl:
+        acl_needed=float("inf")
+        if AccessLevel.accessLevelSet(command.lower()+"_param_"+param[0].lower()):
+            acl_needed=AccessLevel.getAccessLevel(command.lower()+"_param_"+param[0].lower())
+        if not acl_needed>=acl:
             continue
         paramstr=paramstr+"\n"+" "*ident_param
         paramstr=paramstr+"0x0088ff"+param[0]+":"
@@ -61,7 +64,7 @@ def getDescription(command, acl):
         paramstr=paramstr+paramdesc[0]
         paramdesc=paramdesc[1:]
         for desc in paramdesc:
-            paramstr=paramstr+"\n"+" "*ident_param_desc+" 0xffffff"+desc+"\n"
+            paramstr=paramstr+"\n"+" "+" "*ident_param_desc+" 0xffffff"+desc+"\n"
     if len(paramstr)==0: paramstr="None"
     return brief, paramstr
 
@@ -82,12 +85,9 @@ def getDescriptionInit(command, args):
         if comment[0]=="brief":
             brief=" ".join(comment[1:])
         elif comment[0]=="param" and comment[1] in args:
-            paramname=comment[1]
+            paramname=comment[1].strip()
             paramdesc=" ".join(comment[2:])
-            acl=float("inf")
-            if AccessLevel.accessLevelSet(command.lower()+"_param_"+paramname.lower()):
-                acl=AccessLevel.getAccessLevel(command.lower()+"_param_"+paramname.lower())
-            params.append((paramname, paramdesc, acl))
+            params.append((paramname, paramdesc))
     return brief, params
 
 def initCommand(command):
@@ -267,7 +267,9 @@ def unregister_command(name):
     else:
         command_listing[0].remove(name)
     global commands
+    global commandvalues
     del commands[name]
+    del commandvalues[name.lower()]
 
 def getRealCommand(x):
     x=x.lower()
@@ -317,7 +319,7 @@ def register_help(name,label, data, access=None, override=False):
 # @param player The player who called /script
 def script(acl, player, *code):
     code=" ".join(code)
-    Armagetronad.PrintMessage("[nameScript Command] Started script execution")
+    Armagetronad.PrintMessage("[Script Command] Started script execution")
     code.replace("\"","'")
     try:
         exec(code.replace("print(","Armagetronad.PrintPlayerMessage('"+player+"','[Script Command] Output: ' + ") )
@@ -441,7 +443,7 @@ def info(acl, player, *topics):
         Armagetronad.PrintPlayerMessage(player, "0x8888ffCommands in topic 0xaaaa00 "+" ".join(topics)+":")
         Armagetronad.PrintPlayerMessage(player, "0x8888ffFor usage details on a command, use /info <command name>")
         for command in curtopic:
-            Armagetronad.PrintPlayerMessage(player, "0x00ff88"+getCommandLine(command)+": 0xffffff"+getDescription(command, 0)[0])
+            Armagetronad.PrintPlayerMessage(player, "0x00ff88"+getCommandLine(command, acl)+": 0xffffff"+getDescription(command, 0)[0])
     else:
         Armagetronad.PrintPlayerMessage(player, "0xff0000ERROR No topics available.")
 
