@@ -98,7 +98,6 @@ def delete_modules_from_dir(directory=None, dir_rel=True):
                 x=getattr(sys.modules[mod], attr)
                 if inspect.ismodule(x):
                     sub_mods[mod].append(x.__name__)
-                
             delete_module(mod)
     return need_delete, vars
 
@@ -123,7 +122,6 @@ def reload_script_modules():
                 sys.stderr.write("Failed.\n")
                 continue
             sys.stderr.write("OK\n")
-    sys.stderr.write(str(sub_mods))
     for mod in modules:
         if mod in sys.modules:
             if mod in sub_mods:

@@ -44,7 +44,7 @@ ModeNotExist="Mode {mode} doesn't exist! Look at /info modes for a list of all a
 # @details This message is printed when a vote is active.
 # @param target The target of the active vote
 # @param expire How much rounds does this vote still stay alive?
-PollInProgress="0xff8844Poll 0xffff00{target} 0xff8844in progress. Use /yes or /no to vote! This vote expires in {expire} rounds"
+PollInProgress="0xff8844Poll for 0xffff00{target} 0xff8844in progress. Use /yes or /no to vote! This vote expires in {expire} rounds"
 
 PollInProgressCenter="0xff8800Poll in progress! VOTE!"
 
@@ -52,22 +52,22 @@ PollInProgressCenter="0xff8800Poll in progress! VOTE!"
 # @details This message is displayed when a new vote was added.
 # @param target The target of the vote which was added
 # @param player The player who added the vote.
-PollAdded="0x00ff00Poll 0xffff00{target} 0x00ff00submitted by 0x00ff88{player}"
+PollAdded="0x00ff00Poll for 0xffff00{target} 0x00ff00submitted by 0x00ff88{player}"
 
 ## @brief Vote cancelled message
 # @details This message is printed when an admin cancelled a vote.
 # @param target The target of the cancelled vote.
-PollCancelled="0xff2200Poll 0xffff00{target} 0xff2200got cancelled by an administrator."
+PollCancelled="0xff2200Poll for 0xffff00{target} 0xff2200got cancelled by an administrator."
 
 ## @brief Vote successed message
 # @details This message is printed when a vote successed.
 # @param target The target of the vote which successed.
-PollSuccessed="0x00ffffPoll 0xffff00{target} 0x00ffffsucceed!"
+PollSuccessed="0x00ffffPoll for0xffff00{target} 0x00ffff accepted!"
 
 ## @brief Vote failed message
 # @details This message is printed when a vote failed.
 # @param target The target of the vote which failed.
-PollFailed="0x00ffffPoll 0xffff00{target} 0x00fffffailed!"
+PollFailed="0x00ffffPoll for 0xffff00{target} 0x00fffffailed!"
 
 ## @brief Player voted for a vote message
 # @details This message is displayed when a player used the /yes command
@@ -95,7 +95,7 @@ NoActivePoll="There's no poll in progress!"
 # @details This message is printed when /acl was successfully called.
 # @param command The command of which the access level has changed.
 # @param access The access level to which the required access level has changed.
-AccessLevelChanged="0x00ff00The needed access level for command /{command} has been changed to {access}."
+AccessLevelChanged="0x00ff00The needed access level for {command} has changed to {access}."
 
 ## @brief Already a vote active message
 # @details This message is printed when a player tries to create a vote, but there is already one active.
@@ -141,4 +141,4 @@ PollTimedOut="0xffff00The poll about {target} timed out."
 
 ModeAlreadyPlaying="0xff0000You are already playing this mode!"
 
-ModeLocked="0xff0000Mode was locked by an adminsitrator."
+ModeLocked="0xff0000Mode got locked by an adminsitrator."
