@@ -10,8 +10,6 @@ import inspect
 
 locked=False
 
-
-
 ## @brief Add a mode. 
 #  @details Add a new mode.
 #  @param name The name of the mode.
@@ -101,8 +99,11 @@ def mode(acl, player, modename, when=None):
         
     if ctype=="vote":
         try:
-            target="Change mode to '"+modename+"'"
-            Poll.Add(target, activator, player)
+            target="Mode '"+modename+"'"
+            act=lambda: activator("roundend")
+            if Mode.current_mode and Mode.current_mode.lives>10:
+                act=lambda: activator("now")
+            Poll.Add(target, act, player)
             Poll.current_poll.SetPlayerVote(player, True)
             Armagetronad.PrintMessage(Messages.PollAdded.format(target=target, player=Player.players[player].name))
             Poll.current_poll.CheckResult(only_sure=True)
