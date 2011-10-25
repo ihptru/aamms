@@ -71,6 +71,10 @@ def loadExtensions():
     sys.path.append(__path__)
     for i in getExtensions():
         missing_deps=loadExtension(i) #@UnusedVariable
+def __del__():
+    global loadedExtensions 
+    for i in range(len(loadedExtensions)):
+        del loadedExtensions[0] # Always delete first element, so next gets first.
 
 def __reload__(loadedExtensions__old):
     for ext in loadedExtensions__old:

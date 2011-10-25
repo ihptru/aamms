@@ -14,6 +14,7 @@ import Poll
 import Global
 from threading import Thread
 import threading
+import tools
 
 __save_vars=["log", "runningCommands"]
 ## @brief The logging object
@@ -69,10 +70,12 @@ def unregister_handler(event, *functions):
 def unregister_package(name):
     global extraHandlers
     for event in extraHandlers:
+        needRemove=[]
         for func in extraHandlers[event]:
-            if len(func.__module__.split("."))>1:
-                if func.__module__.split(".")[-2].lower()==name.lower():
-                    extraHandlers[event].remove(func) 
+            if tools.get_package(func.__module__).lower()==name.lower():
+                    needRemove+=[func]
+        for func in needRemove:
+            extraHandlers[event].remove(func)
 ## @brief Handles commands
 # @details Every time when a command that isn't handled by the server is entered, this
 #          function will be called.
