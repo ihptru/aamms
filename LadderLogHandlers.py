@@ -209,31 +209,19 @@ def OnlinePlayer(lname, red, green, blue, ping, teamname=None):
     if not lname in Player.players:
         log.warning("Player „"+lname+"“ doesn't exist in OnlinePlayer. Ignoring.")
         return
-    allow_team_name_player=1
-    try:
-        allow_team_name_player=int(Armagetronad.GetSetting("ALLOW_TEAM_NAME_PLAYER") )
-    except ValueError:
-        try:
-            allow_team_name_player=int(Armagetronad.GetSetting("ALLOW_TEAM_NAME_PLAYER") )
-        except ValueError:
-            pass
-    if allow_team_name_player == 0 and teamname!=None:
-        teamname=teamname.replace("_", " ").capitalize()
-    else:
-        teamname=Player.players[lname].name
-    if teamname!=None:
-        if Player.players[lname].getTeam()==None or Player.players[lname].getTeam().replace(" ","").replace("_","").lower()!=teamname.replace("_","").replace(" ","").lower():
-            Player.players[lname].leaveTeam()
-            if not teamname in Team.teams and teamname != None:
-                log.debug("Teams: "+str(Team.teams) )
-                teamname=Team.Add(teamname)
-            Player.players[lname].joinTeam(teamname)
-        else:
-            teamname=Player.players[lname].getTeam()
-    elif teamname==None:
-        Player.players[lname].leaveTeam()
-    if not teamname in Team.teams and teamname != None:
-        Team.Add(Player.players[lname].name)
+
+    allow_team_name_player=Armagetronad.GetSetting("ALLOW_TEAM_NAME_PLAYER")
+    if allow_team_name_player!="":
+       if int(allow_team_name_player)!=0:
+            teamname=Player.players[lname].name
+       else:
+            teamname=teamname.replace("_"," ").capitalize()
+    teamname_escaped=teamname.replace(" ","_").lower()
+    quiet=True if teamname else False
+    Player.players[lname].leaveTeam(quiet=quiet)
+    if not teamname_escaped in Team.teams:
+        Team.Add(teamname)
+    Player.players[lname].joinTeam(teamname_escaped)   
     Player.players[lname].color=red,green,blue
     Player.players[lname].ping=ping
 
