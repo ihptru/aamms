@@ -11,6 +11,8 @@ import LadderLogHandlers
 import Global
 import time
 
+
+
 ## @brief Executes a command
 # @details Send a command to the server. You only have to replace this function if you
 #          don't want to print commands to stdout.
@@ -105,9 +107,9 @@ def GetSetting(setting, timeout=5):
     match=None
     for i in range(timeout*2): #@UnusedVariable
         for line in serverlog.readlines():
-            match=pattern1.match(line)
+            match=pattern1.search(line)
             if match==None:
-                match=pattern2.match(line)
+                match=pattern2.search(line)
             if match!=None:
                 break
         if match!=None:
