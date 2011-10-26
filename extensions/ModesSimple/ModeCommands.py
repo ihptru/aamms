@@ -72,7 +72,7 @@ def mode(acl, player, modename, when=None):
         Armagetronad.PrintPlayerMessage(player, Messages.ModeNotExist.format(mode=modename))
         return
     if SimpleMode.current_mode:
-        if SimpleMode.current_mode.name.lower()==modename.lower() and type=="vote": #@UndefinedVariable
+        if SimpleMode.current_mode.name.lower()==modename.lower() and ctype=="vote": #@UndefinedVariable
             Armagetronad.PrintPlayerMessage(player, Messages.ModeAlreadyPlaying)
             return
 

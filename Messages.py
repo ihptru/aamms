@@ -46,7 +46,7 @@ ModeNotExist="Mode {mode} doesn't exist! Look at /info modes for a list of all a
 # @param expire How much rounds does this vote still stay alive?
 PollInProgress="0xff8844Poll for 0xffff00{target} 0xff8844in progress. Use /yes or /no to vote! This vote expires in {expire} rounds"
 
-PollInProgressCenter="0xff8800Poll in progress! VOTE!"
+PollInProgressCenter="0xff8800Poll in progress! Vote!"
 
 ## @brief Vote added message
 # @details This message is displayed when a new vote was added.
@@ -62,7 +62,7 @@ PollCancelled="0xff2200Poll for 0xffff00{target} 0xff2200got cancelled by an adm
 ## @brief Vote successed message
 # @details This message is printed when a vote successed.
 # @param target The target of the vote which successed.
-PollSuccessed="0x00ffffPoll for0xffff00{target} 0x00ffff accepted!"
+PollSuccessed="0x00ffffPoll for 0xffff00{target} 0x00ffffaccepted!"
 
 ## @brief Vote failed message
 # @details This message is printed when a vote failed.
