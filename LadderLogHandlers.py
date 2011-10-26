@@ -209,19 +209,20 @@ def OnlinePlayer(lname, red, green, blue, ping, teamname=None):
     if not lname in Player.players:
         log.warning("Player „"+lname+"“ doesn't exist in OnlinePlayer. Ignoring.")
         return
-
-    allow_team_name_player=Armagetronad.GetSetting("ALLOW_TEAM_NAME_PLAYER")
-    if allow_team_name_player!="":
-       if int(allow_team_name_player)!=0:
-            teamname=Player.players[lname].name
-       else:
-            teamname=teamname.replace("_"," ").capitalize()
-    teamname_escaped=teamname.replace(" ","_").lower()
-    quiet=True if teamname else False
-    Player.players[lname].leaveTeam(quiet=quiet)
-    if not teamname_escaped in Team.teams:
-        Team.Add(teamname)
-    Player.players[lname].joinTeam(teamname_escaped)   
+    if teamname!=None:
+        allow_team_name_player=Armagetronad.GetSetting("ALLOW_TEAM_NAME_PLAYER")
+        if allow_team_name_player!="":
+           if int(allow_team_name_player)!=0:
+                teamname=Player.players[lname].name
+           else:
+                teamname=teamname.replace("_"," ").capitalize()
+        teamname_escaped=teamname.replace(" ","_").lower()
+        Player.players[lname].leaveTeam(quiet=True)
+        if not teamname_escaped in Team.teams:
+            Team.Add(teamname)
+        Player.players[lname].joinTeam(teamname_escaped)   
+    else:
+        Player.players[lname].leaveTeam()
     Player.players[lname].color=red,green,blue
     Player.players[lname].ping=ping
 

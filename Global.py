@@ -10,10 +10,12 @@ __save_vars=["state", "serverlog", "datadir","configdir","debug","server_name"]
 ## @brief Call to reload player list.
 # @details This will kill all players and reset match score so the script can reload the player list.
 def reloadPlayerList():
+    rubber=Armagetronad.GetSetting("CYCLE_RUBBER")
     Armagetronad.SendCommand("START_NEW_MATCH")
     Armagetronad.SendCommand("CYCLE_RUBBER -1")
     sleep(1)
     Armagetronad.SendCommand("CYCLE_RUBBER 1")
+    Armagetronad.SendCommand("CYCLE_RUBBER "+rubber)
     Armagetronad.SendCommand("SINCLUDE settings_custom.cfg")
 
 ## @brief Reloads all modules used by this script
