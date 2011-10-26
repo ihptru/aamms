@@ -62,11 +62,7 @@ def delete_module(mod):
     for attr in filter(lambda x : not (x.startswith("__") and x.endswith("__")), dir(mod)):
         if inspect.ismodule(getattr(mod, attr)) and not is_script_component(getattr(mod, attr)):
             continue
-        elif inspect.isfunction(getattr(mod, attr)):
-            delattr(mod, attr)
         elif inspect.ismodule(getattr(mod, attr)):
-            delattr(mod, attr)
-        else:
             delattr(mod, attr)
     del sys.modules[mod.__name__]
     for i in sys.modules:
@@ -131,7 +127,6 @@ def reload_script_modules():
                     else:
                         setattr(sys.modules[mod], sub_mod, extensions.loadedExtensions[mod])
         if mod in vars:
-            sys.stderr.write(mod)
             if hasattr(sys.modules[mod], "__reload__"):
                 vars_new=dict()
                 for var in vars[mod]:
