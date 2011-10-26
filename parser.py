@@ -32,6 +32,7 @@ def main(debug=False, disabledCommands=[], reloaded=False):
         log.setLevel(logging.INFO)
     #We need some special settings. Set it
     Armagetronad.SendCommand("INTERCEPT_UNKNOWN_COMMANDS 1")
+    Armagetronad.SendCommand("EXTRA_ROUND_TIME 3.25")
     for x in dir(LadderLogHandlers):
         if not x[0].isupper():
             continue
