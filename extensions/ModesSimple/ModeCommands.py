@@ -101,7 +101,7 @@ def mode(acl, player, modename, when=None):
         try:
             target="Mode '"+modename+"'"
             act=lambda: activator("roundend")
-            if Mode.current_mode and Mode.current_mode.lives>10:
+            if SimpleMode.current_mode and SimpleMode.current_mode.lives>10:
                 act=lambda: activator("now")
             Poll.Add(target, act, player)
             Poll.current_poll.SetPlayerVote(player, True)
