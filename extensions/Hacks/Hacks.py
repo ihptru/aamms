@@ -18,7 +18,6 @@ def tele(acl, player, x, y, xdir=0, ydir=1, player_name=None):
         if player_name not in Player.players:
             Armagetronad.PrintPlayerMessage("0xff0000Invalid player!")
             return
-        if Player.players[player_name].isAlive()
         Armagetronad.SendCommand("RESPAWN_PLAYER "+player_name+" 0 "+" ".join((x,y,xdir,ydir)))
         Armagetronad.SendCommand("TELEPORT_PLAYER "+player_name+" "+" ".join((x,y,xdir,ydir)))
         Armagetronad.PrintMessage(Messages.PlayerTeleported.format(player=Player.players[player_name].name, by=player, x=x,y=x) )
