@@ -46,6 +46,8 @@ def Add(target_human, action,player, force=False):
         else:
             Cancel()
     current_poll=Poll(target_human, action)        
+    Armagetronad.PrintMessage(Messages.PollAdded.format(target=target_human, player=Player.players[player].name))
+    Armagetronad.PrintMessage("0xff8800Use /yes or /no to vote!")
     log.info("New Poll  "+target_human+" created.")
 
 ## @brief Cancels the current Poll.
@@ -153,11 +155,11 @@ class Poll:
             percent_no=0
         if percent_yes >= min_needed:
             log.info("Poll for {0} successed.".format(self.target) )
-            Armagetronad.SendCommand("CENTER_MESSAGE "+Messages.PollSuccessed.format(target=self.target) )
+            Armagetronad.SendCommand("CONSOLE_MESSAGE "+Messages.PollSuccessed.format(target=self.target) )
             self.action()
         elif percent_no>(100-min_needed):
             log.info("Poll for {0} failed.".format(self.target) )
-            Armagetronad.SendCommand("CENTER_MESSAGE "+Messages.PollFailed.format(target=self.target) )
+            Armagetronad.SendCommand("CONSOLE_MESSAGE "+Messages.PollFailed.format(target=self.target) )
         else:
             return False
         global current_poll

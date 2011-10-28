@@ -18,10 +18,10 @@ def tele(acl, player, x, y, xdir=0, ydir=1, player_name=None):
         if player_name not in Player.players:
             Armagetronad.PrintPlayerMessage("0xff0000Invalid player!")
             return
-        Player.players[player_name].respawn(x,y,xdir,ydir, True)
+        Armagetronad.SendCommand("TELEPORT_PLAYER "+player_name+" "+" ".join((x,y,xdir,ydir)))
         Armagetronad.PrintMessage(Messages.PlayerTeleported.format(player=Player.players[player_name].name, by=player, x=x,y=x) )
     else:
-        Player.players[player].respawn(x,y,xdir,ydir,True)
+        Armagetronad.SendCommand("TELEPORT_PLAYER "+player+" "+" ".join((x,y,xdir,ydir)))
         Armagetronad.PrintMessage(Messages.PlayerSelfTeleport.format(player=player,x=x,y=y) )
 
 ## @brief Changes your lives.

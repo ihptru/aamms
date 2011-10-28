@@ -23,6 +23,10 @@ def reloadPlayerList():
 def reloadModules():
     pass
 
+def set_script_settings():
+    for setting,value in script_settings.items():
+        Armagetronad.SendCommand(setting.upper() + " " + str(value))
+
 
 ## @brief Current state.
 # @details Possible values are "normal" or "modeeditor".
@@ -38,6 +42,7 @@ configdir=None
 debug=False
 server_name="Unnamed server"
 handleLadderLog=True
+script_settings={"EXTRA_ROUND_TIME": 2, "INTERCEPT_UNKNOWN_COMMANDS": 1, "GAME_TIME_INTERVAL": 1}
     
 class ReloadException(Exception):
     pass

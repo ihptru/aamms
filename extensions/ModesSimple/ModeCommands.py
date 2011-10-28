@@ -105,7 +105,6 @@ def mode(acl, player, modename, when=None):
                 act=lambda: activator("now")
             Poll.Add(target, act, player)
             Poll.current_poll.SetPlayerVote(player, True)
-            Armagetronad.PrintMessage(Messages.PollAdded.format(target=target, player=Player.players[player].name))
             Poll.current_poll.CheckResult(only_sure=True)
         except RuntimeError as r:
             if r.args[1]==1:

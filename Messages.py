@@ -111,7 +111,7 @@ WrongState="0xff0000/{command} cannot be used in this state."
 DisabledCommand="0xff0000This command has been disabled by an administrator."
 
 ## @brief This is the Message that is printed when a player got respawned by the script.
-PlayerRespawned="0x0066ff{player}0x00ff44 got respawned. {msg}"
+PlayerRespawned="0x0066ff{player}0x00ff44 has been respawned. {msg}"
 PlayerDied="0x0066ff{player}0x00ff44 is dead!"
 
 LastLifeMsg="0xff0000Last life!"

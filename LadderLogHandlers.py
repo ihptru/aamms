@@ -228,16 +228,15 @@ def OnlinePlayer(lname, red, green, blue, ping, teamname=None):
 
 def RoundCommencing(round_num_current, round_num_max):
     global round
-    global atRoundend
     global atMatchend
     global roundStarted
-    roundStarted=False
+    roundStarted=True
     round=int(round_num_current)
-    handlers=atRoundend
+    handlers=[]
     if round==1:
         handlers.extend(atMatchend)
         atMatchend=list()
-    # Handle roundend|matchend actions
+    # Handle matchend actions
     for func in handlers:
         try:
             func()
@@ -254,7 +253,16 @@ def RoundCommencing(round_num_current, round_num_max):
                 Armagetronad.PrintMessage(Messages.PollInProgress.format(target=Poll.current_poll.target, expire=Poll.current_poll.aliveRounds) )
                 Armagetronad.SendCommand("CENTER_MESSAGE "+Messages.PollInProgressCenter) 
                 Poll.current_poll.aliveRounds=Poll.current_poll.aliveRounds-1
-    atRoundend=list() # Flush list
+
+def WaitForExternalScript(*args):
+    global atRoundend
+    for func in atRoundend:
+        try:
+            func()
+        except Exception as e:
+            log.error("Could not execute handler "+str(func.__name__)+": "+str(e.__class__.__name__) )
+    atRoundend=[]
+    Armagetronad.SendCommand("WAIT_FOR_EXTERNAL_SCRIPT 0")
 
 ## @brief Handles new round
 # @details Every time a new round starts this function is called.
@@ -268,6 +276,7 @@ def NewRound(date, time, timezone):
     for bot in bots:
         Player.Remove(bot)
     roundStarted=True
+    Armagetronad.SendCommand("WAIT_FOR_EXTERNAL_SCRIPT 1")
     log.debug("## New round started ##")
 
 ## @brief Handles cycle created

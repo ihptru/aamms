@@ -31,15 +31,13 @@ def main(debug=False, disabledCommands=[], reloaded=False):
         log.addHandler(h)
         log.setLevel(logging.INFO)
     #We need some special settings. Set it
-    Armagetronad.SendCommand("INTERCEPT_UNKNOWN_COMMANDS 1")
-    Armagetronad.SendCommand("EXTRA_ROUND_TIME 1.8")
+    Global.set_script_settings()
     for x in dir(LadderLogHandlers):
         if not x[0].isupper():
             continue
         if inspect.isfunction(getattr(LadderLogHandlers,x)):
             x="".join([i.upper() if i.islower() else "_"+i for i in x])
             Armagetronad.SendCommand("LADDERLOG_WRITE"+x+" 1") # X has already a underscore at beginning.
-    Armagetronad.SendCommand("LADDERLOG_GAME_TIME_INTERVAL 1")
     if not reloaded:
         if Global.debug:
             log.info("Starting in debug mode.")
