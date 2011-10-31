@@ -114,6 +114,8 @@ def reload_script_modules():
             try:
                 sys.stderr.write("[ReImport] "+mod+" ... ")
                 imp.load_module(mod, *imp.find_module(mod))
+                if mod in main_mods:
+                    setattr(__main__, mod, sys.modules[mod])
             except ImportError:
                 sys.stderr.write("Failed.\n")
                 continue

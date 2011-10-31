@@ -9,6 +9,7 @@ import shutil
 
 modes=dict()
 current_mode=None
+current_lives=None
 
 def SaveModes(dir="ModesSimple", ext=".mod", modename=None):
     global modes
@@ -53,6 +54,7 @@ class Mode(yaml.YAMLObject):
         
     def activate(self, kill=None, first_time=None):
         global current_mode
+        global current_lives
         if not first_time:
             first_time = False if current_mode==self else True 
         if kill==None:
@@ -70,15 +72,20 @@ class Mode(yaml.YAMLObject):
                 self.lives=int(self.lives)
             if self.lives>=1:
                 Armagetronad.SendCommand("CYCLE_INVULNERABLE_TIME 3")
+                Armagetronad.SendCommand("CYCLE_WALL_TIME 2.9")
             Armagetronad.SendCommand("SINCLUDE settings_custom.cfg")
             Armagetronad.SendCommand("SINCLUDE autoexec.cfg")
             server_name=Global.server_name
             Armagetronad.SendCommand("SERVER_NAME "+server_name+" 0xff8800["+self.name+"]")
             Armagetronad.SendCommand("START_NEW_MATCH")
+            current_lives=self.lives
         if kill:
             for player in Player.players.values():
                 player.kill()
         current_mode=self
+        if current_lives>0:
+            Armagetronad.SendCommand("CYCLE_INVULNERABLE_TIME 3")
+            Armagetronad.SendCommand("CYCLE_WALL_TIME 2.9")
         Armagetronad.SendCommand("ROUND_CONSOLE_MESSAGE "+Messages.ModeMessage.format(mode=self.name))
         return True
     

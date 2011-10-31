@@ -77,5 +77,4 @@ def __del__():
         del loadedExtensions[0] # Always delete first element, so next gets first.
 
 def __reload__(loadedExtensions__old):
-    for ext in loadedExtensions__old:
-        loadExtension(ext.__name__)
+    loadExtensions()

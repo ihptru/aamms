@@ -114,9 +114,9 @@ DisabledCommand="0xff0000This command has been disabled by an administrator."
 PlayerRespawned="0x0066ff{player}0x00ff44 has been respawned. {msg}"
 PlayerDied="0x0066ff{player}0x00ff44 is dead!"
 
-LastLifeMsg="0xff0000Last life!"
-OneLifeMsg="One life left!"
-LivesMsg="{lives} lives left!"
+LastLifeMsg="0xff0000Last respawn!"
+OneLifeMsg="0x88ff88One 0x00ff44respawn left!"
+LivesMsg="0x88ff88{lives} 0x00ff44respawns left!"
 
 ## @brief About message displayed by /info about
 About="""0x00ffff                  About
@@ -142,3 +142,5 @@ PollTimedOut="0xffff00The poll about {target} timed out."
 ModeAlreadyPlaying="0xff0000You are already playing this mode!"
 
 ModeLocked="0xff0000Mode got locked by an adminsitrator."
+
+LivesChanged="0xffff00{player} 0x00aaffchanged the number of respawns to 0xffdd00{new_lives}."

@@ -13,20 +13,24 @@ def HandlePlayerDied(player, *args):
             elif lives_left==1:
                 res_msg=Messages.OneLifeMsg
             message=Messages.PlayerRespawned.format(player=Player.players[player].name, msg=res_msg)
-        if not SimpleMode.current_mode.lives==0:  #@UndefinedVariable
+        if not SimpleMode.current_lives==0:
             Armagetronad.PrintMessage(message)
     
 def HandleCycleCreated(player_name, x, y, xdir, ydir):
     if SimpleMode.current_mode:
         if "respoint" not in Player.players[player_name].data:
-            Player.players[player_name].setLives(SimpleMode.current_mode.lives+1) #@UndefinedVariable
-    Player.players[player_name].data["respoint"]=tuple( map( float,(x,y,xdir,ydir) ) )
+            if SimpleMode.current_lives==None:
+                Player.players[player_name].setLives(SimpleMode.current_mode.lives+1) #@UndefinedVariable
+            else:
+                Player.players[player_name].setLives(SimpleMode.current_lives+1)
+            Player.players[player_name].data["respoint"]=tuple( map( float,(x,y,xdir,ydir) ) )
 
 def DoInit(*args):
     if SimpleMode.current_mode:
         SimpleMode.current_mode.activate(kill=False) #@UndefinedVariable
         for player_name in Player.players:
-            Player.players[player_name].setLives(SimpleMode.current_mode.lives+1) #@UndefinedVariable
+            if "respoint" in Player.players[player_name].data:
+                del Player.players[player_name].data["respoint"]
 
 def CheckForNewMatch(cur_num, max_num):
     if cur_num=="1":

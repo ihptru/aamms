@@ -140,9 +140,19 @@ def unlockMode(acl, player):
     global locked
     locked=False
     Armagetronad.PrintPlayerMessage(player, "0x00ff88Mode unlocked.")
+## @brief Change lives.
+#  @param lives New lives. (Number of respawns)
+def setLives(acl, player, lives):
+    try:
+        SimpleMode.current_lives=int(lives)
+    except ValueError:
+        Armagetronad.PrintPlayerMessage(player, "0xff4400Invalid format!")
+    else:
+        Armagetronad.PrintMessage(Messages.LivesChanged.format(new_lives=lives, player=Player.players[player].name))
 
 
 
 Commands.add_help_group("modes", "Commands about modes (edit, add, ...)")
 Commands.register_commands(addMode,editMode, deleteMode, lockMode, unlockMode, group="modes")
 Commands.register_commands(mode, modes, group="voting")
+Commands.register_commands(setLives, group="misc")
