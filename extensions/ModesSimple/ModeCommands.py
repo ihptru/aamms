@@ -124,7 +124,9 @@ def mode(acl, player, modename, when=None):
             Armagetronad.PrintMessage(Messages.NextRoundMode.format(mode=modename.lower(), player=Player.players[player].name))
         elif when=="matchend":
             Armagetronad.PrintMessage(Messages.NextMatchMode.format(mode=modename.lower(), player=Player.players[player].name))
-## @brief List available modes.
+        elif when=="now":
+            Armagetronad.PrintMessage(Messages.ModeChanged.format(mode=modename.lower(), player=Player.players[player].name))
+# @brief List available modes.
 def modes(acl, player):
     Armagetronad.PrintPlayerMessage(player, "0x8888ffAvailable Modes on this server:")
     for m in SimpleMode.modes.values():

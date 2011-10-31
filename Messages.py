@@ -10,12 +10,12 @@ PlayerColorCode="0xddffdd"
 ## @brief Command not found message
 # @details This message is printed if the player tries to execute an invalid command
 # @param command The command the player wanted to execute.
-CommandNotFound="Sorry, command /{command} doesn't exist. Maybe you can try /help."
+CommandNotFound="Sorry, command /{command} doesn't exist. Maybe you can try /info."
 
 ## @brief Access denied message
 # @details This message is printed if the player isn't allowed to execute the command
 # @param command The command the player wanted to execute
-NotAllowed="You're not allowed to use the command /{command}. Go away!"
+NotAllowed="You're not allowed to use the command /{command}. "
 
 ## @brief Player not found message
 # @details This message is printed if the player doesn't exist in player list (bug)..
@@ -52,7 +52,7 @@ PollInProgressCenter="0xff8800Poll in progress! Vote!"
 # @details This message is displayed when a new vote was added.
 # @param target The target of the vote which was added
 # @param player The player who added the vote.
-PollAdded="0x00ff00Poll for 0xffff00{target} 0x00ff00submitted by 0x00ff88{player}"
+PollAdded="0x00ff00Poll for 0xffff00{target} 0x00ff00submitted by 0x00ff88{player}. Type /yes or /no."
 
 ## @brief Vote cancelled message
 # @details This message is printed when an admin cancelled a vote.
@@ -136,6 +136,8 @@ ModeMessage="0x00aaffNow playing: 0xff8800{mode}"
 NextRoundMode="0xffff00{player} 0x00aaffchanged next round's mode to 0xffdd00{mode}."
 
 NextMatchMode="0xffff00{player} 0x00aaffchanged next match's mode to 0xffdd00{mode}."
+
+ModeChanged="0xffff00{player} 0x00aaffchanged the mode to 0xffdd00{mode}."
 
 PollTimedOut="0xffff00The poll about {target} timed out."
 
