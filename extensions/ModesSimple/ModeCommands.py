@@ -129,7 +129,8 @@ def mode(acl, player, modename, when=None):
 # @brief List available modes.
 def modes(acl, player):
     Armagetronad.PrintPlayerMessage(player, "0x8888ffAvailable Modes on this server:")
-    for m in SimpleMode.modes.values():
+    for n in sorted(SimpleMode.modes.keys()):
+        m=SimpleMode.modes[n]
         Armagetronad.PrintPlayerMessage(player, "    0x88ff44"+m.name+": 0x888800"+m.desc)
 
 ## @brief Lock the current mode.

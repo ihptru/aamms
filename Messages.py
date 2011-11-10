@@ -52,7 +52,7 @@ PollInProgressCenter="0xff8800Poll in progress! Vote!"
 # @details This message is displayed when a new vote was added.
 # @param target The target of the vote which was added
 # @param player The player who added the vote.
-PollAdded="0x00ff00Poll for 0xffff00{target} 0x00ff00submitted by 0x00ff88{player}. Type /yes or /no."
+PollAdded="0x00ff00Poll for 0xffff00{target} 0x00ff00submitted by 0x00ff88{player}. Type /yes or /no to vote!"
 
 ## @brief Vote cancelled message
 # @details This message is printed when an admin cancelled a vote.
