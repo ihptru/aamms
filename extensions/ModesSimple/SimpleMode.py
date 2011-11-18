@@ -66,7 +66,7 @@ class Mode(yaml.YAMLObject):
         if first_time:
             Armagetronad.SendCommand("SINCLUDE settings.cfg")
             Armagetronad.SendCommand("SINCLUDE settings_dedicated.cfg")
-            Armagetronad.SendCommand("SINCLUDE default.cfg")
+            #Armagetronad.SendCommand("SINCLUDE default.cfg") Causes trouble
             Armagetronad.SendCommand("SINCLUDE "+configfile)
             if type(self.lives)!=int:
                 self.lives=int(self.lives)
